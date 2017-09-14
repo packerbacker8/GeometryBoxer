@@ -23,7 +23,7 @@ public class PunchScript : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.E) && this.transform.name == "LowerRightArm")
         {
-            this.GetComponent<Rigidbody>().AddForce(this.transform.forward * 100f);
+            this.GetComponent<Rigidbody>().AddForce(this.transform.forward * 10000f);
 
         }
     }
