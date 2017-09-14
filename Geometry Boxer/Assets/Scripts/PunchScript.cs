@@ -13,7 +13,7 @@ public class PunchScript : MonoBehaviour {
 	void Update () {
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
-            this.GetComponent<Rigidbody>().AddForce(this.transform.forward * 100f);
+            this.GetComponent<Rigidbody>().AddForce(this.transform.forward * 10000f);
 
         }
     }
