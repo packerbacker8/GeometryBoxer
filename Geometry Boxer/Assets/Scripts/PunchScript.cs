@@ -139,6 +139,6 @@ public class PunchScript : MonoBehaviour
             armToMove = rightArm;
         }
         Vector3 directionToMove = new Vector3(xMotion, yMotion);
-        armToMove.AddForce(directionToMove * punchForce * 10f);
+        armToMove.AddForce(directionToMove * punchForce * 10f, ForceMode.Impulse);
     }
 }
