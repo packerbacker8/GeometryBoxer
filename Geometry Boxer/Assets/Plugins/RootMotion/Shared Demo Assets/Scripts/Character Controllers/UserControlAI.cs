@@ -12,8 +12,19 @@ namespace RootMotion.Demos {
 		public float stoppingDistance = 0.5f;
 		public float stoppingThreshold = 1.5f;
 
+        public float attackRange = 1f;
+        public Animator animator;
+
 		protected override void Update () {
 			float moveSpeed = walkByDefault? 0.5f: 1f;
+
+            Debug.Log("Distance to target: " + Vector3.Distance(moveTarget.position, this.transform.position));
+
+            if(Vector3.Distance(moveTarget.position,this.transform.position) < attackRange)
+            {
+                Debug.Log("Attacking player");
+                animator.Play("Hit", 0);
+            }
 
 			Vector3 direction = moveTarget.position - transform.position;
 			float distance = direction.magnitude;
