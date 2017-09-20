@@ -32,58 +32,65 @@ namespace RootMotion.Demos {
 			c = GetComponent<Collider>();
 		}
 
-		void OnCollisionEnter(Collision collision) {
-			if (grabbed) return; // If we have not grabbed anything yet...
-			if (Time.time < nextGrabTime) return; // ...and enough time has passed since the last release...
-			if (collision.gameObject.layer != grabLayer) return; // ...and the collider is on the right layer...
-			if (collision.rigidbody == null) return; // ...and it has a rigidbody attached.
+		void OnCollisionStay(Collision collision) {
 
-			// Find MuscleCollisionBroadcaster that is a component added to all muscles by the PM, it broadcasts collisions events to PM and its behaviours.
-			var m = collision.gameObject.GetComponent<MuscleCollisionBroadcaster>();
-			if (m == null) return; // Make sure the collider we collided with is a muscle of a Puppet...
-			if (m.puppetMaster == puppetMaster) return; // ...and it is not the same puppet as ours.
+            //Debug.Log("CAN GRAB NOW!");
+            if(Input.GetKey(KeyCode.E))
+            {
+                if (grabbed) return; // If we have not grabbed anything yet...
+                if (Time.time < nextGrabTime) return; // ...and enough time has passed since the last release...
+                if (collision.gameObject.layer != grabLayer) return; // ...and the collider is on the right layer...
+                if (collision.rigidbody == null) return; // ...and it has a rigidbody attached.
 
-			// Unpin the puppet we collided with
-			foreach (BehaviourBase b in m.puppetMaster.behaviours) {
-				if (b is BehaviourPuppet) {
-					otherPuppet = b as BehaviourPuppet;
-					otherPuppet.SetState(BehaviourPuppet.State.Unpinned); // Unpin
-					otherPuppet.canGetUp = false; // Make it not get up while being held
-				}
-			}
+                // Find MuscleCollisionBroadcaster that is a component added to all muscles by the PM, it broadcasts collisions events to PM and its behaviours.
+                var m = collision.gameObject.GetComponent<MuscleCollisionBroadcaster>();
+                if (m == null) return; // Make sure the collider we collided with is a muscle of a Puppet...
+                if (m.puppetMaster == puppetMaster) return; // ...and it is not the same puppet as ours.
 
-			if (otherPuppet == null) return; // If not BehaviourPuppet found, break out
+                // Unpin the puppet we collided with
+                foreach (BehaviourBase b in m.puppetMaster.behaviours)
+                {
+                    if (b is BehaviourPuppet)
+                    {
+                        otherPuppet = b as BehaviourPuppet;
+                        otherPuppet.SetState(BehaviourPuppet.State.Unpinned); // Unpin
+                        otherPuppet.canGetUp = false; // Make it not get up while being held
+                    }
+                }
 
-			// Adding a ConfigurableJoint to link the two puppets
-			joint = gameObject.AddComponent<ConfigurableJoint>();
-			joint.connectedBody = collision.rigidbody;
+                if (otherPuppet == null) return; // If not BehaviourPuppet found, break out
 
-			// Move the anchor to where the hand is (since we done have a rigidbody for the hand)
-			joint.anchor = new Vector3(-0.35f, 0f, 0f);
+                // Adding a ConfigurableJoint to link the two puppets
+                joint = gameObject.AddComponent<ConfigurableJoint>();
+                joint.connectedBody = collision.rigidbody;
 
-			// Lock linear and angular motion of the joint
-			joint.xMotion = ConfigurableJointMotion.Locked;
-			joint.yMotion = ConfigurableJointMotion.Locked;
-			joint.zMotion = ConfigurableJointMotion.Locked;
-			joint.angularXMotion = ConfigurableJointMotion.Locked;
-			joint.angularYMotion = ConfigurableJointMotion.Locked;
-			joint.angularZMotion = ConfigurableJointMotion.Locked;
+                // Move the anchor to where the hand is (since we done have a rigidbody for the hand)
+                joint.anchor = new Vector3(-0.35f, 0f, 0f);
 
-			// Increasing the mass of the linked Rigidbody when it is a part of a chain is the easiest way to improve link stability.
-			r.mass *= massMlp;
+                // Lock linear and angular motion of the joint
+                joint.xMotion = ConfigurableJointMotion.Locked;
+                joint.yMotion = ConfigurableJointMotion.Locked;
+                joint.zMotion = ConfigurableJointMotion.Locked;
+                joint.angularXMotion = ConfigurableJointMotion.Locked;
+                joint.angularYMotion = ConfigurableJointMotion.Locked;
+                joint.angularZMotion = ConfigurableJointMotion.Locked;
 
-			// Solver iteration count needs to be increased to improve stability of the link between 2 long joint chains.
-			puppetMaster.solverIterationCount *= solverIterationMlp;
+                // Increasing the mass of the linked Rigidbody when it is a part of a chain is the easiest way to improve link stability.
+                r.mass *= massMlp;
 
-			// Ignore collisions with the object we grabbed
-			otherCollider = collision.collider;
-			Physics.IgnoreCollision(c, otherCollider, true);
+                // Solver iteration count needs to be increased to improve stability of the link between 2 long joint chains.
+                puppetMaster.solverIterationCount *= solverIterationMlp;
 
-			// The other puppet is heavy so slow down..
-			userControl.walkByDefault = true;
+                // Ignore collisions with the object we grabbed
+                otherCollider = collision.collider;
+                Physics.IgnoreCollision(c, otherCollider, true);
 
-			// We have successfully grabbed the other puppet
-			grabbed = true;
+                // The other puppet is heavy so slow down..
+                userControl.walkByDefault = true;
+
+                // We have successfully grabbed the other puppet
+                grabbed = true;
+            }
 		}
 
 		void Update() {

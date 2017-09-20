@@ -6,7 +6,6 @@ using RootMotion.Dynamics;
 
 public class EnemyHealthScript : MonoBehaviour
 {
-
     public float EnemyHealth = 1000f;
     public float deathDelay = 20f;
     public float damageThreshold = 100f;
@@ -19,6 +18,8 @@ public class EnemyHealthScript : MonoBehaviour
     private string getUpProne = "GetUpProne";
     private string getUpSupine = "GetUpSupine";
     private GameObject puppetMast;
+    private GameObject gameController;
+    private int enemyIndex = 0;
 
     // Use this for initialization
     void Start()
@@ -26,6 +27,7 @@ public class EnemyHealthScript : MonoBehaviour
         dead = false;
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
+        gameController = GameObject.FindGameObjectWithTag("GameController");
     }
 
     // Update is called once per frame
@@ -50,6 +52,7 @@ public class EnemyHealthScript : MonoBehaviour
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
                 EnemyHealth -= Math.Abs(collision.impulse.magnitude);
+                Debug.Log("Enemy health: " + EnemyHealth);
             }
         }
 
@@ -61,6 +64,25 @@ public class EnemyHealthScript : MonoBehaviour
     public void KillEnemy()
     {
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
+        gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="val"></param>
+    public void SetEnemyIndex(int val)
+    {
+        enemyIndex = val;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public int GetEnemyIndex()
+    {
+        return enemyIndex;
     }
 }
