@@ -35,7 +35,7 @@ namespace RootMotion.Demos {
 		void OnCollisionStay(Collision collision) {
 
             //Debug.Log("CAN GRAB NOW!");
-            if(Input.GetKey(KeyCode.E))
+            if(Input.GetKey(KeyCode.F))
             {
                 if (grabbed) return; // If we have not grabbed anything yet...
                 if (Time.time < nextGrabTime) return; // ...and enough time has passed since the last release...
@@ -90,6 +90,7 @@ namespace RootMotion.Demos {
 
                 // We have successfully grabbed the other puppet
                 grabbed = true;
+                this.transform.gameObject.SendMessageUpwards("ObjectGrabbedLeft", grabbed, SendMessageOptions.DontRequireReceiver); //send message to punch script that something is grabbed
             }
 		}
 
@@ -108,6 +109,7 @@ namespace RootMotion.Demos {
 				otherCollider = null;
 				grabbed = false;
 				nextGrabTime = Time.time + 1f;
+                this.transform.gameObject.SendMessageUpwards("ObjectGrabbedLeft", grabbed, SendMessageOptions.DontRequireReceiver); //send message to punch script that something is grabbed
 			}
 		}
 	}

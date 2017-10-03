@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Dynamics;
 
-public class EnemyHealthScript : MonoBehaviour
+public class PlayerHealthScript : MonoBehaviour
 {
-    public float EnemyHealth = 1000f;
+    public float PlayerHealth = 10000f;
     public float deathDelay = 20f;
+    [Header("How much force is required for the player to take damage.")]
     public float damageThreshold = 100f;
 
     private bool dead;
@@ -19,7 +20,7 @@ public class EnemyHealthScript : MonoBehaviour
     private string getUpSupine = "GetUpSupine";
     private GameObject puppetMast;
     private GameObject gameController;
-    private int enemyIndex = 0;
+    
 
     // Use this for initialization
     void Start()
@@ -33,10 +34,10 @@ public class EnemyHealthScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(EnemyHealth <= 0f && !dead)
+        if (PlayerHealth <= 0f && !dead)
         {
             dead = true;
-            KillEnemy();
+            KillPlayer();
         }
     }
 
@@ -47,12 +48,12 @@ public class EnemyHealthScript : MonoBehaviour
     public void ImpactReceived(Collision collision)
     {
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (collision.gameObject.tag == "Player" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        if (collision.gameObject.tag == "EnemyCollision" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
         {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                EnemyHealth -= Math.Abs(collision.impulse.magnitude);
-                //Debug.Log("Enemy health: " + EnemyHealth);
+                PlayerHealth -= Math.Abs(collision.impulse.magnitude);
+                Debug.Log("Player health: " + PlayerHealth);
             }
         }
 
@@ -61,30 +62,12 @@ public class EnemyHealthScript : MonoBehaviour
     /// <summary>
     /// Function to kill enemy AI unit, plays associated death animation then removes the object.
     /// </summary>
-    public void KillEnemy()
+    public void KillPlayer()
     {
         anim.Play("Death");
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-        gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
-        
+        gameController.GetComponent<GameControllerScript>().playerKilled();
+
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="val"></param>
-    public void SetEnemyIndex(int val)
-    {
-        enemyIndex = val;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public int GetEnemyIndex()
-    {
-        return enemyIndex;
     }
 }
