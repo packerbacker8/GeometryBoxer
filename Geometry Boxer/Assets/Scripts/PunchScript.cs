@@ -44,6 +44,7 @@ public class PunchScript : MonoBehaviour
     private string getUpProne = "GetUpProne";
     private string getUpSupine = "GetUpSupine";
     private string fall = "Fall";
+    private string onGround = "OnGround";
 
     private GameObject puppetMast;
 
@@ -81,7 +82,7 @@ public class PunchScript : MonoBehaviour
             rightGrab = false;
         }
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall)) //prevent use of your arms when you are on the ground and getting up.
+        if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
         {
             if (useController) //controller controls
             {
@@ -178,7 +179,7 @@ public class PunchScript : MonoBehaviour
         }
         else
         {
-            //do something if on the ground
+            //do something if on the ground, ground combat
         }
     }
 
@@ -224,6 +225,9 @@ public class PunchScript : MonoBehaviour
     /// <param name="yMotion">Gets axis value from input for left and right sticks. In vertical direction.</param>
     private void MoveArm(Limbs limb, float xMotion, float yMotion)
     {
+        //snap camera to forward face vector
+        //rotate around Y axis
+        //this.transform.GetChild(2).transform.Rotate(this.transform.up, Vector3.Angle(this.transform.GetChild(2).transform.forward, this.transform.GetChild(3).transform.forward));
         Rigidbody armToMove = null;
         if (limb == Limbs.leftArm)
         {
@@ -232,8 +236,10 @@ public class PunchScript : MonoBehaviour
         else if (limb == Limbs.rightArm)
         {
             armToMove = rightArm;
+            yMotion *= -1;
         }
-        Vector3 directionToMove = new Vector3(xMotion, yMotion);
+        Vector3 directionToMove = new Vector3(yMotion, xMotion, xMotion + yMotion);
+        Debug.Log(directionToMove);
         armToMove.AddForce(directionToMove * punchForce, ForceMode.Impulse);
     }
 

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.AI;
 
 namespace RootMotion.Demos {
 	
@@ -15,24 +16,41 @@ namespace RootMotion.Demos {
         public float attackRange = 1f;
         public Animator animator;
 
-		protected override void Update () {
+        public Transform goal;
+        public GameObject player;
+        NavMeshAgent agent;
+        void Start()
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+            agent = GetComponent<NavMeshAgent>();
+            agent.destination = player.transform.position;
+        }
+
+        protected override void Update () {
 			float moveSpeed = walkByDefault? 0.5f: 1f;
 
-            if(Vector3.Distance(moveTarget.position,this.transform.position) < attackRange)
+            if (Vector3.Distance(moveTarget.position, this.transform.position) < attackRange)
             {
                 animator.Play("Hit", 0);
             }
+            else
+            {
+                //Vector3 direction = player.transform.position - transform.position;
+                //float distance = direction.magnitude;
 
-			Vector3 direction = moveTarget.position - transform.position;
-			float distance = direction.magnitude;
+                //Vector3 normal = transform.up;
+                //Vector3.OrthoNormalize(ref normal, ref direction);
 
-			Vector3 normal = transform.up;
-			Vector3.OrthoNormalize(ref normal, ref direction);
+                //float sD = state.move != Vector3.zero? stoppingDistance: stoppingDistance * stoppingThreshold;
 
-			float sD = state.move != Vector3.zero? stoppingDistance: stoppingDistance * stoppingThreshold;
+                //state.move = distance > sD? direction * moveSpeed: Vector3.zero;
 
-			state.move = distance > sD? direction * moveSpeed: Vector3.zero;
-		}
+
+                agent.destination = player.transform.position;
+                //agent.velocity = state.move;
+                state.move = agent.velocity;
+            }
+        }
 	}
 }
 
