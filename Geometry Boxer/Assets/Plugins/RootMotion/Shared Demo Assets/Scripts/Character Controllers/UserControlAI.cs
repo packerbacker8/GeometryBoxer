@@ -12,55 +12,58 @@ namespace RootMotion.Demos {
 		public Transform moveTarget;
 		public float stoppingDistance = 0.5f;
 		public float stoppingThreshold = 1.5f;
-
+        
         public float attackRange = 1f;
         public Animator animator;
 
         public Transform goal;
-        //public GameObject player;
         NavMeshAgent agent;
+
+        //Sound Engine Needs
+        private AudioSource source;
+        private int attackIndex;
+        private System.Random rand = new System.Random();
+        private SFX_Manager sfxManager;
+
+        private float jumpThreshold = 1.0f;
+
         void Start()
         {
-            //player = GameObject.FindGameObjectWithTag("Player");
+            rand.Next(0, 1);
+            source = gameObject.AddComponent<AudioSource>();
+            sfxManager = FindObjectOfType<SFX_Manager>();
             agent = GetComponent<NavMeshAgent>();
-            //agent.destination = player.transform.position;
         }
 
         protected override void Update () {
 			float moveSpeed = walkByDefault? 0.5f: 1f;
 
-            if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange)
+            //Determine vector to rotate to target if not facing target
+            Vector3 targetDir = moveTarget.position - transform.position;
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
+            
+            //Enemy is within distance to attack player AND is NOT already playing attack anim
+            if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange && !this.animator.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             {
+                if(rand.Next(0,10) == 1)//Chances of attack sound being played
+                {
+                    source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
+                }    
                 animator.Play("Hit", 0);
-                
+            }
+            if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
+            {
+                agent.destination = moveTarget.position;
+                state.move = agent.velocity;
+            }
+            else
+            {
+                agent.destination = transform.position;
+                state.move = agent.velocity;
             }
 
-                //Vector3 direction = Vector3.Distance(player.transform.position, transform.position);
-                //float distance = direction.magnitude;
-
-                //Vector3 normal = transform.up;
-                //Vector3.OrthoNormalize(ref normal, ref direction);
-
-                //float sD = state.move != Vector3.zero? stoppingDistance: stoppingDistance * stoppingThreshold;
-
-                //agent.destination = distance > sD? player.transform.position: transform.position;
-
-
-                //agent.destination =  moveTarget.position;
-                //agent.destination = 
-                //agent.velocity = state.move;
-                if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
-                {
-                agent.destination = moveTarget.position;
-                    state.move = agent.velocity;
-                }
-                else
-                {
-                agent.destination = transform.position;
-                //Debug.Log("Close To player");
-                state.move = agent.velocity;
-                }
-            
+            //Always rotate to face the player
+            transform.rotation = Quaternion.LookRotation(newDir);
         }
 	}
 }
