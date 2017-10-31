@@ -19,6 +19,7 @@ public class SFX_Manager : MonoBehaviour {
 
     public List<AudioClip> heavyPunches = new List<AudioClip>();
     public List<AudioClip> lightPunches = new List<AudioClip>();
+    public List<AudioClip> swishes = new List<AudioClip>();
 
     public List<AudioClip> meleeMetal = new List<AudioClip>();
 

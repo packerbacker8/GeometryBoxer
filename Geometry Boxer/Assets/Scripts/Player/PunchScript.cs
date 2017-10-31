@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RootMotion;
 using RootMotion.Dynamics;
+using RootMotion.Demos;
 
 public class PunchScript : MonoBehaviour
 {
@@ -17,10 +19,10 @@ public class PunchScript : MonoBehaviour
     [Header("PC punch buttons.")]
     public KeyCode leftJabKey = KeyCode.Q;
     public KeyCode rightJabKey = KeyCode.E;
-    //public KeyCode leftPunchKey = KeyCode.Q;
-    //public KeyCode rightPunchKey = KeyCode.E;
-    //public KeyCode leftPunchKey = KeyCode.Q;
-    //public KeyCode rightPunchKey = KeyCode.E;
+    public KeyCode hookModifierKey = KeyCode.LeftControl; //plus q
+    //public KeyCode rightHookKey = KeyCode.E;
+    public KeyCode leftUppercutKey = KeyCode.R;
+    public KeyCode rightUppercutKey = KeyCode.F;
     [Header("Controller punch buttons.")]
     public string leftJabControllerButton = "LeftBumper";
     public string rightJabControllerButton = "RightBumper";
@@ -51,6 +53,9 @@ public class PunchScript : MonoBehaviour
     private int numberOfMuscleComponents;
     private int swingAnimLayer = 1;
     private int punchAnimLayer = 0;
+    private int cameraIndex = 3;
+    private int behaviorIndex = 0;
+    private int puppetArmBehaviorIndex = 1;
 
     private string leftPunchAnimation = "Hit";
     private string rightPunchAnimation = "Hit";
@@ -61,7 +66,10 @@ public class PunchScript : MonoBehaviour
     private string fall = "Fall";
     private string onGround = "OnGround";
 
+    private GameObject puppetArmBehavior;
     private GameObject puppetMast;
+    private GameObject charController;
+    private GameObject cam;
 
     private enum Limbs
     {
@@ -86,7 +94,11 @@ public class PunchScript : MonoBehaviour
         currentY = 0f;
         oldInputX = 0f;
         oldInputY = 0f;
-        anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+        cam = this.transform.GetChild(cameraIndex).gameObject;
+        puppetArmBehavior = this.transform.GetChild(behaviorIndex).gameObject.transform.GetChild(puppetArmBehaviorIndex).gameObject;
+        charController = this.transform.GetChild(characterControllerIndex).gameObject;
+        charController.GetComponent<CharacterMeleeDemo>().canMove = true;
+        anim = charController.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         numberOfMuscleComponents = puppetMast.GetComponent<PuppetMaster>().muscles.Length;
     }
@@ -125,15 +137,10 @@ public class PunchScript : MonoBehaviour
                 {
                     controllingRightArm = false;
                 }
-                if ((controllingLeftArm || controllingRightArm) && !movementAndCameraDisabled)
-                {
-                    //turn off camera movement and character movement
-                    StartCoroutine(ToggleCameraAndMovement(true));
-                }
-                else if (movementAndCameraDisabled)
-                {
-                    StartCoroutine(ToggleCameraAndMovement(false));
-                }
+                //turn off camera movement and character movement
+                StartCoroutine(ToggleCameraAndMovement(controllingLeftArm || controllingRightArm));
+                StartCoroutine(ToggleArmPuppetMaster(controllingLeftArm, Limbs.leftArm));
+                StartCoroutine(ToggleArmPuppetMaster(controllingRightArm, Limbs.rightArm));
                 //Left arm punching
                 if (controllingLeftArm)
                 {
@@ -175,32 +182,30 @@ public class PunchScript : MonoBehaviour
             else  // keyboard controls
             {
                 //Left trigger lets player control left arm independently
-                if (Input.GetKey(KeyCode.Mouse0))
+                if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     controllingLeftArm = true;
                 }
-                else
+                else if (Input.GetKeyUp(KeyCode.Mouse0))
                 {
                     controllingLeftArm = false;
                 }
                 //Right trigger lets player control right arm independently
-                if (Input.GetKey(KeyCode.Mouse1))
+                if (Input.GetKeyDown(KeyCode.Mouse1))
                 {
                     controllingRightArm = true;
+
                 }
-                else
+                else if (Input.GetKeyUp(KeyCode.Mouse1))
                 {
                     controllingRightArm = false;
                 }
-                if((controllingLeftArm || controllingRightArm) && !movementAndCameraDisabled)
-                {
-                    //turn off camera movement and character movement
-                    StartCoroutine(ToggleCameraAndMovement(true));
-                }
-                else if(movementAndCameraDisabled)
-                {
-                    StartCoroutine(ToggleCameraAndMovement(false));
-                }
+                //turn off camera movement and character movement
+                StartCoroutine(ToggleCameraAndMovement(controllingLeftArm || controllingRightArm));
+
+                StartCoroutine(ToggleArmPuppetMaster(controllingLeftArm, Limbs.leftArm));
+                StartCoroutine(ToggleArmPuppetMaster(controllingRightArm, Limbs.rightArm));
+
                 if (controllingLeftArm)
                 {
                     leftArmXAxis = Input.GetAxisRaw("Mouse X");
@@ -295,6 +300,10 @@ public class PunchScript : MonoBehaviour
         Rigidbody armToMove = null;
         xMotion = System.Math.Abs(xMotion);  //make go the right direction, so arm doesn't go through body
         Vector2 forceOfMove = new Vector2(xMotion, System.Math.Abs(yMotion)); //the force multiplied to the punch
+        //if(useController)  //controller needs a little more force
+        //{
+
+        //}
         float sum = xMotion + System.Math.Abs(yMotion);
         if (sum == 0f)
         {
@@ -336,10 +345,24 @@ public class PunchScript : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ToggleCameraAndMovement(bool disable)
     {
+        yield return null;
         movementAndCameraDisabled = disable;
+        cam.GetComponent<CameraController>().rotateAlways = !disable;
+        charController.GetComponent<CharacterMeleeDemo>().canMove = !disable;
+        if(disable)
+        {
+            anim.SetFloat("Forward", 0f);
+            anim.SetFloat("Jump", 0f);
+        }
         yield return null;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="disable"></param>
+    /// <param name="limbToDisable"></param>
+    /// <returns></returns>
     private IEnumerator ToggleArmPuppetMaster(bool disable, Limbs limbToDisable)
     {
         yield return null;

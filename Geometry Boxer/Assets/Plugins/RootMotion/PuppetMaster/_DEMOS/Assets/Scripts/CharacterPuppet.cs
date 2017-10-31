@@ -12,6 +12,8 @@ namespace RootMotion.Demos {
 
 		public BehaviourPuppet puppet { get; private set; }
 
+        public bool canMove = true;
+
 		protected override void Start() {
 			base.Start();
 
@@ -20,14 +22,14 @@ namespace RootMotion.Demos {
 
 		public override void Move(Vector3 deltaPosition, Quaternion deltaRotation) {
 			// Disable movement while the puppet is not balanced or getting up.
-			if (puppet.state != BehaviourPuppet.State.Puppet) return;
+			if (puppet.state != BehaviourPuppet.State.Puppet || !canMove) return;
 
 			base.Move(deltaPosition, deltaRotation);
 		}
 
 		protected override void Rotate() {
 			// Disable rotation while the puppet is not balanced or getting up.
-			if (puppet.state != BehaviourPuppet.State.Puppet) {
+			if (puppet.state != BehaviourPuppet.State.Puppet || !canMove) {
 				if (gravityTarget != null) transform.rotation = Quaternion.FromToRotation(transform.up, transform.position - gravityTarget.position) * transform.rotation;
 
 				return;
@@ -37,7 +39,7 @@ namespace RootMotion.Demos {
 		}
 
 		protected override bool Jump() {
-			if (puppet.state != BehaviourPuppet.State.Puppet) return false;
+			if (puppet.state != BehaviourPuppet.State.Puppet || !canMove) return false;
 
 			return base.Jump();
 		}

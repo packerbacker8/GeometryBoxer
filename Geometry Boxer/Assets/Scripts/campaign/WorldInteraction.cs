@@ -20,6 +20,7 @@ public class WorldInteraction : MonoBehaviour
     public bool isInteractable;
     public bool pathReached;
     public bool canMove;
+    public bool freeze = false;
 
     public Quaternion rot; 
 
@@ -85,14 +86,26 @@ public class WorldInteraction : MonoBehaviour
         activePlayer = this.gameObject; 
     }
 
+    public void freezePlayer()
+    {
+        freeze = true;
+    }
+
+    public void unFreezePlayer()
+    {
+        freeze = false;
+    }
+
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+
+        if (Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && !freeze)
         {
             GetInteraction();
         }
 
         MoveStates();
+        
     }
 
 

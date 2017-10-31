@@ -5,7 +5,6 @@ using UnityEngine;
 public class MeleeSfx : MonoBehaviour {
 
     public float damageThreshold = 100f;
-
     //Sound Engine Needs
     private AudioSource source;
     private int meleeIndex;
@@ -21,17 +20,15 @@ public class MeleeSfx : MonoBehaviour {
     }
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.transform.root.tag == "EnemyRoot")
+        if (collision.gameObject.transform.root.tag == "EnemyRoot" || collision.gameObject.transform.root.tag == "Player")
         {
             if (collision.impulse.magnitude > damageThreshold)
             {
-                if(source.isPlaying)
+                if(!source.isPlaying)
                 {
-                    source.Stop();
+                    source.PlayOneShot(sfxManager.meleeMetal[meleeIndex], 1f);
+                    meleeIndex = rand.Next(0, sfxManager.meleeMetal.Count);
                 }
-                source.PlayOneShot(sfxManager.meleeMetal[meleeIndex], 1f);
-                meleeIndex = rand.Next(0, sfxManager.meleeMetal.Count);
-                //Debug.Log("Enemy health: " + EnemyHealth);
             }
         }
 

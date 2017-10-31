@@ -32,6 +32,8 @@ public class EnemyHealthScript : MonoBehaviour
     void Start()
     {
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialize = true;
+        source.volume = 0.6f;
         sfxManager = FindObjectOfType<SFX_Manager>();
         dead = false;
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
@@ -42,7 +44,7 @@ public class EnemyHealthScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(EnemyHealth <= 0f && !dead)
+        if (EnemyHealth <= 0f && !dead)
         {
             dead = true;
             KillEnemy();
@@ -60,10 +62,12 @@ public class EnemyHealthScript : MonoBehaviour
         {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
+                if(!source.isPlaying && sfxManager.malePain.Count > 0)
+                {
+                    painIndex = rand.Next(0, sfxManager.malePain.Count);
+                    source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
+                }
                 EnemyHealth -= Math.Abs(collision.impulse.magnitude);
-                source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
-                painIndex = rand.Next(0, sfxManager.malePain.Count);
-                //Debug.Log("Enemy health: " + EnemyHealth);
             }
         }
 
@@ -75,10 +79,14 @@ public class EnemyHealthScript : MonoBehaviour
     public void KillEnemy()
     {
         anim.Play("Death");
-        source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
+
+        if(sfxManager.maleDeath.Count > 0)
+        {
+            source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
+        }
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
         gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
-        
+
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
     }
 
@@ -100,3 +108,4 @@ public class EnemyHealthScript : MonoBehaviour
         return enemyIndex;
     }
 }
+

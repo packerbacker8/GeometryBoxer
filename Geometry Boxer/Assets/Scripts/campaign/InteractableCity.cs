@@ -6,8 +6,20 @@ using UnityEngine.SceneManagement;
 public class InteractableCity : Interactable
 {
     public GUIStyle style;
-    private Rect Menu;
-    public bool doWindow = true;
+    public GameObject Player;
+    public GameObject MapCamera;
+    public GameObject Canvas;
+    public int sceneIndex;
+   
+    private WorldInteraction worldInit;
+    private RTSCam cam;
+
+    private void Awake()
+    {
+        worldInit = Player.GetComponent<WorldInteraction>();
+        cam = MapCamera.GetComponent<RTSCam>();
+        Canvas.SetActive(false);
+    }
 
     void Update()
     {
@@ -20,37 +32,13 @@ public class InteractableCity : Interactable
             {
                 if(hit.transform.tag == "Interactable")
                 {
-                    doWindow = true;
-                    int windowWidth = 200;
-                    int windowHeight = 200;
-                    int x = (Screen.width - windowWidth) / 2;
-                    int y = (Screen.height - windowWidth) / 2;
-                    Menu = new Rect(x, y, windowWidth, windowHeight);
+                    worldInit.freeze = true;
+                    cam.freeze = true;
+                    Canvas.SetActive(true);
                 }
             }
         }
 
 
-    }
-
-    void OnGUI()
-    {
-        if (doWindow)
-        {
-            GUI.Window(0, Menu, MenuButtons, "Your forses are attacking a city");
-        }
-    }
-
-    void MenuButtons(int i)
-    {
-        if (GUILayout.Button("Attack"))
-        {
-            doWindow = false;
-            SceneManager.LoadScene("CombatTestEnvironment");
-        }
-        if (GUILayout.Button("Retreat"))
-        {
-            doWindow = false;
-        }
     }
 }

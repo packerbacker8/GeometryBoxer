@@ -804,5 +804,5 @@ namespace RootMotion.Dynamics {
 			
 			angularLimitsEnabled = limited;
 		}
-	}
+    }
 }

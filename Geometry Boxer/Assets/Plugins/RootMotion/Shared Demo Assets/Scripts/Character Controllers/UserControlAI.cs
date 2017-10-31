@@ -31,8 +31,11 @@ namespace RootMotion.Demos {
         {
             rand.Next(0, 1);
             source = gameObject.AddComponent<AudioSource>();
+            source.spatialize = true;
+            source.volume = 0.6f;
             sfxManager = FindObjectOfType<SFX_Manager>();
             agent = GetComponent<NavMeshAgent>();
+            
         }
 
         protected override void Update () {
@@ -45,7 +48,7 @@ namespace RootMotion.Demos {
             //Enemy is within distance to attack player AND is NOT already playing attack anim
             if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange && !this.animator.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             {
-                if(rand.Next(0,10) == 1)//Chances of attack sound being played
+                if(rand.Next(0,10) == 1 && sfxManager.maleAttack.Count > 0)//Chances of attack sound being played
                 {
                     source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
                 }    
