@@ -59,6 +59,7 @@ public class PunchScript : MonoBehaviour
 
     private string leftPunchAnimation = "Hit";
     private string rightPunchAnimation = "Hit";
+    private string leftUppercutAnimation = "LeftUpperCut";
     private string leftSwingAnimation = "SwingProp";
     private string rightSwingAnimation = "SwingProp";
     private string getUpProne = "GetUpProne";
@@ -67,7 +68,8 @@ public class PunchScript : MonoBehaviour
     private string onGround = "OnGround";
 
     private GameObject puppetArmBehavior;
-    private GameObject puppetMast;
+    private GameObject puppetMastObject;
+    private PuppetMaster puppetMaster;
     private GameObject charController;
     private GameObject cam;
 
@@ -99,14 +101,15 @@ public class PunchScript : MonoBehaviour
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         charController.GetComponent<CharacterMeleeDemo>().canMove = true;
         anim = charController.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
-        puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
-        numberOfMuscleComponents = puppetMast.GetComponent<PuppetMaster>().muscles.Length;
+        puppetMastObject = this.transform.GetChild(puppetMasterIndex).gameObject;
+        puppetMaster = puppetMastObject.GetComponent<PuppetMaster>();
+        numberOfMuscleComponents = puppetMastObject.GetComponent<PuppetMaster>().muscles.Length;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (numberOfMuscleComponents < puppetMast.GetComponent<PuppetMaster>().muscles.Length) //number of muscles increased from beginning, a prop has been picked up
+        if (numberOfMuscleComponents < puppetMaster.muscles.Length) //number of muscles increased from beginning, a prop has been picked up
         {
             rightGrab = true;
         }
@@ -228,6 +231,10 @@ public class PunchScript : MonoBehaviour
                 {
                     ThrowSinglePunch(Limbs.leftArm);
                 }
+                else if(Input.GetKeyDown(leftUppercutKey))
+                {
+                    ThrowUppercut(Limbs.leftArm);
+                }
                 if (controllingRightArm)
                 {
                     rightArmXAxis = Input.GetAxisRaw("Mouse X");
@@ -249,6 +256,10 @@ public class PunchScript : MonoBehaviour
                 else if (Input.GetKeyDown(rightJabKey))
                 {
                     ThrowSinglePunch(Limbs.rightArm);
+                }
+                else if(Input.GetKeyDown(rightUppercutKey))
+                {
+                    ThrowUppercut(Limbs.rightArm);
                 }
             }
         }
@@ -285,6 +296,25 @@ public class PunchScript : MonoBehaviour
             {
                 anim.Play(rightPunchAnimation, punchAnimLayer);
             }
+        }
+    }
+
+    /// <summary>
+    /// Cause player to throw single uppercut of one arm.  Arm is determined by limb parameter.
+    /// </summary>
+    /// <param name="limb">The value 0 corresponds to left arm, 1 to right arm.</param>
+    private void ThrowUppercut(Limbs limb)
+    {
+        if (limb == Limbs.leftArm)
+        {
+            anim.Play(leftUppercutAnimation, punchAnimLayer);
+            //anim.SetInteger("ActionIndex", 2);
+        }
+        else if (limb == Limbs.rightArm)
+        {
+
+            anim.Play(rightPunchAnimation, punchAnimLayer);
+
         }
     }
 
@@ -349,7 +379,7 @@ public class PunchScript : MonoBehaviour
         movementAndCameraDisabled = disable;
         cam.GetComponent<CameraController>().rotateAlways = !disable;
         charController.GetComponent<CharacterMeleeDemo>().canMove = !disable;
-        if(disable)
+        if (disable)
         {
             anim.SetFloat("Forward", 0f);
             anim.SetFloat("Jump", 0f);
@@ -365,6 +395,16 @@ public class PunchScript : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ToggleArmPuppetMaster(bool disable, Limbs limbToDisable)
     {
+        foreach (Muscle m in puppetMaster.muscles) //NOT RIGHT DOING IT FOR WHOLE BODY NOT JUST ARMS, STILL IN ANIM POSITION
+        {
+            if(m.name.Contains("arm") || m.name.Contains("hand"))
+            {
+                if (disable)
+                    m.state.pinWeightMlp = 0f;
+                else
+                    m.state.pinWeightMlp = 1f;
+            }
+        }
         yield return null;
     }
 }

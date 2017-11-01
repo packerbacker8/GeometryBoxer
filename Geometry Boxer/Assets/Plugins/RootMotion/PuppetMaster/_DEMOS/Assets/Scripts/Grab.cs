@@ -16,6 +16,8 @@ namespace RootMotion.Demos {
 		[Tooltip("The layers we wish to grab (optimization).")]
 		public int grabLayer;
 
+        public KeyCode grabKey = KeyCode.Z;
+
 		private bool grabbed;
 		private Rigidbody r;
 		private Collider c;
@@ -35,7 +37,7 @@ namespace RootMotion.Demos {
 		void OnCollisionStay(Collision collision) {
 
             //Debug.Log("CAN GRAB NOW!");
-            if(Input.GetKey(KeyCode.F))
+            if(Input.GetKey(grabKey))
             {
                 if (grabbed) return; // If we have not grabbed anything yet...
                 if (Time.time < nextGrabTime) return; // ...and enough time has passed since the last release...
