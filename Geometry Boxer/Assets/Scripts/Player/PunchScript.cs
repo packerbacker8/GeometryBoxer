@@ -60,6 +60,7 @@ public class PunchScript : MonoBehaviour
     private string leftPunchAnimation = "Hit";
     private string rightPunchAnimation = "Hit";
     private string leftUppercutAnimation = "LeftUpperCut";
+    private string rightUppercutAnimation = "RightUpperCut";
     private string leftSwingAnimation = "SwingProp";
     private string rightSwingAnimation = "SwingProp";
     private string getUpProne = "GetUpProne";
@@ -72,6 +73,7 @@ public class PunchScript : MonoBehaviour
     private PuppetMaster puppetMaster;
     private GameObject charController;
     private GameObject cam;
+    private List<Muscle> armMuscles;
 
     private enum Limbs
     {
@@ -104,6 +106,14 @@ public class PunchScript : MonoBehaviour
         puppetMastObject = this.transform.GetChild(puppetMasterIndex).gameObject;
         puppetMaster = puppetMastObject.GetComponent<PuppetMaster>();
         numberOfMuscleComponents = puppetMastObject.GetComponent<PuppetMaster>().muscles.Length;
+        armMuscles = new List<Muscle>();
+        foreach (Muscle m in puppetMaster.muscles) //NOT RIGHT DOING IT FOR WHOLE BODY NOT JUST ARMS, STILL IN ANIM POSITION
+        {
+            if (m.name.Contains("arm") || m.name.Contains("hand"))
+            {
+                armMuscles.Add(m);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -231,7 +241,7 @@ public class PunchScript : MonoBehaviour
                 {
                     ThrowSinglePunch(Limbs.leftArm);
                 }
-                else if(Input.GetKeyDown(leftUppercutKey))
+                else if (Input.GetKeyDown(leftUppercutKey))
                 {
                     ThrowUppercut(Limbs.leftArm);
                 }
@@ -257,7 +267,7 @@ public class PunchScript : MonoBehaviour
                 {
                     ThrowSinglePunch(Limbs.rightArm);
                 }
-                else if(Input.GetKeyDown(rightUppercutKey))
+                else if (Input.GetKeyDown(rightUppercutKey))
                 {
                     ThrowUppercut(Limbs.rightArm);
                 }
@@ -313,7 +323,7 @@ public class PunchScript : MonoBehaviour
         else if (limb == Limbs.rightArm)
         {
 
-            anim.Play(rightPunchAnimation, punchAnimLayer);
+            anim.Play(rightUppercutAnimation, punchAnimLayer);
 
         }
     }
@@ -395,14 +405,17 @@ public class PunchScript : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ToggleArmPuppetMaster(bool disable, Limbs limbToDisable)
     {
-        foreach (Muscle m in puppetMaster.muscles) //NOT RIGHT DOING IT FOR WHOLE BODY NOT JUST ARMS, STILL IN ANIM POSITION
+        foreach (Muscle m in armMuscles) // STILL IN ANIM POSITION
         {
-            if(m.name.Contains("arm") || m.name.Contains("hand"))
+            if (disable)
             {
-                if (disable)
-                    m.state.pinWeightMlp = 0f;
-                else
-                    m.state.pinWeightMlp = 1f;
+                m.state.pinWeightMlp = 0f;
+                m.state.muscleWeightMlp = 0f;
+            }
+            else
+            {
+                m.state.pinWeightMlp = 1f;
+                m.state.muscleWeightMlp = 1f;
             }
         }
         yield return null;
