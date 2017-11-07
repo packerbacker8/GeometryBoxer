@@ -58,19 +58,15 @@ public class EnemyHealthScript : MonoBehaviour
     public void ImpactReceived(Collision collision)
     {
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (collision.gameObject.tag == "Player" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        if (!dead && collision.impulse.magnitude > damageThreshold && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
         {
-            if (!dead && collision.impulse.magnitude > damageThreshold)
+            EnemyHealth -= Math.Abs(collision.impulse.magnitude);
+            if (!source.isPlaying && sfxManager.malePain.Count > 0 && collision.gameObject.transform.root.tag == "Player")
             {
-                if(!source.isPlaying && sfxManager.malePain.Count > 0)
-                {
-                    painIndex = rand.Next(0, sfxManager.malePain.Count);
-                    source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
-                }
-                EnemyHealth -= Math.Abs(collision.impulse.magnitude);
+                painIndex = rand.Next(0, sfxManager.malePain.Count);
+                source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
             }
         }
-
     }
 
     /// <summary>

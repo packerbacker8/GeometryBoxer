@@ -8,24 +8,37 @@ namespace RootMotion.Demos {
 	/// User input for an AI controlled character controller.
 	/// </summary>
 	public class UserControlAI : UserControlThirdPerson {
+        public int attackRandomAudio = 30;
 
-		public Transform moveTarget;
 		public float stoppingDistance = 0.5f;
 		public float stoppingThreshold = 1.5f;
-        
         public float attackRange = 1f;
-        public Animator animator;
+
+        public Animator anim;
 
         public Transform goal;
-        NavMeshAgent agent;
+        public Transform moveTarget;
 
-        //Sound Engine Needs
         private AudioSource source;
-        private int attackIndex;
-        private System.Random rand = new System.Random();
         private SFX_Manager sfxManager;
+        private System.Random rand = new System.Random();
+
+        private NavMeshAgent agent;
+        private CharacterPuppet characterPuppet;
+
+        private int attackIndex;
+        private int swingAnimLayer = 1;
+        private int punchAnimLayer = 0;
+        private int animationControllerIndex = 0;
 
         private float jumpThreshold = 1.0f;
+
+        private string leftSwingAnimation = "SwingProp";
+        private string rightSwingAnimation = "SwingProp";
+        private string getUpProne = "GetUpProne";
+        private string getUpSupine = "GetUpSupine";
+        private string fall = "Fall";
+        private string onGround = "OnGround";
 
         void Start()
         {
@@ -34,8 +47,10 @@ namespace RootMotion.Demos {
             source.spatialize = true;
             source.volume = 0.6f;
             sfxManager = FindObjectOfType<SFX_Manager>();
-            agent = GetComponent<NavMeshAgent>();
             
+            agent = GetComponent<NavMeshAgent>();
+            characterPuppet = GetComponent<CharacterPuppet>();
+            anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         }
 
         protected override void Update () {
@@ -46,13 +61,28 @@ namespace RootMotion.Demos {
             Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
             
             //Enemy is within distance to attack player AND is NOT already playing attack anim
-            if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange && !this.animator.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+            if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             {
-                if(rand.Next(0,10) == 1 && sfxManager.maleAttack.Count > 0)//Chances of attack sound being played
+                AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+                //Rand controls chance of random attack sound being played, only while source is not already playing
+                if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying)
                 {
                     source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
-                }    
-                animator.Play("Hit", 0);
+                }
+
+                //If puppet is down, does not try to attack player during stand up anim
+                if((!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && !info.IsName(onGround)))
+                {
+                    //This is for when puppet has melee object in hand
+                    if (characterPuppet.propRoot.currentProp != null)
+                    {
+                        anim.Play(rightSwingAnimation, swingAnimLayer);
+                    }
+                    else//No melee object in hand of puppet
+                    {
+                        anim.Play(rightSwingAnimation, punchAnimLayer);
+                    }
+                }
             }
             if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
             {

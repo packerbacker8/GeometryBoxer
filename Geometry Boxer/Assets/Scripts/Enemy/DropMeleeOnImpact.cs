@@ -10,6 +10,7 @@ namespace RootMotion.Demos
         private CharacterPuppet characterPuppet;
         private string getUpProne = "GetUpProne";
         private string getUpSupine = "GetUpSupine";
+        private string death = "Death";
         private int animationControllerIndex = 0;
 
         public float dropThreshold = 10f;
@@ -23,10 +24,8 @@ namespace RootMotion.Demos
         void OnCollisionEnter(Collision collision)
         {
             AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-            Debug.Log("Collision detected, Force: " + collision.impulse.magnitude);
-            if (collision.impulse.magnitude > dropThreshold || info.IsName(getUpProne) || info.IsName(getUpSupine))
+            if (collision.impulse.magnitude > dropThreshold || info.IsName(getUpProne) || info.IsName(getUpSupine) || info.IsName(death))
             {
-                Debug.Log("Dropping melee");
                 characterPuppet.propRoot.currentProp = null;
             }
         }

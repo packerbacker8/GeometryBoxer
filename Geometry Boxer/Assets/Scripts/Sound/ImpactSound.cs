@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ImpactSound : MonoBehaviour {
-    
+
+    [Header("Impact sounds that are used for when the enemy comes into contact with the player.")]
     public List<AudioClip> clips = new List<AudioClip>();
     public int index;
     public float punchSoundForceThreshold;
@@ -26,6 +27,5 @@ public class ImpactSound : MonoBehaviour {
             source.PlayOneShot(clips[index], 1f);
             index = rand.Next(0, clips.Count);
         }
-
     }
 }
