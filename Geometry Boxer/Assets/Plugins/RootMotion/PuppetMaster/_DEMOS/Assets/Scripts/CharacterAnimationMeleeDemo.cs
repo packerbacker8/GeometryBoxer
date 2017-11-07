@@ -13,7 +13,7 @@ namespace RootMotion.Demos {
 		// Update the Animator with the current state of the character controller
 		protected override void Update() {
 			base.Update();
-
+            /*
 			animator.SetInteger("ActionIndex", -1);
 
 			if (melee.currentAction != null) {
@@ -25,6 +25,7 @@ namespace RootMotion.Demos {
 
 				melee.currentActionIndex = -1;
 			}
+            */
 		}
 	}
 }

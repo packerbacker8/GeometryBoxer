@@ -23,10 +23,8 @@ namespace RootMotion.Demos
         void OnCollisionEnter(Collision collision)
         {
             AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-            Debug.Log("Collision detected, Force: " + collision.impulse.magnitude);
             if (collision.impulse.magnitude > dropThreshold || info.IsName(getUpProne) || info.IsName(getUpSupine))
             {
-                Debug.Log("Dropping melee");
                 characterPuppet.propRoot.currentProp = null;
             }
         }

@@ -7,8 +7,7 @@ using RootMotion.Demos;
 
 public class PunchScript : MonoBehaviour
 {
-    [Tooltip("Is there a controller plugged in.")]
-    public bool useController = true;
+    
     [Header("Punching Components")]
     [Tooltip("Arm designated as the left arm.  This will move it by its rigidbody.")]
     public Rigidbody leftArm;
@@ -27,6 +26,22 @@ public class PunchScript : MonoBehaviour
     public string leftJabControllerButton = "LeftBumper";
     public string rightJabControllerButton = "RightBumper";
 
+    [Header("Player Combat Animations")]
+    [Tooltip("Array of fighting animations the player character can use.")]
+    public List<CharacterAnimations> playerAnimations = new List<CharacterAnimations>();
+
+    /// <summary>
+    /// Information relating to a character animation.
+    /// </summary>
+    [System.Serializable]
+    public struct CharacterAnimations
+    {
+        public int actionIndex;
+        public string animName;
+        public int animLayer;
+        public float transitionTime;
+        public float playTime;
+    }
     /// <summary>
     /// Private variables for controls in punching and moving arms.
     /// </summary>
@@ -35,6 +50,7 @@ public class PunchScript : MonoBehaviour
     private bool leftGrab;
     private bool rightGrab;
     private bool movementAndCameraDisabled;
+    private bool useController;
 
     private float leftArmXAxis;
     private float leftArmYAxis;
@@ -67,6 +83,7 @@ public class PunchScript : MonoBehaviour
     private string getUpSupine = "GetUpSupine";
     private string fall = "Fall";
     private string onGround = "OnGround";
+    private string[] controllerInfo;
 
     private GameObject puppetArmBehavior;
     private GameObject puppetMastObject;
@@ -89,6 +106,12 @@ public class PunchScript : MonoBehaviour
         leftGrab = false;
         rightGrab = false;
         movementAndCameraDisabled = false;
+        useController = false;
+        controllerInfo = Input.GetJoystickNames();
+        if(controllerInfo.Length > 0)
+        {
+            useController = true;
+        }
         leftArmXAxis = 0f;
         leftArmYAxis = 0f;
         rightArmXAxis = 0f;
@@ -119,6 +142,8 @@ public class PunchScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        useController = controllerInfo.Length > 0;
+        
         if (numberOfMuscleComponents < puppetMaster.muscles.Length) //number of muscles increased from beginning, a prop has been picked up
         {
             rightGrab = true;
@@ -285,28 +310,41 @@ public class PunchScript : MonoBehaviour
     /// <param name="limb">The value 0 corresponds to left arm, 1 to right arm.</param>
     private void ThrowSinglePunch(Limbs limb)
     {
-        if (limb == Limbs.leftArm)
+        CharacterAnimations currentAnim = InitCharacterAnimationStruct();
+        foreach (CharacterAnimations action in playerAnimations)
         {
-            if (leftGrab)
+            if (limb == Limbs.leftArm)
             {
-                anim.Play(leftSwingAnimation, swingAnimLayer);
+                if(leftGrab && action.animName == "SwingProp")
+                {
+                    currentAnim = action;
+                    break;
+                }
+                else if(!leftGrab && action.animName == "Hit")
+                {
+                    currentAnim = action;
+                    break;
+                }
             }
-            else
+            if (limb == Limbs.rightArm)
             {
-                anim.Play(leftPunchAnimation, punchAnimLayer);
+                
+                if (rightGrab && action.animName == "SwingProp")
+                {
+                    currentAnim = action;
+                    break;
+                }
+                else if (!rightGrab && action.animName == "Hit")
+                {
+                    currentAnim = action;
+                    break;
+                }
             }
         }
-        else if (limb == Limbs.rightArm)
-        {
-            if (rightGrab)
-            {
-                anim.Play(rightSwingAnimation, swingAnimLayer);
-            }
-            else
-            {
-                anim.Play(rightPunchAnimation, punchAnimLayer);
-            }
-        }
+        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        anim.SetInteger("ActionIndex", -1);
     }
 
     /// <summary>
@@ -315,17 +353,27 @@ public class PunchScript : MonoBehaviour
     /// <param name="limb">The value 0 corresponds to left arm, 1 to right arm.</param>
     private void ThrowUppercut(Limbs limb)
     {
-        if (limb == Limbs.leftArm)
+        CharacterAnimations currentAnim = InitCharacterAnimationStruct();
+        //anim.Play(leftUppercutAnimation, punchAnimLayer);
+        foreach (CharacterAnimations action in playerAnimations)
         {
-            anim.Play(leftUppercutAnimation, punchAnimLayer);
-            //anim.SetInteger("ActionIndex", 2);
+            if (limb == Limbs.leftArm && action.animName == "LeftUpperCut")
+            {
+                currentAnim = action;
+                break;
+            }
+            if (limb == Limbs.rightArm && action.animName == "RightUpperCut")
+            {
+                currentAnim = action;
+                break;
+            }
         }
-        else if (limb == Limbs.rightArm)
-        {
 
-            anim.Play(rightUppercutAnimation, punchAnimLayer);
+        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
 
-        }
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        anim.SetInteger("ActionIndex", -1);
+
     }
 
     /// <summary>
@@ -398,7 +446,7 @@ public class PunchScript : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Make arms of player go limp.
     /// </summary>
     /// <param name="disable"></param>
     /// <param name="limbToDisable"></param>
@@ -419,5 +467,16 @@ public class PunchScript : MonoBehaviour
             }
         }
         yield return null;
+    }
+
+    private CharacterAnimations InitCharacterAnimationStruct()
+    {
+        CharacterAnimations result;
+        result.animName = "Grounded Directional";
+        result.actionIndex = -1;
+        result.animLayer = 1;
+        result.playTime = 1f;
+        result.transitionTime = 1f;
+        return result;
     }
 }
