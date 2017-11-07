@@ -70,10 +70,10 @@ namespace RootMotion.Demos {
 			
 			// the anim speed multiplier allows the overall speed of walking/running to be tweaked in the inspector
 			if (characterController.animState.onGround && characterController.animState.moveDirection.z > 0f) {
-				animator.speed = animSpeedMultiplier;
+				//animator.speed = animSpeedMultiplier;
 			} else {
 				// but we don't want to use that while airborne
-				animator.speed = 1;
+				//animator.speed = 1;
 			}
 		}
 		

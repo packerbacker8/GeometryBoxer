@@ -16,7 +16,7 @@ public class GameControllerScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        enemyContainer= GameObject.FindGameObjectWithTag("EnemyRoot");
+        enemyContainer= GameObject.FindGameObjectWithTag("EnemyContainer");
         numEnemiesAlive = enemyContainer.transform.childCount;
         for (int i = 0; i < numEnemiesAlive; i++)
         {
