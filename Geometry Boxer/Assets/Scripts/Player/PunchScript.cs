@@ -130,15 +130,37 @@ public class PunchScript : MonoBehaviour
         puppetMaster = puppetMastObject.GetComponent<PuppetMaster>();
         numberOfMuscleComponents = puppetMastObject.GetComponent<PuppetMaster>().muscles.Length;
         armMuscles = new List<Muscle>();
-        foreach (Muscle m in puppetMaster.muscles) //NOT RIGHT DOING IT FOR WHOLE BODY NOT JUST ARMS, STILL IN ANIM POSITION
-        {
-            if (m.name.Contains("arm") || m.name.Contains("hand"))
-            {
-                armMuscles.Add(m);
-            }
-        }
-    }
-
+//        foreach (Muscle m in puppetMaster.muscles) //NOT RIGHT DOING IT FOR WHOLE BODY NOT JUST ARMS, STILL IN ANIM POSITION
+//        {
+//            if (m.name.Contains("arm") || m.name.Contains("hand"))
+//            {
+//                armMuscles.Add(m);
+//            }
+//        }
+//    }
+	/// <summary>
+	/// Muscle Groups are used by Puppet Behaviours to discriminate body parts.  //Larry: From Muscle.cs in PuppetMaster/Scripts
+	/// </summary>
+	//		[System.Serializable]
+	//		public enum Group {
+	//			Hips,
+	//			Spine,
+	//			Head,
+	//			Arm,
+	//			Hand,
+	//			Leg,
+	//			Foot,
+	//			Tail,
+	//			Prop
+	//		}
+			foreach (Muscle m in puppetMaster.muscles) 
+			{
+				if (m.props.group == Muscle.Group.Arm || m.props.group == Muscle.Group.Hand)
+				{
+					armMuscles.Add(m);
+				}
+			}
+	}
     // Update is called once per frame
     void Update()
     {
