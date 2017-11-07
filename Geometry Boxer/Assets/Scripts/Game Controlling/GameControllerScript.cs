@@ -10,17 +10,18 @@ public class GameControllerScript : MonoBehaviour
 
     private int numEnemiesAlive;
     private GameObject[] enemiesInWorld;
+    private GameObject enemyContainer;
     private bool playerAlive;
 
     // Use this for initialization
     void Start()
     {
-        enemiesInWorld = GameObject.FindGameObjectsWithTag("EnemyRoot");
-        for (int i = 0; i < enemiesInWorld.Length; i++)
+        enemyContainer= GameObject.FindGameObjectWithTag("EnemyRoot");
+        numEnemiesAlive = enemyContainer.transform.childCount;
+        for (int i = 0; i < numEnemiesAlive; i++)
         {
-            enemiesInWorld[i].GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
+            enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
         }
-        numEnemiesAlive = enemiesInWorld.Length;
         playerAlive = true;
         //Debug.Log("numEnemiesAlive: " + numEnemiesAlive);
     }
