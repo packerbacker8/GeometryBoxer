@@ -1,0 +1,1400 @@
+fileFormatVersion: 2
+guid: d75c385e89497dc4cb2cb03d76dc0930
+timeCreated: 1510020810
+licenseType: Free
+ModelImporter:
+  serializedVersion: 21
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: cubeChar2_GEO
+    100004: head_CTRL
+    100006: head_driver_JNT
+    100008: head_offset_GRP
+    100010: head_parent_GRP
+    100012: head_result_JNT
+    100014: left
+    100016: left_arm_IK_GRP
+    100018: left_arm_IKCTRL
+    100020: left_arm_IKHDL
+    100022: left_arm_IKMatchHelper
+    100024: left_arm_IKoffset_GRP
+    100026: left_arm_IKPoleSnapEnd_LOC
+    100028: left_arm_IKPoleSnapLengthEnd
+    100030: left_arm_IKPoleSnapLengthStart
+    100032: left_arm_IKPoleSnapMid_LOC
+    100034: left_arm_IKPoleSnapStart_LOC
+    100036: left_arm_IKStretchEnd_LOC
+    100038: left_arm_IKStretchLength
+    100040: left_arm_IKStretchStart_LOC
+    100042: left_arm_parent_GRP
+    100044: left_arm_poleCTRL
+    100046: left_arm_poleLOC
+    100048: left_arm_poleoffset_GRP
+    100050: left_foot_driver_JNT
+    100052: left_foot_FKCTRL
+    100054: left_foot_IK_JNT
+    100056: left_foot_offset_JNT
+    100058: left_foot_result_JNT
+    100060: left_forearm_driver_JNT
+    100062: left_forearm_FKCTRL
+    100064: left_forearm_IK_JNT
+    100066: left_forearm_offset_JNT
+    100068: left_forearm_result_JNT
+    100070: left_hand_driver_JNT
+    100072: left_hand_FKCTRL
+    100074: left_hand_IK_JNT
+    100076: left_hand_offset_JNT
+    100078: left_hand_result_JNT
+    100080: left_knee_driver_JNT
+    100082: left_knee_FKCTRL
+    100084: left_knee_IK_JNT
+    100086: left_knee_offset_JNT
+    100088: left_knee_result_JNT
+    100090: left_leg_IK_GRP
+    100092: left_leg_IKCTRL
+    100094: left_leg_IKHDL
+    100096: left_leg_IKMatchHelper
+    100098: left_leg_IKoffset_GRP
+    100100: left_leg_IKPoleSnapEnd_LOC
+    100102: left_leg_IKPoleSnapLengthEnd
+    100104: left_leg_IKPoleSnapLengthStart
+    100106: left_leg_IKPoleSnapMid_LOC
+    100108: left_leg_IKPoleSnapStart_LOC
+    100110: left_leg_IKStretchEnd_LOC
+    100112: left_leg_IKStretchLength
+    100114: left_leg_IKStretchStart_LOC
+    100116: left_leg_parent_GRP
+    100118: left_leg_poleCTRL
+    100120: left_leg_poleLOC
+    100122: left_leg_poleoffset_GRP
+    100124: left_shoulder_CTRL
+    100126: left_shoulder_driver_JNT
+    100128: left_shoulder_offset_GRP
+    100130: left_shoulder_parent_GRP
+    100132: left_shoulder_result_JNT
+    100134: left_thigh_driver_JNT
+    100136: left_thigh_FKCTRL
+    100138: left_thigh_IK_JNT
+    100140: left_thigh_offset_JNT
+    100142: left_thigh_result_JNT
+    100144: left_upperArm_driver_JNT
+    100146: left_upperArm_FKCTRL
+    100148: left_upperArm_IK_JNT
+    100150: left_upperArm_offset_JNT
+    100152: left_upperArm_result_JNT
+    100154: neck_CTRL
+    100156: neck_driver_JNT
+    100158: neck_offset_GRP
+    100160: neck_parent_GRP
+    100162: neck_result_JNT
+    100164: pelvis_CTRL
+    100166: pelvis_driver_JNT
+    100168: pelvis_offset_GRP
+    100170: pelvis_parent_GRP
+    100172: pelvis_result_JNT
+    100174: pelvis_rootProxy_JNT
+    100176: right_arm_IK_GRP
+    100178: right_arm_IKCTRL
+    100180: right_arm_IKHDL
+    100182: right_arm_IKMatchHelper
+    100184: right_arm_IKoffset_GRP
+    100186: right_arm_IKPoleSnapEnd_LOC
+    100188: right_arm_IKPoleSnapLengthEnd
+    100190: right_arm_IKPoleSnapLengthStart
+    100192: right_arm_IKPoleSnapMid_LOC
+    100194: right_arm_IKPoleSnapStart_LOC
+    100196: right_arm_IKStretchEnd_LOC
+    100198: right_arm_IKStretchLength
+    100200: right_arm_IKStretchStart_LOC
+    100202: right_arm_parent_GRP
+    100204: right_arm_poleCTRL
+    100206: right_arm_poleLOC
+    100208: right_arm_poleoffset_GRP
+    100210: right_foot_driver_JNT
+    100212: right_foot_FKCTRL
+    100214: right_foot_IK_JNT
+    100216: right_foot_offset_JNT
+    100218: right_foot_result_JNT
+    100220: right_forearm_driver_JNT
+    100222: right_forearm_FKCTRL
+    100224: right_forearm_IK_JNT
+    100226: right_forearm_offset_JNT
+    100228: right_forearm_result_JNT
+    100230: right_hand_driver_JNT
+    100232: right_hand_FKCTRL
+    100234: right_hand_IK_JNT
+    100236: right_hand_offset_JNT
+    100238: right_hand_result_JNT
+    100240: right_knee_driver_JNT
+    100242: right_knee_FKCTRL
+    100244: right_knee_IK_JNT
+    100246: right_knee_offset_JNT
+    100248: right_knee_result_JNT
+    100250: right_leg_IK_GRP
+    100252: right_leg_IKCTRL
+    100254: right_leg_IKHDL
+    100256: right_leg_IKMatchHelper
+    100258: right_leg_IKoffset_GRP
+    100260: right_leg_IKPoleSnapEnd_LOC
+    100262: right_leg_IKPoleSnapLengthEnd
+    100264: right_leg_IKPoleSnapLengthStart
+    100266: right_leg_IKPoleSnapMid_LOC
+    100268: right_leg_IKPoleSnapStart_LOC
+    100270: right_leg_IKStretchEnd_LOC
+    100272: right_leg_IKStretchLength
+    100274: right_leg_IKStretchStart_LOC
+    100276: right_leg_parent_GRP
+    100278: right_leg_poleCTRL
+    100280: right_leg_poleLOC
+    100282: right_leg_poleoffset_GRP
+    100284: right_shoulder_CTRL
+    100286: right_shoulder_driver_JNT
+    100288: right_shoulder_offset_GRP
+    100290: right_shoulder_parent_GRP
+    100292: right_shoulder_result_JNT
+    100294: right_thigh_driver_JNT
+    100296: right_thigh_FKCTRL
+    100298: right_thigh_IK_JNT
+    100300: right_thigh_offset_JNT
+    100302: right_thigh_result_JNT
+    100304: right_upperArm_driver_JNT
+    100306: right_upperArm_FKCTRL
+    100308: right_upperArm_IK_JNT
+    100310: right_upperArm_offset_JNT
+    100312: right_upperArm_result_JNT
+    100314: root_CTRL
+    100316: spine1_CTRL
+    100318: spine1_driver_JNT
+    100320: spine1_offset_GRP
+    100322: spine1_parent_GRP
+    100324: spine1_result_JNT
+    400000: //RootNode
+    400002: cubeChar2_GEO
+    400004: head_CTRL
+    400006: head_driver_JNT
+    400008: head_offset_GRP
+    400010: head_parent_GRP
+    400012: head_result_JNT
+    400014: left
+    400016: left_arm_IK_GRP
+    400018: left_arm_IKCTRL
+    400020: left_arm_IKHDL
+    400022: left_arm_IKMatchHelper
+    400024: left_arm_IKoffset_GRP
+    400026: left_arm_IKPoleSnapEnd_LOC
+    400028: left_arm_IKPoleSnapLengthEnd
+    400030: left_arm_IKPoleSnapLengthStart
+    400032: left_arm_IKPoleSnapMid_LOC
+    400034: left_arm_IKPoleSnapStart_LOC
+    400036: left_arm_IKStretchEnd_LOC
+    400038: left_arm_IKStretchLength
+    400040: left_arm_IKStretchStart_LOC
+    400042: left_arm_parent_GRP
+    400044: left_arm_poleCTRL
+    400046: left_arm_poleLOC
+    400048: left_arm_poleoffset_GRP
+    400050: left_foot_driver_JNT
+    400052: left_foot_FKCTRL
+    400054: left_foot_IK_JNT
+    400056: left_foot_offset_JNT
+    400058: left_foot_result_JNT
+    400060: left_forearm_driver_JNT
+    400062: left_forearm_FKCTRL
+    400064: left_forearm_IK_JNT
+    400066: left_forearm_offset_JNT
+    400068: left_forearm_result_JNT
+    400070: left_hand_driver_JNT
+    400072: left_hand_FKCTRL
+    400074: left_hand_IK_JNT
+    400076: left_hand_offset_JNT
+    400078: left_hand_result_JNT
+    400080: left_knee_driver_JNT
+    400082: left_knee_FKCTRL
+    400084: left_knee_IK_JNT
+    400086: left_knee_offset_JNT
+    400088: left_knee_result_JNT
+    400090: left_leg_IK_GRP
+    400092: left_leg_IKCTRL
+    400094: left_leg_IKHDL
+    400096: left_leg_IKMatchHelper
+    400098: left_leg_IKoffset_GRP
+    400100: left_leg_IKPoleSnapEnd_LOC
+    400102: left_leg_IKPoleSnapLengthEnd
+    400104: left_leg_IKPoleSnapLengthStart
+    400106: left_leg_IKPoleSnapMid_LOC
+    400108: left_leg_IKPoleSnapStart_LOC
+    400110: left_leg_IKStretchEnd_LOC
+    400112: left_leg_IKStretchLength
+    400114: left_leg_IKStretchStart_LOC
+    400116: left_leg_parent_GRP
+    400118: left_leg_poleCTRL
+    400120: left_leg_poleLOC
+    400122: left_leg_poleoffset_GRP
+    400124: left_shoulder_CTRL
+    400126: left_shoulder_driver_JNT
+    400128: left_shoulder_offset_GRP
+    400130: left_shoulder_parent_GRP
+    400132: left_shoulder_result_JNT
+    400134: left_thigh_driver_JNT
+    400136: left_thigh_FKCTRL
+    400138: left_thigh_IK_JNT
+    400140: left_thigh_offset_JNT
+    400142: left_thigh_result_JNT
+    400144: left_upperArm_driver_JNT
+    400146: left_upperArm_FKCTRL
+    400148: left_upperArm_IK_JNT
+    400150: left_upperArm_offset_JNT
+    400152: left_upperArm_result_JNT
+    400154: neck_CTRL
+    400156: neck_driver_JNT
+    400158: neck_offset_GRP
+    400160: neck_parent_GRP
+    400162: neck_result_JNT
+    400164: pelvis_CTRL
+    400166: pelvis_driver_JNT
+    400168: pelvis_offset_GRP
+    400170: pelvis_parent_GRP
+    400172: pelvis_result_JNT
+    400174: pelvis_rootProxy_JNT
+    400176: right_arm_IK_GRP
+    400178: right_arm_IKCTRL
+    400180: right_arm_IKHDL
+    400182: right_arm_IKMatchHelper
+    400184: right_arm_IKoffset_GRP
+    400186: right_arm_IKPoleSnapEnd_LOC
+    400188: right_arm_IKPoleSnapLengthEnd
+    400190: right_arm_IKPoleSnapLengthStart
+    400192: right_arm_IKPoleSnapMid_LOC
+    400194: right_arm_IKPoleSnapStart_LOC
+    400196: right_arm_IKStretchEnd_LOC
+    400198: right_arm_IKStretchLength
+    400200: right_arm_IKStretchStart_LOC
+    400202: right_arm_parent_GRP
+    400204: right_arm_poleCTRL
+    400206: right_arm_poleLOC
+    400208: right_arm_poleoffset_GRP
+    400210: right_foot_driver_JNT
+    400212: right_foot_FKCTRL
+    400214: right_foot_IK_JNT
+    400216: right_foot_offset_JNT
+    400218: right_foot_result_JNT
+    400220: right_forearm_driver_JNT
+    400222: right_forearm_FKCTRL
+    400224: right_forearm_IK_JNT
+    400226: right_forearm_offset_JNT
+    400228: right_forearm_result_JNT
+    400230: right_hand_driver_JNT
+    400232: right_hand_FKCTRL
+    400234: right_hand_IK_JNT
+    400236: right_hand_offset_JNT
+    400238: right_hand_result_JNT
+    400240: right_knee_driver_JNT
+    400242: right_knee_FKCTRL
+    400244: right_knee_IK_JNT
+    400246: right_knee_offset_JNT
+    400248: right_knee_result_JNT
+    400250: right_leg_IK_GRP
+    400252: right_leg_IKCTRL
+    400254: right_leg_IKHDL
+    400256: right_leg_IKMatchHelper
+    400258: right_leg_IKoffset_GRP
+    400260: right_leg_IKPoleSnapEnd_LOC
+    400262: right_leg_IKPoleSnapLengthEnd
+    400264: right_leg_IKPoleSnapLengthStart
+    400266: right_leg_IKPoleSnapMid_LOC
+    400268: right_leg_IKPoleSnapStart_LOC
+    400270: right_leg_IKStretchEnd_LOC
+    400272: right_leg_IKStretchLength
+    400274: right_leg_IKStretchStart_LOC
+    400276: right_leg_parent_GRP
+    400278: right_leg_poleCTRL
+    400280: right_leg_poleLOC
+    400282: right_leg_poleoffset_GRP
+    400284: right_shoulder_CTRL
+    400286: right_shoulder_driver_JNT
+    400288: right_shoulder_offset_GRP
+    400290: right_shoulder_parent_GRP
+    400292: right_shoulder_result_JNT
+    400294: right_thigh_driver_JNT
+    400296: right_thigh_FKCTRL
+    400298: right_thigh_IK_JNT
+    400300: right_thigh_offset_JNT
+    400302: right_thigh_result_JNT
+    400304: right_upperArm_driver_JNT
+    400306: right_upperArm_FKCTRL
+    400308: right_upperArm_IK_JNT
+    400310: right_upperArm_offset_JNT
+    400312: right_upperArm_result_JNT
+    400314: root_CTRL
+    400316: spine1_CTRL
+    400318: spine1_driver_JNT
+    400320: spine1_offset_GRP
+    400322: spine1_parent_GRP
+    400324: spine1_result_JNT
+    2000000: left
+    4300000: cubeChar2_GEO
+    7400000: RightUpperCut
+    9500000: //RootNode
+    13700000: cubeChar2_GEO
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: RightUpperCut
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 37
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human:
+    - boneName: pelvis_result_JNT
+      humanName: Hips
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: left_thigh_result_JNT
+      humanName: LeftUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: right_thigh_result_JNT
+      humanName: RightUpperLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: left_knee_result_JNT
+      humanName: LeftLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: right_knee_result_JNT
+      humanName: RightLowerLeg
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: left_foot_result_JNT
+      humanName: LeftFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: right_foot_result_JNT
+      humanName: RightFoot
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: spine1_result_JNT
+      humanName: Spine
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: neck_result_JNT
+      humanName: Neck
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: head_result_JNT
+      humanName: Head
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: left_shoulder_result_JNT
+      humanName: LeftShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: right_shoulder_result_JNT
+      humanName: RightShoulder
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: left_upperArm_result_JNT
+      humanName: LeftUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: right_upperArm_result_JNT
+      humanName: RightUpperArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: left_forearm_result_JNT
+      humanName: LeftLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: right_forearm_result_JNT
+      humanName: RightLowerArm
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: left_hand_result_JNT
+      humanName: LeftHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    - boneName: right_hand_result_JNT
+      humanName: RightHand
+      limit:
+        min: {x: 0, y: 0, z: 0}
+        max: {x: 0, y: 0, z: 0}
+        value: {x: 0, y: 0, z: 0}
+        length: 0
+        modified: 0
+    skeleton:
+    - name: Anim_uppercutRight(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: cubeChar2_GEO
+      parentName: Anim_uppercutRight(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left
+      parentName: Anim_uppercutRight(Clone)
+      position: {x: 10.000999, y: 0.0069540297, z: -0.0005773157}
+      rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: root_CTRL
+      parentName: Anim_uppercutRight(Clone)
+      position: {x: -0, y: 0.016639216, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: head_parent_GRP
+      parentName: root_CTRL
+      position: {x: -0.0126575, y: 1.15514, z: 0.0770775}
+      rotation: {x: -0.092118844, y: 0.18792173, z: -0.69438726, w: 0.6884954}
+      scale: {x: 1, y: 1, z: 1}
+    - name: head_driver_JNT
+      parentName: head_parent_GRP
+      position: {x: -0.10053677, y: -1.11022296e-17, z: 0}
+      rotation: {x: 0.15873727, y: 0.103071354, z: -0.013359259, w: 0.9818352}
+      scale: {x: 1, y: 1, z: 1}
+    - name: head_offset_GRP
+      parentName: head_parent_GRP
+      position: {x: -0.10053677, y: -4.737802e-18, z: -3.9443044e-33}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: head_CTRL
+      parentName: head_offset_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.15873729, y: 0.103071354, z: -0.013359261, w: 0.9818352}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKoffset_GRP
+      parentName: root_CTRL
+      position: {x: -0.6962259, y: 0.7379563, z: 0.0051858025}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKCTRL
+      parentName: left_arm_IKoffset_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKHDL
+      parentName: left_arm_IKCTRL
+      position: {x: 2.842171e-16, y: 0, z: 1.110223e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKPoleSnapEnd_LOC
+      parentName: left_arm_IKCTRL
+      position: {x: -0.000000003159979, y: -0.0000000031599794, z: 6.180638e-11}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKStretchEnd_LOC
+      parentName: left_arm_IKCTRL
+      position: {x: 2.842171e-16, y: 0, z: 1.110223e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKStretchLength
+      parentName: left_arm_IKCTRL
+      position: {x: 0.6962259, y: -0.7379563, z: -0.0051858025}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_parent_GRP
+      parentName: root_CTRL
+      position: {x: -0.22781564, y: 1.1225364, z: 0.16347405}
+      rotation: {x: 0.13836467, y: 0.15702125, z: 0.37035635, w: 0.90500593}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IK_GRP
+      parentName: left_arm_parent_GRP
+      position: {x: -0.100853495, y: -2.842171e-16, z: 1.3322676e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKPoleSnapStart_LOC
+      parentName: left_arm_IK_GRP
+      position: {x: -1.4210854e-16, y: -1.4210854e-16, z: -5.9164567e-33}
+      rotation: {x: 0, y: -0, z: -0.38268346, w: 0.92387956}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKStretchStart_LOC
+      parentName: left_arm_IK_GRP
+      position: {x: -1.4210854e-16, y: -1.4210854e-16, z: -5.9164567e-33}
+      rotation: {x: 0, y: -0, z: -0.38268346, w: 0.92387956}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_upperArm_IK_JNT
+      parentName: left_arm_IK_GRP
+      position: {x: -1.4210854e-16, y: 0, z: -6.902533e-33}
+      rotation: {x: -0.17477514, y: -0.3904542, z: 0.0032979182, w: 0.90387404}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_forearm_IK_JNT
+      parentName: left_upperArm_IK_JNT
+      position: {x: -0.25801018, y: -2.364775e-16, z: -6.4948045e-17}
+      rotation: {x: 5.063729e-15, y: 0.24974939, z: -2.0599733e-14, w: 0.96831053}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_hand_IK_JNT
+      parentName: left_forearm_IK_JNT
+      position: {x: -0.2971397, y: 1.7763567e-16, z: 4.4408918e-17}
+      rotation: {x: -0.012639281, y: 0.05974307, z: 0.05646675, w: 0.9965353}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_upperArm_driver_JNT
+      parentName: left_arm_parent_GRP
+      position: {x: -0.100853495, y: -2.842171e-16, z: -1.7763568e-17}
+      rotation: {x: 0.15154651, y: 0.6039842, z: -0.08612608, w: 0.77770114}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_forearm_driver_JNT
+      parentName: left_upperArm_driver_JNT
+      position: {x: -0.25801018, y: -1.4210854e-16, z: -2.1316282e-16}
+      rotation: {x: 0.008251056, y: 0.5879924, z: 0.011348788, w: 0.8087447}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_hand_driver_JNT
+      parentName: left_forearm_driver_JNT
+      position: {x: -0.2971397, y: 2.842171e-16, z: -1.7763568e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_upperArm_offset_JNT
+      parentName: left_arm_parent_GRP
+      position: {x: -0.100853495, y: -3.0198067e-16, z: 1.3322676e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_upperArm_FKCTRL
+      parentName: left_upperArm_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.1515465, y: 0.6039841, z: -0.08612605, w: 0.7777012}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_forearm_offset_JNT
+      parentName: left_upperArm_FKCTRL
+      position: {x: -0.25801018, y: -2.364775e-16, z: -6.4948045e-17}
+      rotation: {x: 0, y: 0.008726535, z: -0, w: 0.9999619}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_forearm_FKCTRL
+      parentName: left_forearm_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.008151714, y: 0.5809125, z: 0.011420361, w: 0.8138451}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_hand_offset_JNT
+      parentName: left_forearm_FKCTRL
+      position: {x: -0.2971397, y: 1.7763567e-16, z: 4.4408918e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_hand_FKCTRL
+      parentName: left_hand_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKMatchHelper
+      parentName: left_hand_FKCTRL
+      position: {x: -2.087413e-16, y: 2.842171e-16, z: -1.1103922e-18}
+      rotation: {x: 0.0033395006, y: -0.008062268, z: -0.38266885, w: 0.92384434}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_poleoffset_GRP
+      parentName: root_CTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_poleCTRL
+      parentName: left_arm_poleoffset_GRP
+      position: {x: -0.49317014, y: 0.941012, z: -1.0629677}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKPoleSnapLengthEnd
+      parentName: left_arm_poleCTRL
+      position: {x: 0.49317014, y: -0.941012, z: 1.0629677}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKPoleSnapLengthStart
+      parentName: left_arm_poleCTRL
+      position: {x: 0.49317014, y: -0.941012, z: 1.0629677}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_IKPoleSnapMid_LOC
+      parentName: left_arm_poleCTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_arm_poleLOC
+      parentName: left_arm_poleCTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKoffset_GRP
+      parentName: root_CTRL
+      position: {x: -0.102579705, y: 0.06510825, z: 0.023386508}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKCTRL
+      parentName: left_leg_IKoffset_GRP
+      position: {x: -0.16692857, y: 0.032152005, z: 0.1051634}
+      rotation: {x: 0.09432158, y: -0.04289353, z: -0.0027034136, w: 0.99461365}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKHDL
+      parentName: left_leg_IKCTRL
+      position: {x: -2.4868996e-16, y: 0, z: 8.881784e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKPoleSnapEnd_LOC
+      parentName: left_leg_IKCTRL
+      position: {x: -2.4868996e-16, y: -0.0000000044873674, z: -0.0000000013687881}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKStretchEnd_LOC
+      parentName: left_leg_IKCTRL
+      position: {x: -2.4868996e-16, y: 0, z: 8.881784e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKStretchLength
+      parentName: left_leg_IKCTRL
+      position: {x: 0.102579705, y: -0.06510825, z: -0.023386508}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_parent_GRP
+      parentName: root_CTRL
+      position: {x: -0.033262882, y: 0.571444, z: 0}
+      rotation: {x: -0.092118844, y: 0.18792173, z: -0.69438726, w: 0.6884954}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IK_GRP
+      parentName: left_leg_parent_GRP
+      position: {x: 0.024311228, y: -0.102579705, z: 0.000003028923}
+      rotation: {x: -0.043619387, y: 1.3071394e-17, z: 0.99904823, w: 2.8303855e-16}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKPoleSnapStart_LOC
+      parentName: left_leg_IK_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.030843565, y: -0.030843565, z: -0.7064338, w: 0.7064338}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKStretchStart_LOC
+      parentName: left_leg_IK_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.030843565, y: -0.030843565, z: -0.7064338, w: 0.7064338}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_thigh_IK_JNT
+      parentName: left_leg_IK_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.13120443, y: 0.31232846, z: -0.20910966, w: 0.9173383}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_knee_IK_JNT
+      parentName: left_thigh_IK_JNT
+      position: {x: -0.2691686, y: -1.3766766e-16, z: 0.02}
+      rotation: {x: 1.2026327e-16, y: -0.44548285, z: -4.7242866e-17, w: 0.8952905}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_foot_IK_JNT
+      parentName: left_knee_IK_JNT
+      position: {x: -0.28536952, y: -1.2472986e-16, z: -0.02}
+      rotation: {x: -0.015640046, y: 0.026274163, z: 0.15345408, w: 0.98768264}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_thigh_driver_JNT
+      parentName: left_leg_parent_GRP
+      position: {x: 0.024311228, y: -0.102579705, z: 0.000003028923}
+      rotation: {x: -0.3520449, y: -0.14020076, z: 0.9028416, w: 0.20318756}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_knee_driver_JNT
+      parentName: left_thigh_driver_JNT
+      position: {x: -0.2691686, y: -1.4210854e-16, z: 0.02}
+      rotation: {x: 0, y: -0.44548285, z: -0, w: 0.8952905}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_foot_driver_JNT
+      parentName: left_knee_driver_JNT
+      position: {x: -0.28536952, y: -1.7763567e-16, z: -0.02}
+      rotation: {x: -0.015640046, y: 0.026274163, z: 0.15345408, w: 0.98768264}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_thigh_offset_JNT
+      parentName: left_leg_parent_GRP
+      position: {x: 0.024311228, y: -0.102579705, z: 0.000003028923}
+      rotation: {x: -0.043619387, y: 2.6709172e-18, z: 0.99904823, w: 6.117406e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_thigh_FKCTRL
+      parentName: left_thigh_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_knee_offset_JNT
+      parentName: left_thigh_FKCTRL
+      position: {x: -0.2691686, y: -1.3766766e-16, z: 0.02}
+      rotation: {x: 0, y: -0.043619387, z: -0, w: 0.99904823}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_knee_FKCTRL
+      parentName: left_knee_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_foot_offset_JNT
+      parentName: left_knee_FKCTRL
+      position: {x: -0.28536952, y: -1.2472986e-16, z: -0.02}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_foot_FKCTRL
+      parentName: left_foot_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKMatchHelper
+      parentName: left_foot_FKCTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_poleoffset_GRP
+      parentName: root_CTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_poleCTRL
+      parentName: left_leg_poleoffset_GRP
+      position: {x: -0.1786645, y: 0.36453456, z: 0.5348374}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKPoleSnapLengthEnd
+      parentName: left_leg_poleCTRL
+      position: {x: 0.102579705, y: -0.36453456, z: -0.3750792}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKPoleSnapLengthStart
+      parentName: left_leg_poleCTRL
+      position: {x: 0.102579705, y: -0.36453456, z: -0.3750792}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_IKPoleSnapMid_LOC
+      parentName: left_leg_poleCTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_leg_poleLOC
+      parentName: left_leg_poleCTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_shoulder_parent_GRP
+      parentName: root_CTRL
+      position: {x: -0.013655202, y: 1.1268778, z: 0.07334545}
+      rotation: {x: -0.092118844, y: 0.18792173, z: -0.69438726, w: 0.6884954}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_shoulder_driver_JNT
+      parentName: left_shoulder_parent_GRP
+      position: {x: 1.4210854e-16, y: -0.23239343, z: -1.7763568e-17}
+      rotation: {x: 0, y: 0, z: 0.92387956, w: 0.38268346}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_shoulder_offset_GRP
+      parentName: left_shoulder_parent_GRP
+      position: {x: 1.4210854e-16, y: -0.23239343, z: -3.9443044e-33}
+      rotation: {x: 0, y: 0, z: 0.92387956, w: 0.38268346}
+      scale: {x: 1, y: 1, z: 1}
+    - name: left_shoulder_CTRL
+      parentName: left_shoulder_offset_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: neck_parent_GRP
+      parentName: root_CTRL
+      position: {x: -0.013655202, y: 1.1268778, z: 0.07334545}
+      rotation: {x: -0.092118844, y: 0.18792173, z: -0.69438726, w: 0.6884954}
+      scale: {x: 1, y: 1, z: 1}
+    - name: neck_driver_JNT
+      parentName: neck_parent_GRP
+      position: {x: -0.028525045, y: -8.881784e-18, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: neck_offset_GRP
+      parentName: neck_parent_GRP
+      position: {x: -0.028525045, y: -1.4504358e-18, z: -3.9443044e-33}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: neck_CTRL
+      parentName: neck_offset_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: pelvis_parent_GRP
+      parentName: root_CTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: pelvis_driver_JNT
+      parentName: pelvis_parent_GRP
+      position: {x: -0.033262882, y: 0.571444, z: 0}
+      rotation: {x: -0.09211886, y: 0.18792172, z: -0.6943872, w: 0.68849546}
+      scale: {x: 1, y: 1, z: 1}
+    - name: pelvis_offset_GRP
+      parentName: pelvis_parent_GRP
+      position: {x: -4.0225588e-17, y: 0.6411902, z: 0}
+      rotation: {x: 0, y: -0, z: -0.7071068, w: 0.7071068}
+      scale: {x: 1, y: 1, z: 1}
+    - name: pelvis_CTRL
+      parentName: pelvis_offset_GRP
+      position: {x: 0.0697462, y: -0.033262882, z: 0}
+      rotation: {x: -0.19801861, y: 0.06774286, z: -0.004166118, w: 0.9778457}
+      scale: {x: 1, y: 1, z: 1}
+    - name: pelvis_rootProxy_JNT
+      parentName: root_CTRL
+      position: {x: -0.033262882, y: 0.571444, z: 0}
+      rotation: {x: -0.09211886, y: 0.18792172, z: -0.6943872, w: 0.68849546}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKoffset_GRP
+      parentName: root_CTRL
+      position: {x: 0.6962224, y: 0.7379563, z: 0.0051858025}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKCTRL
+      parentName: right_arm_IKoffset_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKHDL
+      parentName: right_arm_IKCTRL
+      position: {x: -0, y: 1.4210854e-16, z: 1.110223e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKPoleSnapEnd_LOC
+      parentName: right_arm_IKCTRL
+      position: {x: 0.0000000031599796, y: -0.0000000031599796, z: 6.177609e-11}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKStretchEnd_LOC
+      parentName: right_arm_IKCTRL
+      position: {x: -0, y: 1.4210854e-16, z: 1.110223e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKStretchLength
+      parentName: right_arm_IKCTRL
+      position: {x: -0.6962224, y: -0.7379563, z: -0.0051858025}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_parent_GRP
+      parentName: root_CTRL
+      position: {x: 0.20050207, y: 1.131219, z: -0.016781826}
+      rotation: {x: 0.9018173, y: -0.37805432, z: -0.2088694, w: 0.013192209}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IK_GRP
+      parentName: right_arm_parent_GRP
+      position: {x: 0.100853495, y: -1.4210854e-16, z: -1.3322676e-17}
+      rotation: {x: 1.2246469e-16, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKPoleSnapStart_LOC
+      parentName: right_arm_IK_GRP
+      position: {x: -2.842171e-16, y: 2.842171e-16, z: -1.5777218e-32}
+      rotation: {x: 0.92387956, y: -0.38268346, z: 2.3432604e-17, w: -5.657131e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKStretchStart_LOC
+      parentName: right_arm_IK_GRP
+      position: {x: -2.842171e-16, y: 2.842171e-16, z: -1.5777218e-32}
+      rotation: {x: 0.92387956, y: -0.38268346, z: 2.3432604e-17, w: -5.657131e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_upperArm_IK_JNT
+      parentName: right_arm_IK_GRP
+      position: {x: -1.4210854e-16, y: 2.842171e-16, z: -1.5777218e-32}
+      rotation: {x: 0.0926607, y: 0.13832927, z: -0.084955305, w: 0.9823755}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_forearm_IK_JNT
+      parentName: right_upperArm_IK_JNT
+      position: {x: 0.25801018, y: 2.364775e-16, z: 6.4948045e-17}
+      rotation: {x: 3.2954763e-15, y: 0.20372519, z: -1.6768349e-14, w: 0.9790281}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_hand_IK_JNT
+      parentName: right_forearm_IK_JNT
+      position: {x: 0.2971397, y: -1.7763567e-16, z: -4.4408918e-17}
+      rotation: {x: -0.030921157, y: -0.13860203, z: 0.069326654, w: 0.9874347}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_upperArm_driver_JNT
+      parentName: right_arm_parent_GRP
+      position: {x: 0.100853495, y: 1.4210854e-16, z: 1.7763568e-17}
+      rotation: {x: 0.057179745, y: 0.31784654, z: 0.16756788, w: 0.93146396}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_forearm_driver_JNT
+      parentName: right_upperArm_driver_JNT
+      position: {x: 0.25801018, y: 2.842171e-16, z: 3.5527136e-17}
+      rotation: {x: 0, y: 0.6142133, z: -0, w: 0.78914005}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_hand_driver_JNT
+      parentName: right_forearm_driver_JNT
+      position: {x: 0.2971397, y: -1.4210854e-16, z: 1.4210854e-16}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_upperArm_offset_JNT
+      parentName: right_arm_parent_GRP
+      position: {x: 0.100853495, y: 3.0198067e-16, z: -1.3322676e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_upperArm_FKCTRL
+      parentName: right_upperArm_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0.057179745, y: 0.31784654, z: 0.16756788, w: 0.93146396}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_forearm_offset_JNT
+      parentName: right_upperArm_FKCTRL
+      position: {x: 0.25801018, y: 2.364775e-16, z: 6.4948045e-17}
+      rotation: {x: 0, y: 0.008726535, z: -0, w: 0.9999619}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_forearm_FKCTRL
+      parentName: right_forearm_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: 0.6073035, z: -0, w: 0.7944699}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_hand_offset_JNT
+      parentName: right_forearm_FKCTRL
+      position: {x: 0.2971397, y: -1.7763567e-16, z: -4.4408918e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_hand_FKCTRL
+      parentName: right_hand_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKMatchHelper
+      parentName: right_hand_FKCTRL
+      position: {x: 1.3766766e-16, y: -1.4210854e-16, z: 3.330669e-18}
+      rotation: {x: 0.92384434, y: -0.38266885, z: 0.008062268, w: -0.0033395006}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_poleoffset_GRP
+      parentName: root_CTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_poleCTRL
+      parentName: right_arm_poleoffset_GRP
+      position: {x: 0.4931667, y: 0.941012, z: -1.0629661}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKPoleSnapLengthEnd
+      parentName: right_arm_poleCTRL
+      position: {x: -0.4931667, y: -0.941012, z: 1.0629661}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKPoleSnapLengthStart
+      parentName: right_arm_poleCTRL
+      position: {x: -0.4931667, y: -0.941012, z: 1.0629661}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_IKPoleSnapMid_LOC
+      parentName: right_arm_poleCTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_arm_poleLOC
+      parentName: right_arm_poleCTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKoffset_GRP
+      parentName: root_CTRL
+      position: {x: 0.10258, y: 0.06510825, z: 0.023380453}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKCTRL
+      parentName: right_leg_IKoffset_GRP
+      position: {x: 0.08076991, y: 0.10775129, z: -0.24083847}
+      rotation: {x: 0.32782426, y: 0.22248584, z: 0.019750688, w: 0.9179549}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKHDL
+      parentName: right_leg_IKCTRL
+      position: {x: -0, y: -8.881784e-18, z: 4.440892e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKPoleSnapEnd_LOC
+      parentName: right_leg_IKCTRL
+      position: {x: -0, y: -0.0000000044873674, z: -0.0000000013687877}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKStretchEnd_LOC
+      parentName: right_leg_IKCTRL
+      position: {x: -0, y: -8.881784e-18, z: 4.440892e-18}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKStretchLength
+      parentName: right_leg_IKCTRL
+      position: {x: -0.10258, y: -0.06510825, z: -0.023380453}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_parent_GRP
+      parentName: root_CTRL
+      position: {x: -0.033262882, y: 0.571444, z: 0}
+      rotation: {x: -0.092118844, y: 0.18792173, z: -0.69438726, w: 0.6884954}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IK_GRP
+      parentName: right_leg_parent_GRP
+      position: {x: 0.024311228, y: 0.10258, z: -0.000003028923}
+      rotation: {x: 0.99904823, y: 1.1117343e-16, z: 0.043619387, w: -6.591138e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKPoleSnapStart_LOC
+      parentName: right_leg_IK_GRP
+      position: {x: -0, y: 3.5527136e-17, z: 3.5527136e-17}
+      rotation: {x: 0.7064338, y: -0.7064338, z: 0.030843565, w: -0.030843565}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKStretchStart_LOC
+      parentName: right_leg_IK_GRP
+      position: {x: -0, y: 3.5527136e-17, z: 3.5527136e-17}
+      rotation: {x: 0.7064338, y: -0.7064338, z: 0.030843565, w: -0.030843565}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_thigh_IK_JNT
+      parentName: right_leg_IK_GRP
+      position: {x: -0, y: 1.7763568e-17, z: 1.7763568e-17}
+      rotation: {x: 0.11086206, y: 0.18221939, z: -0.17482233, w: 0.9612195}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_knee_IK_JNT
+      parentName: right_thigh_IK_JNT
+      position: {x: 0.2691686, y: 1.3766766e-16, z: -0.02}
+      rotation: {x: 1.1761549e-16, y: -0.5704982, z: -1.9085973e-17, w: 0.8212989}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_foot_IK_JNT
+      parentName: right_knee_IK_JNT
+      position: {x: 0.28536952, y: 1.2472986e-16, z: 0.02}
+      rotation: {x: 0.008101278, y: 0.10900585, z: 0.1417216, w: 0.9838532}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_thigh_driver_JNT
+      parentName: right_leg_parent_GRP
+      position: {x: 0.024311228, y: 0.10258, z: -0.000003028923}
+      rotation: {x: 0.95235634, y: 0.17949168, z: 0.22397378, w: -0.10313093}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_knee_driver_JNT
+      parentName: right_thigh_driver_JNT
+      position: {x: 0.2691686, y: 1.4210854e-16, z: -0.02}
+      rotation: {x: 0, y: -0.5704982, z: -0, w: 0.8212989}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_foot_driver_JNT
+      parentName: right_knee_driver_JNT
+      position: {x: 0.28536952, y: 1.0658141e-16, z: 0.02}
+      rotation: {x: 0.008101278, y: 0.10900585, z: 0.1417216, w: 0.9838532}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_thigh_offset_JNT
+      parentName: right_leg_parent_GRP
+      position: {x: 0.024311228, y: 0.10258, z: -0.000003028923}
+      rotation: {x: 0.99904823, y: 2.6709172e-18, z: 0.043619387, w: -6.117406e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_thigh_FKCTRL
+      parentName: right_thigh_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.07222979, y: -0.2761685, z: -0.091823295, w: 0.95398235}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_knee_offset_JNT
+      parentName: right_thigh_FKCTRL
+      position: {x: 0.2691686, y: 1.3766766e-16, z: -0.02}
+      rotation: {x: 0, y: -0.043619387, z: -0, w: 0.99904823}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_knee_FKCTRL
+      parentName: right_knee_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.23300697, y: 0.1395233, z: 0.1834153, w: 0.94477504}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_foot_offset_JNT
+      parentName: right_knee_FKCTRL
+      position: {x: 0.28536952, y: 1.2472986e-16, z: 0.02}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_foot_FKCTRL
+      parentName: right_foot_offset_JNT
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: -0.18612464, y: -0.27884594, z: -0.055182982, w: 0.94050914}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKMatchHelper
+      parentName: right_foot_FKCTRL
+      position: {x: -1.7763568e-17, y: -1.7763568e-17, z: 2.1754097e-33}
+      rotation: {x: 0.7071068, y: -0.7071068, z: 4.3297806e-17, w: -4.3297806e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_poleoffset_GRP
+      parentName: root_CTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_poleCTRL
+      parentName: right_leg_poleoffset_GRP
+      position: {x: 0.23140727, y: 0.36453456, z: 0.37507305}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKPoleSnapLengthEnd
+      parentName: right_leg_poleCTRL
+      position: {x: -0.10258, y: -0.36453456, z: -0.37507305}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKPoleSnapLengthStart
+      parentName: right_leg_poleCTRL
+      position: {x: -0.10258, y: -0.36453456, z: -0.37507305}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_IKPoleSnapMid_LOC
+      parentName: right_leg_poleCTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_leg_poleLOC
+      parentName: right_leg_poleCTRL
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_shoulder_parent_GRP
+      parentName: root_CTRL
+      position: {x: -0.013655202, y: 1.1268778, z: 0.07334545}
+      rotation: {x: -0.092118844, y: 0.18792173, z: -0.69438726, w: 0.6884954}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_shoulder_driver_JNT
+      parentName: right_shoulder_parent_GRP
+      position: {x: 1.4210854e-16, y: 0.23239, z: 1.7763568e-17}
+      rotation: {x: 0.92387956, y: 0.38268346, z: -2.3432604e-17, w: -5.657131e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_shoulder_offset_GRP
+      parentName: right_shoulder_parent_GRP
+      position: {x: 1.4210854e-16, y: 0.23239, z: -3.9443044e-33}
+      rotation: {x: 0.92387956, y: 0.38268346, z: -2.3432604e-17, w: -5.657131e-17}
+      scale: {x: 1, y: 1, z: 1}
+    - name: right_shoulder_CTRL
+      parentName: right_shoulder_offset_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: spine1_parent_GRP
+      parentName: root_CTRL
+      position: {x: -0.033262882, y: 0.571444, z: 0}
+      rotation: {x: -0.092118844, y: 0.18792173, z: -0.69438726, w: 0.6884954}
+      scale: {x: 1, y: 1, z: 1}
+    - name: spine1_driver_JNT
+      parentName: spine1_parent_GRP
+      position: {x: -0.56059855, y: 6.661338e-18, z: -1.7763568e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: spine1_offset_GRP
+      parentName: spine1_parent_GRP
+      position: {x: -0.56059855, y: 2.0510383e-31, z: -2.2204459e-17}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: spine1_CTRL
+      parentName: spine1_offset_GRP
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: pelvis_result_JNT
+      parentName: Anim_uppercutRight(Clone)
+      position: {x: -0.0000001527369, y: 0.5880832, z: 0}
+      rotation: {x: -0.000000008231807, y: 0.000000008231807, z: -0.7071068, w: 0.7071068}
+      scale: {x: 1.0000004, y: 1.0000005, z: 1.0000002}
+    - name: left_thigh_result_JNT
+      parentName: pelvis_result_JNT
+      position: {x: 0.024311228, y: -0.102579705, z: 0.000003028923}
+      rotation: {x: -0.02729029, y: 0.0081234425, z: 0.99114895, w: 0.12966558}
+      scale: {x: 1.0000005, y: 1.0000002, z: 0.9999998}
+    - name: left_knee_result_JNT
+      parentName: left_thigh_result_JNT
+      position: {x: -0.2691686, y: -1.4210854e-16, z: 0.02}
+      rotation: {x: 6.984919e-10, y: 0.000000005849869, z: 0.119443886, w: 0.99284095}
+      scale: {x: 0.99999964, y: 1.0000001, z: 1}
+    - name: left_foot_result_JNT
+      parentName: left_knee_result_JNT
+      position: {x: -0.28536952, y: -1.7763567e-16, z: -0.02}
+      rotation: {x: 0.0021380628, y: 0.01826369, z: -0.030344654, w: 0.9993704}
+      scale: {x: 1.0000007, y: 1.0000007, z: 1.0000005}
+    - name: right_thigh_result_JNT
+      parentName: pelvis_result_JNT
+      position: {x: 0.024311228, y: 0.10258, z: -0.000003028923}
+      rotation: {x: 0.99114895, y: 0.12966533, z: 0.027289907, w: -0.008123467}
+      scale: {x: 1.0000005, y: 1.0000014, z: 1.0000018}
+    - name: right_knee_result_JNT
+      parentName: right_thigh_result_JNT
+      position: {x: 0.2691686, y: 1.4210854e-16, z: -0.02}
+      rotation: {x: -9.3132246e-10, y: 0.000000014435498, z: 0.11944386, w: 0.992841}
+      scale: {x: 1.0000017, y: 1.0000011, z: 1.0000006}
+    - name: right_foot_result_JNT
+      parentName: right_knee_result_JNT
+      position: {x: 0.28536952, y: 1.0658141e-16, z: 0.02}
+      rotation: {x: 0.0021380596, y: 0.018264033, z: -0.03034487, w: 0.9993703}
+      scale: {x: 1.0000001, y: 1.0000002, z: 1.0000002}
+    - name: spine1_result_JNT
+      parentName: pelvis_result_JNT
+      position: {x: -0.56059855, y: 6.661338e-18, z: -1.7763568e-17}
+      rotation: {x: -0, y: -0, z: 6.776264e-17, w: 1}
+      scale: {x: 0.9999999, y: 1, z: 1.0000001}
+    - name: neck_result_JNT
+      parentName: spine1_result_JNT
+      position: {x: -0.028525045, y: -8.881784e-18, z: 0}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      scale: {x: 0.9999999, y: 1, z: 1}
+    - name: head_result_JNT
+      parentName: neck_result_JNT
+      position: {x: -0.10053677, y: -1.11022296e-17, z: 0}
+      rotation: {x: 0.000000005820767, y: 0.000000011641533, z: 3.3881328e-17, w: 1}
+      scale: {x: 1.0000002, y: 1.0000004, z: 1}
+    - name: left_shoulder_result_JNT
+      parentName: spine1_result_JNT
+      position: {x: 1.4210854e-16, y: -0.23239343, z: -1.7763568e-17}
+      rotation: {x: -0.0000033437723, y: 0.0000017511393, z: 0.8102779, w: 0.58604586}
+      scale: {x: 0.9999999, y: 0.9999997, z: 1}
+    - name: left_upperArm_result_JNT
+      parentName: left_shoulder_result_JNT
+      position: {x: -0.100853495, y: -2.842171e-16, z: -1.7763568e-17}
+      rotation: {x: -0.039871354, y: 0.014715942, z: -0.1341872, w: 0.9900442}
+      scale: {x: 1.0000002, y: 1, z: 1.0000001}
+    - name: left_forearm_result_JNT
+      parentName: left_upperArm_result_JNT
+      position: {x: -0.25801018, y: -1.4210854e-16, z: -2.1316282e-16}
+      rotation: {x: -0.084627524, y: 0.004498381, z: -0.0061789295, w: 0.9963834}
+      scale: {x: 1.0000001, y: 0.9999999, z: 1}
+    - name: left_hand_result_JNT
+      parentName: left_forearm_result_JNT
+      position: {x: -0.2971397, y: 2.842171e-16, z: -1.7763568e-17}
+      rotation: {x: -0, y: -0, z: 0.0000000037252894, w: 1}
+      scale: {x: 1.0000007, y: 0.9999999, z: 1.0000001}
+    - name: right_shoulder_result_JNT
+      parentName: spine1_result_JNT
+      position: {x: 1.4210854e-16, y: 0.23239, z: 1.7763568e-17}
+      rotation: {x: 0.8102778, y: 0.58604604, z: -0.0000033475071, w: 0.00000171899}
+      scale: {x: 0.9999995, y: 1.0000002, z: 1.0000006}
+    - name: right_upperArm_result_JNT
+      parentName: right_shoulder_result_JNT
+      position: {x: 0.100853495, y: 1.4210854e-16, z: 1.7763568e-17}
+      rotation: {x: -0.03986999, y: 0.014707957, z: -0.13418798, w: 0.99004424}
+      scale: {x: 1.000001, y: 1.000001, z: 1.0000011}
+    - name: right_forearm_result_JNT
+      parentName: right_upperArm_result_JNT
+      position: {x: 0.25801018, y: 2.842171e-16, z: 3.5527136e-17}
+      rotation: {x: 0.08462726, y: -0.00449767, z: 0.0061787767, w: -0.99638337}
+      scale: {x: 1.0000005, y: 1.0000006, z: 0.9999994}
+    - name: right_hand_result_JNT
+      parentName: right_forearm_result_JNT
+      position: {x: 0.2971397, y: -1.4210854e-16, z: 1.4210854e-16}
+      rotation: {x: 0.000000007450579, y: -0, z: 0.000000010244546, w: 1}
+      scale: {x: 1.0000004, y: 1, z: 0.99999994}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 3
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
