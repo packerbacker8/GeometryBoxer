@@ -69,4 +69,13 @@ public class PlayerHealthScript : MonoBehaviour
 
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
     }
+
+    /// <summary>
+    /// Function to give player more health.
+    /// </summary>
+    /// <param name="amount">How much health to give.</param>
+    public void GiveHealth(int amount)
+    {
+        PlayerHealth += amount;
+    }
 }
