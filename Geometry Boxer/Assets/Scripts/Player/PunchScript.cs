@@ -153,6 +153,10 @@ public class PunchScript : MonoBehaviour
             rightGrab = false;
         }
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+        if(!info.IsName("Hit"))
+        {
+            anim.speed = 1f;
+        }
         if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
         {
             if (useController) //controller controls
@@ -240,7 +244,6 @@ public class PunchScript : MonoBehaviour
                 }
                 //turn off camera movement and character movement
                 StartCoroutine(ToggleCameraAndMovement(controllingLeftArm || controllingRightArm));
-
                 StartCoroutine(ToggleArmPuppetMaster(controllingLeftArm, Limbs.leftArm));
                 StartCoroutine(ToggleArmPuppetMaster(controllingRightArm, Limbs.rightArm));
 
@@ -300,7 +303,7 @@ public class PunchScript : MonoBehaviour
         }
         else
         {
-            //do something if on the ground, ground combat
+            //do something if down on the ground, ground combat
         }
     }
 
@@ -337,13 +340,13 @@ public class PunchScript : MonoBehaviour
                 else if (!rightGrab && action.animName == "Hit")
                 {
                     currentAnim = action;
+                    //anim.speed = 5f;
                     break;
                 }
             }
         }
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);
-
-        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime); //going to need to determine when animation ends to allow next triggering event
         anim.SetInteger("ActionIndex", -1);
     }
 
@@ -370,7 +373,6 @@ public class PunchScript : MonoBehaviour
         }
 
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);
-
         anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
         anim.SetInteger("ActionIndex", -1);
 
