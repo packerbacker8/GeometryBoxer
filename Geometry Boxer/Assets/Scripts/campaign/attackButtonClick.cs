@@ -6,15 +6,19 @@ using UnityEngine.Experimental.UIElements;
 public class attackButtonClick : MonoBehaviour {
 
     public UnityEngine.UI.Button attackButton;
-    public int sceneIndex;
+
+    private GameObject citySelectController;
+    private int sceneIndex;
 
     void Start()
     {
         attackButton.onClick.AddListener(TaskOnClick);
+        citySelectController = GameObject.FindGameObjectWithTag("GameController");
     }
 
     void TaskOnClick()
     {
+        sceneIndex = citySelectController.GetComponent<CitySelectSceneController>().GetCurrentCityBuildIndex();
         LoadingScreenManager.LoadScene(sceneIndex);
     }
 }

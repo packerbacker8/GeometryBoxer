@@ -27,6 +27,21 @@ public class LoadLevel : MonoBehaviour
     }
 
     /// <summary>
+    /// When called, loads in the scene at the given build order
+    /// number.  If scene doesn't exist, the main menu will be loaded.
+    /// </summary>
+    /// <param name="level">The value that determines which scene is loaded.</param>
+    public void LoadALevel(string level)
+    {
+        /*if () //check other potential problems
+        {
+            level = (int)LevelsBuildNum.MainMenuScene;
+        }*/
+        SceneManager.LoadScene(level); //maybe use async version?
+        Time.timeScale = 1;
+    }
+
+    /// <summary>
     /// Function to quit the game when called. Quits as soon as possible.
     /// </summary>
     public void ExitGame()
@@ -41,5 +56,29 @@ public class LoadLevel : MonoBehaviour
     public void LoadNextScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    /// <summary>
+    /// Function to reload the current scene. Use to restart level.
+    /// </summary>
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    /// <summary>
+    /// Function to load the main menu.
+    /// </summary>
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene((int)LevelsBuildNum.MainMenuScene);
+    }
+
+    /// <summary>
+    /// Function to load character select scene.
+    /// </summary>
+    public void LoadCharacterSelect()
+    {
+        SceneManager.LoadScene("CharacterSelect");
     }
 }
