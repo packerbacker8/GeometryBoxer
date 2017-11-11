@@ -1,14 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenuCanvasControlling : MonoBehaviour
 {
     public GameObject hasSaveGameCanvas;
     public GameObject noSaveGameCanvas;
     public GameObject optionsMenu;
+    public GameObject loadFileCanvas;
 
     private bool hasSavedGame;
+    private InputField loadFileInput;
+    private string fileToLoad;
 
     // Use this for initialization
     void Start()
@@ -16,6 +20,9 @@ public class MainMenuCanvasControlling : MonoBehaviour
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
         noSaveGameCanvas.SetActive(!hasSavedGame);
+        loadFileInput = loadFileCanvas.GetComponentInChildren<InputField>();
+        loadFileCanvas.SetActive(false);
+        fileToLoad = "";
     }
 
     /// <summary>
@@ -35,5 +42,43 @@ public class MainMenuCanvasControlling : MonoBehaviour
             hasSaveGameCanvas.SetActive(hasSavedGame);
             noSaveGameCanvas.SetActive(!hasSavedGame);
         }
+    }
+
+    /// <summary>
+    /// Function to show the load file canvas.
+    /// </summary>
+    public void ShowLoadCanvas()
+    {
+        loadFileCanvas.SetActive(true);
+        hasSaveGameCanvas.SetActive(false);
+        noSaveGameCanvas.SetActive(false);
+    }
+
+    /// <summary>
+    /// Function to hide the load file canvas and show the others.
+    /// </summary>
+    public void HideLoadCanvas()
+    {
+        loadFileCanvas.SetActive(false);
+        hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
+        hasSaveGameCanvas.SetActive(hasSavedGame);
+        noSaveGameCanvas.SetActive(!hasSavedGame);
+    }
+    /// <summary>
+    /// Function to set string that represents file we want to load.
+    /// </summary>
+    public void SetFileToLoadString()
+    {
+        fileToLoad = loadFileInput.text;
+    }
+
+    /// <summary>
+    /// Load the data file matched to the string of the input field.
+    /// </summary>
+    public void LoadThisFile()
+    {
+        loadFileInput.text = "";
+        SaveAndLoadGame.saver.LoadGame(fileToLoad);
+        LoadLevel.loader.LoadALevel("SelectCityMap");
     }
 }

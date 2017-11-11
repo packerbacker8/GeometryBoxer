@@ -48,6 +48,11 @@ public class SaveAndLoadGame : MonoBehaviour
     /// </summary>
     public bool CheckForSaveGame()
     {
+        if(hasSavedGame)
+        {
+            return true;
+        }
+        //otherwise do checking on files to set the value of has saved game
         return false;
     }
 
@@ -98,9 +103,9 @@ public class SaveAndLoadGame : MonoBehaviour
         {
             BinaryFormatter binaryForm = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/" + loadFileName + ".dat", FileMode.Open);
-            GameData data = (GameData)binaryForm.Deserialize(file);
+            saveData = (GameData)binaryForm.Deserialize(file);
             file.Close();
-
+            hasSavedGame = true;
             //set values from data received
         }
 
@@ -111,7 +116,8 @@ public class SaveAndLoadGame : MonoBehaviour
     /// </summary>
     public void ContinueGame()
     {
-        LoadGame();
+        //LoadGame();
+        LoadLevel.loader.LoadALevel("CitySelectMap");
     }
 
 

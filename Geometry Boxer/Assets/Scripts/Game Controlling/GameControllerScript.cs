@@ -7,6 +7,7 @@ public class GameControllerScript : MonoBehaviour
     [Tooltip("What index value of the level to load in the build order.")]
     public string dominationMap = "CitySelectMap";
     public float loadLevelTimeOut = 20f;
+    public string currentMapName;
 
     private int numEnemiesAlive;
     private GameObject[] enemiesInWorld;
@@ -23,7 +24,6 @@ public class GameControllerScript : MonoBehaviour
             enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
         }
         playerAlive = true;
-        //Debug.Log("numEnemiesAlive: " + numEnemiesAlive);
     }
 
     // Update is called once per frame
@@ -31,6 +31,7 @@ public class GameControllerScript : MonoBehaviour
     {
         if(numEnemiesAlive <= 0)
         {
+            SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
             StartCoroutine(changeLevel(dominationMap));
         }
     }
@@ -62,6 +63,7 @@ public class GameControllerScript : MonoBehaviour
     public void playerKilled()
     {
         playerAlive = false;
-        LoadLevel.loader.ReloadScene(); //index of the scene the player is currently on
+        SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
+        LoadLevel.loader.LoadALevel(dominationMap); //index of the scene the player is currently on
     }
 }
