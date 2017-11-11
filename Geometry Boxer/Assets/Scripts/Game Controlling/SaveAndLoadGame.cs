@@ -13,6 +13,7 @@ public class SaveAndLoadGame : MonoBehaviour
 
     private static GameData saveData;
     private bool hasSavedGame;
+    private string saveFileName;
 
     //use player information and store it in a singleton game object
 
@@ -31,6 +32,7 @@ public class SaveAndLoadGame : MonoBehaviour
             //may want to destroy to avoid duplicates
             Destroy(this.gameObject);
         }
+        saveFileName = "";
     }
 
     private void Start()
@@ -41,6 +43,16 @@ public class SaveAndLoadGame : MonoBehaviour
     private void OnApplicationQuit()
     {
         SaveGame();
+    }
+
+    public string GetSaveFileName()
+    {
+        return saveFileName;
+    }
+
+    public void SetSaveFileName(string nameToSet)
+    {
+        saveFileName = nameToSet;
     }
 
     /// <summary>
@@ -55,30 +67,26 @@ public class SaveAndLoadGame : MonoBehaviour
     /// Function to save game and the player's play session
     /// information.
     /// </summary>
-    /// <returns>Returns true if success in saving, false otherwise.</returns>
-    public bool SaveGame()
+    public void SaveGame()
     {
         BinaryFormatter binaryForm = new BinaryFormatter();
         FileStream file = File.Open(Application.persistentDataPath + "/saveGame_" + DateTime.Today.Month + "_" + DateTime.Today.Day + "_" + DateTime.Today.Year + "_" + DateTime.Today.ToFileTime() + ".dat", FileMode.OpenOrCreate);
 
         binaryForm.Serialize(file, saveData);
         file.Close();
-        return true;
     }
     /// <summary>
     /// Function to save game and the player's play session
     /// information.
     /// </summary>
-    /// <param name="saveFileName">String that says where to write this file.</param>
-    /// <returns>Returns true if success in saving, false otherwise.</returns>
-    public bool SaveGame(string saveFileName)
+    /// <param name="fileToSave">String that says where to write this file.</param>
+    public void SaveGame(string name)
     {
         BinaryFormatter binaryForm = new BinaryFormatter();
         FileStream file = File.Open(Application.persistentDataPath + "/" + saveFileName + ".dat", FileMode.OpenOrCreate);
 
         binaryForm.Serialize(file, saveData);
         file.Close();
-        return true;
     }
 
     /// <summary>
