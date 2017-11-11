@@ -40,7 +40,7 @@ public class SaveAndLoadGame : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SaveGame();
+        //SaveGame();
     }
 
     /// <summary>
@@ -55,30 +55,30 @@ public class SaveAndLoadGame : MonoBehaviour
     /// Function to save game and the player's play session
     /// information.
     /// </summary>
-    /// <returns>Returns true if success in saving, false otherwise.</returns>
-    public bool SaveGame()
+    public void SaveGame()
     {
         BinaryFormatter binaryForm = new BinaryFormatter();
-        FileStream file = File.Open(Application.persistentDataPath + "/saveGame_" + DateTime.Today.Month + "_" + DateTime.Today.Day + "_" + DateTime.Today.Year + "_" + DateTime.Today.ToFileTime() + ".dat", FileMode.OpenOrCreate);
+        FileStream file = File.Open(Application.persistentDataPath + "/ASF_" + DateTime.Today.Month + "_" + DateTime.Today.Day + "_" + DateTime.Today.Year + "_" + DateTime.Today.ToFileTime() + ".dat", FileMode.OpenOrCreate);
 
         binaryForm.Serialize(file, saveData);
         file.Close();
-        return true;
     }
     /// <summary>
     /// Function to save game and the player's play session
     /// information.
     /// </summary>
-    /// <param name="saveFileName">String that says where to write this file.</param>
-    /// <returns>Returns true if success in saving, false otherwise.</returns>
-    public bool SaveGame(string saveFileName)
+    /// <param name="fileToSave">String that says where to write this file.</param>
+    public void SaveGame(string name)
     {
+        if(name == "")
+        {
+            name = "unnamedSave_" + DateTime.Today.Second;
+        }
         BinaryFormatter binaryForm = new BinaryFormatter();
-        FileStream file = File.Open(Application.persistentDataPath + "/" + saveFileName + ".dat", FileMode.OpenOrCreate);
+        FileStream file = File.Open(Application.persistentDataPath + "/" + name + ".dat", FileMode.OpenOrCreate);
 
         binaryForm.Serialize(file, saveData);
         file.Close();
-        return true;
     }
 
     /// <summary>
