@@ -9,8 +9,4 @@ public class Initialize : MonoBehaviour {
 		//check here to see which canvas to enable/disable. Only one should be enabled
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
