@@ -5,14 +5,13 @@ using UnityEngine;
 public class GameControllerScript : MonoBehaviour
 {
     [Tooltip("What index value of the level to load in the build order.")]
-    public int dominationMap = 5;
+    public string dominationMap = "CitySelectMap";
     public float loadLevelTimeOut = 20f;
 
     private int numEnemiesAlive;
     private GameObject[] enemiesInWorld;
     private GameObject enemyContainer;
     private bool playerAlive;
-    private LoadLevel loader;
 
     // Use this for initialization
     void Start()
@@ -24,7 +23,6 @@ public class GameControllerScript : MonoBehaviour
             enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
         }
         playerAlive = true;
-        loader = this.GetComponent<LoadLevel>();
         //Debug.Log("numEnemiesAlive: " + numEnemiesAlive);
     }
 
@@ -51,11 +49,11 @@ public class GameControllerScript : MonoBehaviour
     /// to black.
     /// </summary>
     /// <returns></returns>
-    IEnumerator changeLevel(int levelToLoad)
+    IEnumerator changeLevel(string levelToLoad)
     {
         float fadeTime = GetComponent<Fade>().BeginFade(1);
         yield return new WaitForSeconds(fadeTime);
-        loader.LoadALevel(levelToLoad);
+        LoadLevel.loader.LoadALevel(levelToLoad);
     }
 
     /// <summary>
@@ -64,6 +62,6 @@ public class GameControllerScript : MonoBehaviour
     public void playerKilled()
     {
         playerAlive = false;
-        loader.ReloadScene(); //index of the scene the player is currently on
+        LoadLevel.loader.ReloadScene(); //index of the scene the player is currently on
     }
 }

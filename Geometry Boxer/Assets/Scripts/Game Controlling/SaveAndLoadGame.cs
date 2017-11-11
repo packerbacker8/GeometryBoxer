@@ -8,7 +8,10 @@ using System.IO;
 public class SaveAndLoadGame : MonoBehaviour
 {
     public static SaveAndLoadGame saver;
-    private LoadLevel loader;
+    public string[] cityNames;
+    public string[] cityStatuses;
+
+    private static GameData saveData;
     private bool hasSavedGame;
 
     //use player information and store it in a singleton game object
@@ -19,14 +22,25 @@ public class SaveAndLoadGame : MonoBehaviour
         if(saver == null)
         {
             //might want to not destroy on load
+            DontDestroyOnLoad(this.gameObject);
             saver = this;
+            saveData = new GameData();
         }
         else if(saver != this)
         {
             //may want to destroy to avoid duplicates
+            Destroy(this.gameObject);
         }
-        loader = this.GetComponent<LoadLevel>();
+    }
 
+    private void Start()
+    {
+        SetCityNamesAndStatus();
+    }
+
+    private void OnApplicationQuit()
+    {
+        //SaveGame();
     }
 
     /// <summary>
@@ -41,29 +55,30 @@ public class SaveAndLoadGame : MonoBehaviour
     /// Function to save game and the player's play session
     /// information.
     /// </summary>
-    /// <returns>Returns true if success in saving, false otherwise.</returns>
-    public bool SaveGame()
+    public void SaveGame()
     {
         BinaryFormatter binaryForm = new BinaryFormatter();
-        FileStream file = File.Open(Application.persistentDataPath + "/saveGame_" + DateTime.Today + ".dat", FileMode.Open);
+        FileStream file = File.Open(Application.persistentDataPath + "/ASF_" + DateTime.Today.Month + "_" + DateTime.Today.Day + "_" + DateTime.Today.Year + "_" + DateTime.Today.ToFileTime() + ".dat", FileMode.OpenOrCreate);
 
-        GameData data = new GameData();
-
-        binaryForm.Serialize(file, data);
+        binaryForm.Serialize(file, saveData);
         file.Close();
-        return true;
     }
     /// <summary>
     /// Function to save game and the player's play session
     /// information.
     /// </summary>
-    /// <param name="saveFileName">String that says where to write this file.</param>
-    /// <returns>Returns true if success in saving, false otherwise.</returns>
-    public bool SaveGame(string saveFileName)
+    /// <param name="fileToSave">String that says where to write this file.</param>
+    public void SaveGame(string name)
     {
+        if(name == "")
+        {
+            name = "unnamedSave_" + DateTime.Today.Second;
+        }
         BinaryFormatter binaryForm = new BinaryFormatter();
-        FileStream file = File.Open(Application.persistentDataPath + "/" + saveFileName + ".dat", FileMode.OpenOrCreate);
-        return true;
+        FileStream file = File.Open(Application.persistentDataPath + "/" + name + ".dat", FileMode.OpenOrCreate);
+
+        binaryForm.Serialize(file, saveData);
+        file.Close();
     }
 
     /// <summary>
@@ -107,14 +122,77 @@ public class SaveAndLoadGame : MonoBehaviour
     public void StartNewGame()
     {
         //start save game information here
-        
-        loader.LoadALevel("CitySelectMap");
+        saveData = new GameData();
+        LoadLevel.loader.LoadALevel("CitySelectMap");
+    }
+
+    /// <summary>
+    /// Function to set character type.
+    /// </summary>
+    /// <param name="type">The type of the character (cube, sphere, octa).</param>
+    public void SetCharType(string type)
+    {
+        saveData.characterType = type;
+    }
+
+    /// <summary>
+    /// Function to add the city names and statuses that are in the lists. 
+    /// </summary>
+    public void SetCityNamesAndStatus()
+    {
+        saveData.cityNames.Clear();
+        saveData.cityStatuses.Clear();
+        for (int i = 0; i < cityNames.Length; i++)
+        {
+            saveData.cityNames.Add(cityNames[i]);
+            saveData.cityStatuses.Add(cityStatuses[i]);
+        }
+    }
+
+    /// <summary>
+    /// Function to set the status of a city given its name.
+    /// </summary>
+    /// <param name="cityName">The name of the city to change its status.</param>
+    /// <param name="newStatus">The new status to the city.</param>
+    /// <returns>Returns true if status set, false otherwise.</returns>
+    public bool SetCityStatus(string cityName, string newStatus)
+    {
+        for (int i = 0; i < saveData.cityNames.Count; i++)
+        {
+            if(cityName == saveData.cityNames[i])
+            {
+                saveData.cityStatuses[i] = newStatus;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Go through the city statuses and check if all conquered.
+    /// </summary>
+    /// <returns>Returns true if all cities are conquered, else false.</returns>
+    public bool CheckIfWonGame()
+    {
+        for (int i = 0; i < saveData.cityStatuses.Count; i++)
+        {
+            if (!saveData.cityNames[i].Contains(saveData.characterType) &&  saveData.cityStatuses[i] != "Conquered")
+            {
+                saveData.wonGame = false;
+                return false;
+            }
+        }
+        saveData.wonGame = true;
+        return true;
     }
 
     [Serializable]
     private class GameData
-    {
-
+    {   
+        public string characterType = "Cube";
+        public List<string> cityNames = new List<string>();
+        public List<string> cityStatuses = new List<string>();
+        public bool wonGame = false;
     }
 }
 

@@ -9,61 +9,65 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1627263141749742}
+  m_RootGameObject: {fileID: 1703511656577592}
   m_IsPrefabParent: 1
---- !u!1 &1627263141749742
+--- !u!1 &1703511656577592
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4564712471329368}
-  - component: {fileID: 114012859341719978}
-  - component: {fileID: 114852009753482974}
+  - component: {fileID: 4165296775922130}
+  - component: {fileID: 114059141406363036}
+  - component: {fileID: 114656991063129522}
   m_Layer: 0
-  m_Name: GameController
-  m_TagString: GameController
+  m_Name: SaveLoadGameAndLevel
+  m_TagString: Save
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4564712471329368
+--- !u!4 &4165296775922130
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1627263141749742}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -29.512844, y: 3.297637, z: -34.00672}
+  m_GameObject: {fileID: 1703511656577592}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114012859341719978
+--- !u!114 &114059141406363036
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1627263141749742}
+  m_GameObject: {fileID: 1703511656577592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 010d08a84deee9440870feabe875d60b, type: 3}
+  m_Script: {fileID: 11500000, guid: 3da1caa900880e24c894f23ff78097a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dominationMap: 
-  loadLevelTimeOut: 20
---- !u!114 &114852009753482974
+  cityNames:
+  - CubeBayCity
+  - SphereSewerCity
+  - OctahedronClubCity
+  cityStatuses:
+  - notconquered
+  - notconquered
+  - notconquered
+--- !u!114 &114656991063129522
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1627263141749742}
+  m_GameObject: {fileID: 1703511656577592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 324850fe78688284482dc64073eb7e62, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ba384ef3dc748b40bc60c67b85fac71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeOutTexture: {fileID: 2800000, guid: a2bc665ff1792374f9420281ed5b6217, type: 3}
-  fadeSpeed: 0.8
