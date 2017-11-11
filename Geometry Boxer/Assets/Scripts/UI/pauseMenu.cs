@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class pauseMenu : MonoBehaviour
 {
@@ -9,10 +10,12 @@ public class pauseMenu : MonoBehaviour
 
     private GameObject pauseMenuCanvas;
     private GameObject saveCanvas;
+    private InputField saveInputField;
+
     RootMotion.Demos.UserControlMelee UserControlMeleeScript;
     RootMotion.CameraController CameraControllerScript;
     PunchScript punchScript;
-
+    private string saveFileName;
 
     private bool mouseShouldBeLocked = false;
     private bool isPaused = false;
@@ -22,11 +25,13 @@ public class pauseMenu : MonoBehaviour
     {
         pauseMenuCanvas = this.transform.GetChild(0).gameObject;
         saveCanvas = this.transform.GetChild(1).gameObject;
+        saveInputField = saveCanvas.GetComponentInChildren<InputField>();
         saveCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(false);
         UserControlMeleeScript = character.GetComponentInChildren<RootMotion.Demos.UserControlMelee>();
         CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
         punchScript = character.gameObject.GetComponent<PunchScript>();
+        saveFileName = "";
     }
 
     // Update is called once per frame
@@ -103,5 +108,21 @@ public class pauseMenu : MonoBehaviour
         pauseMenuCanvas.SetActive(true);
     }
 
+    public string GetSaveFileName()
+    {
+        return saveFileName;
+    }
+
+    public void SetSaveFileName()
+    {
+        saveFileName = saveInputField.text;
+    }
+
+    public void SaveTheGame()
+    {
+        SaveAndLoadGame.saver.SaveGame(saveFileName);
+        saveInputField.text = "";
+        CloseSaveCanvas();
+    }
 
 }
