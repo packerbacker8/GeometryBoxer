@@ -4,6 +4,8 @@ using System.Collections;
 
 public class LoadLevel : MonoBehaviour
 {
+    public static LoadLevel loader;
+
     public enum LevelsBuildNum
     {
         MainMenuScene = 0,
@@ -11,6 +13,19 @@ public class LoadLevel : MonoBehaviour
         LevelSelectScene = 2,
         CubeLevelScene1 = 3
     };
+
+    private void Awake()
+    {
+        if(loader == null)
+        {
+            DontDestroyOnLoad(this.gameObject);
+            loader = this;
+        }
+        else if(loader != this)
+        {
+            Destroy(gameObject);
+        }
+    }
     /// <summary>
     /// When called, loads in the scene at the given build order
     /// number.  If scene doesn't exist, the main menu will be loaded.
@@ -71,7 +86,7 @@ public class LoadLevel : MonoBehaviour
     /// </summary>
     public void LoadMainMenu()
     {
-        SceneManager.LoadScene((int)LevelsBuildNum.MainMenuScene);
+        SceneManager.LoadScene("MainMenu");
     }
 
     /// <summary>

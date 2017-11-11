@@ -8,14 +8,12 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public GameObject noSaveGameCanvas;
     public GameObject optionsMenu;
 
-    private SaveAndLoadGame saver;
     private bool hasSavedGame;
 
     // Use this for initialization
     void Start()
     {
-        saver = this.GetComponent<SaveAndLoadGame>();
-        hasSavedGame = saver.CheckForSaveGame();
+        hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
         noSaveGameCanvas.SetActive(!hasSavedGame);
     }
