@@ -51,6 +51,8 @@ namespace RootMotion.Demos {
             agent = GetComponent<NavMeshAgent>();
             characterPuppet = GetComponent<CharacterPuppet>();
             anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+            agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
+            agent.nextPosition = transform.position;
         }
 
         protected override void Update () {
@@ -59,42 +61,47 @@ namespace RootMotion.Demos {
             //Determine vector to rotate to target if not facing target
             Vector3 targetDir = moveTarget.position - transform.position;
             Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
-            
-            //Enemy is within distance to attack player AND is NOT already playing attack anim
-            if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
-            {
-                AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-                //Rand controls chance of random attack sound being played, only while source is not already playing
-                if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying)
-                {
-                    source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
-                }
+            AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
-                //If puppet is down, does not try to attack player during stand up anim
-                if((!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && !info.IsName(onGround)))
+            agent.nextPosition = transform.position;
+                //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
+                if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
                 {
-                    //This is for when puppet has melee object in hand
-                    if (characterPuppet.propRoot.currentProp != null)
+
+                    //Rand controls chance of random attack sound being played, only while source is not already playing
+                    if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying)
                     {
-                        anim.Play(rightSwingAnimation, swingAnimLayer);
+                        source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
                     }
-                    else//No melee object in hand of puppet
+
+                    //If puppet is down, does not try to attack player during stand up anim
+                    if ((!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && !info.IsName(onGround)))
                     {
-                        anim.Play(rightSwingAnimation, punchAnimLayer);
+                        //This is for when puppet has melee object in hand
+                        if (characterPuppet.propRoot.currentProp != null)
+                        {
+                            anim.Play(rightSwingAnimation, swingAnimLayer);
+                        }
+                        else//No melee object in hand of puppet
+                        {
+                            anim.Play(rightSwingAnimation, punchAnimLayer);
+                        }
                     }
                 }
-            }
-            if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
+            if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance && GetComponent<Rigidbody>().velocity.y > -5)
             {
+                //agent.updatePosition = true; 
                 agent.destination = moveTarget.position;
                 state.move = agent.velocity;
+                //agent.Move(agent.velocity);
             }
             else
             {
                 agent.destination = transform.position;
                 state.move = agent.velocity;
             }
-
+                
+            
             //Always rotate to face the player
             transform.rotation = Quaternion.LookRotation(newDir);
         }
