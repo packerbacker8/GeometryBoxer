@@ -7,6 +7,8 @@ public class pauseMenu : MonoBehaviour
 {
 
     public GameObject character;
+    public GameObject scrollView;
+    public GameObject fileButtonPrefab;
 
     private GameObject pauseMenuCanvas;
     private GameObject saveCanvas;
@@ -20,6 +22,8 @@ public class pauseMenu : MonoBehaviour
     private bool mouseShouldBeLocked = false;
     private bool isPaused = false;
     private float TimeSinceEsc = 0.0f;
+    private List<GameObject> saveFileButtons;
+
     // Use this for initialization
     void Start()
     {
@@ -32,6 +36,7 @@ public class pauseMenu : MonoBehaviour
         CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
         punchScript = character.gameObject.GetComponent<PunchScript>();
         saveFileName = "";
+        saveFileButtons = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -96,7 +101,26 @@ public class pauseMenu : MonoBehaviour
     public void OpenSaveCanvas()
     {
         saveCanvas.SetActive(true);
+        FillInSaveFileInfo();
         pauseMenuCanvas.SetActive(false);
+    }
+
+    /// <summary>
+    /// Function to fill in buttons of scrollview of the found saved game files.
+    /// </summary>
+    private void FillInSaveFileInfo()
+    {
+        string[] files = SaveAndLoadGame.saver.GetAllSaveFiles();
+        for (int i = 0; i < files.Length; i++)
+        {
+            files[i] = files[i].Substring(Application.persistentDataPath.Length + 1, files[i].Length - Application.persistentDataPath.Length - 5);
+            GameObject button = Instantiate(fileButtonPrefab) as GameObject;
+            button.GetComponentInChildren<Text>().text = files[i];
+            button.transform.SetParent(scrollView.transform, false);
+            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 200f - (30f * i));
+            button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetSaveFileName(button.GetComponentInChildren<Text>().text); });
+            saveFileButtons.Add(button);
+        }
     }
 
     /// <summary>
@@ -104,6 +128,7 @@ public class pauseMenu : MonoBehaviour
     /// </summary>
     public void CloseSaveCanvas()
     {
+        saveFileButtons.Clear();
         saveCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(true);
     }
@@ -118,11 +143,27 @@ public class pauseMenu : MonoBehaviour
         saveFileName = saveInputField.text;
     }
 
+    public void SetSaveFileName(string buttonText)
+    {
+        saveInputField.text = buttonText;
+        SetSaveFileName();
+    }
+
     public void SaveTheGame()
     {
         SaveAndLoadGame.saver.SaveGame(saveFileName);
         saveInputField.text = "";
         CloseSaveCanvas();
+    }
+
+    public void GoToMainMenu()
+    {
+        LoadLevel.loader.LoadMainMenu();
+    }
+
+    public void QuitGame()
+    {
+        LoadLevel.loader.ExitGame();
     }
 
 }

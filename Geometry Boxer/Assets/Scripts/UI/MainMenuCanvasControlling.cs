@@ -9,10 +9,13 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public GameObject noSaveGameCanvas;
     public GameObject optionsMenu;
     public GameObject loadFileCanvas;
+    public GameObject fileButtonPrefab;
+    public GameObject scrollView;
 
     private bool hasSavedGame;
     private InputField loadFileInput;
     private string fileToLoad;
+    private List<GameObject> loadFileButtons;
 
     // Use this for initialization
     void Start()
@@ -23,6 +26,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
         loadFileInput = loadFileCanvas.GetComponentInChildren<InputField>();
         loadFileCanvas.SetActive(false);
         fileToLoad = "";
+        loadFileButtons = new List<GameObject>();
     }
 
     /// <summary>
@@ -55,15 +59,21 @@ public class MainMenuCanvasControlling : MonoBehaviour
         noSaveGameCanvas.SetActive(false);
     }
 
+    /// <summary>
+    /// Function to fill in buttons of scrollview of the found saved game files.
+    /// </summary>
     private void FillInSaveFileInfo()
     {
         string[] files = SaveAndLoadGame.saver.GetAllSaveFiles();
-        foreach(string file in files)
+        for(int i = 0; i<files.Length;i++)
         {
-            //make prefab button and add to scrollview
-            //Debug.Log(Application.persistentDataPath.Length);
-            //Debug.Log(file.Length);
-            Debug.Log(file.Substring(Application.persistentDataPath.Length+1, file.Length - Application.persistentDataPath.Length - 5));
+            files[i] = files[i].Substring(Application.persistentDataPath.Length+1, files[i].Length - Application.persistentDataPath.Length - 5);
+            GameObject button = Instantiate(fileButtonPrefab) as GameObject;
+            button.GetComponentInChildren<Text>().text = files[i];
+            button.transform.SetParent(scrollView.transform,false);
+            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 200f - (30f * i));
+            button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetFileToLoadString(button.GetComponentInChildren<Text>().text); });
+            loadFileButtons.Add(button);
         }
     }
 
@@ -72,6 +82,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     /// </summary>
     public void HideLoadCanvas()
     {
+        loadFileButtons.Clear();
         loadFileCanvas.SetActive(false);
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame);
@@ -86,12 +97,22 @@ public class MainMenuCanvasControlling : MonoBehaviour
     }
 
     /// <summary>
+    /// Function to set string that represents file we want to load.
+    /// </summary>
+    /// <param name="buttonText">The text on the button that is the desired file name.</param>
+    public void SetFileToLoadString(string buttonText)
+    {
+        loadFileInput.text = buttonText;
+        SetFileToLoadString();
+    }
+
+    /// <summary>
     /// Load the data file matched to the string of the input field.
     /// </summary>
     public void LoadThisFile()
     {
-        loadFileInput.text = "";
         SaveAndLoadGame.saver.LoadGame(fileToLoad);
-        LoadLevel.loader.LoadALevel("SelectCityMap");
+        loadFileInput.text = "";
+        LoadLevel.loader.LoadALevel("CitySelectMap");
     }
 }

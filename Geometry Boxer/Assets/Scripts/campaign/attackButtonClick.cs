@@ -8,7 +8,7 @@ public class attackButtonClick : MonoBehaviour {
     public UnityEngine.UI.Button attackButton;
 
     private GameObject citySelectController;
-    private int sceneIndex;
+    private string sceneName;
 
     void Start()
     {
@@ -18,7 +18,7 @@ public class attackButtonClick : MonoBehaviour {
 
     void TaskOnClick()
     {
-        sceneIndex = citySelectController.GetComponent<CitySelectSceneController>().GetCurrentCityBuildIndex();
-        LoadingScreenManager.LoadScene(sceneIndex);
+        sceneName = citySelectController.GetComponent<CitySelectSceneController>().GetCurrentCityBuildName();
+        LoadingScreenManager.LoadScene(sceneName);
     }
 }

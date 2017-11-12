@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CitySelectSceneController : MonoBehaviour
 {
-    private int currentCityBuildIndex;
+    private string currentCityBuildName;
 
     // Use this for initialization
     void Start()
     {
-        currentCityBuildIndex = 0; //default to main menu
+        currentCityBuildName = "MainMenu"; //default to main menu
     }
 
 
@@ -17,17 +17,17 @@ public class CitySelectSceneController : MonoBehaviour
     /// Set variable that indicates selected city with build index.
     /// </summary>
     /// <param name="index"></param>
-    public void SetCityBuildIndex(int index)
+    public void SetCityBuildName(string name)
     {
-        currentCityBuildIndex = index;
+        currentCityBuildName = name;
     }
 
     /// <summary>
     /// Return index of currently selected city's build index.
     /// </summary>
     /// <returns></returns>
-    public int GetCurrentCityBuildIndex()
+    public string GetCurrentCityBuildName()
     {
-        return currentCityBuildIndex;
+        return currentCityBuildName;
     }
 }
