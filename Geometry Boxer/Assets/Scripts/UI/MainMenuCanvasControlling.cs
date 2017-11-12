@@ -54,6 +54,11 @@ public class MainMenuCanvasControlling : MonoBehaviour
         noSaveGameCanvas.SetActive(false);
     }
 
+    private void FillInSaveFileInfo()
+    {
+
+    }
+
     /// <summary>
     /// Function to hide the load file canvas and show the others.
     /// </summary>

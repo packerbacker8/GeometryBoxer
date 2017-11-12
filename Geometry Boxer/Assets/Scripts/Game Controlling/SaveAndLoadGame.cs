@@ -139,6 +139,13 @@ public class SaveAndLoadGame : MonoBehaviour
     public void SetCharType(string type)
     {
         saveData.characterType = type;
+        for (int i = 0; i < cityNames.Length; i++)
+        {
+            if(cityNames[i].Contains(type))
+            {
+                SetCityStatus(cityNames[i], "ours");
+            }
+        }
     }
 
     /// <summary>
