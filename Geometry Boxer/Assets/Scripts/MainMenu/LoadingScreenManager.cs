@@ -35,18 +35,18 @@ public class LoadingScreenManager : MonoBehaviour {
 	AsyncOperation operation;
 	Scene currentScene;
 
-	public static int sceneToLoad = -1;
+	public static string sceneToLoad = "MainMenu";
 	// IMPORTANT! This is the build index of your loading scene. You need to change this to match your actual scene index
-	static int loadingSceneIndex = 3;
+	static string loadingSceneIndex = "loadingSceneMap";
 
-	public static void LoadScene(int levelNum) {				
+	public static void LoadScene(string levelName) {				
 		Application.backgroundLoadingPriority = ThreadPriority.High;
-		sceneToLoad = levelNum;
+		sceneToLoad = levelName;
 		SceneManager.LoadScene(loadingSceneIndex);
 	}
 
 	void Start() {
-		if (sceneToLoad < 0)
+		if (sceneToLoad == "")
 			return;
 
 		fadeOverlay.gameObject.SetActive(true); // Making sure it's on so that we can crossfade Alpha
@@ -54,13 +54,13 @@ public class LoadingScreenManager : MonoBehaviour {
 		StartCoroutine(LoadAsync(sceneToLoad));
 	}
 
-	private IEnumerator LoadAsync(int levelNum) {
+	private IEnumerator LoadAsync(string levelName) {
 		ShowLoadingVisuals();
 
 		yield return null; 
 
 		FadeIn();
-		StartOperation(levelNum);
+		StartOperation(levelName);
 
 		float lastProgress = 0f;
 
@@ -91,9 +91,9 @@ public class LoadingScreenManager : MonoBehaviour {
 			operation.allowSceneActivation = true;
 	}
 
-	private void StartOperation(int levelNum) {
+	private void StartOperation(string levelName) {
 		Application.backgroundLoadingPriority = loadThreadPriority;
-		operation = SceneManager.LoadSceneAsync(levelNum, loadSceneMode);
+		operation = SceneManager.LoadSceneAsync(levelName, loadSceneMode);
 
 
 		if (loadSceneMode == LoadSceneMode.Single)

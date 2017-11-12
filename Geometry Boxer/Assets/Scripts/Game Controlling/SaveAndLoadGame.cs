@@ -92,7 +92,24 @@ public class SaveAndLoadGame : MonoBehaviour
     /// </summary>
     public void LoadGame()
     {
-
+        string[] files = GetAllSaveFiles();
+        if(files.Length == 0)
+        {
+            return;
+        }
+        FileInfo mostRecent = new FileInfo(files[0]);
+        int mostRecentIndex = 0;
+        FileInfo current;
+        for(int i =0; i<files.Length; i++)
+        {
+            current = new FileInfo(files[i]); 
+            if(DateTime.Compare(current.LastWriteTime,mostRecent.LastWriteTime) > 0)
+            {
+                mostRecent = current;
+                mostRecentIndex = i;
+            }
+        }
+        LoadGame(files[mostRecentIndex].Substring(Application.persistentDataPath.Length + 1, files[mostRecentIndex].Length - Application.persistentDataPath.Length - 5));
     }
 
     /// <summary>
@@ -117,7 +134,7 @@ public class SaveAndLoadGame : MonoBehaviour
     /// </summary>
     public void ContinueGame()
     {
-        //LoadGame();
+        LoadGame();
         LoadLevel.loader.LoadALevel("CitySelectMap");
     }
 
@@ -130,7 +147,7 @@ public class SaveAndLoadGame : MonoBehaviour
     {
         //start save game information here
         saveData = new GameData();
-        LoadLevel.loader.LoadALevel("CitySelectMap");
+        LoadLevel.loader.LoadALevel("CharacterSelect");
     }
 
     /// <summary>

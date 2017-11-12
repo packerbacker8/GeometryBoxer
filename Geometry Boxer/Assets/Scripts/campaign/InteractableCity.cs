@@ -9,7 +9,7 @@ public class InteractableCity : Interactable
     public GameObject Player;
     public GameObject MapCamera;
     public GameObject Canvas;
-    public int sceneIndex;
+    public string sceneName;
    
     private WorldInteraction worldInit;
     private RTSCam cam;
@@ -30,7 +30,7 @@ public class InteractableCity : Interactable
             worldInit.freeze = true;
             cam.freeze = true;
             Canvas.SetActive(true);
-            citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildIndex(sceneIndex);
+            citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
 
             //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             //Vector3 clickedPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

@@ -2777,31 +2777,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 15
       objectReference: {fileID: 0}
-    - target: {fileID: 114211246207517556, guid: 754ac39fd8bc224409ee56ab272f0d6c,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 2113873574}
-    - target: {fileID: 114038602745958240, guid: 754ac39fd8bc224409ee56ab272f0d6c,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 2113873574}
     - target: {fileID: 114300198533922954, guid: 754ac39fd8bc224409ee56ab272f0d6c,
         type: 2}
       propertyPath: character
       value: 
       objectReference: {fileID: 1601285301}
-    - target: {fileID: 224926513636957054, guid: 754ac39fd8bc224409ee56ab272f0d6c,
-        type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 224926513636957054, guid: 754ac39fd8bc224409ee56ab272f0d6c,
-        type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 224227764034798488, guid: 754ac39fd8bc224409ee56ab272f0d6c,
         type: 2}
       propertyPath: m_AnchorMax.x
@@ -2812,10 +2792,15 @@ Prefab:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 224682025858499134, guid: 754ac39fd8bc224409ee56ab272f0d6c,
+    - target: {fileID: 224926513636957054, guid: 754ac39fd8bc224409ee56ab272f0d6c,
         type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: 300
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224926513636957054, guid: 754ac39fd8bc224409ee56ab272f0d6c,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 754ac39fd8bc224409ee56ab272f0d6c, type: 2}
@@ -9618,12 +9603,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e69b09739c130e9449555b60e80f9cb7, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &2113873574 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114656991063129522, guid: e69b09739c130e9449555b60e80f9cb7,
-    type: 2}
-  m_PrefabInternal: {fileID: 2113873573}
-  m_Script: {fileID: 11500000, guid: 4ba384ef3dc748b40bc60c67b85fac71, type: 3}
 --- !u!1001 &2123609919
 Prefab:
   m_ObjectHideFlags: 0
