@@ -124,7 +124,6 @@ public class SaveAndLoadGame : MonoBehaviour
             saveData = (GameData)binaryForm.Deserialize(file);
             file.Close();
             hasSavedGame = true;
-            Debug.Log(saveData.characterType);
             //set values from data received
         }
 

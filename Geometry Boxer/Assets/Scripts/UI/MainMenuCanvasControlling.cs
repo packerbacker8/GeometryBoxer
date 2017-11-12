@@ -27,6 +27,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
         loadFileCanvas.SetActive(false);
         fileToLoad = "";
         loadFileButtons = new List<GameObject>();
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     /// <summary>

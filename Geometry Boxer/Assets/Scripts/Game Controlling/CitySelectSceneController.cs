@@ -10,6 +10,8 @@ public class CitySelectSceneController : MonoBehaviour
     void Start()
     {
         currentCityBuildName = "MainMenu"; //default to main menu
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
 

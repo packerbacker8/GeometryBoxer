@@ -34,6 +34,8 @@ public class CharacterSelectController : MonoBehaviour
         sphereForwardPos = new Vector3(-1.5f, 0, -6.8f);
         octahedronForwardPos = new Vector3(1.5f, 0, -6.8f);
         lerpTime = 1.5f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     // Update is called once per frame
