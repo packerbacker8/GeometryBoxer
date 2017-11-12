@@ -38,12 +38,6 @@ public class CharacterSelectController : MonoBehaviour
         Cursor.visible = true;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void CharacterSelected(string charPicked)
     {
         beginButton.interactable = true;
