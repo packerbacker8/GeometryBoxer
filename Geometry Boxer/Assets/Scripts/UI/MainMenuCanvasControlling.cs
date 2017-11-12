@@ -50,13 +50,21 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public void ShowLoadCanvas()
     {
         loadFileCanvas.SetActive(true);
+        FillInSaveFileInfo();
         hasSaveGameCanvas.SetActive(false);
         noSaveGameCanvas.SetActive(false);
     }
 
     private void FillInSaveFileInfo()
     {
-
+        string[] files = SaveAndLoadGame.saver.GetAllSaveFiles();
+        foreach(string file in files)
+        {
+            //make prefab button and add to scrollview
+            //Debug.Log(Application.persistentDataPath.Length);
+            //Debug.Log(file.Length);
+            Debug.Log(file.Substring(Application.persistentDataPath.Length+1, file.Length - Application.persistentDataPath.Length - 5));
+        }
     }
 
     /// <summary>

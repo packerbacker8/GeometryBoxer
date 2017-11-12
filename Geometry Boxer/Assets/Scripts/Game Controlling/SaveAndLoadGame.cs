@@ -53,7 +53,8 @@ public class SaveAndLoadGame : MonoBehaviour
             return true;
         }
         //otherwise do checking on files to set the value of has saved game
-        return false;
+        
+        return GetAllSaveFiles().Length > 0;
     }
 
     /// <summary>
@@ -197,6 +198,39 @@ public class SaveAndLoadGame : MonoBehaviour
         }
         saveData.wonGame = true;
         return true;
+    }
+
+    /// <summary>
+    /// Method to grab all files found on disk that were saved by this game.
+    /// </summary>
+    /// <returns>Returns files found that match app persistent data path and saved as .dat</returns>
+    public string[] GetAllSaveFiles()
+    {
+        string[] filesFound = Directory.GetFiles(Application.persistentDataPath + "/", "*.dat", SearchOption.TopDirectoryOnly);
+        return filesFound;
+    }
+
+    /// <summary>
+    /// Method to grab all files found on disk that were saved by this game.
+    /// </summary>
+    /// <param name="searchPath">A string representing address to search for pattern on disk.</param>
+    /// <returns>Returns files found that match given search path and saved as .dat</returns>
+    public string[] GetAllSaveFiles(string searchPath)
+    {
+        string[] filesFound = Directory.GetFiles(searchPath, "*.dat", SearchOption.TopDirectoryOnly);
+        return filesFound;
+    }
+
+    /// <summary>
+    /// Method to grab all files found on disk that were saved by this game.
+    /// </summary>
+    /// <param name="searchPath">A string representing address to search for pattern on disk.</param>
+    /// <param name="searchPattern">String to represent the pattern to search for.</param>
+    /// <returns>Returns files found that match given search path and matches the search pattern</returns>
+    public string[] GetAllSaveFiles(string searchPath, string searchPattern)
+    {
+        string[] filesFound = Directory.GetFiles(searchPath, searchPattern, SearchOption.TopDirectoryOnly);
+        return filesFound;
     }
 
     [Serializable]
