@@ -58,6 +58,8 @@ namespace RootMotion.Demos {
 			// calculate the head look target position
 			state.lookPos = transform.position + cam.forward * 100f;
 		}
+
+
 	}
 }
 
