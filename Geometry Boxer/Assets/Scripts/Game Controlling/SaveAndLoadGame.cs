@@ -200,6 +200,32 @@ public class SaveAndLoadGame : MonoBehaviour
     }
 
     /// <summary>
+    /// Function to get status of the requested city.
+    /// </summary>
+    /// <param name="cityToGet">Name of the city of which status you want.</param>
+    /// <returns>Return the string of the status of the requested city.</returns>
+    public string GetCityStatus(string cityToGet)
+    {
+        for (int i = 0; i < saveData.cityNames.Count; i++)
+        {
+            if (cityToGet == saveData.cityNames[i])
+            {
+                return saveData.cityStatuses[i];
+            }
+        }
+        return "unknown";
+    }
+
+    /// <summary>
+    /// Function to return the status of each city as currently saved.
+    /// </summary>
+    /// <returns>List of strings of all city statuses.</returns>
+    public List<string> GetCityStatuses()
+    {
+        return saveData.cityStatuses;
+    }
+
+    /// <summary>
     /// Go through the city statuses and check if all conquered.
     /// </summary>
     /// <returns>Returns true if all cities are conquered, else false.</returns>

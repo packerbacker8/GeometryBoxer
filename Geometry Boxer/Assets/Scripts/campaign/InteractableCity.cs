@@ -31,7 +31,6 @@ public class InteractableCity : Interactable
             cam.freeze = true;
             Canvas.SetActive(true);
             citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
-
             //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             //Vector3 clickedPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             //RaycastHit hit;
