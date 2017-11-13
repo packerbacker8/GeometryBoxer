@@ -25,12 +25,13 @@ public class InteractableCity : Interactable
 
     void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "owned" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "conquered") //CHANGE TO BRING UP A DIFFERENT CANVAS IN THE FUTURE
         {
             worldInit.freeze = true;
             cam.freeze = true;
             Canvas.SetActive(true);
             citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
+            
             //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             //Vector3 clickedPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             //RaycastHit hit;
