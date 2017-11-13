@@ -147,6 +147,7 @@ public class SaveAndLoadGame : MonoBehaviour
     {
         //start save game information here
         saveData = new GameData();
+        SetCityNamesAndStatus();
         LoadLevel.loader.LoadALevel("CharacterSelect");
     }
 
@@ -161,7 +162,7 @@ public class SaveAndLoadGame : MonoBehaviour
         {
             if(cityNames[i].Contains(type))
             {
-                SetCityStatus(cityNames[i], "ours");
+                SetCityStatus(cityNames[i], "owned");
             }
         }
     }
@@ -233,7 +234,7 @@ public class SaveAndLoadGame : MonoBehaviour
     {
         for (int i = 0; i < saveData.cityStatuses.Count; i++)
         {
-            if (!saveData.cityNames[i].Contains(saveData.characterType) &&  saveData.cityStatuses[i] != "Conquered")
+            if (!saveData.cityNames[i].Contains(saveData.characterType) &&  saveData.cityStatuses[i] != "conquered")
             {
                 saveData.wonGame = false;
                 return false;

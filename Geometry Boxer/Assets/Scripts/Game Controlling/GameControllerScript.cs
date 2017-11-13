@@ -85,4 +85,9 @@ public class GameControllerScript : MonoBehaviour
         SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
         LoadLevel.loader.LoadALevel(dominationMap); //index of the scene the player is currently on
     }
+
+    public GameObject GetActivePlayer()
+    {
+        return activePlayer;
+    }
 }
