@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Dynamics;
+using RootMotion.Demos;
 
 public class EnemyHealthScript : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class EnemyHealthScript : MonoBehaviour
     private GameObject puppetMast;
     private GameObject gameController;
     private int enemyIndex = 0;
+    private UserControlAI charController;
 
     // Use this for initialization
     void Start()
@@ -39,6 +41,7 @@ public class EnemyHealthScript : MonoBehaviour
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
+        charController = GetComponentInChildren<UserControlAI>();
     }
 
     // Update is called once per frame
@@ -60,11 +63,14 @@ public class EnemyHealthScript : MonoBehaviour
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
         if (!dead && collision.impulse.magnitude > damageThreshold && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
         {
-            EnemyHealth -= Math.Abs(collision.impulse.magnitude);
-            if (!source.isPlaying && sfxManager.malePain.Count > 0 && collision.gameObject.transform.root.tag == "Player")
+            if (!charController.drop)
             {
-                painIndex = rand.Next(0, sfxManager.malePain.Count);
-                source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
+                EnemyHealth -= Math.Abs(collision.impulse.magnitude);
+                if (!source.isPlaying && sfxManager.malePain.Count > 0 && collision.gameObject.transform.root.tag == "Player")
+                {
+                    painIndex = rand.Next(0, sfxManager.malePain.Count);
+                    source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
+                }
             }
         }
     }
