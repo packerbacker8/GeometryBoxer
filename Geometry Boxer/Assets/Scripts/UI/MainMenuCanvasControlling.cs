@@ -117,4 +117,28 @@ public class MainMenuCanvasControlling : MonoBehaviour
         loadFileInput.text = "";
         LoadLevel.loader.LoadALevel("CitySelectMap");
     }
+
+    /// <summary>
+    /// Helper function to continue most recent save game.
+    /// </summary>
+    public void ContinueGame()
+    {
+        SaveAndLoadGame.saver.ContinueGame();
+    }
+
+    /// <summary>
+    /// Helper function to start a new save game.
+    /// </summary>
+    public void BeginNewGame()
+    {
+        SaveAndLoadGame.saver.StartNewGame();
+    }
+
+    /// <summary>
+    /// Helper function to quit the game.
+    /// </summary>
+    public void QuitGame()
+    {
+        LoadLevel.loader.ExitGame();
+    }
 }

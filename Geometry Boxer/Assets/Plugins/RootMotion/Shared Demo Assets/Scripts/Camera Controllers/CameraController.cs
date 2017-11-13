@@ -78,8 +78,8 @@ namespace RootMotion {
 			if (target == null || !cam.enabled) return;
 
 			// Cursors
-			Cursor.lockState = lockCursor? CursorLockMode.Locked: CursorLockMode.None;
-			Cursor.visible = lockCursor? false: true;
+			//Cursor.lockState = lockCursor? CursorLockMode.Locked: CursorLockMode.None;
+			//Cursor.visible = lockCursor? false: true;
 
 			// Should we rotate the camera?
 			bool rotate = rotateAlways || (rotateOnLeftButton && Input.GetMouseButton(0)) || (rotateOnRightButton && Input.GetMouseButton(1)) || (rotateOnMiddleButton && Input.GetMouseButton(2));

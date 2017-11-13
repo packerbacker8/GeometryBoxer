@@ -77,11 +77,11 @@ public class pauseMenu : MonoBehaviour
     /// </summary>
     public void pauseGame()
     {
-        Time.timeScale = 0.0f;
 
         Cursor.visible = true;
-
         Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0.0f;
+
         mouseShouldBeLocked = true;
 
         //UserControlMeleeScript.inPause = true;

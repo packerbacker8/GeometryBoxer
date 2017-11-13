@@ -280,8 +280,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1744243137}
-        m_MethodName: ExitGame
+      - m_Target: {fileID: 964499552}
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -548,7 +548,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.071017146}
+  m_AnchoredPosition: {x: 0, y: -0.000041745603}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &439409424
@@ -939,12 +939,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 600308511}
---- !u!114 &630814229 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114059141406363036, guid: e69b09739c130e9449555b60e80f9cb7,
-    type: 2}
-  m_PrefabInternal: {fileID: 594518031}
-  m_Script: {fileID: 11500000, guid: 3da1caa900880e24c894f23ff78097a6, type: 3}
 --- !u!1 &759275748
 GameObject:
   m_ObjectHideFlags: 0
@@ -1659,7 +1653,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1828200954}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9978591
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1774,8 +1768,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 630814229}
-        m_MethodName: StartNewGame
+      - m_Target: {fileID: 964499552}
+        m_MethodName: BeginNewGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1901,8 +1895,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 630814229}
-        m_MethodName: StartNewGame
+      - m_Target: {fileID: 964499552}
+        m_MethodName: BeginNewGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2021,12 +2015,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1674425302}
---- !u!114 &1744243137 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114656991063129522, guid: e69b09739c130e9449555b60e80f9cb7,
-    type: 2}
-  m_PrefabInternal: {fileID: 594518031}
-  m_Script: {fileID: 11500000, guid: 4ba384ef3dc748b40bc60c67b85fac71, type: 3}
 --- !u!1 &1767358958
 GameObject:
   m_ObjectHideFlags: 0
@@ -2355,8 +2343,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1744243137}
-        m_MethodName: ExitGame
+      - m_Target: {fileID: 964499552}
+        m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2643,7 +2631,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 630814229}
+      - m_Target: {fileID: 964499552}
         m_MethodName: ContinueGame
         m_Mode: 1
         m_Arguments:
