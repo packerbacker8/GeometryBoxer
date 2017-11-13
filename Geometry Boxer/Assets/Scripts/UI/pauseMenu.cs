@@ -6,10 +6,11 @@ using UnityEngine.UI;
 public class pauseMenu : MonoBehaviour
 {
 
-    public GameObject character;
     public GameObject scrollView;
     public GameObject fileButtonPrefab;
 
+    private GameObject character;
+    private GameObject control;
     private GameObject pauseMenuCanvas;
     private GameObject saveCanvas;
     private InputField saveInputField;
@@ -27,6 +28,8 @@ public class pauseMenu : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        control = GameObject.FindGameObjectWithTag("GameController");
+        character = control.GetComponent<GameControllerScript>().GetActivePlayer();
         pauseMenuCanvas = this.transform.GetChild(0).gameObject;
         saveCanvas = this.transform.GetChild(1).gameObject;
         saveInputField = saveCanvas.GetComponentInChildren<InputField>();
