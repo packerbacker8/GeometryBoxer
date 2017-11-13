@@ -50,7 +50,6 @@ public class pauseMenu : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Escape) && isPaused)
         {
             resumeGame();
-            isPaused = false;
         }
     }
 
@@ -64,14 +63,13 @@ public class pauseMenu : MonoBehaviour
         punchScript.enabled = true;
         CameraControllerScript.enabled = true;
 
-        if (mouseShouldBeLocked)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
+
+        Cursor.lockState = CursorLockMode.Locked;
+
         Cursor.visible = false;
 
         pauseMenuCanvas.SetActive(false);
-
+        isPaused = false;
     }
 
     /// <summary>
@@ -82,11 +80,10 @@ public class pauseMenu : MonoBehaviour
         Time.timeScale = 0.0f;
 
         Cursor.visible = true;
-        if (Cursor.lockState == CursorLockMode.Locked)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            mouseShouldBeLocked = true;
-        }
+
+        Cursor.lockState = CursorLockMode.None;
+        mouseShouldBeLocked = true;
+
         //UserControlMeleeScript.inPause = true;
         punchScript.enabled = false;
         CameraControllerScript.enabled = false;

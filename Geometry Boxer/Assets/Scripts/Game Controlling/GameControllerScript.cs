@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RootMotion.Demos;
 
 public class GameControllerScript : MonoBehaviour
 {
@@ -10,23 +11,33 @@ public class GameControllerScript : MonoBehaviour
     public GameObject[] playerOptions;
 
     private string currentMapName;
+    private GameObject activePlayer;
     private int numEnemiesAlive;
     private GameObject[] enemiesInWorld;
     private GameObject enemyContainer;
     private bool playerAlive;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         for (int i = 0; i < playerOptions.Length; i++)
         {
-            playerOptions[i].SetActive(playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()));
+            if(playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()))
+            {
+                playerOptions[i].SetActive(true);
+                activePlayer = playerOptions[i];
+            }
+            else
+            {
+                playerOptions[i].SetActive(false);
+            }
         }
         enemyContainer = GameObject.FindGameObjectWithTag("EnemyContainer");
         numEnemiesAlive = enemyContainer.transform.childCount;
         for (int i = 0; i < numEnemiesAlive; i++)
         {
             enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
+            enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(activePlayer.transform);
         }
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;

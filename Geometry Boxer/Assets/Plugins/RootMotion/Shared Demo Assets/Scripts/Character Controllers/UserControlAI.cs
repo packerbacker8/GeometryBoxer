@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.AI;
 
 namespace RootMotion.Demos
@@ -17,10 +17,11 @@ namespace RootMotion.Demos
         public float attackRange = 1f;
 
         public Animator anim;
-
         public Transform goal;
         public Transform moveTarget;
 
+        private GameObject activePlayer;
+        private GameObject[] playerOptions;
         private AudioSource source;
         private SFX_Manager sfxManager;
         private System.Random rand = new System.Random();
@@ -32,6 +33,7 @@ namespace RootMotion.Demos
         private int swingAnimLayer = 1;
         private int punchAnimLayer = 0;
         private int animationControllerIndex = 0;
+        private int characterControllerIndex = 2;
 
         private float jumpThreshold = 1.0f;
 
@@ -44,6 +46,7 @@ namespace RootMotion.Demos
 
         void Start()
         {
+            playerOptions = new GameObject[3];
             rand.Next(0, 1);
             source = gameObject.AddComponent<AudioSource>();
             source.spatialize = true;
@@ -55,6 +58,8 @@ namespace RootMotion.Demos
             anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
             //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
             agent.nextPosition = transform.position;
+            
+            
         }
 
         protected override void Update()
@@ -69,7 +74,6 @@ namespace RootMotion.Demos
             //agent.nextPosition = transform.position;
             if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) && !agent.isOnOffMeshLink)
             {
-                Debug.Log("Falling");
                 //agent.updatePosition = false;
                 //agent.nextPosition = transform.position;
                 agent.nextPosition = transform.position;
@@ -125,6 +129,15 @@ namespace RootMotion.Demos
 
             //Always rotate to face the player
             transform.rotation = Quaternion.LookRotation(newDir);
+        }
+
+        /// <summary>
+        /// Function to set player's move controller.
+        /// </summary>
+        /// <param name="move"></param>
+        public void SetMoveTarget(Transform move)
+        {
+            moveTarget = move.GetChild(characterControllerIndex);
         }
     }
 }
