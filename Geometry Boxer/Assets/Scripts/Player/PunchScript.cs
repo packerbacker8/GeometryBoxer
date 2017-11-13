@@ -122,7 +122,7 @@ public class PunchScript : MonoBehaviour
         oldInputX = 0f;
         oldInputY = 0f;
         cam = this.transform.GetChild(cameraIndex).gameObject;
-        puppetArmBehavior = this.transform.GetChild(behaviorIndex).gameObject.transform.GetChild(puppetArmBehaviorIndex).gameObject;
+        //puppetArmBehavior = this.transform.GetChild(behaviorIndex).gameObject.transform.GetChild(puppetArmBehaviorIndex).gameObject;
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         charController.GetComponent<CharacterMeleeDemo>().canMove = true;
         anim = charController.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
@@ -345,7 +345,7 @@ public class PunchScript : MonoBehaviour
                     currentAnim = action;
                     break;
                 }
-                else if(!leftGrab && action.animName == "Hit")
+                else if(!leftGrab && action.animName == "LeftPunch")
                 {
                     currentAnim = action;
                     break;
@@ -359,7 +359,7 @@ public class PunchScript : MonoBehaviour
                     currentAnim = action;
                     break;
                 }
-                else if (!rightGrab && action.animName == "Hit")
+                else if (!rightGrab && action.animName == "RightPunch")
                 {
                     currentAnim = action;
                     //anim.speed = 5f;

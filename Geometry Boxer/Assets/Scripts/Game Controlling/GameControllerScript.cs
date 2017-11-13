@@ -7,8 +7,9 @@ public class GameControllerScript : MonoBehaviour
     [Tooltip("What index value of the level to load in the build order.")]
     public string dominationMap = "CitySelectMap";
     public float loadLevelTimeOut = 20f;
-    public string currentMapName;
+    public GameObject[] playerOptions;
 
+    private string currentMapName;
     private int numEnemiesAlive;
     private GameObject[] enemiesInWorld;
     private GameObject enemyContainer;
@@ -17,19 +18,24 @@ public class GameControllerScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        enemyContainer= GameObject.FindGameObjectWithTag("EnemyContainer");
+        for (int i = 0; i < playerOptions.Length; i++)
+        {
+            playerOptions[i].SetActive(playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()));
+        }
+        enemyContainer = GameObject.FindGameObjectWithTag("EnemyContainer");
         numEnemiesAlive = enemyContainer.transform.childCount;
         for (int i = 0; i < numEnemiesAlive; i++)
         {
             enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
         }
         playerAlive = true;
+        currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(numEnemiesAlive <= 0)
+        if (numEnemiesAlive <= 0)
         {
             SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
             StartCoroutine(changeLevel(dominationMap));

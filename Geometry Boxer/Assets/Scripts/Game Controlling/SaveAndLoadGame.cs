@@ -250,6 +250,15 @@ public class SaveAndLoadGame : MonoBehaviour
         return filesFound;
     }
 
+    /// <summary>
+    /// Function to obtain the saved player's character type.
+    /// </summary>
+    /// <returns>Returns the string which represents the player's type (Cube, Sphere, Octahedron).</returns>
+    public string GetCharacterType()
+    {
+        return saveData.characterType;
+    }
+
     [Serializable]
     private class GameData
     {   
