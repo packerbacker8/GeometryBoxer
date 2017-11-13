@@ -41,6 +41,8 @@ public class GameControllerScript : MonoBehaviour
         }
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     // Update is called once per frame

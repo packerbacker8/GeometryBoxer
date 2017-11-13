@@ -138,21 +138,6 @@ public class PunchScript : MonoBehaviour
 //            }
 //        }
 //    }
-	/// <summary>
-	/// Muscle Groups are used by Puppet Behaviours to discriminate body parts.  //Larry: From Muscle.cs in PuppetMaster/Scripts
-	/// </summary>
-	//		[System.Serializable]
-	//		public enum Group {
-	//			Hips,
-	//			Spine,
-	//			Head,
-	//			Arm,
-	//			Hand,
-	//			Leg,
-	//			Foot,
-	//			Tail,
-	//			Prop
-	//		}
 			foreach (Muscle m in puppetMaster.muscles) 
 			{
 				if (m.props.group == Muscle.Group.Arm || m.props.group == Muscle.Group.Hand)
