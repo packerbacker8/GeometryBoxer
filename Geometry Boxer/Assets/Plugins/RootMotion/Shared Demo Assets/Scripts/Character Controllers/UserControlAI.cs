@@ -20,6 +20,8 @@ namespace RootMotion.Demos
         public Transform goal;
         public Transform moveTarget;
 
+        public bool drop;
+
         private GameObject activePlayer;
         private GameObject[] playerOptions;
         private AudioSource source;
@@ -58,32 +60,39 @@ namespace RootMotion.Demos
             anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
             //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
             agent.nextPosition = transform.position;
-            
+            drop = false;
             
         }
 
         protected override void Update()
         {
             float moveSpeed = walkByDefault ? 0.5f : 1f;
-
+            
             //Determine vector to rotate to target if not facing target
             Vector3 targetDir = moveTarget.position - transform.position;
             Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
             AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
             //agent.nextPosition = transform.position;
-            if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) && !agent.isOnOffMeshLink)
+            if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
             {
-                //agent.updatePosition = false;
-                //agent.nextPosition = transform.position;
-                agent.nextPosition = transform.position;
-                agent.enabled = false;
+                if (!agent.isOnOffMeshLink) {
+                    //agent.updatePosition = false;
+                    //agent.nextPosition = transform.position;
+                    agent.nextPosition = transform.position;
+                    agent.enabled = false;
+                }
+                else
+                {
+                    drop = true;
+                }
                 
             }
             else if (!agent.enabled)
             {
-                
+
                 //agent.updatePosition = true;
+                drop = false;
                 agent.enabled = true;
                 agent.nextPosition = transform.position;
             }
