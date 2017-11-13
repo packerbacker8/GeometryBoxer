@@ -8,7 +8,7 @@ namespace RootMotion.Demos
     /// <summary>
     /// User input for an AI controlled character controller.
     /// </summary>
-    public class UserControlAI : UserControlThirdPerson
+    public class UserControlJumpAI : UserControlThirdPerson
     {
         public int attackRandomAudio = 30;
 
@@ -16,6 +16,7 @@ namespace RootMotion.Demos
         public float stoppingThreshold = 1.5f;
         public float attackRange = 1f;
 
+        public float jumpDistance = 10f;
         public Animator anim;
 
         public Transform goal;
@@ -74,11 +75,11 @@ namespace RootMotion.Demos
                 //agent.nextPosition = transform.position;
                 agent.nextPosition = transform.position;
                 agent.enabled = false;
-                
+
             }
             else if (!agent.enabled)
             {
-                
+
                 //agent.updatePosition = true;
                 agent.enabled = true;
                 agent.nextPosition = transform.position;
@@ -109,7 +110,12 @@ namespace RootMotion.Demos
             }
             if (agent.enabled)
             {
-                if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
+                if (Vector3.Distance(moveTarget.position, transform.position) < jumpDistance + jumpThreshold && Vector3.Distance(moveTarget.position, transform.position) > jumpDistance - jumpThreshold)
+                {
+                    agent.enabled = false;
+                    state.jump = true;
+                }
+               else if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
                 {
                     //agent.updatePosition = true; 
                     agent.destination = moveTarget.position;
