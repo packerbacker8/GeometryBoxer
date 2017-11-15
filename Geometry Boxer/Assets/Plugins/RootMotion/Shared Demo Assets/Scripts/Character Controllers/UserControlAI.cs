@@ -66,8 +66,22 @@ namespace RootMotion.Demos
 
         protected override void Update()
         {
+            AIbehavior();
+        }
+
+        /// <summary>
+        /// Function to set player's move controller.
+        /// </summary>
+        /// <param name="move"></param>
+        public void SetMoveTarget(Transform move)
+        {
+            moveTarget = move.GetChild(characterControllerIndex);
+        }
+
+        private void AIbehavior()
+        {
             float moveSpeed = walkByDefault ? 0.5f : 1f;
-            
+
             //Determine vector to rotate to target if not facing target
             Vector3 targetDir = moveTarget.position - transform.position;
             Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
@@ -76,7 +90,8 @@ namespace RootMotion.Demos
             //agent.nextPosition = transform.position;
             if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
             {
-                if (!agent.isOnOffMeshLink) {
+                if (!agent.isOnOffMeshLink)
+                {
                     //agent.updatePosition = false;
                     //agent.nextPosition = transform.position;
                     agent.nextPosition = transform.position;
@@ -86,7 +101,7 @@ namespace RootMotion.Demos
                 {
                     drop = true;
                 }
-                
+
             }
             else if (!agent.enabled)
             {
@@ -138,15 +153,6 @@ namespace RootMotion.Demos
 
             //Always rotate to face the player
             transform.rotation = Quaternion.LookRotation(newDir);
-        }
-
-        /// <summary>
-        /// Function to set player's move controller.
-        /// </summary>
-        /// <param name="move"></param>
-        public void SetMoveTarget(Transform move)
-        {
-            moveTarget = move.GetChild(characterControllerIndex);
         }
     }
 }
