@@ -5,7 +5,7 @@ using RootMotion.Demos;
 
 public class GameControllerScript : MonoBehaviour
 {
-    [Tooltip("What index value of the level to load in the build order.")]
+    [Tooltip("What string value of the level to load in the build order.")]
     public string dominationMap = "CitySelectMap";
     public float loadLevelTimeOut = 20f;
     public GameObject[] playerOptions;
