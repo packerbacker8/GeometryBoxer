@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CitySelectSceneController : MonoBehaviour
 {
+    public GameObject wonGameCanvas;
+
     private string currentCityBuildName;
 
     // Use this for initialization
@@ -13,11 +15,7 @@ public class CitySelectSceneController : MonoBehaviour
         
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        if(SaveAndLoadGame.saver.CheckIfWonGame())
-        {
-            //open canvas saying the player won, let them go back to main menu
-        }
+        wonGameCanvas.SetActive(SaveAndLoadGame.saver.CheckIfWonGame());
     }
 
 
@@ -37,5 +35,21 @@ public class CitySelectSceneController : MonoBehaviour
     public string GetCurrentCityBuildName()
     {
         return currentCityBuildName;
+    }
+
+    /// <summary>
+    /// Funciton for canvas button to quit game.
+    /// </summary>
+    public void QuitGameButton()
+    {
+        LoadLevel.loader.ExitGame();
+    }
+
+    /// <summary>
+    /// Function for canvas button to go to main menu.
+    /// </summary>
+    public void GoToMainMenuButton()
+    {
+        LoadLevel.loader.LoadMainMenu();
     }
 }

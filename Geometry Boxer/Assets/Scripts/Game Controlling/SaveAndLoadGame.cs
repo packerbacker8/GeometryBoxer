@@ -13,6 +13,7 @@ public class SaveAndLoadGame : MonoBehaviour
 
     private static GameData saveData;
     private bool hasSavedGame;
+    private string currentSavePath;
 
     //use player information and store it in a singleton game object
 
@@ -25,6 +26,7 @@ public class SaveAndLoadGame : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
             saver = this;
             saveData = new GameData();
+            currentSavePath = "";
         }
         else if(saver != this)
         {
@@ -55,6 +57,11 @@ public class SaveAndLoadGame : MonoBehaviour
         //otherwise do checking on files to set the value of has saved game
         
         return GetAllSaveFiles().Length > 0;
+    }
+
+    public void QuickSave()
+    {
+        SaveGame(currentSavePath);
     }
 
     /// <summary>
@@ -117,6 +124,7 @@ public class SaveAndLoadGame : MonoBehaviour
     /// </summary>
     public void LoadGame(string loadFileName)
     {
+        currentSavePath = loadFileName;
         if (File.Exists(Application.persistentDataPath + "/" + loadFileName + ".dat" ))
         {
             BinaryFormatter binaryForm = new BinaryFormatter();
@@ -244,6 +252,7 @@ public class SaveAndLoadGame : MonoBehaviour
         }
         saveData.wonGame = true;
         saveData.gameStatus = "Victory";
+        SaveGame(currentSavePath);
         return true;
     }
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -463,7 +463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &70553033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,7 +476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e7eec7e577cfc43b8b0dccfa08b43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyHealth: 1e+13
+  EnemyHealth: 200
   deathDelay: 20
   damageThreshold: 60
 --- !u!1001 &71633153
@@ -5409,11 +5409,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!4 &600730625 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4868374675826868, guid: 098a3f7b7bb77694e8c81e0a50077758,
-    type: 2}
-  m_PrefabInternal: {fileID: 1441810387}
 --- !u!1001 &618363818
 Prefab:
   m_ObjectHideFlags: 0
@@ -14094,7 +14089,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1353788465}
-  - component: {fileID: 1353788473}
   - component: {fileID: 1353788467}
   - component: {fileID: 1353788472}
   - component: {fileID: 1353788466}
@@ -14278,28 +14272,6 @@ MonoBehaviour:
   text: The character model can be easily replaced if you assign a Humanoid character
     FBX or a ready made ragdoll as the "Replace Character Model" in the CharacterMeleeDemo
     component on the "Character Controller" and click on "Replace".
---- !u!114 &1353788473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1353788464}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e655dcf4c67df504bae352c0ef31ba1b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkByDefault: 0
-  canCrouch: 1
-  canJump: 1
-  attackRandomAudio: 30
-  stoppingDistance: 0.5
-  stoppingThreshold: 1.5
-  attackRange: 1
-  jumpDistance: 10
-  anim: {fileID: 0}
-  goal: {fileID: 0}
-  moveTarget: {fileID: 642895435}
 --- !u!1001 &1357565425
 Prefab:
   m_ObjectHideFlags: 0
@@ -15007,57 +14979,6 @@ Transform:
   m_Father: {fileID: 473320895}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1441810387
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1715855463}
-    m_Modifications:
-    - target: {fileID: 4868374675826868, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 23.39
-      objectReference: {fileID: 0}
-    - target: {fileID: 4868374675826868, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.32
-      objectReference: {fileID: 0}
-    - target: {fileID: 4868374675826868, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -16.91
-      objectReference: {fileID: 0}
-    - target: {fileID: 4868374675826868, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4868374675826868, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4868374675826868, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4868374675826868, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4868374675826868, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114292618782238648, guid: 098a3f7b7bb77694e8c81e0a50077758,
-        type: 2}
-      propertyPath: moveTarget
-      value: 
-      objectReference: {fileID: 642895435}
-    - target: {fileID: 1493950646642732, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-      propertyPath: m_Name
-      value: Bot Jump Sphere
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 098a3f7b7bb77694e8c81e0a50077758, type: 2}
-  m_IsPrefabParent: 0
 --- !u!4 &1444332519 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4335541723774630, guid: dba28f02c42201048bed4d1f2f38c658,
@@ -20650,7 +20571,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1272659335}
-  - {fileID: 600730625}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

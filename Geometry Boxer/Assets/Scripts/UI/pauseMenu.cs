@@ -22,6 +22,7 @@ public class pauseMenu : MonoBehaviour
 
     private bool mouseShouldBeLocked = false;
     private bool isPaused = false;
+    private bool isCombatScene = false;
     private float TimeSinceEsc = 0.0f;
     private List<GameObject> saveFileButtons;
 
@@ -29,35 +30,72 @@ public class pauseMenu : MonoBehaviour
     void Start()
     {
         control = GameObject.FindGameObjectWithTag("GameController");
-        character = control.GetComponent<GameControllerScript>().GetActivePlayer();
         pauseMenuCanvas = this.transform.GetChild(0).gameObject;
         saveCanvas = this.transform.GetChild(1).gameObject;
         saveInputField = saveCanvas.GetComponentInChildren<InputField>();
         saveCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(false);
-        UserControlMeleeScript = character.GetComponentInChildren<RootMotion.Demos.UserControlMelee>();
-        CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
-        punchScript = character.gameObject.GetComponent<PunchScript>();
         saveFileName = "";
         saveFileButtons = new List<GameObject>();
+        //if game controller found is game controller for combat levels, grab player info
+        isCombatScene = control.name.Equals("GameController");
+        if (isCombatScene)
+        {
+            character = control.GetComponent<GameControllerScript>().GetActivePlayer();
+            UserControlMeleeScript = character.GetComponentInChildren<RootMotion.Demos.UserControlMelee>();
+            CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
+            punchScript = character.gameObject.GetComponent<PunchScript>();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         TimeSinceEsc = TimeSinceEsc += Time.deltaTime;
+
         if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
         {
-            pauseGame();
+            pauseGameHelper();
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && isPaused)
         {
-            resumeGame();
+            resumeGameHelper();
+        }
+
+    }
+
+    /// <summary>
+    /// Function to pick which pause to use.
+    /// </summary>
+    public void pauseGameHelper()
+    {
+        if (isCombatScene)
+        {
+            pauseGame();
+        }
+        else
+        {
+            pauseGameNonCombat();
         }
     }
 
     /// <summary>
-    /// 
+    /// Function to pick which resume to use.
+    /// </summary>
+    public void resumeGameHelper()
+    {
+        if (isCombatScene)
+        {
+            resumeGame();
+        }
+        else
+        {
+            resumeGameNonCombat();
+        }
+    }
+
+    /// <summary>
+    /// Function to resume gameplay when playing in combat scenes.
     /// </summary>
     public void resumeGame()
     {
@@ -76,7 +114,7 @@ public class pauseMenu : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Function to pause gameplay when in combat scenes.
     /// </summary>
     public void pauseGame()
     {
@@ -91,6 +129,29 @@ public class pauseMenu : MonoBehaviour
         punchScript.enabled = false;
         CameraControllerScript.enabled = false;
 
+        pauseMenuCanvas.SetActive(true);
+        isPaused = true;
+    }
+
+    /// <summary>
+    /// Function to resume gameplay when playing in other scenes.
+    /// </summary>
+    public void resumeGameNonCombat()
+    {
+        Time.timeScale = 1.0f;
+
+        pauseMenuCanvas.SetActive(false);
+        isPaused = false;
+    }
+
+    /// <summary>
+    /// Function to pause gameplay when in other scenes.
+    /// </summary>
+    public void pauseGameNonCombat()
+    {
+        Time.timeScale = 0.0f;
+
+        mouseShouldBeLocked = true;
         pauseMenuCanvas.SetActive(true);
         isPaused = true;
     }
