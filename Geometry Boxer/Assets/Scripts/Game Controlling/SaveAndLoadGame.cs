@@ -179,6 +179,7 @@ public class SaveAndLoadGame : MonoBehaviour
             saveData.cityNames.Add(cityNames[i]);
             saveData.cityStatuses.Add(cityStatuses[i]);
         }
+        saveData.gameStatus = "Started";
     }
 
     /// <summary>
@@ -237,10 +238,12 @@ public class SaveAndLoadGame : MonoBehaviour
             if (!saveData.cityNames[i].Contains(saveData.characterType) &&  saveData.cityStatuses[i] != "conquered")
             {
                 saveData.wonGame = false;
+                saveData.gameStatus = "In Progress";
                 return false;
             }
         }
         saveData.wonGame = true;
+        saveData.gameStatus = "Victory";
         return true;
     }
 
@@ -286,9 +289,29 @@ public class SaveAndLoadGame : MonoBehaviour
         return saveData.characterType;
     }
 
+    /// <summary>
+    /// Function to obtain the saved game's status.
+    /// </summary>
+    /// <returns>Returns status of current save data with Character Select, In Progress, or Victory.</returns>
+    public string GetGameStatus()
+    {
+        return saveData.gameStatus;
+    }
+
+
+    /// <summary>
+    /// Function to set the current save's game status.
+    /// </summary>
+    /// <param name="status">Set the saved game's status to some string that indicates status.</param>
+    public void SetGameStatus(string status)
+    {
+        saveData.gameStatus = status;
+    }
+
     [Serializable]
     private class GameData
-    {   
+    {
+        public string gameStatus = "Character Select";
         public string characterType = "Cube";
         public List<string> cityNames = new List<string>();
         public List<string> cityStatuses = new List<string>();

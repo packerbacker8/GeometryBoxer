@@ -13,6 +13,11 @@ public class CitySelectSceneController : MonoBehaviour
         
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        if(SaveAndLoadGame.saver.CheckIfWonGame())
+        {
+            //open canvas saying the player won, let them go back to main menu
+        }
     }
 
 
