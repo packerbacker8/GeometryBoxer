@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 using UnityEngine.AI;
 
@@ -15,12 +16,18 @@ namespace RootMotion.Demos
         public float stoppingDistance = 0.5f;
         public float stoppingThreshold = 1.5f;
         public float attackRange = 1f;
+        public float jumpDistance = 10f;
+        public int behaviorIndex = 1;
 
         public Animator anim;
         public Transform goal;
         public Transform moveTarget;
-
+        [SerializeField] private EnemyBehavior enemyAI;  //Might Remove this Later
         public bool drop;
+
+        
+        private delegate void AIBehavior();
+        AIBehavior ai;
 
         private GameObject activePlayer;
         private GameObject[] playerOptions;
@@ -54,19 +61,18 @@ namespace RootMotion.Demos
             source.spatialize = true;
             source.volume = 0.6f;
             sfxManager = FindObjectOfType<SFX_Manager>();
-
             agent = GetComponent<NavMeshAgent>();
             characterPuppet = GetComponent<CharacterPuppet>();
             anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
             //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
             agent.nextPosition = transform.position;
             drop = false;
-            
+
         }
 
         protected override void Update()
         {
-            AIbehavior();
+            AIbehavior(behaviorIndex);
         }
 
         /// <summary>
@@ -78,7 +84,7 @@ namespace RootMotion.Demos
             moveTarget = move.GetChild(characterControllerIndex);
         }
 
-        private void AIbehavior()
+        private void AIbehavior(int behavior)
         {
             float moveSpeed = walkByDefault ? 0.5f : 1f;
 
@@ -87,13 +93,26 @@ namespace RootMotion.Demos
             Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
             AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
-            //agent.nextPosition = transform.position;
+            switch (behavior)
+            {
+                case 1:
+                    jumpBehavior(targetDir, newDir, info);
+                    break;
+                case 2:
+                    break;
+                default:
+                    defaultBehavior(targetDir,newDir,info);
+                    break;
+            }
+
+        }
+
+        private void defaultBehavior(Vector3 targetDir, Vector3 newDir, AnimatorStateInfo info)
+        {
             if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
             {
                 if (!agent.isOnOffMeshLink)
                 {
-                    //agent.updatePosition = false;
-                    //agent.nextPosition = transform.position;
                     agent.nextPosition = transform.position;
                     agent.enabled = false;
                 }
@@ -101,6 +120,66 @@ namespace RootMotion.Demos
                 {
                     drop = true;
                 }
+
+            }
+            else if (!agent.enabled)
+            {
+                drop = false;
+                agent.enabled = true;
+                agent.nextPosition = transform.position;
+            }
+
+            if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
+            {
+
+                //Rand controls chance of random attack sound being played, only while source is not already playing
+                if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying)
+                {
+                    source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
+                }
+
+                //If puppet is down, does not try to attack player during stand up anim
+                if ((!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && !info.IsName(onGround)))
+                {
+                    //This is for when puppet has melee object in hand
+                    if (characterPuppet.propRoot.currentProp != null)
+                    {
+                        anim.Play(rightSwingAnimation, swingAnimLayer);
+                    }
+                    else//No melee object in hand of puppet
+                    {
+                        anim.Play(rightSwingAnimation, punchAnimLayer);
+                    }
+                }
+            }
+            if (agent.enabled)
+            {
+                if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
+                {
+                    agent.destination = moveTarget.position;
+                    state.move = agent.velocity;
+                }
+                else
+                {
+                    agent.destination = transform.position;
+                    state.move = agent.velocity;
+                }
+            }
+
+            //Always rotate to face the player
+            transform.rotation = Quaternion.LookRotation(newDir);
+        }
+
+        private void jumpBehavior(Vector3 targetDir, Vector3 newDir, AnimatorStateInfo info)
+        {
+            if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) && !agent.isOnOffMeshLink)
+            {
+                Debug.Log("Falling");
+                //agent.updatePosition = false;
+                //agent.nextPosition = transform.position;
+                agent.nextPosition = transform.position;
+                agent.enabled = false;
+                drop = false;
 
             }
             else if (!agent.enabled)
@@ -137,7 +216,13 @@ namespace RootMotion.Demos
             }
             if (agent.enabled)
             {
-                if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
+                if (Vector3.Distance(moveTarget.position, transform.position) < jumpDistance + jumpThreshold && Vector3.Distance(moveTarget.position, transform.position) > jumpDistance - jumpThreshold)
+                {
+
+                    agent.enabled = false;
+                    state.jump = true;
+                }
+                else if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
                 {
                     //agent.updatePosition = true; 
                     agent.destination = moveTarget.position;

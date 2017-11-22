@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -476,7 +476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e7eec7e577cfc43b8b0dccfa08b43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyHealth: 200
+  EnemyHealth: 10000
   deathDelay: 20
   damageThreshold: 60
 --- !u!1001 &71633153
@@ -14090,6 +14090,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1353788465}
   - component: {fileID: 1353788467}
+  - component: {fileID: 1353788473}
   - component: {fileID: 1353788472}
   - component: {fileID: 1353788466}
   - component: {fileID: 1353788471}
@@ -14188,6 +14189,8 @@ MonoBehaviour:
   stoppingDistance: 1
   stoppingThreshold: 1.2
   attackRange: 1.2
+  jumpDistance: 10
+  behaviorIndex: 0
   anim: {fileID: 0}
   goal: {fileID: 0}
   moveTarget: {fileID: 642895435}
@@ -14272,6 +14275,28 @@ MonoBehaviour:
   text: The character model can be easily replaced if you assign a Humanoid character
     FBX or a ready made ragdoll as the "Replace Character Model" in the CharacterMeleeDemo
     component on the "Character Controller" and click on "Replace".
+--- !u!114 &1353788473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1353788464}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e655dcf4c67df504bae352c0ef31ba1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkByDefault: 0
+  canCrouch: 1
+  canJump: 1
+  attackRandomAudio: 30
+  stoppingDistance: 0.5
+  stoppingThreshold: 1.5
+  attackRange: 1
+  jumpDistance: 10
+  anim: {fileID: 0}
+  goal: {fileID: 0}
+  moveTarget: {fileID: 642895435}
 --- !u!1001 &1357565425
 Prefab:
   m_ObjectHideFlags: 0
