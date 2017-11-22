@@ -5,11 +5,21 @@ using UnityEngine.AI;
 
 namespace RootMotion.Demos
 {
-    [System.Serializable]
-    public abstract class EnemyBehavior
+    public class EnemyBehavior
     {
-        public abstract void Movement();
+        private Vector3 _targetDir;
+        private Vector3 _newDir;
+        private AnimatorStateInfo _info;
 
-        public abstract void Attack();
+        public EnemyBehavior(Vector3 targetDir, Vector3 newDir, AnimatorStateInfo info)
+        {
+            _targetDir = targetDir;
+            _newDir = newDir;
+            _info = info;
+        }
+        public void defaultMovement()
+        {
+
+        }
     }
 }

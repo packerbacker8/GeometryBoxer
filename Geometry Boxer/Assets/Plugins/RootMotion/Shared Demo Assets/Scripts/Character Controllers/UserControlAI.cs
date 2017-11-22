@@ -22,10 +22,10 @@ namespace RootMotion.Demos
         public Animator anim;
         public Transform goal;
         public Transform moveTarget;
-        [SerializeField] private EnemyBehavior enemyAI;  //Might Remove this Later
         public bool drop;
 
-        
+        [SerializeField]
+        private EnemyBehavior enemyAI;  //Might Remove this Later
         private delegate void AIBehavior();
         AIBehavior ai;
 
