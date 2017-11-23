@@ -16,11 +16,14 @@ public class UITrigger_MainMenu_Melee : MonoBehaviour {
 		
 	}
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider col)
     {
-        mainTrigger.SendMessage("MoveToMeleeDemo");
+        if(col.transform.root.tag == "Player")
+        {
+            mainTrigger.SendMessage("MoveToMeleeDemo");
+        }
     }
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider col)
     {
         //mainTrigger.SendMessage("MoveToOverhead");
     }

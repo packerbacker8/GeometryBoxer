@@ -13,12 +13,18 @@ public class UITrigger_MainMenu_Dummy : MonoBehaviour {
 	void Update () {
 		
 	}
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider col)
     {
-        mainTrigger.SendMessage("MoveToDummyDemo");
+        if(col.transform.root.tag == "Player")
+        {
+            mainTrigger.SendMessage("MoveToDummyDemo");
+        }
     }
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider col)
     {
-        mainTrigger.SendMessage("MoveToOverhead");
+        if(col.transform.root.tag == "Player")
+        {
+            mainTrigger.SendMessage("MoveToOverhead");
+        }
     }
 }
