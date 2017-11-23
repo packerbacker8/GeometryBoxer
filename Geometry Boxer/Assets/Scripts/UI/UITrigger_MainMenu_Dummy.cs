@@ -22,9 +22,11 @@ public class UITrigger_MainMenu_Dummy : MonoBehaviour {
     }
     private void OnTriggerExit(Collider col)
     {
-        if(col.transform.root.tag == "Player")
+        mainTrigger.SendMessage("MoveToOverhead");
+        if (col.transform.root.tag == "EnemyRoot")
         {
-            mainTrigger.SendMessage("MoveToOverhead");
+            Destroy(this);
         }
+        
     }
 }
