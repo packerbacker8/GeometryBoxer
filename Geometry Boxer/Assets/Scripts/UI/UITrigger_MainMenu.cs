@@ -25,6 +25,11 @@ public class UITrigger_MainMenu : MonoBehaviour {
     {
         Vector3 newPos = new Vector3(cameraTarget.transform.position.x, cameraTarget.transform.position.y, cameraTarget.transform.position.z);
         camera.transform.position = Vector3.Lerp(camera.transform.position, newPos, Time.deltaTime * cameraTransitionSpeed);
+
+        var targetRotation = Quaternion.LookRotation(player.transform.position - transform.position);
+
+        // Smoothly rotate towards the target point.
+        camera.transform.rotation = Quaternion.Slerp(camera.transform.rotation, targetRotation, cameraTransitionSpeed * Time.deltaTime);
     }
 
     void OnTriggerEnter(Collider col)
@@ -46,5 +51,18 @@ public class UITrigger_MainMenu : MonoBehaviour {
             ui_root.SetActive(false);
             cameraTarget = cameraAngles[1];
         }
+    }
+    
+    void MoveToOverhead()
+    {
+        cameraTarget = cameraAngles[1];
+    }
+    void MoveToMeleeDemo()
+    {
+        cameraTarget = cameraAngles[2];
+    }
+    void MoveToDummyDemo()
+    {
+        cameraTarget = cameraAngles[3];
     }
 }
