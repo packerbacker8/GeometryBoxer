@@ -104,15 +104,15 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4161969335280046}
-  - component: {fileID: 114159518337186038}
   - component: {fileID: 114527657433941802}
+  - component: {fileID: 114757299355172216}
   m_Layer: 0
   m_Name: SphereChar_Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1098761919915736
 GameObject:
   m_ObjectHideFlags: 1
@@ -1671,20 +1671,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114159518337186038
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1093907478265458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfaefcab34071e2458ec4aaf906630bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerHealth: 10000
-  deathDelay: 20
-  damageThreshold: 5
 --- !u!114 &114168014829140338
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2489,6 +2475,19 @@ MonoBehaviour:
   ignoreCollisionWithRagdoll:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &114757299355172216
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1093907478265458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d336601d2bf0d84fb417b075a2d51f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathDelay: 20
+  damageThreshold: 100
 --- !u!114 &114758787925825396
 MonoBehaviour:
   m_ObjectHideFlags: 1

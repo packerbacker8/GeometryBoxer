@@ -1,10 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RootMotion.Dynamics;
+using System;
+
 
 public class PlayerStatsBaseClass : MonoBehaviour
 {
-    protected int health;
+    public float deathDelay = 20f;
+    [Header("How much force is required for the player to take damage.")]
+    public float damageThreshold = 100f;
+
+    protected bool dead;
+    protected Animator anim;
+    protected int characterControllerIndex = 2;
+    protected int animationControllerIndex = 0;
+    protected int puppetMasterIndex = 1;
+    protected string getUpProne = "GetUpProne";
+    protected string getUpSupine = "GetUpSupine";
+    protected GameObject puppetMast;
+    protected GameObject gameController;
+
+    protected float health;
     protected float stability;
     protected float speed;
     protected float attackForce;
@@ -19,7 +36,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
         fallDamageMultiplier = 1.0f;
     }
 
-    public PlayerStatsBaseClass(int newHealth, float newStability, float newSpeed, float newForce, float newMult)
+    public PlayerStatsBaseClass(float newHealth, float newStability, float newSpeed, float newForce, float newMult)
     {
         health = newHealth;
         stability = newStability;
@@ -33,7 +50,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// differently.
     /// </summary>
     /// <returns>The integer that is returned is the current health.</returns>
-    public virtual int GetPlayerHealth()
+    public virtual float GetPlayerHealth()
     {
         return health;
     }
@@ -43,7 +60,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// differently.
     /// </summary>
     /// <param name="val">This value changes the health in some way. The default way is to subtract it off the current health.</param>
-    public virtual void SetPlayerHealth(int val)
+    public virtual void SetPlayerHealth(float val)
     {
         health -= val;
     }
@@ -126,5 +143,42 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public virtual void SetPlayerFallMultiplier(float newMult)
     {
         fallDamageMultiplier = newMult;
+    }
+
+    
+
+    /// <summary>
+    /// Function receives impulse received by colliders on the enemy characters.
+    /// </summary>
+    /// <param name="impulseVal"></param>
+    public virtual void ImpactReceived(Collision collision)
+    {
+        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+        if (collision.gameObject.tag == "EnemyCollision" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        {
+            if (!dead && collision.impulse.magnitude > damageThreshold)
+            {
+                SetPlayerHealth(Math.Abs(collision.impulse.magnitude));
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// Function to kill enemy AI unit, plays associated death animation then removes the object.
+    /// </summary>
+    public virtual void KillPlayer()
+    {
+        anim.Play("Death");
+        puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
+    }
+
+    /// <summary>
+    /// Function to give player more health.
+    /// </summary>
+    /// <param name="amount">How much health to give.</param>
+    public virtual void GiveHealth(int amount)
+    {
+        health += amount;
     }
 }
