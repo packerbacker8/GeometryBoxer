@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerStatsBaseClass : MonoBehaviour
 {
-    protected int health;
+    protected float health;
     protected float stability;
     protected float speed;
     protected float attackForce;
@@ -12,14 +12,14 @@ public class PlayerStatsBaseClass : MonoBehaviour
 
     public PlayerStatsBaseClass()
     {
-        health = 1000;
+        health = 1000f;
         stability = 1.0f;
         speed = 1.0f;
         attackForce = 1.0f;
         fallDamageMultiplier = 1.0f;
     }
 
-    public PlayerStatsBaseClass(int newHealth, float newStability, float newSpeed, float newForce, float newMult)
+    public PlayerStatsBaseClass(float newHealth, float newStability, float newSpeed, float newForce, float newMult)
     {
         health = newHealth;
         stability = newStability;
@@ -32,8 +32,8 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// Get the current health of the player. This method can be overridden to behave
     /// differently.
     /// </summary>
-    /// <returns>The integer that is returned is the current health.</returns>
-    public virtual int GetPlayerHealth()
+    /// <returns>The float that is returned is the current health.</returns>
+    public virtual float GetPlayerHealth()
     {
         return health;
     }
@@ -43,7 +43,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// differently.
     /// </summary>
     /// <param name="val">This value changes the health in some way. The default way is to subtract it off the current health.</param>
-    public virtual void SetPlayerHealth(int val)
+    public virtual void SetPlayerHealth(float val)
     {
         health -= val;
     }
