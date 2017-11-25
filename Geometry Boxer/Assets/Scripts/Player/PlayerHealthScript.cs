@@ -10,6 +10,7 @@ public class PlayerHealthScript : MonoBehaviour
     public float deathDelay = 20f;
     [Header("How much force is required for the player to take damage.")]
     public float damageThreshold = 100f;
+    public float cubeHealthModifier = 1f;
 
     private bool dead;
     private Animator anim;
@@ -52,7 +53,7 @@ public class PlayerHealthScript : MonoBehaviour
         {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                PlayerHealth -= Math.Abs(collision.impulse.magnitude);
+                PlayerHealth -= Math.Abs(collision.impulse.magnitude) / cubeHealthModifier;
             }
         }
 

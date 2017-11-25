@@ -29,7 +29,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
 
     public PlayerStatsBaseClass()
     {
-        health = 1000;
+        health = 1000f;
         stability = 1.0f;
         speed = 1.0f;
         attackForce = 1.0f;
@@ -49,7 +49,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// Get the current health of the player. This method can be overridden to behave
     /// differently.
     /// </summary>
-    /// <returns>The integer that is returned is the current health.</returns>
+    /// <returns>The float that is returned is the current health.</returns>
     public virtual float GetPlayerHealth()
     {
         return health;
