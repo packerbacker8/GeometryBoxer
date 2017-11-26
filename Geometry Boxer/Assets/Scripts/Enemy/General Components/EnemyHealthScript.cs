@@ -62,7 +62,7 @@ public class EnemyHealthScript : MonoBehaviour
     /// <param name="collision">The collision and its information recieved by the enemy colliders.</param>
     public void ImpactReceived(Collision collision)
     {
-        Debug.Log("Impact Force: " + collision.impulse.magnitude);
+        //Debug.Log("Impact Force: " + collision.impulse.magnitude);
         string tagOfCollision = collision.gameObject.transform.root.tag;
         if (tagOfCollision == "Player")
         {

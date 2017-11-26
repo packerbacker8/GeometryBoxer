@@ -53,6 +53,7 @@ public class SphereAttackScript : PunchScript
                 {
                     Debug.Log("char position " + charController.transform.position);
                     DeactivateRollAttack();
+                    UpdatePos(charController.transform, ballForm.transform);
                     Debug.Log("char position " + charController.transform.position);
 
                 }
@@ -93,6 +94,7 @@ public class SphereAttackScript : PunchScript
         Vector3 targetVec = targetTransform.position;
         if(transformToUpdate == ballForm.transform)
         {
+            transformToUpdate.localRotation = Quaternion.identity;
             targetVec = new Vector3(targetVec.x, targetVec.y + 1.5f, targetVec.z);
         }
         transformToUpdate.position = targetVec;
