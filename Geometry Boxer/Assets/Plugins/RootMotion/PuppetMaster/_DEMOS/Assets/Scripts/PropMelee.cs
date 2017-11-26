@@ -23,7 +23,7 @@ namespace RootMotion.Demos {
 		[Range(0f, 1f)] public float actionAdditionalPinWeight = 1f;
 
 		[Tooltip("Temporarily increase the mass of the Rigidbody when a hitting action is triggered.")]
-		[Range(0.1f, 10f)] public float actionMassMlp = 1f;
+		[Range(0.1f, 100000f)] public float actionMassMlp = 1f;
 
 		[Tooltip("Offset to the default center of mass of the Rigidbody (might improve prop handling).")]
 		public Vector3 COMOffset;

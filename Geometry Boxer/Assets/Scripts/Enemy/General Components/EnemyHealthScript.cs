@@ -19,6 +19,7 @@ public class EnemyHealthScript : MonoBehaviour
     private SFX_Manager sfxManager;
 
     private bool dead;
+    private bool damageIsFromPlayer;
     private Animator anim;
     private int characterControllerIndex = 2;
     private int animationControllerIndex = 0;
@@ -38,6 +39,7 @@ public class EnemyHealthScript : MonoBehaviour
         source.volume = 0.6f;
         sfxManager = FindObjectOfType<SFX_Manager>();
         dead = false;
+        damageIsFromPlayer = false;
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
@@ -57,16 +59,22 @@ public class EnemyHealthScript : MonoBehaviour
     /// <summary>
     /// Function receives impulse received by colliders on the enemy characters.
     /// </summary>
-    /// <param name="impulseVal"></param>
+    /// <param name="collision">The collision and its information recieved by the enemy colliders.</param>
     public void ImpactReceived(Collision collision)
     {
+        Debug.Log("Impact Force: " + collision.impulse.magnitude);
+        string tagOfCollision = collision.gameObject.transform.root.tag;
+        if (tagOfCollision == "Player")
+        {
+            damageIsFromPlayer = true; //after animator states enemy has stood up, change this to false.
+        }
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
         if (!dead && collision.impulse.magnitude > damageThreshold && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
         {
             if (!charController.drop)
             {
                 EnemyHealth -= Math.Abs(collision.impulse.magnitude);
-                if (!source.isPlaying && sfxManager.malePain.Count > 0 && collision.gameObject.transform.root.tag == "Player")
+                if (!source.isPlaying && sfxManager.malePain.Count > 0 && tagOfCollision == "Player")
                 {
                     painIndex = rand.Next(0, sfxManager.malePain.Count);
                     source.PlayOneShot(sfxManager.malePain[painIndex], 1f);

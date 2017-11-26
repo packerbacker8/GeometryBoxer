@@ -174,7 +174,6 @@ namespace RootMotion.Demos
         {
             if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) && !agent.isOnOffMeshLink)
             {
-                Debug.Log("Falling");
                 //agent.updatePosition = false;
                 //agent.nextPosition = transform.position;
                 agent.nextPosition = transform.position;
