@@ -5,12 +5,26 @@ using UnityEngine;
 public class CitySelectSceneController : MonoBehaviour
 {
     public GameObject wonGameCanvas;
+    public GameObject[] playerOptions;
 
     private string currentCityBuildName;
+    private GameObject activePlayer;
 
     // Use this for initialization
     void Start()
     {
+        for (int i = 0; i < playerOptions.Length; i++)
+        {
+            if (playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()))
+            {
+                playerOptions[i].SetActive(true);
+                activePlayer = playerOptions[i];
+            }
+            else
+            {
+                playerOptions[i].SetActive(false);
+            }
+        }
         currentCityBuildName = "MainMenu"; //default to main menu
         
         Cursor.lockState = CursorLockMode.None;

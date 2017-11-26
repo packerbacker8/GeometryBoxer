@@ -14,6 +14,7 @@ public class UITrigger_MainMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        Time.timeScale = 1.0f;
         if(!ui_root.activeSelf)
         {
             ui_root.SetActive(true);
