@@ -18,6 +18,8 @@ public class PlayerStatsBaseClass : MonoBehaviour
     protected int puppetMasterIndex = 1;
     protected string getUpProne = "GetUpProne";
     protected string getUpSupine = "GetUpSupine";
+    protected string protectedAnim = "Protective";
+    protected string fall = "Fall";
     protected GameObject puppetMast;
     protected GameObject gameController;
 

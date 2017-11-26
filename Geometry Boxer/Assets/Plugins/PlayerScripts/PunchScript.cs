@@ -92,7 +92,7 @@ public class PunchScript : MonoBehaviour
     private GameObject cam;
     private List<Muscle> armMuscles;
 
-    private enum Limbs
+    public enum Limbs
     {
         leftArm = 0,
         rightArm
@@ -318,7 +318,7 @@ public class PunchScript : MonoBehaviour
     /// Cause player to throw single punch of one arm.  Arm is determined by limb parameter.
     /// </summary>
     /// <param name="limb">The value 0 corresponds to left arm, 1 to right arm.</param>
-    private void ThrowSinglePunch(Limbs limb)
+    public virtual void ThrowSinglePunch(Limbs limb)
     {
         CharacterAnimations currentAnim = InitCharacterAnimationStruct();
         foreach (CharacterAnimations action in playerAnimations)
@@ -361,7 +361,7 @@ public class PunchScript : MonoBehaviour
     /// Cause player to throw single uppercut of one arm.  Arm is determined by limb parameter.
     /// </summary>
     /// <param name="limb">The value 0 corresponds to left arm, 1 to right arm.</param>
-    private void ThrowUppercut(Limbs limb)
+    public virtual void ThrowUppercut(Limbs limb)
     {
         CharacterAnimations currentAnim = InitCharacterAnimationStruct();
         //anim.Play(leftUppercutAnimation, punchAnimLayer);
@@ -391,7 +391,7 @@ public class PunchScript : MonoBehaviour
     /// <param name="limb">The value 0 corresponds to left arm, 1 to right arm.</param>
     /// <param name="xMotion">Gets axis value from input for left and right sticks. In horizontal direction.</param>
     /// <param name="yMotion">Gets axis value from input for left and right sticks. In vertical direction.</param>
-    private void MoveArm(Limbs limb, float xMotion, float yMotion)
+    public virtual void MoveArm(Limbs limb, float xMotion, float yMotion)
     {
         //use camera's forward to determine the forward (z direction) of the movement
         Rigidbody armToMove = null;
