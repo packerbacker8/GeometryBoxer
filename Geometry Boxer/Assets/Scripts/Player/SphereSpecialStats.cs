@@ -22,8 +22,9 @@ public class SphereSpecialStats : PlayerStatsBaseClass
     private bool isGrounded;
 
     // Use this for initialization
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         dead = false;
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;

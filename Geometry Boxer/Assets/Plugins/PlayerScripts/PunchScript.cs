@@ -88,7 +88,7 @@ public class PunchScript : MonoBehaviour
     private GameObject puppetArmBehavior;
     private GameObject puppetMastObject;
     private PuppetMaster puppetMaster;
-    private GameObject charController;
+    protected GameObject charController;
     private GameObject cam;
     private List<Muscle> armMuscles;
 
@@ -99,7 +99,7 @@ public class PunchScript : MonoBehaviour
     };
 
     // Use this for initialization
-    void Start()
+    protected virtual void Start()
     {
         controllingLeftArm = false;
         controllingRightArm = false;

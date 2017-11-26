@@ -47,6 +47,15 @@ public class PlayerStatsBaseClass : MonoBehaviour
         fallDamageMultiplier = newMult;
     }
 
+    protected virtual void Start()
+    {
+        health = 1000f;
+        stability = 1.0f;
+        speed = 1.0f;
+        attackForce = 1.0f;
+        fallDamageMultiplier = 1.0f;
+    }
+
     /// <summary>
     /// Get the current health of the player. This method can be overridden to behave
     /// differently.
