@@ -39,8 +39,9 @@ public class SphereAttackScript : PunchScript
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         if(!onCooldown)
         {
             if (Input.GetKeyDown(ballFormKey))

@@ -147,7 +147,7 @@ public class PunchScript : MonoBehaviour
 			}
 	}
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         useController = controllerInfo.Length > 0;
         
