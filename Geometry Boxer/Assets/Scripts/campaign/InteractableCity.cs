@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class InteractableCity : Interactable
@@ -9,8 +10,10 @@ public class InteractableCity : Interactable
     public GameObject Player;
     public GameObject MapCamera;
     public GameObject Canvas;
+    public Image cityImageLink;
+    public Sprite citySprite;
     public string sceneName;
-   
+
     private WorldInteraction worldInit;
     private RTSCam cam;
     private GameObject citySelectController;
@@ -31,6 +34,7 @@ public class InteractableCity : Interactable
             cam.freeze = true;
             Canvas.SetActive(true);
             citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
+            cityImageLink.sprite = citySprite;
             
             //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             //Vector3 clickedPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

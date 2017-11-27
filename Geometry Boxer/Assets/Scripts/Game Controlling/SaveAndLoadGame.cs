@@ -321,7 +321,7 @@ public class SaveAndLoadGame : MonoBehaviour
     private class GameData
     {
         public string gameStatus = "Character Select";
-        public string characterType = "Sphere";
+        public string characterType = "Octahedron";
         public List<string> cityNames = new List<string>();
         public List<string> cityStatuses = new List<string>();
         public bool wonGame = false;
