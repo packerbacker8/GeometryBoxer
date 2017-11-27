@@ -12,6 +12,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public float damageThreshold = 100f;
 
     protected bool dead;
+    protected bool hitByEnemy;
     protected Animator anim;
     protected int characterControllerIndex = 2;
     protected int animationControllerIndex = 0;
@@ -22,6 +23,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     protected string fall = "Fall";
     protected GameObject puppetMast;
     protected GameObject gameController;
+    protected BehaviourPuppet behavePuppet;
 
     protected float health;
     protected float stability;
@@ -36,6 +38,8 @@ public class PlayerStatsBaseClass : MonoBehaviour
         speed = 1.0f;
         attackForce = 1.0f;
         fallDamageMultiplier = 1.0f;
+        hitByEnemy = false;
+        dead = false;
     }
 
     public PlayerStatsBaseClass(float newHealth, float newStability, float newSpeed, float newForce, float newMult)
@@ -54,6 +58,18 @@ public class PlayerStatsBaseClass : MonoBehaviour
         speed = 1.0f;
         attackForce = 1.0f;
         fallDamageMultiplier = 1.0f;
+        hitByEnemy = false;
+        dead = false;
+        anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+        puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
+        gameController = GameObject.FindGameObjectWithTag("GameController");
+        behavePuppet = this.transform.GetComponentInChildren<BehaviourPuppet>();
+    }
+
+    protected virtual void LateUpdate()
+    {
+        hitByEnemy = CheckIfKnockedDown();
+        //Debug.Log(hitByEnemy);
     }
 
     /// <summary>
@@ -161,11 +177,19 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// <summary>
     /// Function receives impulse received by colliders on the enemy characters.
     /// </summary>
-    /// <param name="impulseVal"></param>
+    /// <param name="collision">collision information sent to this character.</param>
     public virtual void ImpactReceived(Collision collision)
     {
-        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (collision.gameObject.tag == "EnemyCollision" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        //AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+        if (collision.gameObject.tag == "EnemyCollision")  //|| (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        {
+            hitByEnemy = true;
+            if (!dead && collision.impulse.magnitude > damageThreshold)
+            {
+                SetPlayerHealth(Math.Abs(collision.impulse.magnitude));
+            }
+        }
+        else if(hitByEnemy)
         {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
@@ -191,5 +215,15 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public virtual void GiveHealth(int amount)
     {
         health += amount;
+    }
+
+    protected virtual bool CheckIfKnockedDown()
+    {
+        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+        if(behavePuppet.state == BehaviourPuppet.State.Unpinned)
+        {
+            return hitByEnemy;
+        }
+        return false;
     }
 }

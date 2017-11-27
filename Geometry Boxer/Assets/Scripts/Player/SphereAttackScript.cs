@@ -42,21 +42,20 @@ public class SphereAttackScript : PunchScript
     protected override void Update()
     {
         base.Update();
-        if(!onCooldown)
+        
+        if (!onCooldown)
         {
             if (Input.GetKeyDown(ballFormKey))
             {
                 if (!isBall) //make this have a cooldown
                 {
                     ActivateRollAttack();
+                    UpdatePos(ballForm.transform, charController.transform);
                 }
                 else
                 {
-                    Debug.Log("char position " + charController.transform.position);
                     DeactivateRollAttack();
                     UpdatePos(charController.transform, ballForm.transform);
-                    Debug.Log("char position " + charController.transform.position);
-
                 }
             }
             if (isBall)
@@ -76,6 +75,7 @@ public class SphereAttackScript : PunchScript
             else
             {
                 UpdatePos(ballForm.transform, charController.transform);
+
             }
         }
         else
@@ -95,14 +95,15 @@ public class SphereAttackScript : PunchScript
         Vector3 targetVec = targetTransform.position;
         if(transformToUpdate == ballForm.transform)
         {
-            transformToUpdate.localRotation = Quaternion.identity;
-            targetVec = new Vector3(targetVec.x, targetVec.y + 1.5f, targetVec.z);
+            transformToUpdate.rotation = Quaternion.identity;
+            targetVec = new Vector3(targetVec.x, targetVec.y + 2f, targetVec.z);
         }
         transformToUpdate.position = targetVec;
     }
 
     public void DeactivateRollAttack()
     {
+        UpdatePos(charController.transform, ballForm.transform);
         //play animation of morphing into ball
         isBall = false;
         timeAsBall = 0;
@@ -132,6 +133,7 @@ public class SphereAttackScript : PunchScript
 
     public void ActivateRollAttack()
     {
+        UpdatePos(ballForm.transform, charController.transform);
         isBall = true;
         //play animation of morphing into ball
         for(int i =0; i < this.transform.childCount; i++)
