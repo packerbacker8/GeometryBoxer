@@ -12,9 +12,13 @@ public class UITrigger_MainMenu : MonoBehaviour {
 
     private GameObject cameraTarget; 
 
+    void Awake()
+    {
+        Time.timeScale = 1.0f;
+    }
 	// Use this for initialization
 	void Start () {
-        Time.timeScale = 1.0f;
+       
         if(!ui_root.activeSelf)
         {
             ui_root.SetActive(true);
