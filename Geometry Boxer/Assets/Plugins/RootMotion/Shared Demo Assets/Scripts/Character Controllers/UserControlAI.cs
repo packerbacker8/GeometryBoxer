@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 namespace RootMotion.Demos
 {
-
     /// <summary>
     /// User input for an AI controlled character controller.
     /// </summary>
@@ -25,7 +24,7 @@ namespace RootMotion.Demos
         public bool drop;
 
         [SerializeField]
-        private EnemyBehavior enemyAI;  //Might Remove this Later
+//        private EnemyBehavior enemyAI;  //Might Remove this Later
         private delegate void AIBehavior();
         AIBehavior ai;
 
@@ -64,7 +63,6 @@ namespace RootMotion.Demos
             agent = GetComponent<NavMeshAgent>();
             characterPuppet = GetComponent<CharacterPuppet>();
             anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
-            //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
             agent.nextPosition = transform.position;
             drop = false;
 
@@ -174,8 +172,6 @@ namespace RootMotion.Demos
         {
             if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) && !agent.isOnOffMeshLink)
             {
-                //agent.updatePosition = false;
-                //agent.nextPosition = transform.position;
                 agent.nextPosition = transform.position;
                 agent.enabled = false;
                 drop = false;
@@ -183,8 +179,6 @@ namespace RootMotion.Demos
             }
             else if (!agent.enabled)
             {
-
-                //agent.updatePosition = true;
                 drop = false;
                 agent.enabled = true;
                 agent.nextPosition = transform.position;
@@ -223,10 +217,8 @@ namespace RootMotion.Demos
                 }
                 else if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
                 {
-                    //agent.updatePosition = true; 
                     agent.destination = moveTarget.position;
                     state.move = agent.velocity;
-                    //agent.Move(agent.velocity);
                 }
                 else
                 {
