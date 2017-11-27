@@ -85,12 +85,12 @@ public class PunchScript : MonoBehaviour
     private string onGround = "OnGround";
     private string[] controllerInfo;
 
-    private GameObject puppetArmBehavior;
-    private GameObject puppetMastObject;
-    private PuppetMaster puppetMaster;
+    protected GameObject puppetArmBehavior;
+    protected GameObject puppetMastObject;
+    protected PuppetMaster puppetMaster;
     protected GameObject charController;
-    private GameObject cam;
-    private List<Muscle> armMuscles;
+    protected GameObject cam;
+    protected List<Muscle> armMuscles;
 
     public enum Limbs
     {

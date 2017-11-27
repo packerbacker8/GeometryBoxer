@@ -172,7 +172,15 @@ public class PlayerStatsBaseClass : MonoBehaviour
         fallDamageMultiplier = newMult;
     }
 
-    
+    /// <summary>
+    /// Applies stability multiplier to the collision resistance parameter of the
+    /// behavior puppet. Method can be overriden to behave differently.
+    /// </summary>
+    public virtual void ApplyStabilityStat()
+    {
+        behavePuppet.collisionResistance = new Weight(behavePuppet.collisionResistance.floatValue * stability);
+    }
+
 
     /// <summary>
     /// Function receives impulse received by colliders on the enemy characters.

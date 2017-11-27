@@ -37,6 +37,7 @@ public class SphereSpecialStats : PlayerStatsBaseClass
         fadeOffMult = 10;
         switchedMesh = false;
         stability = 0.5f;
+        ApplyStabilityStat();
         speed = 1.0f; //builds up as they move more
         attackForce = 1.0f; //builds up as they move more
 
@@ -67,14 +68,14 @@ public class SphereSpecialStats : PlayerStatsBaseClass
                 attackForce = maxAttackForce;
             }
         }
-        else if(info.IsName(fall))
-        {
-            //keep the same as falling maybe?
-        }
-        else if(info.IsName(getUpProne) || info.IsName(getUpSupine)) //if you've been knocked down automatically reset stats
+        else if (info.IsName(getUpProne) || info.IsName(getUpSupine)) //if you've been knocked down automatically reset stats
         {
             speed = minSpeed;
             attackForce = minAttackForce;
+        }
+        else if(info.IsName(fall))
+        {
+            //keep the same as falling maybe?
         }
         else
         {
