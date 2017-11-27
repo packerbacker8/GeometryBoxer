@@ -1,0 +1,1 @@
+I forgot to say that I also duplicated the animation controller, called LarryTestController. It just has one parameter added called variableAnimSpeed and it is applied to the "Grounded Directional" state. I did it this way because changing anim.speed dosen't work for me.

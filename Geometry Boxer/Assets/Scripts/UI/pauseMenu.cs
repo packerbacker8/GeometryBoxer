@@ -42,7 +42,6 @@ public class pauseMenu : MonoBehaviour
         if (isCombatScene)
         {
             character = control.GetComponent<GameControllerScript>().GetActivePlayer();
-            UserControlMeleeScript = character.GetComponentInChildren<RootMotion.Demos.UserControlMelee>();
             CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
             punchScript = character.gameObject.GetComponent<PunchScript>();
         }
