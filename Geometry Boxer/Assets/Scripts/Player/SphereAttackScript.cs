@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using RootMotion;
@@ -15,6 +16,7 @@ public class SphereAttackScript : PunchScript
     private float cooldownTime;
     private SphereSpecialStats stats;
     private Rigidbody ballRigid;
+    private Rigidbody pelvisRigid;
     private float moveVer;
     private float moveHor;
     private float ballForce;
@@ -27,10 +29,11 @@ public class SphereAttackScript : PunchScript
         base.Start();
         stats = this.GetComponent<SphereSpecialStats>();
         ballRigid = ballForm.GetComponent<Rigidbody>();
+        pelvisRigid = stats.pelvisJoint.GetComponent<Rigidbody>();
         ballForm.GetComponent<MeshRenderer>().enabled = false;
         ballForm.GetComponent<SphereCollider>().enabled = false;
         ballTime = 10.0f;
-        ballForce = 100f;
+        ballForce = 1000f;
         ballCooldownTime = 2.0f;
         timeAsBall = 0;
         cooldownTime = 0f;
@@ -68,14 +71,17 @@ public class SphereAttackScript : PunchScript
                 }
                 moveHor = Input.GetAxis("Horizontal") * ballForce * stats.GetPlayerSpeed();
                 moveVer = Input.GetAxis("Vertical") * ballForce * stats.GetPlayerSpeed();
-
                 ballRigid.AddForce(new Vector3(moveHor, 0, moveVer));
+                /*if(Math.Abs(ballRigid.velocity.magnitude) > 500f)
+                {
+                    ballRigid.AddForce(new Vector3(-1 * moveHor, 0, -1 *moveVer));
+                }*/
                 UpdatePos(charController.transform, ballForm.transform);
             }
             else
             {
                 UpdatePos(ballForm.transform, charController.transform);
-
+                ballRigid.velocity = pelvisRigid.velocity;
             }
         }
         else
