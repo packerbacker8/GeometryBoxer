@@ -253,7 +253,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     protected virtual bool CheckIfKnockedDown()
     {
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if(behavePuppet.state == BehaviourPuppet.State.Unpinned)
+        if(behavePuppet.state == BehaviourPuppet.State.Unpinned || info.IsName(fall))
         {
             return hitByEnemy;
         }

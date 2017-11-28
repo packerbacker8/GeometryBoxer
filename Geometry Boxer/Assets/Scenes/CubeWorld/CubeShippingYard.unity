@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1166,7 +1166,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -1177,6 +1177,21 @@ Prefab:
         type: 2}
       propertyPath: behaviorIndex
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: damageThreshold
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: heavyDamageOffset
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: attackRandomAudio
+      value: 250
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4f55e8e7522dd7147bb98701fbbf5276, type: 2}
@@ -1618,7 +1633,87 @@ GameObject:
   m_PrefabParentObject: {fileID: 1238341778347432, guid: bb1270abca3964748819397b580c9a26,
     type: 2}
   m_PrefabInternal: {fileID: 1647689917}
---- !u!82 &100780033
+--- !u!82 &100780031
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 100780030}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 5977cb1d0ff10854d86c357ced177525, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!82 &100780032
 AudioSource:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -1631,7 +1726,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -6806,7 +6901,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -6822,6 +6917,21 @@ Prefab:
         type: 2}
       propertyPath: m_ConnectedAnchor.y
       value: 0.0000006258485
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: damageThreshold
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: heavyDamageOffset
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: attackRandomAudio
+      value: 250
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4f55e8e7522dd7147bb98701fbbf5276, type: 2}
@@ -9694,7 +9804,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -9705,6 +9815,21 @@ Prefab:
         type: 2}
       propertyPath: behaviorIndex
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: damageThreshold
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: heavyDamageOffset
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: attackRandomAudio
+      value: 250
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4f55e8e7522dd7147bb98701fbbf5276, type: 2}
@@ -12605,7 +12730,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -12616,6 +12741,21 @@ Prefab:
         type: 2}
       propertyPath: behaviorIndex
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: damageThreshold
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: heavyDamageOffset
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: attackRandomAudio
+      value: 250
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4f55e8e7522dd7147bb98701fbbf5276, type: 2}
@@ -13872,6 +14012,26 @@ Prefab:
       propertyPath: m_Name
       value: Bot Cube (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: damageThreshold
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: heavyDamageOffset
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: attackRandomAudio
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: EnemyHealth
+      value: 5000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4f55e8e7522dd7147bb98701fbbf5276, type: 2}
   m_IsPrefabParent: 0
@@ -15125,7 +15285,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -15196,6 +15356,21 @@ Prefab:
         type: 2}
       propertyPath: m_ConnectedAnchor.z
       value: -0.000003881548
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: damageThreshold
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: heavyDamageOffset
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: attackRandomAudio
+      value: 250
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4f55e8e7522dd7147bb98701fbbf5276, type: 2}
@@ -16108,6 +16283,19 @@ GameObject:
   m_PrefabParentObject: {fileID: 1093907478265458, guid: c267fa9c116b99744947890072a861a2,
     type: 2}
   m_PrefabInternal: {fileID: 1243112423}
+--- !u!114 &1243112425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1243112424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467325d2e80a66740a503162b86118aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activate: {fileID: 8300000, guid: e97fca5dbb8c29b4ea210910f29bb7ee, type: 3}
+  deactivate: {fileID: 8300000, guid: c7965de26f0715b44996683e6c2fbeda, type: 3}
 --- !u!1001 &1244813399
 Prefab:
   m_ObjectHideFlags: 0

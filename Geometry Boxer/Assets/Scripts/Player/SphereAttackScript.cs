@@ -157,6 +157,7 @@ public class SphereAttackScript : PunchScript
             anim.SetFloat("Forward", 0);
         }
         anim.Play("Grounded Directional");
+        SendMessage("BallDeactivatedSfx");
     }
 
     public void ActivateRollAttack()
@@ -186,5 +187,6 @@ public class SphereAttackScript : PunchScript
         charController.GetComponent<CharacterMeleeDemo>().enabled = false;
         charController.GetComponent<CapsuleCollider>().enabled = false;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+        SendMessage("BallActivatedSfx");
     }
 }
