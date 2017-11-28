@@ -117,4 +117,10 @@ public class SphereSpecialStats : PlayerStatsBaseClass
 
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
     }
+
+    public override void PlayerBeingReset(Transform resetLocation)
+    {
+        //base.PlayerBeingReset(resetLocation);
+        LoadLevel.loader.ReloadScene();
+    }
 }

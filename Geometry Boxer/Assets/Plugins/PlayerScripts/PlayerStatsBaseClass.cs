@@ -23,6 +23,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     protected string fall = "Fall";
     protected GameObject puppetMast;
     protected GameObject gameController;
+    protected GameObject charController;
     protected BehaviourPuppet behavePuppet;
 
     protected float health;
@@ -63,6 +64,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
+        charController = this.transform.GetChild(characterControllerIndex).gameObject;
         behavePuppet = this.transform.GetComponentInChildren<BehaviourPuppet>();
     }
 
@@ -181,6 +183,29 @@ public class PlayerStatsBaseClass : MonoBehaviour
         behavePuppet.collisionResistance = new Weight(behavePuppet.collisionResistance.floatValue * stability);
     }
 
+    /// <summary>
+    /// Function to reset the player's location when falling outside the saftey net.
+    /// </summary>
+    /// <param name="resetLocation">Empty game object's transform describing where player should go.</param>
+    public virtual void PlayerBeingReset(Transform resetLocation)
+    {
+        hitByEnemy = false;
+        behavePuppet.Reset(resetLocation.position, Quaternion.identity);
+        SetVelocityToZero(puppetMast.transform.GetChild(0).gameObject); //send the pelvis joint as the starting rigid body to stop velocity
+        charController.transform.position = resetLocation.position;
+    }
+
+    private void SetVelocityToZero(GameObject obj)
+    {
+        for (int i = 0; i < obj.transform.childCount; i++)
+        {
+            SetVelocityToZero(obj.transform.GetChild(i).gameObject);
+        }
+        obj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        obj.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        obj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        obj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+    }
 
     /// <summary>
     /// Function receives impulse received by colliders on the enemy characters.

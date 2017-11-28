@@ -51,7 +51,6 @@ public class EnemyHealthScript : MonoBehaviour
     {
         if (EnemyHealth <= 0f && !dead)
         {
-            dead = true;
             KillEnemy();
         }
     }
@@ -88,16 +87,28 @@ public class EnemyHealthScript : MonoBehaviour
     /// </summary>
     public void KillEnemy()
     {
-        anim.Play("Death");
-
-        if(sfxManager.maleDeath.Count > 0)
+        if (!dead)
         {
-            source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
-        }
-        puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-        gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
+            anim.Play("Death");
 
-        //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+            if (sfxManager.maleDeath.Count > 0)
+            {
+                source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
+            }
+            puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
+            gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
+            dead = true;
+            //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+        }
+    }
+
+    /// <summary>
+    /// Helper function to kill enemy and freeze them if they go outside the bounds of the world.
+    /// </summary>
+    public void ResetEnemy()
+    {
+        KillEnemy();
+        this.GetComponentInChildren<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
     }
 
     /// <summary>
@@ -116,6 +127,15 @@ public class EnemyHealthScript : MonoBehaviour
     public int GetEnemyIndex()
     {
         return enemyIndex;
+    }
+
+    /// <summary>
+    /// Helper function to ask if the enemy is dead or not.
+    /// </summary>
+    /// <returns>Returns bool indicating if enemy is dead or not. Dead = true.</returns>
+    public bool GetIsDead()
+    {
+        return dead;
     }
 }
 
