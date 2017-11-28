@@ -46,9 +46,4 @@ public class CitySelectScreenCharacterImageUpdate : MonoBehaviour {
             image.sprite = octahedron;
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
