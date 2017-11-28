@@ -1166,7 +1166,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -6901,7 +6901,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -9789,7 +9789,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -12715,7 +12715,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -14012,6 +14012,11 @@ Prefab:
       propertyPath: attackRandomAudio
       value: 250
       objectReference: {fileID: 0}
+    - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
+        type: 2}
+      propertyPath: EnemyHealth
+      value: 5000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4f55e8e7522dd7147bb98701fbbf5276, type: 2}
   m_IsPrefabParent: 0
@@ -15265,7 +15270,7 @@ Prefab:
     - target: {fileID: 114466966127859440, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
       propertyPath: EnemyHealth
-      value: 2000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 114041593842955682, guid: 4f55e8e7522dd7147bb98701fbbf5276,
         type: 2}
@@ -16263,6 +16268,19 @@ GameObject:
   m_PrefabParentObject: {fileID: 1093907478265458, guid: c267fa9c116b99744947890072a861a2,
     type: 2}
   m_PrefabInternal: {fileID: 1243112423}
+--- !u!114 &1243112425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1243112424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467325d2e80a66740a503162b86118aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activate: {fileID: 8300000, guid: e97fca5dbb8c29b4ea210910f29bb7ee, type: 3}
+  deactivate: {fileID: 8300000, guid: c7965de26f0715b44996683e6c2fbeda, type: 3}
 --- !u!1001 &1244813399
 Prefab:
   m_ObjectHideFlags: 0
