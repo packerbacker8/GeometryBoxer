@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4979396581856620}
   - component: {fileID: 198779302408594680}
   - component: {fileID: 199335060378261470}
+  - component: {fileID: 114499757937017364}
   m_Layer: 9
   m_Name: WaterParticle
   m_TagString: Untagged
@@ -233,7 +234,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1971804774843748}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.57, y: 0.5, z: -18.162}
+  m_LocalPosition: {x: -37.74156, y: 0.48000002, z: -10.126092}
   m_LocalScale: {x: 0.58498925, y: 0.5849892, z: 0.5849892}
   m_Children:
   - {fileID: 4834033227170672}
@@ -383,6 +384,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   particles: {fileID: 198779302408594680}
+--- !u!114 &114499757937017364
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1050170260802560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b47eecaba2070ea4d9ac335b7828b5f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114675050478827776
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -472,7 +484,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 6.57, y: 0.5, z: -18.162}
+  m_ConnectedAnchor: {x: -37.74156, y: 0.48000002, z: -10.126092}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -709,7 +721,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 2117642597
+  randomSeed: -187257336
   InitialModule:
     serializedVersion: 3
     enabled: 1
