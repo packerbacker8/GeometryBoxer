@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +10,6 @@ public class PlayerHealthScript : MonoBehaviour
     public float deathDelay = 20f;
     [Header("How much force is required for the player to take damage.")]
     public float damageThreshold = 100f;
-    public float cubeHealthModifier = 1f;
 
     private bool dead;
     private Animator anim;
@@ -21,7 +20,8 @@ public class PlayerHealthScript : MonoBehaviour
     private string getUpSupine = "GetUpSupine";
     private GameObject puppetMast;
     private GameObject gameController;
-    
+    private float cubeHealthModifier = 1f;
+
 
     // Use this for initialization
     void Start()
@@ -78,5 +78,10 @@ public class PlayerHealthScript : MonoBehaviour
     public void GiveHealth(int amount)
     {
         PlayerHealth += amount;
+    }
+
+    public void setCubeHealthModifier(float amount)
+    {
+        cubeHealthModifier = amount;
     }
 }
