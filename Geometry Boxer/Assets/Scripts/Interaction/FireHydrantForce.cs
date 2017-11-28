@@ -5,15 +5,21 @@ using RootMotion.Dynamics;
 
 public class FireHydrantForce : MonoBehaviour
 {
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.transform.tag.Contains("Player") || other.transform.tag.Contains("Enemy"))
         {
             //other.transform.root.GetComponentInChildren<PuppetMaster>().pinWeight = 0;
             //other.transform.root.GetComponentInChildren<PuppetMaster>().muscleWeight = 0;
-            other.transform.root.GetComponentInChildren<BehaviourPuppet>().SetState(BehaviourPuppet.State.Unpinned);
-            other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
+            if(other.transform.root.GetComponentInChildren<BehaviourPuppet>() == null)
+            {
+                other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
+            }
+            else
+            {
+                other.transform.root.GetComponentInChildren<BehaviourPuppet>().SetState(BehaviourPuppet.State.Unpinned);
+                other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
+            }
         }
 
     }
@@ -31,7 +37,6 @@ public class FireHydrantForce : MonoBehaviour
         if (other.transform.tag.Contains("Player") || other.transform.tag.Contains("Enemy"))
         {
             other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
-            //other.transform.root.GetComponentInChildren<PuppetMaster>().muscleWeight = 1;
         }
     }
 }
