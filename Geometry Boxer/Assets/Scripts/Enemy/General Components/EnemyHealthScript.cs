@@ -84,7 +84,6 @@ public class EnemyHealthScript : MonoBehaviour
                 EnemyHealth -= Math.Abs(collisionMagnitude);
                 if (!source.isPlaying && sfxManager.malePain.Count > 0 && tagOfCollision == "Player")
                 {
-
                     painIndex = rand.Next(0, sfxManager.malePain.Count);
                     lightImpactIndex = rand.Next(0, sfxManager.lightPunches.Count);
                     heavyImpactIndex = rand.Next(0, sfxManager.heavyPunches.Count);

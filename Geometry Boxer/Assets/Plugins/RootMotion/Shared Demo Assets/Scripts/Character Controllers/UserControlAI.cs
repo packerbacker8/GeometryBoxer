@@ -10,7 +10,7 @@ namespace RootMotion.Demos
     /// </summary>
     public class UserControlAI : UserControlThirdPerson
     {
-        public int attackRandomAudio = 30;
+        public int attackRandomAudio = 250;
 
         public float stoppingDistance = 0.5f;
         public float stoppingThreshold = 1.5f;
