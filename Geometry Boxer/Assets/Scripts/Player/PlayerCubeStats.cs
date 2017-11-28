@@ -1,41 +1,46 @@
-﻿using System.Collections;
+using RootMotion.Demos;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCubeStats : MonoBehaviour
+public class PlayerCubeStats : PlayerStatsBaseClass
 {
-    public PlayerHealthScript HealthScript;
-    public float Health;
+    public float Health = 15000;
+    public float Speed = .7f;
+    public float Stability;
+    public float AttackForce;
+    public float FallDamageMultiplier;
+
     public float PowerUpTimeLimit = 10;
 
-    private GameObject puppetMast;
-    private GameObject gameController;
-    private GameObject CharacterController;
-    private Animator anim;
-    private int characterControllerIndex = 2;
-    private int animationControllerIndex = 0;
-    private int puppetMasterIndex = 1;
-    private string getUpProne = "GetUpProne";
-    private string getUpSupine = "GetUpSupine";
-
-    private PlayerStatsBaseClass PlayerStats;
+    private PlayerHealthScript HealthScript;
     private bool PowerUp = false;
     private float TimePowerUp;
     private Behaviour halo;
+
+    // This is puppetMasters user controler, it controls the players movements
+    protected UserControlThirdPerson userControl; // user input
 
 
     // Use this for initialization
     void Start()
     {
-        PlayerStats = new PlayerStatsBaseClass(Health, 1f, 1f, 1f, 1f);
+        HealthScript = this.GetComponent<PlayerHealthScript>();
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
-        CharacterController = this.transform.GetChild(characterControllerIndex).gameObject;
+        charController = this.transform.GetChild(characterControllerIndex).gameObject;
         TimePowerUp = PowerUpTimeLimit;
-        halo = (Behaviour)CharacterController.GetComponent("Halo");
+        halo = (Behaviour)charController.GetComponent("Halo");
+        userControl = charController.GetComponent<UserControlThirdPerson>();
 
-        HealthScript.PlayerHealth = PlayerStats.GetPlayerHealth();
+        health = Health;
+        stability = Stability;
+        speed = Speed;
+        attackForce = AttackForce;
+        fallDamageMultiplier = FallDamageMultiplier;
+
+        HealthScript.PlayerHealth = GetPlayerHealth();
     }
 
     // Update is called once per frame
@@ -45,6 +50,11 @@ public class PlayerCubeStats : MonoBehaviour
         {
             PowerUp = true;
             halo.enabled = true;
+            SetPlayerSpeed(.5f);
+            SetPlayerAttackForce(2);
+            SetPlayerStability(2);
+            SetPlayerFallMultiplier(2);
+            userControl.state.move *= 0.5f;
         }
 
         if (PowerUp)
@@ -71,12 +81,12 @@ public class PlayerCubeStats : MonoBehaviour
         {
             if (PowerUp == true)
             {
-                HealthScript.cubeHealthModifier = 500;
+                HealthScript.setCubeHealthModifier(500);
 
             }
             else
             {
-                HealthScript.cubeHealthModifier = 1;
+                HealthScript.setCubeHealthModifier(1);
             }
 
         }
