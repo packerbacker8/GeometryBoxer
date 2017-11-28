@@ -11,8 +11,9 @@ namespace Enemy
         bool canAttack();
 
         void attack();
-        void setUp(float stopDist, float stopThresh, float jumpDis, Animator animator,
-            Transform move, UserControlThirdPerson.State baseState, NavMeshAgent baseAgent);
+        void setUp(float stopDist, float stopThresh, float jumpDis, 
+        Transform move, CharacterPuppet charPup, AudioSource src,
+        SFX_Manager sfx, float rangeAttack);
 
     }
 }

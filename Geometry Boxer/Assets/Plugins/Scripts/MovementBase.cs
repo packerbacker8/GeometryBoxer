@@ -8,11 +8,11 @@ namespace Enemy
 {
     public interface MovementBase
     {
-        void move();
+        Vector3 move();
 
         bool canMove();
 
-        void setUp(float stopDist, float stopThresh, float jumpDis, Animator animator,
-            Transform move, UserControlThirdPerson.State baseState, NavMeshAgent baseAgent);
+        void setUp(float stopDist, float stopThresh, float jumpDis, 
+            Transform move);
     }
 }

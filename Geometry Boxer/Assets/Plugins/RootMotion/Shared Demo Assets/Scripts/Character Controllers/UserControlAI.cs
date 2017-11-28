@@ -2,31 +2,29 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine.AI;
-
+using Enemy;
 namespace RootMotion.Demos
 {
+
     /// <summary>
     /// User input for an AI controlled character controller.
     /// </summary>
     public class UserControlAI : UserControlThirdPerson
     {
-        public int attackRandomAudio = 250;
+        public int attackRandomAudio = 30;
 
         public float stoppingDistance = 0.5f;
         public float stoppingThreshold = 1.5f;
         public float attackRange = 1f;
         public float jumpDistance = 10f;
-        public int behaviorIndex = 1;
+        //public int behaviorIndex = 1;
 
+        public MovementBase movementStyle;
+        public AttackBase attackStyle;
         public Animator anim;
         public Transform goal;
         public Transform moveTarget;
         public bool drop;
-
-        [SerializeField]
-//        private EnemyBehavior enemyAI;  //Might Remove this Later
-        private delegate void AIBehavior();
-        AIBehavior ai;
 
         private GameObject activePlayer;
         private GameObject[] playerOptions;
@@ -63,50 +61,26 @@ namespace RootMotion.Demos
             agent = GetComponent<NavMeshAgent>();
             characterPuppet = GetComponent<CharacterPuppet>();
             anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+            //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
             agent.nextPosition = transform.position;
             drop = false;
+            movementStyle = GetComponent<MovementBase>();
+            attackStyle = GetComponent<AttackBase>();
+            movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget);
+            attackStyle.setUp(stoppingDistance, stoppingThreshold,
+                jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
+
 
         }
 
         protected override void Update()
         {
-            AIbehavior(behaviorIndex);
-        }
 
-        /// <summary>
-        /// Function to set player's move controller.
-        /// </summary>
-        /// <param name="move"></param>
-        public void SetMoveTarget(Transform move)
-        {
-            moveTarget = move.GetChild(characterControllerIndex);
-        }
-
-        private void AIbehavior(int behavior)
-        {
-            float moveSpeed = walkByDefault ? 0.5f : 1f;
-
-            //Determine vector to rotate to target if not facing target
+            float moveSpeed = walkByDefault ? 1.0f : 1.5f;
             Vector3 targetDir = moveTarget.position - transform.position;
             Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
             AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
-            switch (behavior)
-            {
-                case 1:
-                    jumpBehavior(targetDir, newDir, info);
-                    break;
-                case 2:
-                    break;
-                default:
-                    defaultBehavior(targetDir,newDir,info);
-                    break;
-            }
-
-        }
-
-        private void defaultBehavior(Vector3 targetDir, Vector3 newDir, AnimatorStateInfo info)
-        {
             if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
             {
                 if (!agent.isOnOffMeshLink)
@@ -127,108 +101,26 @@ namespace RootMotion.Demos
                 agent.nextPosition = transform.position;
             }
 
-            if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
-            {
-
-                //Rand controls chance of random attack sound being played, only while source is not already playing
-                if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying)
-                {
-                    source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
-                }
-
-                //If puppet is down, does not try to attack player during stand up anim
-                if ((!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && !info.IsName(onGround)))
-                {
-                    //This is for when puppet has melee object in hand
-                    if (characterPuppet.propRoot.currentProp != null)
-                    {
-                        anim.Play(rightSwingAnimation, swingAnimLayer);
-                    }
-                    else//No melee object in hand of puppet
-                    {
-                        anim.Play(rightSwingAnimation, punchAnimLayer);
-                    }
-                }
-            }
+            attackStyle.attack();
             if (agent.enabled)
             {
-                if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
-                {
-                    agent.destination = moveTarget.position;
-                    state.move = agent.velocity;
-                }
-                else
-                {
-                    agent.destination = transform.position;
-                    state.move = agent.velocity;
-                }
+                agent.destination = movementStyle.move();
+                state.move = agent.velocity;
             }
 
-            //Always rotate to face the player
+
             transform.rotation = Quaternion.LookRotation(newDir);
+
         }
 
-        private void jumpBehavior(Vector3 targetDir, Vector3 newDir, AnimatorStateInfo info)
+        /// <summary>
+        /// Function to set player's move controller.
+        /// </summary>
+        /// <param name="move"></param>
+        public void SetMoveTarget(Transform move)
         {
-            if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) && !agent.isOnOffMeshLink)
-            {
-                agent.nextPosition = transform.position;
-                agent.enabled = false;
-                drop = false;
-
-            }
-            else if (!agent.enabled)
-            {
-                drop = false;
-                agent.enabled = true;
-                agent.nextPosition = transform.position;
-            }
-            //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
-            if (Vector3.Distance(moveTarget.position, this.transform.position) <= attackRange && !this.anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
-            {
-
-                //Rand controls chance of random attack sound being played, only while source is not already playing
-                if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying)
-                {
-                    source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
-                }
-
-                //If puppet is down, does not try to attack player during stand up anim
-                if ((!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && !info.IsName(onGround)))
-                {
-                    //This is for when puppet has melee object in hand
-                    if (characterPuppet.propRoot.currentProp != null)
-                    {
-                        anim.Play(rightSwingAnimation, swingAnimLayer);
-                    }
-                    else//No melee object in hand of puppet
-                    {
-                        anim.Play(rightSwingAnimation, punchAnimLayer);
-                    }
-                }
-            }
-            if (agent.enabled)
-            {
-                if (Vector3.Distance(moveTarget.position, transform.position) < jumpDistance + jumpThreshold && Vector3.Distance(moveTarget.position, transform.position) > jumpDistance - jumpThreshold)
-                {
-
-                    agent.enabled = false;
-                    state.jump = true;
-                }
-                else if (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance)
-                {
-                    agent.destination = moveTarget.position;
-                    state.move = agent.velocity;
-                }
-                else
-                {
-                    agent.destination = transform.position;
-                    state.move = agent.velocity;
-                }
-            }
-
-            //Always rotate to face the player
-            transform.rotation = Quaternion.LookRotation(newDir);
+            moveTarget = move.GetChild(characterControllerIndex);
         }
     }
 }
+
