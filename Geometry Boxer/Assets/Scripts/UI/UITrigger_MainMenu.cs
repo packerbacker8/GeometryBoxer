@@ -18,7 +18,7 @@ public class UITrigger_MainMenu : MonoBehaviour {
     }
 	// Use this for initialization
 	void Start () {
-       
+        cameraTarget = cameraAngles[0];
         if(!ui_root.activeSelf)
         {
             ui_root.SetActive(true);
