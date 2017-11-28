@@ -14,11 +14,13 @@ public class SphereAttackScript : PunchScript
     private float ballCooldownTime;
     private float timeAsBall;
     private float cooldownTime;
+    private float maxVelocity;
     private SphereSpecialStats stats;
     private Rigidbody ballRigid;
     private Rigidbody pelvisRigid;
     private float moveVer;
     private float moveHor;
+    private Vector3 moveDir;
     private float ballForce;
     private bool onCooldown;
     private bool isBall;
@@ -37,6 +39,7 @@ public class SphereAttackScript : PunchScript
         ballCooldownTime = 2.0f;
         timeAsBall = 0;
         cooldownTime = 0f;
+        maxVelocity = 100f;
         onCooldown = false;
         isBall = false;
     }
@@ -59,6 +62,7 @@ public class SphereAttackScript : PunchScript
                 {
                     DeactivateRollAttack();
                     UpdatePos(charController.transform, ballForm.transform);
+                    charController.transform.position = new Vector3(charController.transform.position.x, charController.transform.position.y + 1.0f, charController.transform.position.z);
                 }
             }
             if (isBall)
@@ -68,14 +72,17 @@ public class SphereAttackScript : PunchScript
                 if (timeAsBall > ballTime)
                 {
                     DeactivateRollAttack();
+                    charController.transform.position = new Vector3(charController.transform.position.x, charController.transform.position.y + 1.0f, charController.transform.position.z);
                 }
-                moveHor = Input.GetAxis("Horizontal") * ballForce * stats.GetPlayerSpeed();
-                moveVer = Input.GetAxis("Vertical") * ballForce * stats.GetPlayerSpeed();
-                ballRigid.AddForce(new Vector3(moveHor, 0, moveVer));
-                /*if(Math.Abs(ballRigid.velocity.magnitude) > 500f)
+                moveHor = Input.GetAxisRaw("Horizontal") * ballForce * stats.GetPlayerSpeed();
+                moveVer = Input.GetAxisRaw("Vertical") * ballForce * stats.GetPlayerSpeed();
+                if (Math.Abs(ballRigid.velocity.magnitude) <= maxVelocity) //attempt to limit ball from going too fast
                 {
-                    ballRigid.AddForce(new Vector3(-1 * moveHor, 0, -1 *moveVer));
-                }*/
+                    moveDir = new Vector3(moveHor, 0, moveVer);
+                    moveDir = cam.transform.TransformDirection(moveDir);
+                    moveDir.y = 0;
+                    ballRigid.AddForce(moveDir);
+                }
                 UpdatePos(charController.transform, ballForm.transform);
             }
             else
