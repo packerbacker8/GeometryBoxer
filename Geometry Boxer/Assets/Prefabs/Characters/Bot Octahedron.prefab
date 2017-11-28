@@ -267,6 +267,8 @@ GameObject:
   - component: {fileID: 136528869306716738}
   - component: {fileID: 195440494513185794}
   - component: {fileID: 114236633788826906}
+  - component: {fileID: 114454254995599130}
+  - component: {fileID: 114949936035255920}
   m_Layer: 8
   m_Name: Character Controller
   m_TagString: Enemy
@@ -1985,7 +1987,6 @@ MonoBehaviour:
   stoppingThreshold: 1.2
   attackRange: 1.2
   jumpDistance: 10
-  behaviorIndex: 0
   anim: {fileID: 0}
   goal: {fileID: 0}
   moveTarget: {fileID: 0}
@@ -2040,6 +2041,18 @@ MonoBehaviour:
   puppetMaster: {fileID: 114510617731186360}
   connectTo: {fileID: 54994497429448446}
   currentProp: {fileID: 0}
+--- !u!114 &114454254995599130
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1393648088365764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a9004144ffb4e849a0daed952cf0378, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRandomAudio: 30
 --- !u!114 &114510617731186360
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2660,6 +2673,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114949936035255920
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1393648088365764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10db3f3536994814b9522f15c7fb8ac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &114977126927427028
