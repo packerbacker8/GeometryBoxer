@@ -39,7 +39,7 @@ public class SphereAttackScript : PunchScript
         ballCooldownTime = 2.0f;
         timeAsBall = 0;
         cooldownTime = 0f;
-        maxVelocity = 100f;
+        maxVelocity = 25f;
         onCooldown = false;
         isBall = false;
     }
@@ -74,13 +74,17 @@ public class SphereAttackScript : PunchScript
                     DeactivateRollAttack();
                     charController.transform.position = new Vector3(charController.transform.position.x, charController.transform.position.y + 1.0f, charController.transform.position.z);
                 }
-                moveHor = Input.GetAxisRaw("Horizontal") * ballForce * stats.GetPlayerSpeed();
-                moveVer = Input.GetAxisRaw("Vertical") * ballForce * stats.GetPlayerSpeed();
+                
                 if (Math.Abs(ballRigid.velocity.magnitude) <= maxVelocity) //attempt to limit ball from going too fast
                 {
-                    moveDir = new Vector3(moveHor, 0, moveVer);
+                    //moveHor =  * ballForce * stats.GetPlayerSpeed();
+                    //moveVer =  * ballForce * stats.GetPlayerSpeed();
+                    moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
                     moveDir = cam.transform.TransformDirection(moveDir);
                     moveDir.y = 0;
+                    moveDir = Vector3.Normalize(moveDir);
+                    moveDir.x = moveDir.x * ballForce * stats.GetPlayerSpeed();
+                    moveDir.z = moveDir.z * ballForce * stats.GetPlayerSpeed();
                     ballRigid.AddForce(moveDir);
                 }
                 UpdatePos(charController.transform, ballForm.transform);
@@ -142,6 +146,17 @@ public class SphereAttackScript : PunchScript
         charController.GetComponent<CapsuleCollider>().enabled = true;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
         onCooldown = true;
+        anim.SetInteger("ActionIndex", -1);
+        anim.SetBool("IsStrafing", false);
+        if(ballRigid.velocity.sqrMagnitude > 0)
+        {
+            anim.SetFloat("Forward", 1);
+        }
+        else
+        {
+            anim.SetFloat("Forward", 0);
+        }
+        anim.Play("Grounded Directional");
     }
 
     public void ActivateRollAttack()

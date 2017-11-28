@@ -45,45 +45,45 @@ public class PunchScript : MonoBehaviour
     /// <summary>
     /// Private variables for controls in punching and moving arms.
     /// </summary>
-    private bool controllingLeftArm; //controlling left arm or right arm is the same as disabling puppet master control
-    private bool controllingRightArm;
-    private bool leftGrab;
-    private bool rightGrab;
-    private bool movementAndCameraDisabled;
-    private bool useController;
+    protected bool controllingLeftArm; //controlling left arm or right arm is the same as disabling puppet master control
+    protected bool controllingRightArm;
+    protected bool leftGrab;
+    protected bool rightGrab;
+    protected bool movementAndCameraDisabled;
+    protected bool useController;
 
-    private float leftArmXAxis;
-    private float leftArmYAxis;
-    private float rightArmXAxis;
-    private float rightArmYAxis;
-    private float marginOfError;
-    private float currentX;
-    private float currentY;
-    private float oldInputX;
-    private float oldInputY;
-
-    private Animator anim;
-    private int characterControllerIndex = 2;
-    private int animationControllerIndex = 0;
-    private int puppetMasterIndex = 1;
-    private int numberOfMuscleComponents;
-    private int swingAnimLayer = 1;
-    private int punchAnimLayer = 0;
-    private int cameraIndex = 3;
-    private int behaviorIndex = 0;
-    private int puppetArmBehaviorIndex = 1;
-
-    private string leftPunchAnimation = "Hit";
-    private string rightPunchAnimation = "Hit";
-    private string leftUppercutAnimation = "LeftUpperCut";
-    private string rightUppercutAnimation = "RightUpperCut";
-    private string leftSwingAnimation = "SwingProp";
-    private string rightSwingAnimation = "SwingProp";
-    private string getUpProne = "GetUpProne";
-    private string getUpSupine = "GetUpSupine";
-    private string fall = "Fall";
-    private string onGround = "OnGround";
-    private string[] controllerInfo;
+    protected float leftArmXAxis;
+    protected float leftArmYAxis;
+    protected float rightArmXAxis;
+    protected float rightArmYAxis;
+    protected float marginOfError;
+    protected float currentX;
+    protected float currentY;
+    protected float oldInputX;
+    protected float oldInputY;
+    
+    protected Animator anim;
+    protected int characterControllerIndex = 2;
+    protected int animationControllerIndex = 0;
+    protected int puppetMasterIndex = 1;
+    protected int numberOfMuscleComponents;
+    protected int swingAnimLayer = 1;
+    protected int punchAnimLayer = 0;
+    protected int cameraIndex = 3;
+    protected int behaviorIndex = 0;
+    protected int puppetArmBehaviorIndex = 1;
+    
+    protected string leftPunchAnimation = "Hit";
+    protected string rightPunchAnimation = "Hit";
+    protected string leftUppercutAnimation = "LeftUpperCut";
+    protected string rightUppercutAnimation = "RightUpperCut";
+    protected string leftSwingAnimation = "SwingProp";
+    protected string rightSwingAnimation = "SwingProp";
+    protected string getUpProne = "GetUpProne";
+    protected string getUpSupine = "GetUpSupine";
+    protected string fall = "Fall";
+    protected string onGround = "OnGround";
+    protected string[] controllerInfo;
 
     protected GameObject puppetArmBehavior;
     protected GameObject puppetMastObject;
