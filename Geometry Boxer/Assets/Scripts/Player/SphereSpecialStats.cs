@@ -15,6 +15,7 @@ public class SphereSpecialStats : PlayerStatsBaseClass
     private float minAttackForce;
     private float maxAttackForce;
     private float buildUpAmount;
+    private int fadeOffMult;
     private bool switchedMesh;
     private Vector3 originalPos;
     private Rigidbody playerRigidBody;
@@ -25,20 +26,18 @@ public class SphereSpecialStats : PlayerStatsBaseClass
     protected override void Start()
     {
         base.Start();
-        dead = false;
-        anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
-        puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
-        gameController = GameObject.FindGameObjectWithTag("GameController");
 
         health = 5000f;
         originalHealth = health;
-        minSpeed = 1.0f;
+        minSpeed = 0.75f;
         maxSpeed = 2.5f;
-        minAttackForce = 1.0f;
+        minAttackForce = 0.75f;
         maxAttackForce = 2.5f;
-        buildUpAmount = 0.1f;
+        buildUpAmount = 0.001f;
+        fadeOffMult = 10;
         switchedMesh = false;
         stability = 0.5f;
+        ApplyStabilityStat();
         speed = 1.0f; //builds up as they move more
         attackForce = 1.0f; //builds up as they move more
 
@@ -51,16 +50,28 @@ public class SphereSpecialStats : PlayerStatsBaseClass
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void LateUpdate()
     {
+        base.LateUpdate();
         isGrounded = charMelDemo.animState.onGround;
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
         if (playerRigidBody.velocity.magnitude > 0 && (Math.Abs(Input.GetAxis("Horizontal")) > 0 || Math.Abs(Input.GetAxis("Vertical")) != 0) && isGrounded)
         {
             speed += buildUpAmount;
             attackForce += buildUpAmount;
-            Mathf.Clamp(speed, minSpeed, maxSpeed);
-            Mathf.Clamp(attackForce, minAttackForce, maxAttackForce);
+            if(speed > maxSpeed)
+            {
+                speed = maxSpeed;
+            }
+            if(attackForce > maxAttackForce)
+            {
+                attackForce = maxAttackForce;
+            }
+        }
+        else if (info.IsName(getUpProne) || info.IsName(getUpSupine)) //if you've been knocked down automatically reset stats
+        {
+            speed = minSpeed;
+            attackForce = minAttackForce;
         }
         else if(info.IsName(fall))
         {
@@ -68,11 +79,20 @@ public class SphereSpecialStats : PlayerStatsBaseClass
         }
         else
         {
-            speed -= buildUpAmount;
-            attackForce -= buildUpAmount;
-            Mathf.Clamp(speed, minSpeed, maxSpeed);
-            Mathf.Clamp(attackForce, minAttackForce, maxAttackForce);
+            
+            speed -= (fadeOffMult*buildUpAmount);
+            attackForce -= (fadeOffMult*buildUpAmount);
+            if(speed < minSpeed)
+            {
+                speed = minSpeed;
+            }
+            if(attackForce < minAttackForce)
+            {
+                attackForce = minAttackForce;
+            }
         }
+
+        anim.speed = speed; //MAYBE
 
         if(health <= originalHealth/2 && !switchedMesh)
         {
@@ -96,5 +116,11 @@ public class SphereSpecialStats : PlayerStatsBaseClass
         gameController.GetComponent<GameControllerScript>().playerKilled();
 
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+    }
+
+    public override void PlayerBeingReset(Transform resetLocation)
+    {
+        //base.PlayerBeingReset(resetLocation);
+        LoadLevel.loader.ReloadScene();
     }
 }

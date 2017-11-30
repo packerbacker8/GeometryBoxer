@@ -51,6 +51,7 @@ public class GameControllerScript : MonoBehaviour
         if (numEnemiesAlive <= 0)
         {
             SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
+            this.SendMessage("NewSceneIsLoading", SendMessageOptions.DontRequireReceiver);
             StartCoroutine(changeLevel(dominationMap));
         }
     }
