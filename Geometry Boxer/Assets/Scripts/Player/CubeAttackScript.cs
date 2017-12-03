@@ -1,22 +1,25 @@
-using RootMotion.Demos;
-using System.Collections;
+﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using RootMotion;
+using RootMotion.Demos;
 
-public class PlayerCubeStats : PlayerStatsBaseClass
+public class CubeAttackScript : CubePunchScript
 {
-    public float Health = 15000;
-    public float Speed = .7f;
-    public float Stability;
-    public float AttackForce;
-    public float FallDamageMultiplier;
-
+    public GameObject pelvisJoint;
     public float PowerUpTimeLimit = 10;
+    public KeyCode ballFormKey = KeyCode.LeftControl;
 
+    private Rigidbody playerRigidBody;
     private PlayerHealthScript HealthScript;
-    private bool PowerUp = false;
+    public bool PowerUp = false;
     private float TimePowerUp;
     private Behaviour halo;
+    private bool isGrounded;
+    private CharacterMeleeDemo charMelDemo;
+    private GameObject puppetMast;
+    private GameObject gameController;
 
     // This is puppetMasters user controler, it controls the players movements
     protected UserControlThirdPerson userControl; // user input
@@ -33,63 +36,38 @@ public class PlayerCubeStats : PlayerStatsBaseClass
         TimePowerUp = PowerUpTimeLimit;
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
+        playerRigidBody = pelvisJoint.GetComponent<Rigidbody>();
+        charMelDemo = this.transform.GetComponentInChildren<CharacterMeleeDemo>();
+        isGrounded = charMelDemo.animState.onGround;
 
-        health = Health;
-        stability = Stability;
-        speed = Speed;
-        attackForce = AttackForce;
-        fallDamageMultiplier = FallDamageMultiplier;
 
-        HealthScript.PlayerHealth = GetPlayerHealth();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z) && PowerUp == false)
+        if (Input.GetKeyDown(ballFormKey) && !PowerUp)
         {
             PowerUp = true;
             halo.enabled = true;
-            SetPlayerSpeed(.5f);
-            SetPlayerAttackForce(2);
-            SetPlayerStability(2);
-            SetPlayerFallMultiplier(2);
-            userControl.state.move *= 0.5f;
+            SendMessage("PowerUpActive", true);
+            this.transform.localScale += new Vector3(2F, 2F, 2F);
         }
 
-        if (PowerUp)
+        if (PowerUp == true)
         {
             TimePowerUp -= 1 * Time.deltaTime;
             if (TimePowerUp <= 0)
             {
                 PowerUp = false;
                 halo.enabled = false;
+                this.transform.localScale -= new Vector3(2F, 2F, 2F);
                 TimePowerUp = PowerUpTimeLimit;
+                SendMessage("PowerUpDeactivated", false);
             }
-        }
-
-    }
-
-    /// <summary>
-    /// Function receives impulse received by colliders on the enemy characters.
-    /// </summary>
-    /// <param name="impulseVal"></param>
-    public void ImpactReceived(Collision collision)
-    {
-        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (collision.gameObject.tag == "EnemyCollision" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
-        {
-            if (PowerUp == true)
-            {
-                HealthScript.setCubeHealthModifier(500);
-
-            }
-            else
-            {
-                HealthScript.setCubeHealthModifier(1);
-            }
-
         }
 
     }
 }
+
+

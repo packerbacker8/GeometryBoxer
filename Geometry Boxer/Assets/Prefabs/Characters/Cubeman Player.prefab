@@ -641,6 +641,7 @@ GameObject:
   - component: {fileID: 114570732204345652}
   - component: {fileID: 114464917651388254}
   - component: {fileID: 114307195025998704}
+  - component: {fileID: 114856325007226608}
   m_Layer: 0
   m_Name: Cubeman Player
   m_TagString: Player
@@ -1889,8 +1890,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1036b343b110b144e81b0921b0521bb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HealthScript: {fileID: 114570732204345652}
+  deathDelay: 20
+  damageThreshold: 100
+  pelvisJoint: {fileID: 0}
   Health: 10000
+  Speed: 0.7
+  Stability: 0
+  AttackForce: 0
+  FallDamageMultiplier: 0
   PowerUpTimeLimit: 10
 --- !u!114 &114309167561324288
 MonoBehaviour:
@@ -2477,7 +2484,6 @@ MonoBehaviour:
   PlayerHealth: 10000
   deathDelay: 20
   damageThreshold: 5
-  cubeHealthModifier: 1
 --- !u!114 &114593277777294936
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2788,6 +2794,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114856325007226608
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1798918362888838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e563d61b80d6f048a7e000f96c26fdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftArm: {fileID: 0}
+  rightArm: {fileID: 0}
+  punchForce: 50
+  leftJabKey: 113
+  rightJabKey: 101
+  hookModifierKey: 306
+  leftUppercutKey: 114
+  rightUppercutKey: 102
+  leftJabControllerButton: LeftBumper
+  rightJabControllerButton: RightBumper
+  playerAnimations: []
+  pelvisJoint: {fileID: 0}
+  PowerUpTimeLimit: 10
+  ballFormKey: 306
+  PowerUp: 0
 --- !u!114 &114861114146542508
 MonoBehaviour:
   m_ObjectHideFlags: 1
