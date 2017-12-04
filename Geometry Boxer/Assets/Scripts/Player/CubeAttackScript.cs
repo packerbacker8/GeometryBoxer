@@ -51,8 +51,13 @@ public class CubeAttackScript : CubePunchScript
             PowerUp = true;
             halo.enabled = true;
             SendMessage("PowerUpActive", true);
-            this.transform.localScale += new Vector3(2F, 2F, 2F);
+
+            puppetMast.transform.localScale += new Vector3(2F, 2F, 2F);
+            charController.transform.localScale += new Vector3(2F, 2F, 2F);
+
         }
+
+        
 
         if (PowerUp == true)
         {
@@ -61,7 +66,9 @@ public class CubeAttackScript : CubePunchScript
             {
                 PowerUp = false;
                 halo.enabled = false;
-                this.transform.localScale -= new Vector3(2F, 2F, 2F);
+
+                puppetMast.transform.localScale -= new Vector3(2F, 2F, 2F);
+                charController.transform.localScale -= new Vector3(2F, 2F, 2F);
                 TimePowerUp = PowerUpTimeLimit;
                 SendMessage("PowerUpDeactivated", false);
             }
