@@ -9,7 +9,7 @@ public class CubeAttackScript : CubePunchScript
 {
     public GameObject pelvisJoint;
     public float PowerUpTimeLimit = 10;
-    public KeyCode ballFormKey = KeyCode.LeftControl;
+    public KeyCode attacKey = KeyCode.LeftControl;
 
     private Rigidbody playerRigidBody;
     private PlayerHealthScript HealthScript;
@@ -46,7 +46,7 @@ public class CubeAttackScript : CubePunchScript
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(ballFormKey) && !PowerUp)
+        if (Input.GetKeyDown(attacKey) || Input.GetButtonDown("XButton") && !PowerUp)
         {
             PowerUp = true;
             halo.enabled = true;

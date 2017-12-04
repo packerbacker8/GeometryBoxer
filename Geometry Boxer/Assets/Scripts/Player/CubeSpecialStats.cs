@@ -12,10 +12,9 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     public float Stability;
     public float AttackForce;
     public float FallDamageMultiplier;
-    private float HealthModifier;
-
     public float PowerUpTimeLimit = 10;
 
+    private float HealthModifier;
     private Rigidbody playerRigidBody;
     private PlayerHealthScript HealthScript;
     private bool PowerUp = false;
@@ -73,6 +72,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
 
         if (PowerUp == true)
         {
+            attackForce = 100;
             userControl.state.move *= 0.5f;
             stability = 100f;
             ApplyStabilityStat();
@@ -80,6 +80,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         }
         else
         {
+            attackForce = 1;
             stability = 1f;
             ApplyStabilityStat();
             userControl.state.move *= 1f;
@@ -110,12 +111,12 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         {
             if (PowerUp == true)
             {
-                HealthScript.setCubeHealthModifier(500);
+                HealthScript.setCubeHealthModifier(500); // when we change the health script you will need to fix this
 
             }
             else
             {
-                HealthScript.setCubeHealthModifier(1);
+                HealthScript.setCubeHealthModifier(HealthModifier);
             }
 
         }
