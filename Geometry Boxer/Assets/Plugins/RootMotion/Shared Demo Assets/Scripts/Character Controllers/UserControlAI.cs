@@ -75,7 +75,6 @@ namespace RootMotion.Demos
 
         protected override void Update()
         {
-
             float moveSpeed = walkByDefault ? 1.0f : 1.5f;
             Vector3 targetDir = moveTarget.position - transform.position;
             Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
@@ -107,7 +106,6 @@ namespace RootMotion.Demos
                 agent.destination = movementStyle.move();
                 state.move = agent.velocity;
             }
-
 
             transform.rotation = Quaternion.LookRotation(newDir);
 

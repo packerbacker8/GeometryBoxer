@@ -14,8 +14,6 @@ namespace Enemy
         float jumpDistance;
         Transform moveTarget;
         UserControlThirdPerson.State state;
-        
-
 
         public bool canMove()
         {
@@ -25,34 +23,10 @@ namespace Enemy
         public Vector3 move()
         {
                 if (canMove()) {
-                    //agent.destination = moveTarget.position;
-                    //state.move = agent.velocity;
                     return moveTarget.position;
                 }
             return transform.position;
         }
-        //public void move()
-        //{
-        //    if (agent.enabled)
-        //    {
-        //        if (canMove())
-        //        {
-        //            agent.destination = moveTarget.position;
-        //            //return moveTarget.position;
-        //        }
-        //        else
-        //        {
-        //            agent.destination = transform.position;
-        //            //return transform.position;
-        //        }
-        //    }
-        //    //baseState.move = agent.velocity;
-        //    //return baseState;
-        //    //return transform.position;
-        //}
-
-
-  
 
         void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, Transform move)
         {
@@ -63,9 +37,6 @@ namespace Enemy
             moveTarget = move;
             
         }
-
-
-
 
         // Use this for initialization
         void Start()
