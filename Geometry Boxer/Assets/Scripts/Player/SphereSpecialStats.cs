@@ -38,7 +38,7 @@ public class SphereSpecialStats : PlayerStatsBaseClass
         switchedMesh = false;
         stability = 0.5f;
         ApplyStabilityStat();
-        speed = 1.0f; //builds up as they move more
+        speed = 0.75f; //builds up as they move more
         attackForce = 1.0f; //builds up as they move more
 
         fallDamageMultiplier = 1.5f;
