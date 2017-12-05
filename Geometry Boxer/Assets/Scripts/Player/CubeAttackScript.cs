@@ -5,7 +5,7 @@ using UnityEngine;
 using RootMotion;
 using RootMotion.Demos;
 
-public class CubeAttackScript : CubePunchScript
+public class CubeAttackScript : PunchScript
 {
     public GameObject pelvisJoint;
     public float PowerUpTimeLimit = 10;
@@ -26,8 +26,9 @@ public class CubeAttackScript : CubePunchScript
 
 
     // Use this for initialization
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         HealthScript = this.GetComponent<PlayerHealthScript>();
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
@@ -44,8 +45,9 @@ public class CubeAttackScript : CubePunchScript
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         if (Input.GetKeyDown(attacKey) || Input.GetButtonDown("XButton") && !PowerUp)
         {
             PowerUp = true;

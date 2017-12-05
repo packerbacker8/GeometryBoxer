@@ -638,10 +638,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4262284193317296}
-  - component: {fileID: 114570732204345652}
-  - component: {fileID: 114464917651388254}
-  - component: {fileID: 114307195025998704}
-  - component: {fileID: 114856325007226608}
+  - component: {fileID: 114155484887780150}
+  - component: {fileID: 114958514554871138}
   m_Layer: 0
   m_Name: Cubeman Player
   m_TagString: Player
@@ -687,7 +685,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1925941266390230
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,7 +753,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1974144309562556
 GameObject:
   m_ObjectHideFlags: 1
@@ -996,8 +994,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1798918362888838}
-  m_LocalRotation: {x: -0, y: 0.94734037, z: -0, w: 0.3202284}
-  m_LocalPosition: {x: -36.07, y: 1.36, z: -27.52}
+  m_LocalRotation: {x: -0, y: 0.91054535, z: -0, w: 0.41340923}
+  m_LocalPosition: {x: 4.89, y: 0.54, z: -2.29}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4940239308246698}
@@ -1007,7 +1005,7 @@ Transform:
   - {fileID: 4828587453169478}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 142.647, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 131.162, z: 0}
 --- !u!4 &4275684178723764
 Transform:
   m_ObjectHideFlags: 1
@@ -1857,6 +1855,57 @@ MonoBehaviour:
   text: The character model can be easily replaced if you assign a Humanoid character
     FBX or a ready made ragdoll as the "Replace Character Model" in the CharacterMeleeDemo
     component on the "Character Controller" and click on "Replace".
+--- !u!114 &114155484887780150
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1798918362888838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0ce29c24186ace40a9e817b6912170e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftArm: {fileID: 54752752217636050}
+  rightArm: {fileID: 54129550631274510}
+  punchForce: 50
+  leftJabKey: 113
+  rightJabKey: 101
+  hookModifierKey: 306
+  leftUppercutKey: 114
+  rightUppercutKey: 102
+  leftJabControllerButton: LeftBumper
+  rightJabControllerButton: RightBumper
+  playerAnimations:
+  - actionIndex: 1
+    animName: RightPunch
+    animLayer: 0
+    transitionTime: 0
+    playTime: 0.2
+  - actionIndex: 1
+    animName: SwingProp
+    animLayer: 1
+    transitionTime: 0.2
+    playTime: 0.2
+  - actionIndex: 2
+    animName: LeftUpperCut
+    animLayer: 0
+    transitionTime: 0.1
+    playTime: 2
+  - actionIndex: 3
+    animName: RightUpperCut
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 0.2
+  - actionIndex: 4
+    animName: LeftPunch
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 1
+  pelvisJoint: {fileID: 1983625813745298}
+  PowerUpTimeLimit: 10
+  attacKey: 306
+  PowerUp: 0
 --- !u!114 &114210151158017132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1879,26 +1928,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114307195025998704
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1798918362888838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1036b343b110b144e81b0921b0521bb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deathDelay: 20
-  damageThreshold: 100
-  pelvisJoint: {fileID: 0}
-  Health: 10000
-  Speed: 0.7
-  Stability: 0
-  AttackForce: 0
-  FallDamageMultiplier: 0
-  PowerUpTimeLimit: 10
 --- !u!114 &114309167561324288
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2252,53 +2281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114464917651388254
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1798918362888838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ade4b68f5dfc342409b993fe7b94a41d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArm: {fileID: 54752752217636050}
-  rightArm: {fileID: 54129550631274510}
-  punchForce: 25
-  leftJabKey: 113
-  rightJabKey: 101
-  hookModifierKey: 306
-  leftUppercutKey: 114
-  rightUppercutKey: 102
-  leftJabControllerButton: LeftBumper
-  rightJabControllerButton: RightBumper
-  playerAnimations:
-  - actionIndex: 1
-    animName: RightPunch
-    animLayer: 0
-    transitionTime: 0
-    playTime: 0.2
-  - actionIndex: 1
-    animName: SwingProp
-    animLayer: 1
-    transitionTime: 0.2
-    playTime: 0.2
-  - actionIndex: 2
-    animName: LeftUpperCut
-    animLayer: 0
-    transitionTime: 0.1
-    playTime: 2
-  - actionIndex: 3
-    animName: RightUpperCut
-    animLayer: 0
-    transitionTime: 0.2
-    playTime: 0.2
-  - actionIndex: 4
-    animName: LeftPunch
-    animLayer: 0
-    transitionTime: 0.2
-    playTime: 1
 --- !u!114 &114478466734342050
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2470,20 +2452,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114570732204345652
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1798918362888838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfaefcab34071e2458ec4aaf906630bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerHealth: 10000
-  deathDelay: 20
-  damageThreshold: 5
 --- !u!114 &114593277777294936
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2650,7 +2618,7 @@ MonoBehaviour:
   knockOutDistance: 0.7
   unpinnedMuscleWeightMlp: 0.405
   maxRigidbodyVelocity: 10
-  dropProps: 1
+  dropProps: 0
   canGetUp: 1
   getUpDelay: 1
   blendToAnimationTime: 0.3
@@ -2728,7 +2696,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1856839902915630}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85ef3e8d5c77f405d8ab70a643d6a2f3, type: 3}
   m_Name: 
@@ -2794,32 +2762,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114856325007226608
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1798918362888838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e563d61b80d6f048a7e000f96c26fdd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leftArm: {fileID: 0}
-  rightArm: {fileID: 0}
-  punchForce: 50
-  leftJabKey: 113
-  rightJabKey: 101
-  hookModifierKey: 306
-  leftUppercutKey: 114
-  rightUppercutKey: 102
-  leftJabControllerButton: LeftBumper
-  rightJabControllerButton: RightBumper
-  playerAnimations: []
-  pelvisJoint: {fileID: 0}
-  PowerUpTimeLimit: 10
-  ballFormKey: 306
-  PowerUp: 0
 --- !u!114 &114861114146542508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2835,6 +2777,26 @@ MonoBehaviour:
   canCrouch: 1
   canJump: 1
   hitKey: 323
+--- !u!114 &114958514554871138
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1798918362888838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2b982dfd24a18447a8af0930cac7ea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathDelay: 20
+  damageThreshold: 100
+  pelvisJoint: {fileID: 1983625813745298}
+  Health: 15000
+  Speed: 0.7
+  Stability: 0
+  AttackForce: 0
+  FallDamageMultiplier: 0
+  PowerUpTimeLimit: 10
 --- !u!114 &114962364254578312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3122,7 +3084,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.68966097, y: -0.00000009126601, z: 0}
+  m_ConnectedAnchor: {x: -0.6896611, y: -0.00000009126601, z: 0}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: 1}
   m_XMotion: 0
@@ -3216,7 +3178,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.28536958, y: -0.0000006338814, z: 0.020000864}
+  m_ConnectedAnchor: {x: 0.2853696, y: -0.00000019918662, z: 0.019999925}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: -1, z: 0}
   m_XMotion: 0
@@ -3310,7 +3272,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.02431124, y: 0.10258004, z: -0.0000021159644}
+  m_ConnectedAnchor: {x: 0.024311287, y: 0.1025801, z: -0.00000321865}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: -1, z: 0}
   m_XMotion: 0
@@ -3404,7 +3366,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.24556968, y: -0.0000009983778, z: 0.00000021979213}
+  m_ConnectedAnchor: {x: 0.24556996, y: -0.00000009313226, z: -0.00000014528632}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: -1, z: 0}
   m_XMotion: 0
@@ -3498,7 +3460,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.28536972, y: -0.0000005828915, z: -0.020000229}
+  m_ConnectedAnchor: {x: -0.28536978, y: 0.000000011874363, z: -0.020000111}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -3592,7 +3554,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.2691686, y: 0.000000461936, z: -0.020001285}
+  m_ConnectedAnchor: {x: 0.26916867, y: -0.00000016391277, z: -0.019999817}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: -1, z: 0}
   m_XMotion: 0
@@ -3686,7 +3648,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.26916808, y: -0.0000015348196, z: 0.019999262}
+  m_ConnectedAnchor: {x: -0.2691687, y: -0.000000074505806, z: 0.019999923}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -3780,7 +3742,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.5125771, y: 0.3005164, z: -0.0000018775459}
+  m_ConnectedAnchor: {x: -0.51257724, y: 0.30051565, z: -0.00000086426724}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: -1, z: 0}
   m_XMotion: 0
@@ -3874,7 +3836,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.024311127, y: -0.10258004, z: 0.0000021159644}
+  m_ConnectedAnchor: {x: 0.024311172, y: -0.10257961, z: 0.0000030100339}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -3968,7 +3930,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.51257706, y: -0.30051878, z: -0.0000011622902}
+  m_ConnectedAnchor: {x: -0.5125771, y: -0.30051947, z: -0.000001043081}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -4062,7 +4024,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -36.07, y: 2.0011902, z: -27.52}
+  m_ConnectedAnchor: {x: 4.89, y: 1.1811903, z: -2.29}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 2
@@ -4156,7 +4118,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.21323134, y: 0.000000014901134, z: 0.00000084191447}
+  m_ConnectedAnchor: {x: 0.2132316, y: -0.00000016391247, z: -0.00000017881369}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: -1, z: 0}
   m_XMotion: 0
@@ -4250,7 +4212,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.24557059, y: 0.000001270324, z: 0.0000010617077}
+  m_ConnectedAnchor: {x: -0.24556997, y: 0.00000008568168, z: 0.000000007450581}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -4344,7 +4306,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -0, z: -1}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.21323104, y: -0.0000002533196, z: -0.0000011641528}
+  m_ConnectedAnchor: {x: -0.21323152, y: 0.0000002235173, z: -0.00000014342362}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0

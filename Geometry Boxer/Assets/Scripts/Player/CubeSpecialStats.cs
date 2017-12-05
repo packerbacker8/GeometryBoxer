@@ -28,9 +28,10 @@ public class CubeSpecialStats : PlayerStatsBaseClass
 
 
     // Use this for initialization
-    void Start()
+    protected override void Start()
     {
-        HealthScript = this.GetComponent<PlayerHealthScript>();
+        base.Start();
+        //HealthScript = this.GetComponent<PlayerHealthScript>();
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
@@ -42,32 +43,35 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         isGrounded = charMelDemo.animState.onGround;
         playerRigidBody = pelvisJoint.GetComponent<Rigidbody>();
 
+        HealthModifier = 1.0f;
+
         health = Health;
         stability = Stability;
         speed = Speed;
         attackForce = AttackForce;
         fallDamageMultiplier = FallDamageMultiplier;
 
-        HealthScript.PlayerHealth = GetPlayerHealth();
+        //HealthScript.PlayerHealth = GetPlayerHealth();
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void LateUpdate()
     {
-        HealthScript.setCubeHealthModifier(HealthModifier);
+        base.LateUpdate();
+        //HealthScript.setCubeHealthModifier(HealthModifier);
         if (playerRigidBody.velocity.magnitude < 1)
         {
             attackForce += 1;
             stability += 1;
             FallDamageMultiplier += 1;
-            HealthModifier += 1;
+            HealthModifier += 1.0f;
         }
         else
         {
             attackForce = 1;
             stability = 1;
             FallDamageMultiplier = 1;
-            HealthModifier = 1;
+            HealthModifier = 1.0f;
         }
 
         if (PowerUp == true)
@@ -76,7 +80,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             userControl.state.move *= 0.5f;
             stability = 100f;
             ApplyStabilityStat();
-            HealthScript.setCubeHealthModifier(500);
+            //HealthScript.setCubeHealthModifier(500);
         }
         else
         {
@@ -84,7 +88,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             stability = 1f;
             ApplyStabilityStat();
             userControl.state.move *= 1f;
-            HealthScript.setCubeHealthModifier(1);
+            //HealthScript.setCubeHealthModifier(1);
         }
 
 
@@ -104,19 +108,20 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     /// Function receives impulse received by colliders on the enemy characters.
     /// </summary>
     /// <param name="impulseVal"></param>
-    public void ImpactReceived(Collision collision)
+    public override void ImpactReceived(Collision collision)
     {
+
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
         if (collision.gameObject.tag == "EnemyCollision" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
         {
             if (PowerUp == true)
             {
-                HealthScript.setCubeHealthModifier(500); // when we change the health script you will need to fix this
+                //HealthScript.setCubeHealthModifier(500); // when we change the health script you will need to fix this
 
             }
             else
             {
-                HealthScript.setCubeHealthModifier(HealthModifier);
+                //HealthScript.setCubeHealthModifier(HealthModifier);
             }
 
         }

@@ -17,6 +17,7 @@ public class FireHydrantForce : MonoBehaviour
             }
             else
             {
+                other.transform.root.GetComponentInChildren<BehaviourPuppet>().dropProps = false;
                 other.transform.root.GetComponentInChildren<BehaviourPuppet>().SetState(BehaviourPuppet.State.Unpinned);
                 other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
             }
@@ -36,7 +37,15 @@ public class FireHydrantForce : MonoBehaviour
     {
         if (other.transform.tag.Contains("Player") || other.transform.tag.Contains("Enemy"))
         {
-            other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
+            if (other.transform.root.GetComponentInChildren<BehaviourPuppet>() == null)
+            {
+                other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
+            }
+            else
+            {
+                other.transform.root.GetComponentInChildren<BehaviourPuppet>().dropProps = true;
+                other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
+            }
         }
     }
 }
