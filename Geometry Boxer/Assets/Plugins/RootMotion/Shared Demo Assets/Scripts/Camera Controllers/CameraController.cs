@@ -44,9 +44,11 @@ namespace RootMotion {
 		private Quaternion rotation = Quaternion.identity;
 		private Vector3 smoothPosition;
 		private Camera cam;
+        private bool useController;
+        private string[] controllerInfo;
 
-		// Initiate, set the params to the current transformation of the camera relative to the target
-		protected virtual void Awake () {
+        // Initiate, set the params to the current transformation of the camera relative to the target
+        protected virtual void Awake () {
 			Vector3 angles = transform.eulerAngles;
 			x = angles.y;
 			y = angles.x;
@@ -57,11 +59,22 @@ namespace RootMotion {
 			cam = GetComponent<Camera>();
 
 			lastUp = rotationSpace != null? rotationSpace.up: Vector3.up;
-		}
+        }
 
-		protected virtual void Update() {
+        protected virtual void Start()
+        {
+            useController = false;
+            controllerInfo = Input.GetJoystickNames();
+            if (controllerInfo.Length > 0)
+            {
+                useController = true;
+            }
+        }
+
+
+        protected virtual void Update() {
 			if (updateMode == UpdateMode.Update) UpdateTransform();
-		}
+        }
 
 		protected virtual void FixedUpdate() {
 			if (updateMode == UpdateMode.FixedUpdate) UpdateTransform();
@@ -84,14 +97,39 @@ namespace RootMotion {
 			// Should we rotate the camera?
 			bool rotate = rotateAlways || (rotateOnLeftButton && Input.GetMouseButton(0)) || (rotateOnRightButton && Input.GetMouseButton(1)) || (rotateOnMiddleButton && Input.GetMouseButton(2));
 
-			// delta rotation
-			if (rotate) {
-				x += Input.GetAxis("Mouse X") * rotationSensitivity;
-				y = ClampAngle(y - Input.GetAxis("Mouse Y") * rotationSensitivity, yMinLimit, yMaxLimit);
-			}
+            if (rotate) {
+                x += Input.GetAxis("HorizontalRight") * rotationSensitivity;
+                y = ClampAngle(y - Input.GetAxis("VerticalRight") * rotationSensitivity, yMinLimit, yMaxLimit);
+            }
 
-			// Distance
-			distanceTarget = Mathf.Clamp(distanceTarget + zoomAdd, minDistance, maxDistance);
+            if (rotate)
+            {
+                x += Input.GetAxis("Mouse X") * rotationSensitivity;
+                y = ClampAngle(y - Input.GetAxis("Mouse Y") * rotationSensitivity, yMinLimit, yMaxLimit);
+            }
+
+
+                // see if you can get this to work.
+                // useController = controllerInfo.Length > 0;
+                // if (useController)
+                // {
+                //         // delta rotation
+                //     if (rotate) {
+                // 	    x += Input.GetAxis("HorizontalRight") * rotationSensitivity;
+                // 	    y = ClampAngle(y - Input.GetAxis("VerticalRight") * rotationSensitivity, yMinLimit, yMaxLimit);
+                //     }
+                // }
+                // else
+                // {
+                //     if (rotate)
+                //     {
+                //         x += Input.GetAxis("Mouse X") * rotationSensitivity;
+                //         y = ClampAngle(y - Input.GetAxis("Mouse Y") * rotationSensitivity, yMinLimit, yMaxLimit);
+                //     }
+                // }
+
+                // Distance
+                distanceTarget = Mathf.Clamp(distanceTarget + zoomAdd, minDistance, maxDistance);
 		}
 
 		// Update the camera transform

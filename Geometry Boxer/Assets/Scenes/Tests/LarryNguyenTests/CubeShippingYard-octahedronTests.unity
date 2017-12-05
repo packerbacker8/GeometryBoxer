@@ -463,7 +463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &70553033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,6 +479,7 @@ MonoBehaviour:
   EnemyHealth: 10000
   deathDelay: 20
   damageThreshold: 60
+  heavyDamageOffset: 50
 --- !u!1001 &71633153
 Prefab:
   m_ObjectHideFlags: 0
@@ -5912,6 +5913,21 @@ Prefab:
       propertyPath: playerOptions.Array.data[2]
       value: 
       objectReference: {fileID: 1560779673}
+    - target: {fileID: 114839644939680634, guid: 80c287934c1bf2e488a18eb547dc1f44,
+        type: 2}
+      propertyPath: playerOptions.Array.data[0]
+      value: 
+      objectReference: {fileID: 1560779673}
+    - target: {fileID: 114839644939680634, guid: 80c287934c1bf2e488a18eb547dc1f44,
+        type: 2}
+      propertyPath: playerOptions.Array.data[1]
+      value: 
+      objectReference: {fileID: 1243112424}
+    - target: {fileID: 114839644939680634, guid: 80c287934c1bf2e488a18eb547dc1f44,
+        type: 2}
+      propertyPath: playerOptions.Array.data[2]
+      value: 
+      objectReference: {fileID: 198978115}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 80c287934c1bf2e488a18eb547dc1f44, type: 2}
   m_IsPrefabParent: 0
@@ -13547,6 +13563,11 @@ Prefab:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 95085801694687930, guid: c267fa9c116b99744947890072a861a2,
+        type: 2}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: fda962c742623f546a71bcef3c7c18fe, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c267fa9c116b99744947890072a861a2, type: 2}
   m_IsPrefabParent: 0
@@ -14411,7 +14432,6 @@ MonoBehaviour:
   stoppingThreshold: 1.2
   attackRange: 1.2
   jumpDistance: 10
-  behaviorIndex: 0
   anim: {fileID: 0}
   goal: {fileID: 0}
   moveTarget: {fileID: 642895435}
