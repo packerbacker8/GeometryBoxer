@@ -8,6 +8,7 @@ using RootMotion.Demos;
 public class SphereAttackScript : PunchScript
 {
     public GameObject ballForm;
+    public GameObject ballShield;
     public KeyCode ballFormKey = KeyCode.LeftControl;
 
     private float ballTime;
@@ -24,7 +25,6 @@ public class SphereAttackScript : PunchScript
     private float ballForce;
     private bool onCooldown;
     private bool isBall;
-
     // Use this for initialization
     protected override void Start()
     {
@@ -34,6 +34,7 @@ public class SphereAttackScript : PunchScript
         pelvisRigid = stats.pelvisJoint.GetComponent<Rigidbody>();
         ballForm.GetComponent<MeshRenderer>().enabled = false;
         ballForm.GetComponent<SphereCollider>().enabled = false;
+        ballShield.gameObject.SetActive(false);
         ballTime = 10.0f;
         ballForce = 1000f;
         ballCooldownTime = 2.0f;
@@ -88,6 +89,7 @@ public class SphereAttackScript : PunchScript
                     ballRigid.AddForce(moveDir);
                 }
                 UpdatePos(charController.transform, ballForm.transform);
+                UpdatePos(ballShield.transform, ballForm.transform);
             }
             else
             {
@@ -145,6 +147,7 @@ public class SphereAttackScript : PunchScript
         charController.GetComponent<CharacterMeleeDemo>().enabled = true;
         charController.GetComponent<CapsuleCollider>().enabled = true;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
+        ballShield.gameObject.SetActive(false);
         onCooldown = true;
         anim.SetInteger("ActionIndex", -1);
         anim.SetBool("IsStrafing", false);
@@ -187,6 +190,8 @@ public class SphereAttackScript : PunchScript
         charController.GetComponent<CharacterMeleeDemo>().enabled = false;
         charController.GetComponent<CapsuleCollider>().enabled = false;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+        ballShield.gameObject.SetActive(true);
+        UpdatePos(ballShield.transform, charController.transform);
         SendMessage("BallActivatedSfx");
     }
 }

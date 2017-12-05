@@ -123,4 +123,5 @@ public class SphereSpecialStats : PlayerStatsBaseClass
         //base.PlayerBeingReset(resetLocation);
         LoadLevel.loader.ReloadScene();
     }
+
 }
