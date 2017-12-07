@@ -1934,7 +1934,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathDelay: 20
   damageThreshold: 100
-  pelvisJoint: {fileID: 0}
+  pelvisJoint: {fileID: 1983625813745298}
   Health: 15000
   Speed: 0.7
   Stability: 0
@@ -2823,8 +2823,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0ce29c24186ace40a9e817b6912170e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftArm: {fileID: 0}
-  rightArm: {fileID: 0}
+  leftArm: {fileID: 54752752217636050}
+  rightArm: {fileID: 54129550631274510}
   punchForce: 50
   leftJabKey: 113
   rightJabKey: 101
@@ -2833,8 +2833,33 @@ MonoBehaviour:
   rightUppercutKey: 102
   leftJabControllerButton: LeftBumper
   rightJabControllerButton: RightBumper
-  playerAnimations: []
-  pelvisJoint: {fileID: 0}
+  playerAnimations:
+  - actionIndex: 1
+    animName: RightPunch
+    animLayer: 0
+    transitionTime: 0
+    playTime: 0.2
+  - actionIndex: 1
+    animName: SwingProp
+    animLayer: 1
+    transitionTime: 0.2
+    playTime: 0.2
+  - actionIndex: 2
+    animName: LeftUpperCut
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 0.2
+  - actionIndex: 3
+    animName: RightUpperCut
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 0.2
+  - actionIndex: 4
+    animName: LeftPunch
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 1
+  pelvisJoint: {fileID: 1983625813745298}
   PowerUpTimeLimit: 10
   attacKey: 306
   PowerUp: 0
