@@ -638,8 +638,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4262284193317296}
-  - component: {fileID: 114155484887780150}
-  - component: {fileID: 114958514554871138}
+  - component: {fileID: 114925435005148402}
+  - component: {fileID: 114161355537309206}
   m_Layer: 0
   m_Name: Cubeman Player
   m_TagString: Player
@@ -1921,7 +1921,7 @@ MonoBehaviour:
   text: The character model can be easily replaced if you assign a Humanoid character
     FBX or a ready made ragdoll as the "Replace Character Model" in the CharacterMeleeDemo
     component on the "Character Controller" and click on "Replace".
---- !u!114 &114155484887780150
+--- !u!114 &114161355537309206
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -1929,7 +1929,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1798918362888838}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0ce29c24186ace40a9e817b6912170e, type: 3}
+  m_Script: {fileID: 11500000, guid: 175e3f27b515e8c4fb87c7a76f53d4e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leftArm: {fileID: 54752752217636050}
@@ -1956,8 +1956,8 @@ MonoBehaviour:
   - actionIndex: 2
     animName: LeftUpperCut
     animLayer: 0
-    transitionTime: 0.1
-    playTime: 2
+    transitionTime: 0.2
+    playTime: 0.2
   - actionIndex: 3
     animName: RightUpperCut
     animLayer: 0
@@ -2843,7 +2843,7 @@ MonoBehaviour:
   canCrouch: 1
   canJump: 1
   hitKey: 323
---- !u!114 &114958514554871138
+--- !u!114 &114925435005148402
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -2851,7 +2851,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1798918362888838}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2b982dfd24a18447a8af0930cac7ea2, type: 3}
+  m_Script: {fileID: 11500000, guid: 341cc7881792de2419fad7a12e7b782f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   deathDelay: 20
