@@ -3,46 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Demos;
 
-public class OctahedronSpecials : MonoBehaviour {
-
-
-	CharacterMeleeDemo charMeleeDemoRef;
-	UserControlThirdPerson userControlThirdPersonRef;
+public class OctahedronSpecials : PunchScript
+{
+    CharacterMeleeDemo charMeleeDemoRef;
+    UserControlThirdPerson userControlThirdPersonRef;
     CharacterThirdPerson charThirdPersonref;
-	Rigidbody rb;
+    Rigidbody rb;
 
     //public CharacterController;
-	// animClips = anim.runtimeAnimatorController.animationClips;
+    // animClips = anim.runtimeAnimatorController.animationClips;
 
+    float currentTime = 0.0f;
+    float SpecialTime = 0.0f;
 
-
-	float currentTime = 0.0f;
-	float SpecialTime = 0.0f;
-
-	bool executingSpecial = false;
-	bool specialIsSpeed = false;
+    bool executingSpecial = false;
+    bool specialIsSpeed = false;
     bool tornadoMode = false;
-	Animator anim;
 
-	// Use this for initialization
-	void Start () {
-		charMeleeDemoRef = transform.GetComponentInChildren<CharacterMeleeDemo> ();
-		userControlThirdPersonRef = transform.GetComponentInChildren<UserControlThirdPerson> ();
+    // Use this for initialization
+    protected override void Start()
+    {
+        base.Start();
+        charMeleeDemoRef = transform.GetComponentInChildren<CharacterMeleeDemo>();
+        userControlThirdPersonRef = transform.GetComponentInChildren<UserControlThirdPerson>();
         charThirdPersonref = transform.GetComponentInChildren<CharacterThirdPerson>();
-        anim = transform.GetComponentInChildren<Animator> ();
-		//AnimatorStateInfo i = anim.GetNextAnimatorStateInfo(0);
-		Rigidbody[] arr = transform.GetComponentsInChildren<Rigidbody>();
-		rb = arr [11];
+        //AnimatorStateInfo i = anim.GetNextAnimatorStateInfo(0);
+        Rigidbody[] arr = transform.GetComponentsInChildren<Rigidbody>();
+        rb = arr[11];
 
 
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
 
+    // Update is called once per frame
+    protected override void Update()
+    {
+        base.Update();
         //anim.SetFloat("Forward", 1.0f);
-        Debug.Log(userControlThirdPersonRef.state.move + " forward: " + charMeleeDemoRef.transform.forward);
+        //Debug.Log(userControlThirdPersonRef.state.move + " forward: " + charMeleeDemoRef.transform.forward);
 
         if (tornadoMode)
         {
@@ -61,7 +59,7 @@ public class OctahedronSpecials : MonoBehaviour {
             }
             userControlThirdPersonRef.state.move = vec;
         }
-       
+
 
         //vec.x = userControlThirdPersonRef.state.move.x;
         // vec.y = userControlThirdPersonRef.state.move.y;
@@ -71,35 +69,40 @@ public class OctahedronSpecials : MonoBehaviour {
         //rb = charMeleeDemoRef.GetComponent<Rigidbody>();
         //rb.velocity = transform.forward * 5f;
 
-        if (executingSpecial) {
-			currentTime += Time.deltaTime;
-			if (currentTime >= SpecialTime) {
-				currentTime = 0.0f;
-				executingSpecial = false;
+        if (executingSpecial)
+        {
+            currentTime += Time.deltaTime;
+            if (currentTime >= SpecialTime)
+            {
+                currentTime = 0.0f;
+                executingSpecial = false;
                 tornadoMode = false;
-				if (specialIsSpeed) {
-					anim.SetFloat ("variableAnimSpeed", 1.0f);
-				}
-			}
-		}
-			
-		if (Input.GetKey(KeyCode.V) && !executingSpecial) {
-			anim.SetFloat ("variableAnimSpeed", 2.0f);
-			executingSpecial = true;
-			SpecialTime = 3.0f;
-			specialIsSpeed = true;
-		}
-		if (Input.GetKey(KeyCode.B) && !executingSpecial) {
-			anim.SetFloat ("variableAnimSpeed", 6.0f);
-			executingSpecial = true;
-			SpecialTime = 0.2f;
-			specialIsSpeed = true;
-		}
-		//if (Input.GetKey(KeyCode.Space) && !executingSpecial) {
-		//	//rb.AddForce (-transform.forward * 50000);
-		//	rb.velocity = new Vector3(0.0f, 0.0f, 100f);
-		//	//executingSpecial = true;
-		//}
+                if (specialIsSpeed)
+                {
+                    anim.SetFloat("variableAnimSpeed", 1.0f);
+                }
+            }
+        }
+
+        if (Input.GetKey(KeyCode.V) && !executingSpecial)
+        {
+            anim.SetFloat("variableAnimSpeed", 2.0f);
+            executingSpecial = true;
+            SpecialTime = 3.0f;
+            specialIsSpeed = true;
+        }
+        if (Input.GetKey(KeyCode.B) && !executingSpecial)
+        {
+            anim.SetFloat("variableAnimSpeed", 6.0f);
+            executingSpecial = true;
+            SpecialTime = 0.2f;
+            specialIsSpeed = true;
+        }
+        //if (Input.GetKey(KeyCode.Space) && !executingSpecial) {
+        //	//rb.AddForce (-transform.forward * 50000);
+        //	rb.velocity = new Vector3(0.0f, 0.0f, 100f);
+        //	//executingSpecial = true;
+        //}
 
         if (Input.GetKey(KeyCode.G) && !executingSpecial)
         {
@@ -115,5 +118,5 @@ public class OctahedronSpecials : MonoBehaviour {
 
         //Debug.Log(anim.GetFloat("Forward"));
 
-	}
+    }
 }
