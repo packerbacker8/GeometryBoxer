@@ -59,7 +59,15 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     {
         base.LateUpdate();
         //HealthScript.setCubeHealthModifier(HealthModifier);
-        if (playerRigidBody.velocity.magnitude < 1)
+        if (PowerUp == true)
+        {
+            attackForce = 100;
+            userControl.state.move *= 0.5f;
+            stability = 100f;
+            ApplyStabilityStat();
+            HealthModifier = 500.0f;
+        }
+        else if (playerRigidBody.velocity.magnitude < 1)
         {
             attackForce += 1;
             stability += 1;
@@ -69,26 +77,11 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         else
         {
             attackForce = 1;
-            stability = 1;
-            FallDamageMultiplier = 1;
-            HealthModifier = 1.0f;
-        }
-
-        if (PowerUp == true)
-        {
-            attackForce = 100;
-            userControl.state.move *= 0.5f;
-            stability = 100f;
-            ApplyStabilityStat();
-            //HealthScript.setCubeHealthModifier(500);
-        }
-        else
-        {
-            attackForce = 1;
             stability = 1f;
             ApplyStabilityStat();
             userControl.state.move *= 1f;
-            //HealthScript.setCubeHealthModifier(1);
+            HealthModifier = 1.0f;
+
         }
 
 
@@ -111,19 +104,36 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     public override void ImpactReceived(Collision collision)
     {
 
-        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (collision.gameObject.tag == "EnemyCollision" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        // AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+        // if (collision.gameObject.tag == "EnemyCollision" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        // {
+        //     if (PowerUp == true)
+        //     {
+        //         //HealthScript.setCubeHealthModifier(500); // when we change the health script you will need to fix this
+        // 
+        //     }
+        //     else
+        //     {
+        //         //HealthScript.setCubeHealthModifier(HealthModifier);
+        //     }
+        // 
+        // }
+
+        //AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+        if (collision.gameObject.tag == "EnemyCollision")  //|| (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
         {
-            if (PowerUp == true)
+            hitByEnemy = true;
+            if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                //HealthScript.setCubeHealthModifier(500); // when we change the health script you will need to fix this
-
+                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
             }
-            else
+        }
+        else if (hitByEnemy)
+        {
+            if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                //HealthScript.setCubeHealthModifier(HealthModifier);
+                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
             }
-
         }
 
     }

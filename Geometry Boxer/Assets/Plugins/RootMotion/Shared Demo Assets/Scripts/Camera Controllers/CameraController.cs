@@ -29,7 +29,7 @@ namespace RootMotion {
 		public float zoomSensitivity = 1f; // The sensitivity of mouse zoom
 		public float rotationSensitivity = 3.5f; // The sensitivity of rotation
 		public float yMinLimit = -20; // Min vertical angle
-		public float yMaxLimit = 80; // Max vertical angle
+		public float yMaxLimit = 160; // Max vertical angle
 		public Vector3 offset = new Vector3(0, 1.5f, 0.5f); // The offset from target relative to camera rotation
 		public bool rotateAlways = true; // Always rotate to mouse?
 		public bool rotateOnLeftButton; // Rotate to mouse when left button is pressed?
@@ -99,7 +99,7 @@ namespace RootMotion {
 
             if (rotate) {
                 x += Input.GetAxis("HorizontalRight") * rotationSensitivity;
-                y = ClampAngle(y - Input.GetAxis("VerticalRight") * rotationSensitivity, yMinLimit, yMaxLimit);
+                y = ClampAngle(y + Input.GetAxis("VerticalRight") * rotationSensitivity, yMinLimit, yMaxLimit);
             }
 
             if (rotate)

@@ -41,14 +41,14 @@ public class CubeAttackScript : PunchScript
         charMelDemo = this.transform.GetComponentInChildren<CharacterMeleeDemo>();
         isGrounded = charMelDemo.animState.onGround;
 
-
+        PowerUp = false;
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-        if (Input.GetKeyDown(attacKey) || Input.GetButtonDown("XButton") && !PowerUp)
+        if (PowerUp == false && Input.GetKeyDown(attacKey) || PowerUp == false && Input.GetButtonDown("XButton") )
         {
             PowerUp = true;
             halo.enabled = true;
