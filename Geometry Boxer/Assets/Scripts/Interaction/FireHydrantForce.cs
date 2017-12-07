@@ -5,6 +5,33 @@ using RootMotion.Dynamics;
 
 public class FireHydrantForce : MonoBehaviour
 {
+    private ParticleSystem particles;
+    private Collider capCollider;
+    private float activateTime;
+    private float activateCount;
+
+    private void Start()
+    {
+        particles = this.GetComponent<ParticleSystem>();
+        capCollider = this.GetComponent<Collider>();
+        capCollider.enabled = false;
+        activateTime = 3f;
+        activateCount = 0f;
+    }
+
+    public void LateUpdate()
+    {
+        if(!this.transform.parent)
+        {
+            activateCount += Time.deltaTime;
+            if(activateCount > activateTime)
+            {
+                particles.Play();
+                capCollider.enabled = particles.isEmitting;
+            }
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.transform.tag.Contains("Player") || other.transform.tag.Contains("Enemy"))

@@ -2523,12 +2523,13 @@ MonoBehaviour:
   hookModifierKey: 306
   leftUppercutKey: 114
   rightUppercutKey: 102
+  hiKickKey: 107
   leftJabControllerButton: LeftBumper
   rightJabControllerButton: RightBumper
   playerAnimations:
   - actionIndex: 1
     animName: RightPunch
-    animLayer: 0
+    animLayer: 1
     transitionTime: 0
     playTime: 0.2
   - actionIndex: 1
@@ -2549,8 +2550,13 @@ MonoBehaviour:
   - actionIndex: 4
     animName: LeftPunch
     animLayer: 0
-    transitionTime: 0.2
-    playTime: 1
+    transitionTime: 0.5
+    playTime: 0.1
+  - actionIndex: 5
+    animName: HiKick
+    animLayer: 0
+    transitionTime: 0.1
+    playTime: 0.1
   ballForm: {fileID: 1536871662710872}
   ballShield: {fileID: 1240495207618862}
   ballFormKey: 98

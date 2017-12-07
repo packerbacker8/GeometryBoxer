@@ -20,7 +20,7 @@ namespace RootMotion.Demos
             {
                 particles.gameObject.transform.parent = null;
                 particles.transform.localScale = Vector3.one;
-                particles.Play();
+                //particles.Play();
             }
             if (prop.isPickedUp) return;
             if (!LayerMaskExtensions.Contains(characterLayers, collider.gameObject.layer)) return;

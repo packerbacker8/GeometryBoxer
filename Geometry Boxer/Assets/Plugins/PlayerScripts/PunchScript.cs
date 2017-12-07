@@ -22,6 +22,7 @@ public class PunchScript : MonoBehaviour
     //public KeyCode rightHookKey = KeyCode.E;
     public KeyCode leftUppercutKey = KeyCode.R;
     public KeyCode rightUppercutKey = KeyCode.F;
+    public KeyCode hiKickKey = KeyCode.K;
     [Header("Controller punch buttons.")]
     public string leftJabControllerButton = "LeftBumper";
     public string rightJabControllerButton = "RightBumper";
@@ -306,6 +307,10 @@ public class PunchScript : MonoBehaviour
                 {
                     ThrowUppercut(Limbs.rightArm);
                 }
+                else if(Input.GetKeyDown(hiKickKey))
+                {
+                    ThrowHiKick();
+                }
             }
         }
         else
@@ -333,6 +338,10 @@ public class PunchScript : MonoBehaviour
                 else if(!leftGrab && action.animName == "LeftPunch")
                 {
                     currentAnim = action;
+                    if(anim.GetFloat("Forward") < 0.5f)
+                    {
+                        currentAnim.animLayer = 0;
+                    }
                     break;
                 }
             }
@@ -348,6 +357,14 @@ public class PunchScript : MonoBehaviour
                 {
                     currentAnim = action;
                     //anim.speed = 5f;
+                    if (anim.GetFloat("Forward") < 0.5f)
+                    {
+                        currentAnim.animLayer = 0;
+                    }
+                    else
+                    {
+                        currentAnim.animLayer = 1;
+                    }
                     break;
                 }
             }
@@ -375,6 +392,14 @@ public class PunchScript : MonoBehaviour
             if (limb == Limbs.rightArm && action.animName == "RightUpperCut")
             {
                 currentAnim = action;
+                if (anim.GetFloat("Forward") < 0.5f)
+                {
+                    currentAnim.animLayer = 0;
+                }
+                else
+                {
+                    currentAnim.animLayer = 1; //forced
+                }
                 break;
             }
         }
@@ -384,6 +409,26 @@ public class PunchScript : MonoBehaviour
         anim.SetInteger("ActionIndex", -1);
 
     }
+
+    /// <summary>
+    /// Function to allow players to throw a high kick at the enemies. Only for right leg.
+    /// </summary>
+    public virtual void ThrowHiKick()
+    {
+        CharacterAnimations currentAnim = InitCharacterAnimationStruct();
+        foreach (CharacterAnimations action in playerAnimations)
+        {
+            if (action.animName == "HiKick")
+            {
+                currentAnim = action;
+                break;
+            }
+        }
+        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        anim.SetInteger("ActionIndex", -1);
+    }
+
 
     /// <summary>
     /// Allows player to move limb about as they choose with the controller joysticks.
