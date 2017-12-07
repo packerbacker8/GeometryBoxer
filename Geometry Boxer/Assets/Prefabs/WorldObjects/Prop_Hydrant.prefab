@@ -234,8 +234,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1971804774843748}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.3321214, y: 0.48000002, z: -55.157997}
+  m_LocalRotation: {x: -0, y: 0.09764952, z: -0, w: 0.99522096}
+  m_LocalPosition: {x: 2.9, y: 0.5, z: 3.62}
   m_LocalScale: {x: 0.58498925, y: 0.5849892, z: 0.5849892}
   m_Children:
   - {fileID: 4834033227170672}
@@ -246,7 +246,7 @@ Transform:
   - {fileID: 4979396581856620}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 11.208, z: 0}
 --- !u!4 &4834033227170672
 Transform:
   m_ObjectHideFlags: 1
@@ -424,7 +424,7 @@ MonoBehaviour:
   boxCollider: {fileID: 65668798608065866}
   actionColliderRadiusMlp: 2.5
   actionAdditionalPinWeight: 1
-  actionMassMlp: 1
+  actionMassMlp: 100000
   COMOffset: {x: 0, y: 0, z: -0.1}
 --- !u!114 &114862144515794038
 MonoBehaviour:
@@ -484,7 +484,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 1
+  m_Radius: 0.5
   m_Height: 5
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 2.7}
@@ -498,7 +498,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 2.3321214, y: 0.48000002, z: -55.157997}
+  m_ConnectedAnchor: {x: 2.9, y: 0.5, z: 3.62}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -735,7 +735,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1613651030
+  randomSeed: -529069715
   InitialModule:
     serializedVersion: 3
     enabled: 1
