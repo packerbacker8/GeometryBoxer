@@ -15,19 +15,19 @@ public class FireHydrantForce : MonoBehaviour
         particles = this.GetComponent<ParticleSystem>();
         capCollider = this.GetComponent<Collider>();
         capCollider.enabled = false;
-        activateTime = 3f;
+        activateTime = 1f;
         activateCount = 0f;
     }
 
     public void LateUpdate()
     {
-        if(!this.transform.parent)
+        if(!this.transform.parent && !particles.isEmitting)
         {
             activateCount += Time.deltaTime;
             if(activateCount > activateTime)
             {
                 particles.Play();
-                capCollider.enabled = particles.isEmitting;
+                capCollider.enabled = true;
             }
         }
     }
