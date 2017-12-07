@@ -101,10 +101,13 @@ namespace RootMotion.Demos
             }
 
             attackStyle.attack();
-            if (agent.enabled)
+            if (agent.enabled && agent.isOnNavMesh)
             {
                 agent.destination = movementStyle.move();
-                state.move = agent.velocity;
+                if (agent.pathStatus == NavMeshPathStatus.PathComplete)
+                {
+                    state.move = agent.velocity;
+                }
             }
 
             transform.rotation = Quaternion.LookRotation(newDir);
