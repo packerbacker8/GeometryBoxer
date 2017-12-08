@@ -90,11 +90,13 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     public void PowerUpActive(bool active)
     {
         PowerUp = active;
+        SendMessage("CubeActivatedSfx");
     }
 
     public void PowerUpDeactivated(bool deActivate)
     {
         PowerUp = deActivate;
+        SendMessage("CubeDeactivatedSfx");
     }
 
     /// <summary>
