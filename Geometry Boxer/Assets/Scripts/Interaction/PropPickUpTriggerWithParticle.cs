@@ -14,12 +14,14 @@ namespace RootMotion.Demos
 
         private CharacterPuppet characterPuppet;
 
+
         void OnTriggerEnter(Collider collider)
         {
             if(collider.transform.root.tag == "Player" || collider.transform.root.tag == "EnemyContainer")
             {
                 particles.gameObject.transform.parent = null;
                 particles.transform.localScale = Vector3.one;
+
                 //particles.Play();
             }
             if (prop.isPickedUp) return;

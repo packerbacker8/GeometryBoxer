@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Dynamics;
+using UTJ.Alembic;
 
 public class FireHydrantForce : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class FireHydrantForce : MonoBehaviour
     private Collider capCollider;
     private float activateTime;
     private float activateCount;
+    //private float abcTime;
+    //private float abcTimeThreshold;
+    //private GameObject abcObj;
+    //private GameObject abcObjLoop;
 
     private void Start()
     {
@@ -17,6 +22,12 @@ public class FireHydrantForce : MonoBehaviour
         capCollider.enabled = false;
         activateTime = 1f;
         activateCount = 0f;
+        //abcTime = 0f;
+        //abcTimeThreshold = 2.3f;
+        //abcObj = this.transform.GetChild(0).gameObject;
+        //abcObjLoop = this.transform.GetChild(1).gameObject;
+        //abcObj.SetActive(false);
+        //abcObjLoop.SetActive(false);
     }
 
     public void LateUpdate()
@@ -28,8 +39,19 @@ public class FireHydrantForce : MonoBehaviour
             {
                 particles.Play();
                 capCollider.enabled = true;
+                //abcObj.SetActive(true);
             }
         }
+        /*
+        if(abcObj.activeInHierarchy)
+        {
+            abcTime += Time.deltaTime;
+            if(abcTime > abcTimeThreshold)
+            {
+                abcObj.SetActive(false);
+                abcObjLoop.SetActive(true);
+            }
+        }*/
     }
 
     private void OnTriggerEnter(Collider other)

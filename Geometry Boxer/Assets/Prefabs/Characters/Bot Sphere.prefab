@@ -142,6 +142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4237132602115622}
   - component: {fileID: 114293892927364900}
+  - component: {fileID: 114136831747871414}
   m_Layer: 0
   m_Name: Bot Sphere
   m_TagString: EnemyRoot
@@ -1696,6 +1697,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114136831747871414
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1110977890516434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b30558b121a6f21488729632189c90af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Init: {fileID: 2100000, guid: 4762cf8fbcd06b242a67b6a3ecaf3f88, type: 2}
+  DMG0: {fileID: 2100000, guid: 7de755e24e8699a448f6da481d071cba, type: 2}
+  DMG1: {fileID: 2100000, guid: 94d61d52281e19d42bb7e6089becde1f, type: 2}
+  DMG2: {fileID: 2100000, guid: cb0d9a613fffe9f4898b38b191eecec2, type: 2}
+  DMG3: {fileID: 2100000, guid: e5414c733c5cd0e49a88ba18817626db, type: 2}
+  DMG4: {fileID: 2100000, guid: 832de75e7081a7147b9f980dccd59bde, type: 2}
 --- !u!114 &114156521252406874
 MonoBehaviour:
   m_ObjectHideFlags: 1

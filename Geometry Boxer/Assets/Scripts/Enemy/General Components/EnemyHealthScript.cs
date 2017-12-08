@@ -35,6 +35,13 @@ public class EnemyHealthScript : MonoBehaviour
     private int enemyIndex = 0;
     private UserControlAI charController;
 
+    private SwapMaterials ShowDmg;
+    private float Val0;
+    private float Val1;
+    private float Val2;
+    private float Val3;
+    private float Val4;
+
     // Use this for initialization
     void Start()
     {
@@ -49,6 +56,12 @@ public class EnemyHealthScript : MonoBehaviour
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
         charController = GetComponentInChildren<UserControlAI>();
+        ShowDmg = this.GetComponent<SwapMaterials>();
+        Val4 = 0;
+        Val0 = 4 * (EnemyHealth / 5);
+        Val1 = 3 * (EnemyHealth / 5);
+        Val2 = 2 * (EnemyHealth / 5);
+        Val3 = 1 * (EnemyHealth / 5);
     }
 
     // Update is called once per frame
@@ -99,6 +112,30 @@ public class EnemyHealthScript : MonoBehaviour
                     
                 }
             }
+        }
+        if (EnemyHealth > Val0)
+        {
+            ShowDmg.SetMaterial0();
+        }
+        else if (EnemyHealth > Val1)
+        {
+            ShowDmg.SetMaterial1();
+        }
+        else if (EnemyHealth > Val2)
+        {
+            ShowDmg.SetMaterial2();
+        }
+        else if (EnemyHealth > Val3)
+        {
+            ShowDmg.SetMaterial3();
+        }
+        else if (EnemyHealth > Val4)
+        {
+            ShowDmg.SetMaterial4();
+        }
+        else
+        {
+            ShowDmg.SetMaterial5();
         }
     }
 
