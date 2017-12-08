@@ -68,6 +68,7 @@ public class SphereAttackScript : PunchScript
             }
             if (isBall)
             {
+                
                 //use different timer at some point
                 timeAsBall += Time.deltaTime;
                 if (timeAsBall > ballTime)
@@ -125,6 +126,7 @@ public class SphereAttackScript : PunchScript
         UpdatePos(charController.transform, ballForm.transform);
         //play animation of morphing into ball
         isBall = false;
+        isAttacking = false;
         timeAsBall = 0;
         for (int i = 0; i < this.transform.childCount; i++) //move camera back to player here
         {
@@ -167,6 +169,7 @@ public class SphereAttackScript : PunchScript
     {
         UpdatePos(ballForm.transform, charController.transform);
         isBall = true;
+        isAttacking = true;
         //play animation of morphing into ball
         for(int i =0; i < this.transform.childCount; i++)
         {

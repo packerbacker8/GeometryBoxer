@@ -52,6 +52,7 @@ public class PunchScript : MonoBehaviour
     protected bool rightGrab;
     protected bool movementAndCameraDisabled;
     protected bool useController;
+    protected bool isAttacking;
 
     protected float leftArmXAxis;
     protected float leftArmYAxis;
@@ -62,6 +63,7 @@ public class PunchScript : MonoBehaviour
     protected float currentY;
     protected float oldInputX;
     protected float oldInputY;
+    protected float currentAnimLength;
     
     protected Animator anim;
     protected int characterControllerIndex = 2;
@@ -108,6 +110,7 @@ public class PunchScript : MonoBehaviour
         rightGrab = false;
         movementAndCameraDisabled = false;
         useController = false;
+        isAttacking = false;
         controllerInfo = Input.GetJoystickNames();
         if(controllerInfo.Length > 0)
         {
@@ -122,6 +125,7 @@ public class PunchScript : MonoBehaviour
         currentY = 0f;
         oldInputX = 0f;
         oldInputY = 0f;
+        currentAnimLength = 0f;
         cam = this.transform.GetChild(cameraIndex).gameObject;
         //puppetArmBehavior = this.transform.GetChild(behaviorIndex).gameObject.transform.GetChild(puppetArmBehaviorIndex).gameObject;
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
@@ -165,158 +169,170 @@ public class PunchScript : MonoBehaviour
         {
             anim.speed = 1f;
         }
-        if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
+        if(isAttacking)
         {
-            if (useController) //controller controls
+            currentAnimLength -= Time.deltaTime;
+            if(currentAnimLength <= 0f)
             {
-                //Left trigger lets player control left arm independently
-                if (Input.GetAxis("LeftTrigger") > 0)
-                {
-                    controllingLeftArm = true;
-                }
-                else
-                {
-                    controllingLeftArm = false;
-                }
-                //Right trigger lets player control right arm independently
-                if (Input.GetAxis("RightTrigger") > 0)
-                {
-                    controllingRightArm = true;
-                }
-                else
-                {
-                    controllingRightArm = false;
-                }
-                //turn off camera movement and character movement
-                StartCoroutine(ToggleCameraAndMovement(controllingLeftArm || controllingRightArm));
-                StartCoroutine(ToggleArmPuppetMaster(controllingLeftArm, Limbs.leftArm));
-                StartCoroutine(ToggleArmPuppetMaster(controllingRightArm, Limbs.rightArm));
-                //Left arm punching
-                if (controllingLeftArm)
-                {
-                    leftArmXAxis = Input.GetAxisRaw("HorizontalLeft");
-                    leftArmYAxis = Input.GetAxisRaw("VerticalLeft");
-                    float xSquare = (leftArmXAxis - oldInputX) * (leftArmXAxis - oldInputX);
-                    float ySquare = (leftArmYAxis - oldInputY) * (leftArmYAxis - oldInputY);
-                    if (System.Math.Sqrt(xSquare + ySquare) > marginOfError)
-                    {
-                        MoveArm(Limbs.leftArm, leftArmXAxis, leftArmYAxis);
-                    }
-                    oldInputX = leftArmXAxis;
-                    oldInputY = leftArmYAxis;
-                }
-                else if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
-                {
-                    ThrowSinglePunch(Limbs.leftArm);
-                }
-                //Right arm punching
-                if (controllingRightArm)
-                {
-                    rightArmXAxis = Input.GetAxisRaw("HorizontalRight");
-                    rightArmYAxis = Input.GetAxisRaw("VerticalRight");
-                    float xSquare = (rightArmXAxis - oldInputX) * (rightArmXAxis - oldInputX);
-                    float ySquare = (rightArmYAxis - oldInputY) * (rightArmYAxis - oldInputY);
-                    if (System.Math.Sqrt(xSquare + ySquare) > marginOfError)
-                    {
-                        MoveArm(Limbs.rightArm, rightArmXAxis, rightArmYAxis);
-                    }
-                    oldInputX = rightArmXAxis;
-                    oldInputY = rightArmYAxis;
-                }
-                else if (Input.GetButtonDown(rightJabControllerButton))
-                {
-                    ThrowSinglePunch(Limbs.rightArm);
-                }
-
-            }
-            else  // keyboard controls
-            {
-                //Left trigger lets player control left arm independently
-                if (Input.GetKeyDown(KeyCode.Mouse0))
-                {
-                    controllingLeftArm = true;
-                }
-                else if (Input.GetKeyUp(KeyCode.Mouse0))
-                {
-                    controllingLeftArm = false;
-                }
-                //Right trigger lets player control right arm independently
-                if (Input.GetKeyDown(KeyCode.Mouse1))
-                {
-                    controllingRightArm = true;
-
-                }
-                else if (Input.GetKeyUp(KeyCode.Mouse1))
-                {
-                    controllingRightArm = false;
-                }
-                //turn off camera movement and character movement
-                StartCoroutine(ToggleCameraAndMovement(controllingLeftArm || controllingRightArm));
-                StartCoroutine(ToggleArmPuppetMaster(controllingLeftArm, Limbs.leftArm));
-                StartCoroutine(ToggleArmPuppetMaster(controllingRightArm, Limbs.rightArm));
-
-                if (controllingLeftArm)
-                {
-                    leftArmXAxis = Input.GetAxisRaw("Mouse X");
-                    leftArmYAxis = Input.GetAxisRaw("Mouse Y");
-                    //currentX = Input.mousePosition.x;
-                    //currentY = Input.mousePosition.y;
-                    float xSquare = (leftArmXAxis - oldInputX) * (leftArmXAxis - oldInputX);
-                    float ySquare = (leftArmYAxis - oldInputY) * (leftArmYAxis - oldInputY);
-                    if (System.Math.Sqrt(xSquare + ySquare) > marginOfError)
-                    {
-                        //leftArmXAxis = (currentX - halfScreenWidth) / halfScreenWidth;
-                        //leftArmYAxis = (currentY - halfScreenHeight) / halfScreenHeight;
-                        MoveArm(Limbs.leftArm, leftArmXAxis, leftArmYAxis);
-                    }
-
-                    oldInputX = currentX;
-                    oldInputY = currentY;
-                }
-                else if (Input.GetKeyDown(leftJabKey))
-                {
-                    ThrowSinglePunch(Limbs.leftArm);
-                }
-                else if (Input.GetKeyDown(leftUppercutKey))
-                {
-                    ThrowUppercut(Limbs.leftArm);
-                }
-                if (controllingRightArm)
-                {
-                    rightArmXAxis = Input.GetAxisRaw("Mouse X");
-                    rightArmYAxis = Input.GetAxisRaw("Mouse Y");
-                    //currentY = Input.mousePosition.y;
-                    //currentX = Input.mousePosition.x;
-                    float xSquare = (rightArmXAxis - oldInputX) * (rightArmXAxis - oldInputX);
-                    float ySquare = (rightArmYAxis - oldInputY) * (rightArmYAxis - oldInputY);
-                    if (System.Math.Sqrt(xSquare + ySquare) > marginOfError)
-                    {
-                        //rightArmXAxis = (currentX - halfScreenWidth) / halfScreenWidth;
-                        //rightArmYAxis = (currentY - halfScreenHeight) / halfScreenHeight;
-                        MoveArm(Limbs.rightArm, rightArmXAxis, rightArmYAxis);
-                    }
-
-                    oldInputX = currentX;
-                    oldInputY = currentY;
-                }
-                else if (Input.GetKeyDown(rightJabKey))
-                {
-                    ThrowSinglePunch(Limbs.rightArm);
-                }
-                else if (Input.GetKeyDown(rightUppercutKey))
-                {
-                    ThrowUppercut(Limbs.rightArm);
-                }
-                else if(Input.GetKeyDown(hiKickKey))
-                {
-                    ThrowHiKick();
-                }
+                isAttacking = false;
             }
         }
         else
         {
-            //do something if down on the ground, ground combat
+            if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
+            {
+                if (useController) //controller controls
+                {
+                    //Left trigger lets player control left arm independently
+                    if (Input.GetAxis("LeftTrigger") > 0)
+                    {
+                        controllingLeftArm = true;
+                    }
+                    else
+                    {
+                        controllingLeftArm = false;
+                    }
+                    //Right trigger lets player control right arm independently
+                    if (Input.GetAxis("RightTrigger") > 0)
+                    {
+                        controllingRightArm = true;
+                    }
+                    else
+                    {
+                        controllingRightArm = false;
+                    }
+                    //turn off camera movement and character movement
+                    StartCoroutine(ToggleCameraAndMovement(controllingLeftArm || controllingRightArm));
+                    StartCoroutine(ToggleArmPuppetMaster(controllingLeftArm, Limbs.leftArm));
+                    StartCoroutine(ToggleArmPuppetMaster(controllingRightArm, Limbs.rightArm));
+                    //Left arm punching
+                    if (controllingLeftArm)
+                    {
+                        leftArmXAxis = Input.GetAxisRaw("HorizontalLeft");
+                        leftArmYAxis = Input.GetAxisRaw("VerticalLeft");
+                        float xSquare = (leftArmXAxis - oldInputX) * (leftArmXAxis - oldInputX);
+                        float ySquare = (leftArmYAxis - oldInputY) * (leftArmYAxis - oldInputY);
+                        if (System.Math.Sqrt(xSquare + ySquare) > marginOfError)
+                        {
+                            MoveArm(Limbs.leftArm, leftArmXAxis, leftArmYAxis);
+                        }
+                        oldInputX = leftArmXAxis;
+                        oldInputY = leftArmYAxis;
+                    }
+                    else if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
+                    {
+                        ThrowSinglePunch(Limbs.leftArm);
+                    }
+                    //Right arm punching
+                    if (controllingRightArm)
+                    {
+                        rightArmXAxis = Input.GetAxisRaw("HorizontalRight");
+                        rightArmYAxis = Input.GetAxisRaw("VerticalRight");
+                        float xSquare = (rightArmXAxis - oldInputX) * (rightArmXAxis - oldInputX);
+                        float ySquare = (rightArmYAxis - oldInputY) * (rightArmYAxis - oldInputY);
+                        if (System.Math.Sqrt(xSquare + ySquare) > marginOfError)
+                        {
+                            MoveArm(Limbs.rightArm, rightArmXAxis, rightArmYAxis);
+                        }
+                        oldInputX = rightArmXAxis;
+                        oldInputY = rightArmYAxis;
+                    }
+                    else if (Input.GetButtonDown(rightJabControllerButton))
+                    {
+                        ThrowSinglePunch(Limbs.rightArm);
+                    }
+
+                }
+                else  // keyboard controls
+                {
+                    //Left trigger lets player control left arm independently
+                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    {
+                        controllingLeftArm = true;
+                    }
+                    else if (Input.GetKeyUp(KeyCode.Mouse0))
+                    {
+                        controllingLeftArm = false;
+                    }
+                    //Right trigger lets player control right arm independently
+                    if (Input.GetKeyDown(KeyCode.Mouse1))
+                    {
+                        controllingRightArm = true;
+
+                    }
+                    else if (Input.GetKeyUp(KeyCode.Mouse1))
+                    {
+                        controllingRightArm = false;
+                    }
+                    //turn off camera movement and character movement
+                    StartCoroutine(ToggleCameraAndMovement(controllingLeftArm || controllingRightArm));
+                    StartCoroutine(ToggleArmPuppetMaster(controllingLeftArm, Limbs.leftArm));
+                    StartCoroutine(ToggleArmPuppetMaster(controllingRightArm, Limbs.rightArm));
+
+                    if (controllingLeftArm)
+                    {
+                        leftArmXAxis = Input.GetAxisRaw("Mouse X");
+                        leftArmYAxis = Input.GetAxisRaw("Mouse Y");
+                        //currentX = Input.mousePosition.x;
+                        //currentY = Input.mousePosition.y;
+                        float xSquare = (leftArmXAxis - oldInputX) * (leftArmXAxis - oldInputX);
+                        float ySquare = (leftArmYAxis - oldInputY) * (leftArmYAxis - oldInputY);
+                        if (System.Math.Sqrt(xSquare + ySquare) > marginOfError)
+                        {
+                            //leftArmXAxis = (currentX - halfScreenWidth) / halfScreenWidth;
+                            //leftArmYAxis = (currentY - halfScreenHeight) / halfScreenHeight;
+                            MoveArm(Limbs.leftArm, leftArmXAxis, leftArmYAxis);
+                        }
+
+                        oldInputX = currentX;
+                        oldInputY = currentY;
+                    }
+                    else if (Input.GetKeyDown(leftJabKey))
+                    {
+                        ThrowSinglePunch(Limbs.leftArm);
+                    }
+                    else if (Input.GetKeyDown(leftUppercutKey))
+                    {
+                        ThrowUppercut(Limbs.leftArm);
+                    }
+                    if (controllingRightArm)
+                    {
+                        rightArmXAxis = Input.GetAxisRaw("Mouse X");
+                        rightArmYAxis = Input.GetAxisRaw("Mouse Y");
+                        //currentY = Input.mousePosition.y;
+                        //currentX = Input.mousePosition.x;
+                        float xSquare = (rightArmXAxis - oldInputX) * (rightArmXAxis - oldInputX);
+                        float ySquare = (rightArmYAxis - oldInputY) * (rightArmYAxis - oldInputY);
+                        if (System.Math.Sqrt(xSquare + ySquare) > marginOfError)
+                        {
+                            //rightArmXAxis = (currentX - halfScreenWidth) / halfScreenWidth;
+                            //rightArmYAxis = (currentY - halfScreenHeight) / halfScreenHeight;
+                            MoveArm(Limbs.rightArm, rightArmXAxis, rightArmYAxis);
+                        }
+
+                        oldInputX = currentX;
+                        oldInputY = currentY;
+                    }
+                    else if (Input.GetKeyDown(rightJabKey))
+                    {
+                        ThrowSinglePunch(Limbs.rightArm);
+                    }
+                    else if (Input.GetKeyDown(rightUppercutKey))
+                    {
+                        ThrowUppercut(Limbs.rightArm);
+                    }
+                    else if (Input.GetKeyDown(hiKickKey))
+                    {
+                        ThrowHiKick();
+                    }
+                }
+            }
+            else
+            {
+                //do something if down on the ground, ground combat
+            }
         }
+        
     }
 
     /// <summary>
@@ -370,7 +386,9 @@ public class PunchScript : MonoBehaviour
             }
         }
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);
-        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime); //going to need to determine when animation ends to allow next triggering event
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        //going to need to determine when animation ends to allow next triggering event
+        SetCurrentAnimTime(currentAnim);
         anim.SetInteger("ActionIndex", -1);
     }
 
@@ -403,9 +421,9 @@ public class PunchScript : MonoBehaviour
                 break;
             }
         }
-
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);
         anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        SetCurrentAnimTime(currentAnim);
         anim.SetInteger("ActionIndex", -1);
 
     }
@@ -426,6 +444,7 @@ public class PunchScript : MonoBehaviour
         }
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);
         anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        SetCurrentAnimTime(currentAnim);
         anim.SetInteger("ActionIndex", -1);
     }
 
@@ -532,5 +551,28 @@ public class PunchScript : MonoBehaviour
         result.playTime = 1f;
         result.transitionTime = 1f;
         return result;
+    }
+
+    public virtual void ImpactReceived(Collision collision)
+    {
+        if (collision.gameObject.transform.root.tag.Contains("Enemy") && isAttacking)
+        {
+            GameObject findingRoot = collision.gameObject;
+            while (findingRoot.tag != "EnemyRoot")
+            {
+                findingRoot = findingRoot.transform.parent.gameObject;
+            }
+            BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
+            //behavePup.SetState(BehaviourPuppet.State.Unpinned);
+            collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(collision.impulse.sqrMagnitude, collision.gameObject.transform.position, 10f, 0f, ForceMode.Impulse);
+
+        }
+    }
+
+    protected virtual void SetCurrentAnimTime(CharacterAnimations currentAnim)
+    {
+        currentAnimLength = anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.playTime + (anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.transitionTime);
+        isAttacking = true;
+        Debug.Log("current animation length: " + currentAnimLength);
     }
 }

@@ -213,6 +213,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// <param name="collision">collision information sent to this character.</param>
     public virtual void ImpactReceived(Collision collision)
     {
+
         //AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
         if (collision.gameObject.tag == "EnemyCollision")  //|| (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
         {

@@ -34,7 +34,7 @@ public class FireHydrantForce : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.transform.tag.Contains("Player") || other.transform.tag.Contains("Enemy"))
+        if(other.transform.tag.Contains("Player"))
         {
             //other.transform.root.GetComponentInChildren<PuppetMaster>().pinWeight = 0;
             //other.transform.root.GetComponentInChildren<PuppetMaster>().muscleWeight = 0;
@@ -49,6 +49,18 @@ public class FireHydrantForce : MonoBehaviour
                 other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
             }
         }
+        else if(other.transform.tag.Contains("Enemy"))
+        {
+            GameObject findingRoot = other.gameObject;
+            while (findingRoot.tag != "EnemyRoot")
+            {
+                findingRoot = findingRoot.transform.parent.gameObject;
+            }
+            BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
+            behavePup.SetState(BehaviourPuppet.State.Unpinned);
+            behavePup.dropProps = false;
+            other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
+        }
 
     }
 
@@ -62,7 +74,7 @@ public class FireHydrantForce : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.transform.tag.Contains("Player") || other.transform.tag.Contains("Enemy"))
+        if (other.transform.tag.Contains("Player"))
         {
             if (other.transform.root.GetComponentInChildren<BehaviourPuppet>() == null)
             {
@@ -74,5 +86,16 @@ public class FireHydrantForce : MonoBehaviour
                 other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
             }
         }
-    }
+        else if (other.transform.tag.Contains("Enemy"))
+        {
+            GameObject findingRoot = other.gameObject;
+            while (findingRoot.tag != "EnemyRoot")
+            {
+                findingRoot = findingRoot.transform.parent.gameObject;
+            }
+            BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
+            behavePup.dropProps = true;
+            other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
+        }
+        }
 }
