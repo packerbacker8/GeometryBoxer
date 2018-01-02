@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class InteractableCity : Interactable
 {
+    public Light statusLight;
     public GUIStyle style;
     public GameObject Player;
     public GameObject MapCamera;
@@ -19,12 +20,27 @@ public class InteractableCity : Interactable
     private GameObject citySelectController;
     private bool exitedTrigger = false;
 
+    private const float pulseRange = 10.0f;
+    private const float pulseSpeed = 10.0f;
+    private const float pulseMin = 0.0f;
+
     private void Awake()
     {
         worldInit = Player.GetComponent<WorldInteraction>();
         cam = MapCamera.GetComponent<RTSCam>();
         Canvas.SetActive(false);
         citySelectController = GameObject.FindGameObjectWithTag("GameController");
+
+        statusLight.intensity = pulseRange;
+        //If city is owned, switch light from red to green. What status goes here?
+        if(SaveAndLoadGame.saver.GetCityStatus(sceneName) == "owned" || SaveAndLoadGame.saver.GetCityStatus(sceneName) == "conquered")
+        {
+            statusLight.color = Color.green;
+        }
+        else
+        {
+            statusLight.color = Color.red;
+        }
     }
 
     //Bring up the canvas for the city if player enters the trigger zone
@@ -70,7 +86,14 @@ public class InteractableCity : Interactable
             //}
             //}
         }
-
-
+        
+    }
+    void Update()
+    {
+        //Make enemy city lights pulsate red
+        if(statusLight.color == Color.red)
+        {
+            statusLight.intensity = pulseMin + Mathf.PingPong(Time.time * pulseSpeed, pulseRange - pulseMin);
+        }
     }
 }
