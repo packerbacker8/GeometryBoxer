@@ -17,6 +17,7 @@ public class InteractableCity : Interactable
     private WorldInteraction worldInit;
     private RTSCam cam;
     private GameObject citySelectController;
+    private bool exitedTrigger = false;
 
     private void Awake()
     {
@@ -26,6 +27,28 @@ public class InteractableCity : Interactable
         citySelectController = GameObject.FindGameObjectWithTag("GameController");
     }
 
+    //Bring up the canvas for the city if player enters the trigger zone
+    void OnTriggerEnter(Collider col)
+    {
+        exitedTrigger = false;
+        if (col.transform.root.tag == "Player" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "owned" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "conquered" && !exitedTrigger)
+        {
+            worldInit.freeze = true;
+            cam.freeze = true;
+            Canvas.SetActive(true);
+            citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
+            cityImageLink.sprite = citySprite;
+        }
+    }
+    void OnTriggerExit(Collider col)
+    {
+        exitedTrigger = true;
+        worldInit.freeze = false;
+        cam.freeze = false;
+        Canvas.SetActive(false);
+    }
+
+    //Bring up the canvas for the city if clicked on
     void OnMouseOver()
     {
         if (Input.GetMouseButtonDown(0) && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "owned" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "conquered") //CHANGE TO BRING UP A DIFFERENT CANVAS IN THE FUTURE
