@@ -13,6 +13,7 @@ public class InteractableCity : Interactable
     public GameObject Canvas;
     public Image cityImageLink;
     public Sprite citySprite;
+    public SpriteRenderer AttackIconSpriteRenderer;
     public string sceneName;
 
     private WorldInteraction worldInit;
@@ -35,10 +36,13 @@ public class InteractableCity : Interactable
         //If city is owned, switch light from red to green. What status goes here?
         if(SaveAndLoadGame.saver.GetCityStatus(sceneName) == "owned" || SaveAndLoadGame.saver.GetCityStatus(sceneName) == "conquered")
         {
-            statusLight.color = Color.green;
+            //statusLight.color = Color.green;
+            statusLight.enabled = false;
+            AttackIconSpriteRenderer.enabled = false;
         }
         else
         {
+            AttackIconSpriteRenderer.enabled = true;
             statusLight.color = Color.red;
         }
     }
@@ -91,9 +95,11 @@ public class InteractableCity : Interactable
     void Update()
     {
         //Make enemy city lights pulsate red
-        if(statusLight.color == Color.red)
+        /*
+        if (statusLight.color == Color.red)
         {
             statusLight.intensity = pulseMin + Mathf.PingPong(Time.time * pulseSpeed, pulseRange - pulseMin);
         }
+        */
     }
 }
