@@ -89,27 +89,26 @@ public class EnemyHealthScript : MonoBehaviour
             damageIsFromPlayer = true; //after animator states enemy has stood up, change this to false.
         }
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (!dead && collisionMagnitude > damageThreshold && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        if (!dead && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)) && !charController.drop)
         {
-            if (!charController.drop)
+            if (!source.isPlaying && sfxManager.malePain.Count > 0 && tagOfCollision == "Player")
             {
-                EnemyHealth -= Math.Abs(collisionMagnitude);
-                if (!source.isPlaying && sfxManager.malePain.Count > 0 && tagOfCollision == "Player")
-                {
-                    painIndex = rand.Next(0, sfxManager.malePain.Count);
-                    lightImpactIndex = rand.Next(0, sfxManager.lightPunches.Count);
-                    heavyImpactIndex = rand.Next(0, sfxManager.heavyPunches.Count);
+                
 
-                    source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
-                    if(collisionMagnitude >= lightImpactThreshold && collisionMagnitude <= heavyImpactThreshold)
-                    {
-                        impactSource.PlayOneShot(sfxManager.lightPunches[lightImpactIndex], 1f);
-                    }
-                    else if(collisionMagnitude > heavyImpactIndex)
-                    {
-                        impactSource.PlayOneShot(sfxManager.heavyPunches[heavyImpactIndex], 1f);
-                    }
-                    
+                painIndex = rand.Next(0, sfxManager.malePain.Count);
+                lightImpactIndex = rand.Next(0, sfxManager.lightPunches.Count);
+                heavyImpactIndex = rand.Next(0, sfxManager.heavyPunches.Count);
+
+                source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
+                if (collisionMagnitude <= heavyImpactThreshold)
+                {
+                    impactSource.PlayOneShot(sfxManager.lightPunches[lightImpactIndex], 1f);
+                    EnemyHealth -= Math.Abs(collisionMagnitude);
+                }
+                else if (collisionMagnitude > heavyImpactIndex)
+                {
+                    impactSource.PlayOneShot(sfxManager.heavyPunches[heavyImpactIndex], 1f);
+                    EnemyHealth -= Math.Abs(collisionMagnitude + heavyDamageOffset);
                 }
             }
         }
