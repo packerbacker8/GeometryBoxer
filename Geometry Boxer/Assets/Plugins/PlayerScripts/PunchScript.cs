@@ -564,7 +564,7 @@ public class PunchScript : MonoBehaviour
             }
             BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
             //behavePup.SetState(BehaviourPuppet.State.Unpinned);
-            collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(collision.impulse.sqrMagnitude, collision.gameObject.transform.position, 10f, 0f, ForceMode.Impulse);
+            //collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(collision.impulse.sqrMagnitude, collision.gameObject.transform.position, 10f, 0f, ForceMode.Impulse);
 
         }
     }
