@@ -153,6 +153,8 @@ public class EnemyHealthScript : MonoBehaviour
                 source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
             }
             puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
+            this.GetComponentInChildren<UserControlAI>().enabled = false;
+            Debug.Log("Dead");
             gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
             dead = true;
             //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
