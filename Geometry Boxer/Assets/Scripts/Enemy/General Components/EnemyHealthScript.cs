@@ -9,8 +9,8 @@ public class EnemyHealthScript : MonoBehaviour
 {
     public float EnemyHealth = 1000f;
     public float deathDelay = 20f;
-    public float damageThreshold = 100f;
-    public float heavyDamageOffset = 50f;
+    public float damageThreshold = 5f;
+    public float heavyDamageOffset = 10f;
 
     //Sound Engine Needs
     private AudioSource source;
@@ -88,31 +88,40 @@ public class EnemyHealthScript : MonoBehaviour
         {
             damageIsFromPlayer = true; //after animator states enemy has stood up, change this to false.
         }
-        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (!dead && collisionMagnitude > damageThreshold && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
-        {
-            if (!charController.drop)
-            {
-                EnemyHealth -= Math.Abs(collisionMagnitude);
-                if (!source.isPlaying && sfxManager.malePain.Count > 0 && tagOfCollision == "Player")
-                {
-                    painIndex = rand.Next(0, sfxManager.malePain.Count);
-                    lightImpactIndex = rand.Next(0, sfxManager.lightPunches.Count);
-                    heavyImpactIndex = rand.Next(0, sfxManager.heavyPunches.Count);
 
-                    source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
-                    if(collisionMagnitude >= lightImpactThreshold && collisionMagnitude <= heavyImpactThreshold)
-                    {
-                        impactSource.PlayOneShot(sfxManager.lightPunches[lightImpactIndex], 1f);
-                    }
-                    else if(collisionMagnitude > heavyImpactIndex)
-                    {
-                        impactSource.PlayOneShot(sfxManager.heavyPunches[heavyImpactIndex], 1f);
-                    }
-                    
+        Debug.Log("Impact force: " + collisionMagnitude + "\n Tag: " + tagOfCollision);
+        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+        if (!dead && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)) && !charController.drop)
+        {
+            if (damageIsFromPlayer)
+            {
+                if (collisionMagnitude <= heavyImpactThreshold)
+                {
+                    EnemyHealth -= Math.Abs(collisionMagnitude);
+                }
+                else if (collisionMagnitude > heavyImpactThreshold)
+                {
+                    EnemyHealth -= Math.Abs(collisionMagnitude + heavyDamageOffset);
+                }
+            }
+            if(sfxManager.malePain.Count > 0 && !source.isPlaying && damageIsFromPlayer)
+            {
+                painIndex = rand.Next(0, sfxManager.malePain.Count);
+                lightImpactIndex = rand.Next(0, sfxManager.lightPunches.Count);
+                heavyImpactIndex = rand.Next(0, sfxManager.heavyPunches.Count);
+                source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
+
+                if (collisionMagnitude <= heavyImpactThreshold)
+                {
+                    impactSource.PlayOneShot(sfxManager.lightPunches[lightImpactIndex], 1f);
+                }
+                else if (collisionMagnitude > heavyImpactThreshold)
+                {
+                    impactSource.PlayOneShot(sfxManager.heavyPunches[heavyImpactIndex], 1f);
                 }
             }
         }
+        damageIsFromPlayer = false;
         if (EnemyHealth > Val0)
         {
             ShowDmg.SetMaterial0();
