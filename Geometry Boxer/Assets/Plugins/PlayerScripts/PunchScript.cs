@@ -9,13 +9,15 @@ public class PunchScript : MonoBehaviour
 {
     [Header("Punching Components")]
     [Tooltip("Object designated as the collider in front of the left fist.")]
-    public Collider leftFistCollider;
+    public CapsuleCollider leftFistCollider;
     [Tooltip("Object designated as the collider in front of the right fist.")]
-    public Collider rightFistCollider;
+    public CapsuleCollider rightFistCollider;
     [Tooltip("Object designated as the collider in front of the left foot.")]
-    public Collider leftFootCollider;
+    public BoxCollider leftFootCollider;
     [Tooltip("Object designated as the collider in front of the right foot.")]
-    public Collider rightFootCollider;
+    public BoxCollider rightFootCollider;
+    public float fistGrowAmount = 5f;
+    public float footGrowAmount = 5f;
     [Tooltip("The force by which the rigidbody will move.")]
     public float punchForce = 50f;
     [Header("PC punch buttons.")]
@@ -45,6 +47,22 @@ public class PunchScript : MonoBehaviour
         public int animLayer;
         public float transitionTime;
         public float playTime;
+    }
+
+    /// <summary>
+    /// Class object for expanding the collider
+    /// </summary>
+    protected class CapsuleColliderSizing
+    {
+        public Vector3 pos;
+        public float radius;
+        public float height;
+        public CapsuleColliderSizing(Vector3 startPos, float r, float h)
+        {
+            pos = startPos;
+            radius = r;
+            height = h;
+        }
     }
     /// <summary>
     /// Private variables for controls in punching and moving arms.
@@ -95,6 +113,8 @@ public class PunchScript : MonoBehaviour
     protected GameObject charController;
     protected GameObject cam;
     protected List<Muscle> armMuscles;
+    protected CapsuleColliderSizing leftFistStartSize;
+    protected CapsuleColliderSizing rightFistStartSize;
 
     public enum Limbs
     {
@@ -105,10 +125,8 @@ public class PunchScript : MonoBehaviour
     // Use this for initialization
     protected virtual void Start()
     {
-        leftFistCollider.enabled = false;
-        rightFistCollider.enabled = false;
-        leftFootCollider.enabled = false;
-        rightFootCollider.enabled = false;
+        leftFistStartSize = new CapsuleColliderSizing(leftFistCollider.transform.position, leftFistCollider.radius, leftFistCollider.height);
+        rightFistStartSize = new CapsuleColliderSizing(rightFistCollider.transform.position, rightFistCollider.radius, rightFistCollider.height);
         leftGrab = false;
         rightGrab = false;
         movementAndCameraDisabled = false;
@@ -170,18 +188,18 @@ public class PunchScript : MonoBehaviour
             if (currentAnimLength <= 0f)
             {
                 isAttacking = false;
-                leftFistCollider.enabled = false;
-                rightFistCollider.enabled = false;
-                leftFootCollider.enabled = false;
-                rightFootCollider.enabled = false;
+                leftFistCollider.transform.position = leftFistStartSize.pos;
+                leftFistCollider.radius = leftFistStartSize.radius;
+                leftFistCollider.height = leftFistStartSize.height;
+                rightFistCollider.transform.position = rightFistStartSize.pos;
+                rightFistCollider.radius = rightFistStartSize.radius;
+                rightFistCollider.height = rightFistStartSize.height;
             }
         }
         else
         {
             leftFistCollider.enabled = false;
             rightFistCollider.enabled = false;
-            leftFootCollider.enabled = false;
-            rightFootCollider.enabled = false;
             if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
             {
                 if (useController) //controller controls
@@ -503,7 +521,7 @@ public class PunchScript : MonoBehaviour
             }
             BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
             //behavePup.SetState(BehaviourPuppet.State.Unpinned);
-            collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(collision.impulse.sqrMagnitude, collision.gameObject.transform.position, 10f, 0f, ForceMode.Impulse);
+            //collision.gameObject.GetComponent<Rigidbody>().AddExplosionForce(collision.impulse.sqrMagnitude, collision.gameObject.transform.position, 10f, 0f, ForceMode.Impulse);
 
         }
     }
