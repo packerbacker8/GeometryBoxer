@@ -189,10 +189,12 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// <param name="resetLocation">Empty game object's transform describing where player should go.</param>
     public virtual void PlayerBeingReset(Transform resetLocation)
     {
+        /*
         hitByEnemy = false;
         behavePuppet.Reset(resetLocation.position, Quaternion.identity);
         SetVelocityToZero(puppetMast.transform.GetChild(0).gameObject); //send the pelvis joint as the starting rigid body to stop velocity
         charController.transform.position = resetLocation.position;
+        */
     }
 
     private void SetVelocityToZero(GameObject obj)

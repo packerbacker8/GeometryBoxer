@@ -14,19 +14,12 @@ public class SafetyNet : MonoBehaviour
     private GameObject[] enemies;
     private bool sceneHasEnemies;
 
-    private float positiveWorldBoundaries;
-    private float negativeWorldBoundaries;
 
-    //private Timer theTimer;
-    //check time is how many seconds to wait in milliseconds
-    private int checkTime;
-    private float timeElapsed;
     // Use this for initialization
     void Start()
     {
         resetLocation = GameObject.FindGameObjectWithTag("Respawn");
-        positiveWorldBoundaries = 1000f;
-        negativeWorldBoundaries = -1000f;
+
         for (int i = 0; i < playerOptions.Length; i++)
         {
             if (playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()))
@@ -41,80 +34,50 @@ public class SafetyNet : MonoBehaviour
             }
         }
         enemyContainer = GameObject.FindGameObjectWithTag("EnemyContainer");
-        enemies = new GameObject[enemyContainer.transform.childCount];
-        if(enemyContainer == null)
+
+        if (enemyContainer == null)
         {
             sceneHasEnemies = false;
         }
         else
         {
+            enemies = new GameObject[enemyContainer.transform.childCount];
             sceneHasEnemies = true;
             for (int i = 0; i < enemyContainer.transform.childCount; i++)
             {
                 enemies[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
         }
-
-        checkTime = 5;
-        timeElapsed = 0;
-        //theTimer = new Timer(checkTime);
-        //theTimer.Elapsed += new ElapsedEventHandler(HandleSafteyNetCatch);
-        //theTimer.AutoReset = true;
-        //theTimer.Start();
     }
 
-    private void Update()
+    private void OnTriggerExit(Collider other)
     {
-        timeElapsed += Time.deltaTime;
-        if(timeElapsed > checkTime)
+        if(other.transform.root.tag.Contains("Player"))
         {
-            HandleSafteyNetCatch();
-            timeElapsed = 0;
+            HandleSafteyNetCatch(other.transform.root.gameObject);
         }
-    }
-
-    public void NewSceneIsLoading()
-    {
-        //theTimer.Stop();
-        //theTimer.Dispose();
-    }
-
-    private void OnApplicationQuit()
-    {
-        //if(theTimer != null)
-        //{
-        //   theTimer.Stop();
-        //    theTimer.Dispose();
-        //}
-    }
-
-    // Update is called once per frame
-    private void HandleSafteyNetCatch()
-    {
+        else
         {
-            if (sceneHasEnemies)
+            GameObject findingRoot = other.gameObject;
+            while (findingRoot.tag != "EnemyRoot")
             {
-                foreach (GameObject enemy in enemies)
-                {
-                    //check if any axis position is outside the bounds of the world in the positive
-                    //and negative direction.
-                    if (enemy.transform.GetChild(2).position.x > positiveWorldBoundaries || enemy.transform.GetChild(2).position.y > positiveWorldBoundaries || enemy.transform.GetChild(2).position.z > positiveWorldBoundaries
-                        || enemy.transform.GetChild(2).position.x < negativeWorldBoundaries || enemy.transform.GetChild(2).position.y < negativeWorldBoundaries || enemy.transform.GetChild(2).position.z < negativeWorldBoundaries)
-                    {
-                        enemy.SendMessage("ResetEnemy", SendMessageOptions.DontRequireReceiver);
-                    }
-                }
+                findingRoot = findingRoot.transform.parent.gameObject;
             }
+            HandleSafteyNetCatch(findingRoot);
+        }
+        
+    }
 
-            //check if any axis position is outside the bounds of the world in the positive
-            //and negative direction.
-            if (activePlayer.transform.position.x > positiveWorldBoundaries || activePlayer.transform.position.y > positiveWorldBoundaries
-                || activePlayer.transform.position.z > positiveWorldBoundaries || activePlayer.transform.position.x < negativeWorldBoundaries
-                || activePlayer.transform.position.y < negativeWorldBoundaries || activePlayer.transform.position.z < negativeWorldBoundaries)
-            {
-                //For some reason this isn't working properly so we just reload the scene
-                mainPlayer.SendMessage("PlayerBeingReset", resetLocation.transform, SendMessageOptions.DontRequireReceiver);
-            }
+
+    private void HandleSafteyNetCatch(GameObject heWhoLeftTheWorld)
+    {
+        if(heWhoLeftTheWorld.tag.Contains("Player"))
+        {
+            heWhoLeftTheWorld.SendMessage("PlayerBeingReset", resetLocation.transform, SendMessageOptions.DontRequireReceiver);
+        }
+        else
+        {
+            heWhoLeftTheWorld.SendMessage("ResetEnemy", SendMessageOptions.DontRequireReceiver);
         }
     }
 }

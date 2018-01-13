@@ -164,7 +164,7 @@ public class EnemyHealthScript : MonoBehaviour
             puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
             gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
             dead = true;
-            //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+            Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
         }
     }
 
