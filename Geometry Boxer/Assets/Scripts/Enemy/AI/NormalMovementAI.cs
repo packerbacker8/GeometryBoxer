@@ -38,6 +38,15 @@ namespace Enemy
             
         }
 
+        void MovementBase.playerFound()
+        {
+            throw new NotImplementedException();
+        }
+
+        void MovementBase.playerLost()
+        {
+            throw new NotImplementedException();
+        }
         // Use this for initialization
         void Start()
         {
