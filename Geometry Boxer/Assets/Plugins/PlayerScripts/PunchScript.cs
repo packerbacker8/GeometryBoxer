@@ -513,6 +513,5 @@ public class PunchScript : MonoBehaviour
     {
         currentAnimLength = anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.playTime + (anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.transitionTime);
         isAttacking = true;
-        Debug.Log("current animation length: " + currentAnimLength);
     }
 }
