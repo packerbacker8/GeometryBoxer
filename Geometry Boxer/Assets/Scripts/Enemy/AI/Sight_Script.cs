@@ -23,4 +23,12 @@ public class Sight_Script : MonoBehaviour {
             this.SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);
         }
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.transform.root.tag == "Player")
+        {
+            this.SendMessageUpwards("playerLost", SendMessageOptions.DontRequireReceiver);
+        }
+    }
 }

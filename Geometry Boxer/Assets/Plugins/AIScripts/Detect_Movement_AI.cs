@@ -48,7 +48,7 @@ namespace Enemy
 
         public void playerLost()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
         // Use this for initialization
         void Start()
