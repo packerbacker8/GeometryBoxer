@@ -25,6 +25,12 @@ public class SphereAttackScript : PunchScript
     private float ballForce;
     private bool onCooldown;
     private bool isBall;
+
+    private CapsuleCollider rightHandCol;
+    private CapsuleCollider leftHandCol;
+    private float originalRightHandRadius;
+    private float originalLeftHandRadius;
+
     // Use this for initialization
     protected override void Start()
     {
@@ -43,13 +49,37 @@ public class SphereAttackScript : PunchScript
         maxVelocity = 25f;
         onCooldown = false;
         isBall = false;
+
+        CapsuleCollider[] capsuleArr = this.GetComponentsInChildren<CapsuleCollider>();
+        rightHandCol = capsuleArr[11];
+        leftHandCol = capsuleArr[7];
+        originalRightHandRadius = rightHandCol.radius;
+        originalLeftHandRadius = leftHandCol.radius;
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
+        //rightHandCol.radius = 1.9f;
+        if (base.isAttacking == true)
+        {
+            if (base.rightArmActive == true)
+            {
+                rightHandCol.radius = .6f;
+            }
+            if (base.leftArmActive == true)
+            {
+                leftHandCol.radius = .6f;
+            }        
+        }
+        else
+        {
+            rightHandCol.radius = originalRightHandRadius;
+            leftHandCol.radius = originalLeftHandRadius;
+        }
         
+  
         if (!onCooldown)
         {
             if (Input.GetKeyDown(ballFormKey))
@@ -108,6 +138,9 @@ public class SphereAttackScript : PunchScript
             }
             UpdatePos(ballForm.transform, charController.transform);
         }
+
+        //rightHandCol.radius = originalRightHandRadius;
+
     }
 
     public void UpdatePos(Transform transformToUpdate, Transform targetTransform)

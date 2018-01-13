@@ -48,6 +48,10 @@ public class PunchScript : MonoBehaviour
     /// </summary>
     protected bool controllingLeftArm; //controlling left arm or right arm is the same as disabling puppet master control
     protected bool controllingRightArm;
+
+    protected bool leftArmActive = false;
+    protected bool rightArmActive = false;
+
     protected bool leftGrab;
     protected bool rightGrab;
     protected bool movementAndCameraDisabled;
@@ -175,6 +179,8 @@ public class PunchScript : MonoBehaviour
             if(currentAnimLength <= 0f)
             {
                 isAttacking = false;
+                leftArmActive = false;
+                rightArmActive = false; 
             }
         }
         else
@@ -346,6 +352,8 @@ public class PunchScript : MonoBehaviour
         {
             if (limb == Limbs.leftArm)
             {
+                leftArmActive = true;
+
                 if(leftGrab && action.animName == "SwingProp")
                 {
                     currentAnim = action;
@@ -363,7 +371,8 @@ public class PunchScript : MonoBehaviour
             }
             if (limb == Limbs.rightArm)
             {
-                
+                rightArmActive = true;
+
                 if (rightGrab && action.animName == "SwingProp")
                 {
                     currentAnim = action;
