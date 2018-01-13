@@ -13,11 +13,11 @@ public class PunchScript : MonoBehaviour
     [Tooltip("Object designated as the collider in front of the right fist.")]
     public CapsuleCollider rightFistCollider;
     [Tooltip("Object designated as the collider in front of the left foot.")]
-    public BoxCollider leftFootCollider;
+    public Collider leftFootCollider;
     [Tooltip("Object designated as the collider in front of the right foot.")]
-    public BoxCollider rightFootCollider;
-    public float fistGrowAmount = 5f;
-    public float footGrowAmount = 5f;
+    public Collider rightFootCollider;
+    public float fistGrowMultiplier = 2f;
+    public float footGrowMultiplier = 5f;
     [Tooltip("The force by which the rigidbody will move.")]
     public float punchForce = 50f;
     [Header("PC punch buttons.")]
@@ -72,6 +72,8 @@ public class PunchScript : MonoBehaviour
     protected bool movementAndCameraDisabled;
     protected bool useController;
     protected bool isAttacking;
+    protected bool leftArmAttack;
+    protected bool rightArmAttack;
 
     protected float leftArmXAxis;
     protected float leftArmYAxis;
@@ -129,6 +131,8 @@ public class PunchScript : MonoBehaviour
         rightFistStartSize = new CapsuleColliderSizing(rightFistCollider.transform.position, rightFistCollider.radius, rightFistCollider.height);
         leftGrab = false;
         rightGrab = false;
+        leftArmAttack = false;
+        rightArmAttack = false;
         movementAndCameraDisabled = false;
         useController = false;
         isAttacking = false;
@@ -184,44 +188,36 @@ public class PunchScript : MonoBehaviour
         }
         if (isAttacking)
         {
+            if(leftArmAttack)
+            {
+                leftFistCollider.radius = leftFistStartSize.radius * fistGrowMultiplier;
+                leftFistCollider.height = leftFistStartSize.height * fistGrowMultiplier;
+            }
+            if(rightArmAttack)
+            {
+                rightFistCollider.radius = rightFistStartSize.radius * fistGrowMultiplier;
+                rightFistCollider.height = rightFistStartSize.height * fistGrowMultiplier;
+            }
             currentAnimLength -= Time.deltaTime;
             if (currentAnimLength <= 0f)
             {
                 isAttacking = false;
-                leftFistCollider.transform.position = leftFistStartSize.pos;
                 leftFistCollider.radius = leftFistStartSize.radius;
                 leftFistCollider.height = leftFistStartSize.height;
-                rightFistCollider.transform.position = rightFistStartSize.pos;
                 rightFistCollider.radius = rightFistStartSize.radius;
                 rightFistCollider.height = rightFistStartSize.height;
             }
         }
         else
         {
-            leftFistCollider.enabled = false;
-            rightFistCollider.enabled = false;
+            leftFistCollider.radius = leftFistStartSize.radius;
+            leftFistCollider.height = leftFistStartSize.height;
+            rightFistCollider.radius = rightFistStartSize.radius;
+            rightFistCollider.height = rightFistStartSize.height;
             if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
             {
                 if (useController) //controller controls
                 {
-                    //Left trigger lets player control left arm independently
-                    if (Input.GetAxis("LeftTrigger") > 0)
-                    {
-
-                    }
-                    else
-                    {
-
-                    }
-                    //Right trigger lets player control right arm independently
-                    if (Input.GetAxis("RightTrigger") > 0)
-                    {
-                        
-                    }
-                    else
-                    {
-                        
-                    }
                     //Left arm punching
 
                     if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
@@ -236,41 +232,28 @@ public class PunchScript : MonoBehaviour
                 }
                 else  // keyboard controls
                 {
-                    //Left trigger lets player control left arm independently
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
-                    {
-                        
-                    }
-                    else if (Input.GetKeyUp(KeyCode.Mouse0))
-                    {
-                        
-                    }
-                    //Right trigger lets player control right arm independently
-                    if (Input.GetKeyDown(KeyCode.Mouse1))
-                    {
-                        
-
-                    }
-                    else if (Input.GetKeyUp(KeyCode.Mouse1))
-                    {
-                        
-                    }
 
                     if (Input.GetKeyDown(leftJabKey))
                     {
+                        //currently a combo attack
+                        leftArmAttack = true;
+                        rightArmAttack = true;
                         ThrowSinglePunch(Limbs.leftArm);
                     }
                     else if (Input.GetKeyDown(leftUppercutKey))
                     {
+                        leftArmAttack = true;
                         ThrowUppercut(Limbs.leftArm);
                     }
 
                     if (Input.GetKeyDown(rightJabKey))
                     {
+                        rightArmAttack = true;
                         ThrowSinglePunch(Limbs.rightArm);
                     }
                     else if (Input.GetKeyDown(rightUppercutKey))
                     {
+                        rightArmAttack = true;
                         ThrowUppercut(Limbs.rightArm);
                     }
                     else if (Input.GetKeyDown(hiKickKey))

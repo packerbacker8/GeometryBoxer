@@ -167,8 +167,10 @@ public class SphereAttackScript : PunchScript
 
     public void ActivateRollAttack()
     {
-        leftFootCollider.enabled = false;
-        leftFistCollider.enabled = false;
+        leftFistCollider.radius = leftFistStartSize.radius;
+        leftFistCollider.height = leftFistStartSize.height;
+        rightFistCollider.radius = rightFistStartSize.radius;
+        rightFistCollider.height = rightFistStartSize.height;
         UpdatePos(ballForm.transform, charController.transform);
         isBall = true;
         isAttacking = true;
