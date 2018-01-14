@@ -11,7 +11,20 @@ public class Sight_Script : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        RaycastHit hit;
+        Vector3 p1 = transform.position + Vector3.up;
+        Debug.DrawRay(p1, transform.forward + Vector3.up, Color.black, 2);
+        if(Physics.SphereCast(p1, 5, transform.forward, out hit))
+        {
+            if(hit.transform.root.tag == "Player")
+            {
+                SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);
+            }
+        }
+        else
+        {
+            SendMessageUpwards("playerLost", SendMessageOptions.DontRequireReceiver);
+        }
 	}
 
     private void OnTriggerEnter(Collider other)
@@ -20,7 +33,7 @@ public class Sight_Script : MonoBehaviour {
         if (other.transform.root.tag == "Player")
         {
             Debug.Log("Player Detected");
-            this.SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);
+            SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);
         }
     }
 
