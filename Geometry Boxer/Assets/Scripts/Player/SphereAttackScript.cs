@@ -49,36 +49,12 @@ public class SphereAttackScript : PunchScript
         maxVelocity = 25f;
         onCooldown = false;
         isBall = false;
-
-        CapsuleCollider[] capsuleArr = this.GetComponentsInChildren<CapsuleCollider>();
-        rightHandCol = capsuleArr[11];
-        leftHandCol = capsuleArr[7];
-        originalRightHandRadius = rightHandCol.radius;
-        originalLeftHandRadius = leftHandCol.radius;
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-        //rightHandCol.radius = 1.9f;
-        if (base.isAttacking == true)
-        {
-            if (base.rightArmActive == true)
-            {
-                rightHandCol.radius = .6f;
-            }
-            if (base.leftArmActive == true)
-            {
-                leftHandCol.radius = .6f;
-            }        
-        }
-        else
-        {
-            rightHandCol.radius = originalRightHandRadius;
-            leftHandCol.radius = originalLeftHandRadius;
-        }
-        
   
         if (!onCooldown)
         {
@@ -200,6 +176,10 @@ public class SphereAttackScript : PunchScript
 
     public void ActivateRollAttack()
     {
+        leftFistCollider.radius = leftFistStartSize.radius;
+        leftFistCollider.height = leftFistStartSize.height;
+        rightFistCollider.radius = rightFistStartSize.radius;
+        rightFistCollider.height = rightFistStartSize.height;
         UpdatePos(ballForm.transform, charController.transform);
         isBall = true;
         isAttacking = true;

@@ -139,4 +139,9 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         }
 
     }
+
+    public override void PlayerBeingReset(Transform resetLocation)
+    {
+        LoadLevel.loader.ReloadScene();
+    }
 }
