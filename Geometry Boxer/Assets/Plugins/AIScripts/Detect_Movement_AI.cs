@@ -50,6 +50,25 @@ namespace Enemy
         {
             //throw new NotImplementedException();
         }
+
+        public Quaternion rotateStyle()
+        {
+            //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
+            if (playerTarget)
+            {
+                float moveSpeed = 1.5f;
+                Vector3 targetDir = moveTarget.position - transform.position;
+                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
+                return Quaternion.LookRotation(newDir);
+            }
+            else
+            {
+                
+                float angle = Mathf.Sin(Time.time) * 70;
+                return Quaternion.AngleAxis(angle, Vector3.up);
+               
+            }
+        }
         // Use this for initialization
         void Start()
         {

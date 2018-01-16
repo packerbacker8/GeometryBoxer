@@ -14,7 +14,7 @@ public class Sight_Script : MonoBehaviour {
         RaycastHit hit;
         Vector3 p1 = transform.position + Vector3.up;
         Debug.DrawRay(p1, transform.forward + Vector3.up, Color.black, 2);
-        if(Physics.SphereCast(p1, 5, transform.forward, out hit))
+        if(Physics.SphereCast(p1, 1, transform.forward, out hit))
         {
             if(hit.transform.root.tag == "Player")
             {

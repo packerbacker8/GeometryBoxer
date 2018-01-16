@@ -19,5 +19,7 @@ namespace Enemy
         void playerFound();
 
         void playerLost();
+
+        Quaternion rotateStyle();
     }
 }

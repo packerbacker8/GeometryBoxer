@@ -80,9 +80,9 @@ namespace RootMotion.Demos
         {
             if(!dead)
             {
-                float moveSpeed = walkByDefault ? 1.0f : 1.5f;
-                Vector3 targetDir = moveTarget.position - transform.position;
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
+                //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
+                //Vector3 targetDir = moveTarget.position - transform.position;
+                //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
                 AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
                 if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
@@ -119,7 +119,8 @@ namespace RootMotion.Demos
                     state.move = Vector3.zero;
                 }
 
-                transform.rotation = Quaternion.LookRotation(newDir);
+                //transform.rotation = Quaternion.LookRotation(newDir);
+                transform.rotation = movementStyle.rotateStyle();
             }
             else
             {
