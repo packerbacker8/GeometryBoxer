@@ -8,6 +8,7 @@ public class UITrigger_MainMenu : MonoBehaviour {
     public Camera camera;
     public GameObject ui_root;
     public GameObject player;
+    public GameObject dialogueSprite;
     public List<GameObject> cameraAngles = new List<GameObject>();
 
     private GameObject cameraTarget; 
@@ -55,6 +56,7 @@ public class UITrigger_MainMenu : MonoBehaviour {
         {
             ui_root.SetActive(false);
             cameraTarget = cameraAngles[1];
+            dialogueSprite.SetActive(false);
         }
     }
     
