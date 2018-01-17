@@ -9,20 +9,15 @@ public class CubeAttackScript : PunchScript
 {
     public GameObject pelvisJoint;
     public float PowerUpTimeLimit = 10f;
-    public KeyCode attacKey = KeyCode.LeftControl;
+    public KeyCode attacKey = KeyCode.B;
+    public bool PowerUp = false;
     public GameObject cubeForm;
 
     private Rigidbody playerRigidBody;
-    private PlayerHealthScript HealthScript;
-    public bool PowerUp = false;
     private float TimePowerUp;
     private Behaviour halo;
-    private bool isGrounded;
-    private CharacterMeleeDemo charMelDemo;
-    private GameObject puppetMast;
-    private GameObject gameController;
+    
     private CubeSpecialStats stats;
-
     private Vector3 startCubeSize;
     private Vector3 endCubeSize;
     private Vector3 moveDir;
@@ -30,6 +25,8 @@ public class CubeAttackScript : PunchScript
 
     private bool onCooldown;
     private bool growingCube;
+    private bool launched;
+    private bool isGrounded;
 
     private float coolDownTimer;
     private float cubeForce;
@@ -44,17 +41,13 @@ public class CubeAttackScript : PunchScript
         base.Start();
         stats = this.GetComponent<CubeSpecialStats>();
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
-        puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
-        gameController = GameObject.FindGameObjectWithTag("GameController");
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
         playerRigidBody = pelvisJoint.GetComponent<Rigidbody>();
-        charMelDemo = this.transform.GetComponentInChildren<CharacterMeleeDemo>();
-        isGrounded = charMelDemo.animState.onGround;
 
         PowerUp = false;
-
+        isGrounded = checkIfGrounded();
         startCubeSize = new Vector3(0.1f, 0.1f, 0.1f);
         endCubeSize = new Vector3(2f, 2f, 2f);
         cubeForm.GetComponent<MeshRenderer>().enabled = false;
@@ -62,6 +55,7 @@ public class CubeAttackScript : PunchScript
         cubeRigid = cubeForm.GetComponent<Rigidbody>();
         onCooldown = false;
         growingCube = false;
+        launched = false;
         coolDownTimer = 0f;
         cubeForce = 1000f;
         cubeRigid.useGravity = false;
@@ -72,21 +66,24 @@ public class CubeAttackScript : PunchScript
     {
         base.Update();
         isGrounded = checkIfGrounded();
-        
-        if(growingCube)
+        if(isGrounded)
+        {
+            launched = false;
+        }
+        if (growingCube)
         {
             cubeForm.transform.localScale += startCubeSize;
-            if(cubeForm.transform.localScale.magnitude >= endCubeSize.magnitude)
+            if (cubeForm.transform.localScale.magnitude >= endCubeSize.magnitude)
             {
                 cubeForm.transform.localScale = endCubeSize;
                 growingCube = false;
             }
         }
-        else if(cubeForm.GetComponent<MeshRenderer>().enabled)
+        else if (cubeForm.GetComponent<MeshRenderer>().enabled)
         {
             UpdatePos(charController.transform, cubeForm.transform);
             coolDownTimer += Time.deltaTime;
-            if(coolDownTimer >= PowerUpTimeLimit)
+            if (coolDownTimer >= PowerUpTimeLimit)
             {
                 DeactivateBoxAttack();
                 UpdatePos(charController.transform, cubeForm.transform);
@@ -102,9 +99,11 @@ public class CubeAttackScript : PunchScript
             {
                 cubeRigid.GetComponent<Rigidbody>().AddForce(Vector3.up * cubeForce * 100f);
             }
-            else if(Input.GetKeyDown(KeyCode.Space) && cubeForm.GetComponent<MeshRenderer>().enabled)
+            else if (Input.GetKeyDown(KeyCode.Space) && cubeForm.GetComponent<MeshRenderer>().enabled && !launched)
             {
                 cubeRigid.GetComponent<Rigidbody>().AddForce(-Vector3.up * cubeForce * 300f);
+                launched = true;
+
             }
             if (!isGrounded)
             {
@@ -128,11 +127,11 @@ public class CubeAttackScript : PunchScript
                 UpdatePos(cubeForm.transform, charController.transform);
             }
         }
-        
-        if(onCooldown)
+
+        if (onCooldown)
         {
             coolDownTimer += Time.deltaTime;
-            if(coolDownTimer >= PowerUpTimeLimit)
+            if (coolDownTimer >= PowerUpTimeLimit)
             {
                 onCooldown = false;
                 coolDownTimer = 0f;
@@ -150,7 +149,7 @@ public class CubeAttackScript : PunchScript
             halo.enabled = true;
             SendMessage("PowerUpActive", true);
 
-            puppetMast.transform.localScale += new Vector3(2F, 2F, 2F);
+            puppetMastObject.transform.localScale += new Vector3(2F, 2F, 2F);
             charController.transform.localScale += new Vector3(2F, 2F, 2F);
 
         }
@@ -165,7 +164,7 @@ public class CubeAttackScript : PunchScript
                 PowerUp = false;
                 halo.enabled = false;
 
-                puppetMast.transform.localScale -= new Vector3(2F, 2F, 2F);
+                puppetMastObject.transform.localScale -= new Vector3(2F, 2F, 2F);
                 charController.transform.localScale -= new Vector3(2F, 2F, 2F);
                 TimePowerUp = PowerUpTimeLimit;
                 SendMessage("PowerUpDeactivated", false);
@@ -193,6 +192,7 @@ public class CubeAttackScript : PunchScript
     private void DeactivateBoxAttack()
     {
         cubeRigid.useGravity = false;
+        launched = false;
         UpdatePos(charController.transform, cubeForm.transform);
         cubeForm.transform.localScale = startCubeSize;
         //play animation of morphing into ball
