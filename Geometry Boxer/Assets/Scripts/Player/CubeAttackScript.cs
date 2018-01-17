@@ -58,9 +58,6 @@ public class CubeAttackScript : PunchScript
             charController.transform.localScale += new Vector3(2F, 2F, 2F);
 
         }
-
-        
-
         if (PowerUp == true)
         {
             TimePowerUp -= 1 * Time.deltaTime;

@@ -88,8 +88,7 @@ public class EnemyHealthScript : MonoBehaviour
         {
             damageIsFromPlayer = true; //after animator states enemy has stood up, change this to false.
         }
-
-        Debug.Log("Impact force: " + collisionMagnitude + "\n Tag: " + tagOfCollision);
+        
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
         if (!dead && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)) && !charController.drop)
         {

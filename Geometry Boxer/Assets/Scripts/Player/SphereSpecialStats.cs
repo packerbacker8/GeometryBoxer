@@ -2,14 +2,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using RootMotion.Dynamics;
 using RootMotion.Demos;
 
 public class SphereSpecialStats : PlayerStatsBaseClass
 {
     public GameObject pelvisJoint;
-
+    public float Health;
+    
+    private Image healthBarBackground;
+    private Image healthBarFill;
     private float originalHealth;
+    private float HealthModifier;
     private float minSpeed;
     private float maxSpeed;
     private float minAttackForce;
@@ -27,7 +32,8 @@ public class SphereSpecialStats : PlayerStatsBaseClass
     {
         base.Start();
 
-        health = 5000f;
+        health = Health;
+        HealthModifier = 1f;
         originalHealth = health;
         minSpeed = 0.75f;
         maxSpeed = 2.5f;
@@ -47,6 +53,9 @@ public class SphereSpecialStats : PlayerStatsBaseClass
         playerRigidBody = pelvisJoint.GetComponent<Rigidbody>();
         charMelDemo = this.transform.GetComponentInChildren<CharacterMeleeDemo>();
         isGrounded = charMelDemo.animState.onGround;
+
+        healthBarBackground = GameObject.FindGameObjectWithTag("HealthBarBackground").GetComponent<Image>();
+        healthBarFill = GameObject.FindGameObjectWithTag("HealthBarBackground").transform.GetChild(0).GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -122,6 +131,38 @@ public class SphereSpecialStats : PlayerStatsBaseClass
     {
         //base.PlayerBeingReset(resetLocation);
         LoadLevel.loader.ReloadScene();
+    }
+
+    /// <summary>
+    /// Function receives impulse received by colliders on the enemy characters.
+    /// </summary>
+    /// <param name="impulseVal"></param>
+    public override void ImpactReceived(Collision collision)
+    {
+        //AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+        if (collision.gameObject.tag == "EnemyCollision")  //|| (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        {
+            hitByEnemy = true;
+            if (!dead && collision.impulse.magnitude > damageThreshold)
+            {
+                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+            }
+            UpdateHealthUI();
+        }
+        else if (hitByEnemy)
+        {
+            if (!dead && collision.impulse.magnitude > damageThreshold)
+            {
+                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+            }
+            UpdateHealthUI();
+        }
+        Debug.Log("Health: " + GetPlayerHealth());
+    }
+
+    private void UpdateHealthUI()
+    {
+        healthBarFill.fillAmount = GetPlayerHealth() / originalHealth;
     }
 
 }

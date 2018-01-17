@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 114430465292048552}
   m_Layer: 9
   m_Name: left_forearm_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 114562627026677982}
   m_Layer: 9
   m_Name: left_thigh_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 114004579832961616}
   m_Layer: 9
   m_Name: left_foot_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 114719007087756218}
   m_Layer: 9
   m_Name: right_thigh_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 114560575237138876}
   m_Layer: 9
   m_Name: right_foot_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -278,7 +278,7 @@ GameObject:
   - component: {fileID: 114818164408333786}
   m_Layer: 9
   m_Name: right_hand_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 114407070821841314}
   m_Layer: 9
   m_Name: right_forearm_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -392,7 +392,7 @@ GameObject:
   - component: {fileID: 114116662710157084}
   m_Layer: 9
   m_Name: right_upperArm_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -459,7 +459,7 @@ GameObject:
   - component: {fileID: 114854976915453616}
   m_Layer: 9
   m_Name: left_upperArm_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -478,7 +478,7 @@ GameObject:
   - component: {fileID: 114631178803037096}
   m_Layer: 9
   m_Name: left_hand_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -512,7 +512,7 @@ GameObject:
   - component: {fileID: 114518651915312550}
   m_Layer: 9
   m_Name: right_knee_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -607,7 +607,7 @@ GameObject:
   - component: {fileID: 114200517935099340}
   m_Layer: 9
   m_Name: left_knee_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -626,7 +626,7 @@ GameObject:
   - component: {fileID: 114574459732380758}
   m_Layer: 9
   m_Name: pelvis_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -730,7 +730,7 @@ GameObject:
   - component: {fileID: 65091645414755300}
   m_Layer: 9
   m_Name: head_result_JNT
-  m_TagString: Untagged
+  m_TagString: EnemyCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1921,10 +1921,10 @@ MonoBehaviour:
   mappingWeight: 1
   pinWeight: 1
   muscleWeight: 1
-  muscleSpring: 10
+  muscleSpring: 500
   muscleDamper: 0
-  pinPow: 4
-  pinDistanceFalloff: 5
+  pinPow: 1.55
+  pinDistanceFalloff: 0
   updateJointAnchors: 1
   supportTranslationAnimation: 0
   angularLimits: 1
