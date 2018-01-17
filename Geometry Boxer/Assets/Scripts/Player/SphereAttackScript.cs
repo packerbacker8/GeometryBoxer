@@ -49,6 +49,7 @@ public class SphereAttackScript : PunchScript
         maxVelocity = 25f;
         onCooldown = false;
         isBall = false;
+        ballRigid.useGravity = false;
     }
 
     // Update is called once per frame
@@ -132,6 +133,7 @@ public class SphereAttackScript : PunchScript
 
     public void DeactivateRollAttack()
     {
+        ballRigid.useGravity = false;
         UpdatePos(charController.transform, ballForm.transform);
         //play animation of morphing into ball
         isBall = false;
@@ -176,6 +178,7 @@ public class SphereAttackScript : PunchScript
 
     public void ActivateRollAttack()
     {
+        ballRigid.useGravity = true;
         leftFistCollider.radius = leftFistStartSize.radius;
         leftFistCollider.height = leftFistStartSize.height;
         rightFistCollider.radius = rightFistStartSize.radius;

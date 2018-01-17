@@ -63,7 +63,8 @@ public class CubeAttackScript : PunchScript
         onCooldown = false;
         growingCube = false;
         coolDownTimer = 0f;
-        cubeForce = 10f;
+        cubeForce = 1000f;
+        cubeRigid.useGravity = false;
     }
 
     // Update is called once per frame
@@ -83,7 +84,6 @@ public class CubeAttackScript : PunchScript
         }
         else if(cubeForm.GetComponent<MeshRenderer>().enabled)
         {
-            Debug.Log("If i am on the ground: " + isGrounded);
             UpdatePos(charController.transform, cubeForm.transform);
             coolDownTimer += Time.deltaTime;
             if(coolDownTimer >= PowerUpTimeLimit)
@@ -102,8 +102,11 @@ public class CubeAttackScript : PunchScript
             {
                 cubeRigid.GetComponent<Rigidbody>().AddForce(Vector3.up * cubeForce * 100f);
             }
-
-            if(!isGrounded)
+            else if(Input.GetKeyDown(KeyCode.Space) && cubeForm.GetComponent<MeshRenderer>().enabled)
+            {
+                cubeRigid.GetComponent<Rigidbody>().AddForce(-Vector3.up * cubeForce * 300f);
+            }
+            if (!isGrounded)
             {
                 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
                 moveDir = cam.transform.TransformDirection(moveDir);
@@ -182,13 +185,14 @@ public class CubeAttackScript : PunchScript
         if (transformToUpdate == cubeForm.transform)
         {
             transformToUpdate.rotation = Quaternion.identity;
-            targetVec = new Vector3(targetVec.x, targetVec.y + 1f, targetVec.z);
+            targetVec = new Vector3(targetVec.x, targetVec.y + 3f, targetVec.z);
         }
         transformToUpdate.position = targetVec;
     }
 
     private void DeactivateBoxAttack()
     {
+        cubeRigid.useGravity = false;
         UpdatePos(charController.transform, cubeForm.transform);
         cubeForm.transform.localScale = startCubeSize;
         //play animation of morphing into ball
@@ -226,11 +230,12 @@ public class CubeAttackScript : PunchScript
             anim.SetFloat("Forward", 0);
         }
         anim.Play("Grounded Directional");
-        SendMessage("PowerUpDeactivated");
+        SendMessage("PowerUpDeactivated", false);
     }
 
     private void ActivateBoxAttack()
     {
+        cubeRigid.useGravity = true;
         leftFistCollider.radius = leftFistStartSize.radius;
         leftFistCollider.height = leftFistStartSize.height;
         rightFistCollider.radius = rightFistStartSize.radius;
@@ -260,7 +265,7 @@ public class CubeAttackScript : PunchScript
         charController.GetComponent<CharacterMeleeDemo>().enabled = false;
         charController.GetComponent<CapsuleCollider>().enabled = false;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
-        SendMessage("PowerUpActive");
+        SendMessage("PowerUpActive", true);
     }
 }
 
