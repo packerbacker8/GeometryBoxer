@@ -29,7 +29,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
 
     // This is puppetMasters user controler, it controls the players movements
     protected UserControlThirdPerson userControl; // user input
-    
+
     // Use this for initialization
     protected override void Start()
     {
@@ -152,9 +152,12 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         LoadLevel.loader.ReloadScene();
     }
 
-    private void UpdateHealthUI()
+    public void UpdateHealthUI()
     {
-        Debug.Log("Health: " + GetPlayerHealth());
         healthBarFill.fillAmount = GetPlayerHealth() / originalHealth;
+    }
+    public float GetOriginalHealth()
+    {
+        return originalHealth;
     }
 }

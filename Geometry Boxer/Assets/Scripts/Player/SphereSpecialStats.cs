@@ -157,12 +157,15 @@ public class SphereSpecialStats : PlayerStatsBaseClass
             }
             UpdateHealthUI();
         }
-        Debug.Log("Health: " + GetPlayerHealth());
     }
 
-    private void UpdateHealthUI()
+    public void UpdateHealthUI()
     {
         healthBarFill.fillAmount = GetPlayerHealth() / originalHealth;
+    }
+    public float GetOriginalHealth()
+    {
+        return originalHealth;
     }
 
 }

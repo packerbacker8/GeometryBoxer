@@ -76,10 +76,13 @@ public class OctahedronStats : PlayerStatsBaseClass {
             UpdateHealthUI();
         }
     }
-    private void UpdateHealthUI()
+    public void UpdateHealthUI()
     {
-        Debug.Log("Health: " + GetPlayerHealth());
         healthBarFill.fillAmount = GetPlayerHealth() / originalHealth;
+    }
+    public float GetOriginalHealth()
+    {
+        return originalHealth;
     }
     /*
     public OctahedronStats() : base(1000f, 1.0f, 1.0f, 1.0f, 1.0f)
