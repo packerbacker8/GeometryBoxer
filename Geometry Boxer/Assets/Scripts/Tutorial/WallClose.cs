@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WallClose : MonoBehaviour {
-    public GameObject[] enemyStands;
-    public GameObject[] weaponStands; 
+    public List<GameObject> enemyStands;
+    public List<GameObject> weaponStands; 
 
     public float moveX = 1f;
     public float moveY = 1f;
@@ -28,6 +28,10 @@ public class WallClose : MonoBehaviour {
             {
                 closing = false;
                 closed = true;
+                for(int i = 0; i < enemyStands.Count; i++)
+                {
+                    enemyStands[i].transform.GetComponent<WeaponStand>().Rise();
+                }
             }
         }
 	}

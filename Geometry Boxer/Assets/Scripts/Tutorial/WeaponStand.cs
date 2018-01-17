@@ -36,7 +36,7 @@ public class WeaponStand : MonoBehaviour {
             }
         }
 	}
-    void Rise()
+    public void Rise()
     {
         rising = true;
     }
