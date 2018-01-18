@@ -7,6 +7,7 @@ using RootMotion;
 public class OctahedronSpecials : PunchScript
 {
     public GameObject octaForm;
+    public float octaFormSize = 4f;
     public KeyCode specialAttack = KeyCode.B;
     public KeyCode useAttack = KeyCode.Space;
     public float specialAttackActiveTime = 10f;
@@ -26,6 +27,8 @@ public class OctahedronSpecials : PunchScript
     private float octaForce;
     private float launchTime;
     private float launchLength;
+    private float floatHeight;
+    private float floatOffset;
 
     private bool executingSpecial = false;
     private bool specialIsSpeed = false;
@@ -34,7 +37,8 @@ public class OctahedronSpecials : PunchScript
     private bool growingOcta;
     private bool launched;
     private bool isGrounded;
-    private bool isFloating;
+
+    private int isFloating;
 
     private OctahedronStats stats;
     private Vector3 startOctaSize;
@@ -54,9 +58,9 @@ public class OctahedronSpecials : PunchScript
         rb = arr[11];
 
         isGrounded = checkIfGrounded();
-        isFloating = false;
+        isFloating = 0;
         startOctaSize = new Vector3(0.1f, 0.1f, 0.1f);
-        endOctaSize = new Vector3(2f, 2f, 2f);
+        endOctaSize = new Vector3(octaFormSize, octaFormSize, octaFormSize); 
         stats = this.GetComponent<OctahedronStats>();
         octaForm.GetComponent<MeshRenderer>().enabled = false;
         octaForm.GetComponent<BoxCollider>().enabled = false;   // TEMPORARILY A CUBE COLLIDER UNTIL MESH IS FIXED
@@ -68,6 +72,8 @@ public class OctahedronSpecials : PunchScript
         octaForce = 1000f;
         launchTime = 0;
         launchLength = 1f;
+        floatHeight = 1.5f;
+        floatOffset = 0.2f;
         octaRigid.useGravity = false;
     }
 
@@ -91,16 +97,24 @@ public class OctahedronSpecials : PunchScript
         {
             UpdatePos(charController.transform, octaForm.transform);
             coolDownTimer += Time.deltaTime;
-            octaRigid.useGravity = false;
 
             isFloating = checkIfFloating();
-            if(isFloating) //combine two raycasts to see if within certain range, make sure doesn't go too high or too low
+            //too high
+            if (isFloating > 0) 
             {
-                octaRigid.velocity = new Vector3(octaRigid.velocity.x, 0f, octaRigid.velocity.z);
+                octaRigid.useGravity = true;
             }
+            //too low
+            else if(isFloating < 0)
+            {
+                octaRigid.useGravity = false;
+                octaRigid.AddForce(Vector3.up * octaForce);
+            }
+            //in range
             else
             {
-                octaRigid.AddForce(Vector3.up * octaForce);
+                octaRigid.velocity = new Vector3(octaRigid.velocity.x, 0f, octaRigid.velocity.z);
+                octaRigid.useGravity = false;
             }
             if (coolDownTimer >= specialAttackActiveTime)
             {
@@ -238,10 +252,6 @@ public class OctahedronSpecials : PunchScript
             SpecialTime = 3.0f;
             specialIsSpeed = true;
         }
-
-
-        //Debug.Log(anim.GetFloat("Forward"));
-
     }
 
     /// <summary>
@@ -254,14 +264,27 @@ public class OctahedronSpecials : PunchScript
     }
 
     /// <summary>
-    /// Check to see if the octahedron is floating above the ground.
+    /// Check to see if the octahedron is floating above the ground within a certain range.
     /// </summary>
-    /// <returns>Returns true if the octahedron is greater than a certain distance from the ground, false otherwise.</returns>
-    private bool checkIfFloating()
+    /// <returns>Returns 0 if above lower range and below upper range.
+    /// Returns greater than 0 if outside range of both upper and lower.
+    /// Returns less than 0 if within range of both upper and lower.</returns>
+    private int checkIfFloating()
     {
+        int result = 0;
         Vector3 endPoint = new Vector3(octaForm.transform.position.x, octaForm.transform.position.y - octaForm.GetComponent<BoxCollider>().size.y * 2f , octaForm.transform.position.z);
         Debug.DrawLine(octaForm.transform.position, endPoint, Color.red, 5f);
-        return !Physics.Raycast(octaForm.transform.position, -Vector3.up, octaForm.GetComponent<BoxCollider>().size.y * 2f);
+        bool lower = Physics.Raycast(octaForm.transform.position, -Vector3.up, octaForm.GetComponent<BoxCollider>().size.y * floatHeight);
+        bool upper = Physics.Raycast(octaForm.transform.position, -Vector3.up, octaForm.GetComponent<BoxCollider>().size.y * (floatHeight + floatOffset));
+        if (lower && upper) //within cast range of both raycasts
+        {
+            result = -1;
+        }
+        else if(!lower && !upper) //outside both
+        {
+            result = 1;
+        }
+        return result;
     }
 
     /// <summary>
@@ -277,7 +300,7 @@ public class OctahedronSpecials : PunchScript
         transformToUpdate.rotation = Quaternion.identity;
         if (transformToUpdate == octaForm.transform)
         {
-            targetVec = new Vector3(targetVec.x, targetVec.y + 3f, targetVec.z);
+            targetVec = new Vector3(targetVec.x, targetVec.y + 2f, targetVec.z);
         }
         transformToUpdate.position = targetVec;
     }
@@ -287,6 +310,7 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     private void DeactivateOctaAttack()
     {
+        charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
         octaRigid.useGravity = false;
         launched = false;
         UpdatePos(charController.transform, octaForm.transform);

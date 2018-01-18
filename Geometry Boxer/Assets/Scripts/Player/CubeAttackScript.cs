@@ -208,6 +208,7 @@ public class CubeAttackScript : PunchScript
     private void DeactivateBoxAttack()
     {
         cubeRigid.useGravity = false;
+        charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
         launched = false;
         UpdatePos(charController.transform, cubeForm.transform);
         cubeForm.transform.localScale = startCubeSize;
@@ -246,7 +247,7 @@ public class CubeAttackScript : PunchScript
             anim.SetFloat("Forward", 0);
         }
         anim.Play("Grounded Directional");
-        SendMessage("PowerUpDeactivated", false);
+        SendMessage("PowerUpDeactivated", false, SendMessageOptions.DontRequireReceiver);
     }
 
     /// <summary>
@@ -284,7 +285,7 @@ public class CubeAttackScript : PunchScript
         charController.GetComponent<CharacterMeleeDemo>().enabled = false;
         charController.GetComponent<CapsuleCollider>().enabled = false;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
-        SendMessage("PowerUpActive", true);
+        SendMessage("PowerUpActive", true, SendMessageOptions.DontRequireReceiver);
     }
 }
 
