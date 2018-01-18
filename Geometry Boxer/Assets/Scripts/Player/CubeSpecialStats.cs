@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CubeSpecialStats : PlayerStatsBaseClass
 {
-    public GameObject pelvisJoint;
+    
     public float Health = 15000;
     public float Speed = .7f;
     public float Stability;

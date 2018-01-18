@@ -140,7 +140,10 @@ public class CubeAttackScript : PunchScript
 
         //GrowBigPower();
     }
-
+    /// <summary>
+    /// Allows character to grow larger when attack key is pressed. Shrinks back down after a certain
+    /// amount of time.
+    /// </summary>
     private void GrowBigPower()
     {
         if (!PowerUp && Input.GetKeyDown(attacKey) || !PowerUp && Input.GetButtonDown("XButton"))
@@ -172,23 +175,37 @@ public class CubeAttackScript : PunchScript
         }
     }
 
+    /// <summary>
+    /// Raycast from center of cube to ground to see if on the ground.
+    /// </summary>
+    /// <returns>Returns true if on ground, false otherwise, with some tolerance.</returns>
     private bool checkIfGrounded()
     {
         return Physics.Raycast(cubeForm.transform.position, -Vector3.up, cubeForm.GetComponent<BoxCollider>().size.y + 0.1f);
     }
 
-
+    /// <summary>
+    /// Update the position of one transform to the target transform of another game object.
+    /// This specifically accounts bonus movement of the cube upwards to avoid clipping 
+    /// through the floor when spawning.
+    /// </summary>
+    /// <param name="transformToUpdate">The transform object to move.</param>
+    /// <param name="targetTransform">The transform object to move the other object to.</param>
     private void UpdatePos(Transform transformToUpdate, Transform targetTransform)
     {
         Vector3 targetVec = targetTransform.position;
+        transformToUpdate.rotation = Quaternion.identity;
         if (transformToUpdate == cubeForm.transform)
         {
-            transformToUpdate.rotation = Quaternion.identity;
+            
             targetVec = new Vector3(targetVec.x, targetVec.y + 3f, targetVec.z);
         }
         transformToUpdate.position = targetVec;
     }
 
+    /// <summary>
+    /// Turn off the special box attack and reactivate the player character.
+    /// </summary>
     private void DeactivateBoxAttack()
     {
         cubeRigid.useGravity = false;
@@ -233,6 +250,9 @@ public class CubeAttackScript : PunchScript
         SendMessage("PowerUpDeactivated", false);
     }
 
+    /// <summary>
+    /// Turn on the special box attack and deactivate the player character.
+    /// </summary>
     private void ActivateBoxAttack()
     {
         cubeRigid.useGravity = true;
