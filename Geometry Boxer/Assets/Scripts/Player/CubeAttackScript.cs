@@ -197,7 +197,6 @@ public class CubeAttackScript : PunchScript
         transformToUpdate.rotation = Quaternion.identity;
         if (transformToUpdate == cubeForm.transform)
         {
-            
             targetVec = new Vector3(targetVec.x, targetVec.y + 3f, targetVec.z);
         }
         transformToUpdate.position = targetVec;
