@@ -97,11 +97,11 @@ public class CubeAttackScript : PunchScript
             }
             if (Input.GetKeyDown(KeyCode.Space) && isGrounded && cubeForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
             {
-                cubeRigid.GetComponent<Rigidbody>().AddForce(Vector3.up * cubeForce * 100f);
+                cubeRigid.AddForce(Vector3.up * cubeForce * 100f);
             }
             else if (Input.GetKeyDown(KeyCode.Space) && cubeForm.GetComponent<MeshRenderer>().enabled && !launched)
             {
-                cubeRigid.GetComponent<Rigidbody>().AddForce(-Vector3.up * cubeForce * 300f);
+                cubeRigid.AddForce(-Vector3.up * cubeForce * 300f);
                 launched = true;
 
             }
