@@ -2045,9 +2045,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2b982dfd24a18447a8af0930cac7ea2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pelvisJoint: {fileID: 1983625813745298}
   deathDelay: 20
   damageThreshold: 100
-  pelvisJoint: {fileID: 1983625813745298}
   Health: 15000
   Speed: 0.7
   Stability: 0
@@ -2975,6 +2975,13 @@ MonoBehaviour:
   hiKickKey: 107
   leftJabControllerButton: LeftBumper
   rightJabControllerButton: RightBumper
+  specialForm: {fileID: 1114193915584240}
+  specialFormSize: 4
+  growSpeed: 3
+  specialAttack: 98
+  useAttack: 32
+  specialAttackActiveTime: 10
+  specialAttackCooldownTime: 2
   playerAnimations:
   - actionIndex: 1
     animName: RightPunch
@@ -3006,10 +3013,6 @@ MonoBehaviour:
     animLayer: 0
     transitionTime: 0.1
     playTime: 0.1
-  pelvisJoint: {fileID: 1983625813745298}
-  PowerUpTimeLimit: 10
-  attacKey: 98
-  cubeForm: {fileID: 1114193915584240}
   PowerUp: 0
 --- !u!114 &114962364254578312
 MonoBehaviour:

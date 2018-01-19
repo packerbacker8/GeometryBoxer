@@ -21,9 +21,7 @@ public class SphereAttackScript : PunchScript
     private Rigidbody pelvisRigid;
     private float moveVer;
     private float moveHor;
-    private Vector3 moveDir;
     private float ballForce;
-    private bool onCooldown;
     private bool isBall;
 
     private CapsuleCollider rightHandCol;
@@ -120,16 +118,6 @@ public class SphereAttackScript : PunchScript
 
     }
 
-    public void UpdatePos(Transform transformToUpdate, Transform targetTransform)
-    {
-        Vector3 targetVec = targetTransform.position;
-        if(transformToUpdate == ballForm.transform)
-        {
-            transformToUpdate.rotation = Quaternion.identity;
-            targetVec = new Vector3(targetVec.x, targetVec.y + 2f, targetVec.z);
-        }
-        transformToUpdate.position = targetVec;
-    }
 
     public void DeactivateRollAttack()
     {

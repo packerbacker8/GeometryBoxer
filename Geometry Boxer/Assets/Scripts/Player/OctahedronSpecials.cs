@@ -6,13 +6,6 @@ using RootMotion;
 
 public class OctahedronSpecials : PunchScript
 {
-    public GameObject octaForm;
-    public float octaFormSize = 4f;
-    public KeyCode specialAttack = KeyCode.B;
-    public KeyCode useAttack = KeyCode.Space;
-    public float specialAttackActiveTime = 10f;
-    public float specialAttackCooldownTime = 2f;
-
     CharacterMeleeDemo charMeleeDemoRef;
     UserControlThirdPerson userControlThirdPersonRef;
     CharacterThirdPerson charThirdPersonref;
@@ -33,18 +26,12 @@ public class OctahedronSpecials : PunchScript
     private bool executingSpecial = false;
     private bool specialIsSpeed = false;
     private bool tornadoMode = false;
-    private bool onCooldown;
-    private bool growingOcta;
-    private bool launched;
     private bool isGrounded;
 
     private int isFloating;
 
     private OctahedronStats stats;
-    private Vector3 startOctaSize;
-    private Vector3 endOctaSize;
-    private Vector3 moveDir;
-    private Rigidbody octaRigid;
+    
 
     // Use this for initialization
     protected override void Start()
@@ -59,22 +46,20 @@ public class OctahedronSpecials : PunchScript
 
         isGrounded = checkIfGrounded();
         isFloating = 0;
-        startOctaSize = new Vector3(0.1f, 0.1f, 0.1f);
-        endOctaSize = new Vector3(octaFormSize, octaFormSize, octaFormSize); 
+
         stats = this.GetComponent<OctahedronStats>();
-        octaForm.GetComponent<MeshRenderer>().enabled = false;
-        octaForm.GetComponent<BoxCollider>().enabled = false;   // TEMPORARILY A CUBE COLLIDER UNTIL MESH IS FIXED
-        octaRigid = octaForm.GetComponent<Rigidbody>();
-        onCooldown = false;
-        growingOcta = false;
-        launched = false;
+        baseStats = this.GetComponent<OctahedronStats>();
+        specialForm.GetComponent<MeshRenderer>().enabled = false;
+        specialForm.GetComponent<BoxCollider>().enabled = false;   // TEMPORARILY A CUBE COLLIDER UNTIL MESH IS FIXED
+        specialRigid = specialForm.GetComponent<Rigidbody>();
+
         coolDownTimer = 0f;
         octaForce = 1000f;
         launchTime = 0;
         launchLength = 1f;
         floatHeight = 1.5f;
         floatOffset = 0.2f;
-        octaRigid.useGravity = false;
+        specialRigid.useGravity = false;
     }
 
     // Update is called once per frame
@@ -84,51 +69,50 @@ public class OctahedronSpecials : PunchScript
         //anim.SetFloat("Forward", 1.0f);
         //Debug.Log(userControlThirdPersonRef.state.move + " forward: " + charMeleeDemoRef.transform.forward);
 
-        if (growingOcta)
+        if (growingSpecial)
         {
-            octaForm.transform.localScale += startOctaSize;
-            if (octaForm.transform.localScale.magnitude >= endOctaSize.magnitude)
-            {
-                octaForm.transform.localScale = endOctaSize;
-                growingOcta = false;
-            }
+            GrowSpecial();
         }
-        else if (octaForm.GetComponent<MeshRenderer>().enabled)
+        else if(playerGrowing)
         {
-            UpdatePos(charController.transform, octaForm.transform);
+            GrowPlayer();
+        }
+        else if (specialForm.GetComponent<MeshRenderer>().enabled)
+        {
+            UpdatePos(charController.transform, specialForm.transform);
             coolDownTimer += Time.deltaTime;
 
             isFloating = checkIfFloating();
             //too high
             if (isFloating > 0) 
             {
-                octaRigid.useGravity = true;
+                specialRigid.useGravity = true;
             }
             //too low
             else if(isFloating < 0)
             {
-                octaRigid.useGravity = false;
-                octaRigid.AddForce(Vector3.up * octaForce);
+                specialRigid.useGravity = false;
+                specialRigid.AddForce(Vector3.up * octaForce);
             }
             //in range
             else
             {
-                octaRigid.velocity = new Vector3(octaRigid.velocity.x, 0f, octaRigid.velocity.z);
-                octaRigid.useGravity = false;
+                specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
+                specialRigid.useGravity = false;
             }
             if (coolDownTimer >= specialAttackActiveTime)
             {
-                DeactivateOctaAttack();
-                UpdatePos(charController.transform, octaForm.transform);
+                DeactivateSpecialAttack();
+                UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
             if ((Input.GetKeyDown(specialAttack)))
             {
-                DeactivateOctaAttack();
-                UpdatePos(charController.transform, octaForm.transform);
+                DeactivateSpecialAttack();
+                UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if (Input.GetKeyDown(useAttack) && octaForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
+            if (Input.GetKeyDown(useAttack) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
             {
                 moveDir = Vector3.forward;
                 moveDir = cam.transform.TransformDirection(moveDir);
@@ -136,10 +120,10 @@ public class OctahedronSpecials : PunchScript
                 moveDir = Vector3.Normalize(moveDir);
                 moveDir.x = moveDir.x * octaForce * 100f;
                 moveDir.z = moveDir.z * octaForce * 100f;
-                octaRigid.AddForce(moveDir);
+                specialRigid.AddForce(moveDir);
                 //octaRigid.AddForce(Vector3.forward * octaForce * 100f);
                 launched = true;
-                octaRigid.AddForce(Vector3.up * octaForce * 2f);
+                specialRigid.AddForce(Vector3.up * octaForce * 2f);
             }
             else if(launched)
             {
@@ -154,19 +138,19 @@ public class OctahedronSpecials : PunchScript
                 moveDir = Vector3.Normalize(moveDir);
                 moveDir.x = moveDir.x * octaForce * stats.GetPlayerSpeed();
                 moveDir.z = moveDir.z * octaForce * stats.GetPlayerSpeed();
-                octaRigid.AddForce(moveDir);
-                octaRigid.AddTorque(Vector3.up * octaForce * 100f);
+                specialRigid.AddForce(moveDir);
+                specialRigid.AddTorque(Vector3.up * octaForce * 100f);
             }
             
         }
         else
         {
-            UpdatePos(octaForm.transform, charController.transform);
-            if ((Input.GetKeyDown(specialAttack)) && !octaForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+            UpdatePos(specialForm.transform, charController.transform);
+            if ((Input.GetKeyDown(specialAttack)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
             {
-                growingOcta = true;
-                ActivateOctaAttack();
-                UpdatePos(octaForm.transform, charController.transform);
+                growingSpecial = true;
+                ActivateSpecialAttack();
+                UpdatePos(specialForm.transform, charController.transform);
             }
         }
         if (onCooldown)
@@ -254,14 +238,11 @@ public class OctahedronSpecials : PunchScript
         }
     }
 
-    /// <summary>
-    /// Raycast from center of octahedron to ground to see if on the ground.
-    /// </summary>
-    /// <returns>Returns true if on ground, false otherwise, with some tolerance.</returns>
-    private bool checkIfGrounded()
+    /*
+    protected override bool checkIfGrounded()
     {
-        return Physics.Raycast(octaForm.transform.position, -Vector3.up, octaForm.GetComponent<BoxCollider>().size.y + 0.1f);
-    }
+        return Physics.Raycast(specialForm.transform.position, -Vector3.up, specialForm.GetComponent<MeshCollider>().size.y + 0.1f);
+    }*/
 
     /// <summary>
     /// Check to see if the octahedron is floating above the ground within a certain range.
@@ -272,10 +253,10 @@ public class OctahedronSpecials : PunchScript
     private int checkIfFloating()
     {
         int result = 0;
-        Vector3 endPoint = new Vector3(octaForm.transform.position.x, octaForm.transform.position.y - octaForm.GetComponent<BoxCollider>().size.y * 2f , octaForm.transform.position.z);
-        Debug.DrawLine(octaForm.transform.position, endPoint, Color.red, 5f);
-        bool lower = Physics.Raycast(octaForm.transform.position, -Vector3.up, octaForm.GetComponent<BoxCollider>().size.y * floatHeight);
-        bool upper = Physics.Raycast(octaForm.transform.position, -Vector3.up, octaForm.GetComponent<BoxCollider>().size.y * (floatHeight + floatOffset));
+        Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialForm.GetComponent<BoxCollider>().size.y * 2f , specialForm.transform.position.z);
+        Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
+        bool lower = Physics.Raycast(specialForm.transform.position, -Vector3.up, specialForm.GetComponent<BoxCollider>().size.y * floatHeight);
+        bool upper = Physics.Raycast(specialForm.transform.position, -Vector3.up, specialForm.GetComponent<BoxCollider>().size.y * (floatHeight + floatOffset));
         if (lower && upper) //within cast range of both raycasts
         {
             result = -1;
@@ -287,107 +268,29 @@ public class OctahedronSpecials : PunchScript
         return result;
     }
 
+    /*
     /// <summary>
-    /// Update the position of one transform to the target transform of another game object.
-    /// This specifically accounts bonus movement of the octahedron upwards to avoid clipping 
-    /// through the floor when spawning.
+    /// Method that grows the player and shrinks the special form at the same time.
+    /// This allows the feeling of changing form.
+    /// Defaults to box collider.
     /// </summary>
-    /// <param name="transformToUpdate">The transform object to move.</param>
-    /// <param name="targetTransform">The transform object to move the other object to.</param>
-    private void UpdatePos(Transform transformToUpdate, Transform targetTransform)
+    protected override void GrowPlayer()
     {
-        Vector3 targetVec = targetTransform.position;
-        transformToUpdate.rotation = Quaternion.identity;
-        if (transformToUpdate == octaForm.transform)
+        charController.transform.localScale += playerStartSize;
+        specialForm.transform.localScale -= specialStartSize * growSpeed;
+        UpdatePos(specialForm.transform, charController.transform);
+        if (charController.transform.localScale.magnitude >= playerFinalSize.magnitude)
         {
-            targetVec = new Vector3(targetVec.x, targetVec.y + 2f, targetVec.z);
+            charController.transform.localScale = playerFinalSize;
+            specialForm.GetComponent<MeshRenderer>().enabled = false;
+            specialForm.GetComponent<MeshCollider>().enabled = false; //CHANGE TO MESH COLLIDER WHEN OCTAHEDRON BROUGHT IN
+            specialRigid.velocity = Vector3.zero;
+            playerGrowing = false;
         }
-        transformToUpdate.position = targetVec;
-    }
+        if (specialForm.transform.localScale.magnitude <= specialStartSize.magnitude)
+        {
+            specialForm.transform.localScale = specialStartSize;
 
-    /// <summary>
-    /// Turn off the special octahedron attack and reactivate the player character.
-    /// </summary>
-    private void DeactivateOctaAttack()
-    {
-        charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
-        octaRigid.useGravity = false;
-        launched = false;
-        UpdatePos(charController.transform, octaForm.transform);
-        octaForm.transform.localScale = startOctaSize;
-        //play animation of morphing into ball
-        isAttacking = false;
-        for (int i = 0; i < this.transform.childCount; i++) //move camera back to player here
-        {
-            if (this.transform.GetChild(i).gameObject != octaForm)
-            {
-                if (this.transform.GetChild(i).gameObject.tag == "MainCamera") //move camera to follow ball here
-                {
-                    this.transform.GetChild(i).gameObject.GetComponent<CameraController>().target = stats.pelvisJoint.transform;
-                }
-                else if (this.transform.GetChild(i).gameObject != charController)
-                {
-                    this.transform.GetChild(i).gameObject.SetActive(true);
-                }
-            }
         }
-        //ballForm.SetActive(false);
-        octaForm.GetComponent<MeshRenderer>().enabled = false;
-        octaForm.GetComponent<BoxCollider>().enabled = false;
-        charController.GetComponent<UserControlMelee>().enabled = true;
-        charController.GetComponent<CharacterMeleeDemo>().enabled = true;
-        charController.GetComponent<CapsuleCollider>().enabled = true;
-        charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
-        onCooldown = true;
-        anim.SetInteger("ActionIndex", -1);
-        anim.SetBool("IsStrafing", false);
-        if (octaRigid.velocity.sqrMagnitude > 0)
-        {
-            anim.SetFloat("Forward", 1);
-        }
-        else
-        {
-            anim.SetFloat("Forward", 0);
-        }
-        anim.Play("Grounded Directional");
-        SendMessage("PowerUpDeactivated", false, SendMessageOptions.DontRequireReceiver);
-    }
-
-    /// <summary>
-    /// Turn on the special octahedron attack and deactivate the player character.
-    /// </summary>
-    private void ActivateOctaAttack()
-    {
-        octaRigid.useGravity = true;
-        leftFistCollider.radius = leftFistStartSize.radius;
-        leftFistCollider.height = leftFistStartSize.height;
-        rightFistCollider.radius = rightFistStartSize.radius;
-        rightFistCollider.height = rightFistStartSize.height;
-        UpdatePos(octaForm.transform, charController.transform);
-        isAttacking = true;
-        //play animation of morphing into ball
-        for (int i = 0; i < this.transform.childCount; i++)
-        {
-            if (this.transform.GetChild(i).gameObject != octaForm)
-            {
-                if (this.transform.GetChild(i).gameObject.tag == "MainCamera") //move camera to follow ball here
-                {
-                    this.transform.GetChild(i).gameObject.GetComponent<CameraController>().target = octaForm.transform;
-                }
-                else if (this.transform.GetChild(i).gameObject != charController)
-                {
-                    this.transform.GetChild(i).gameObject.SetActive(false);
-                }
-            }
-        }
-        octaForm.SetActive(true);
-        charController.SetActive(true);
-        octaForm.GetComponent<MeshRenderer>().enabled = true;
-        octaForm.GetComponent<BoxCollider>().enabled = true;
-        charController.GetComponent<UserControlMelee>().enabled = false;
-        charController.GetComponent<CharacterMeleeDemo>().enabled = false;
-        charController.GetComponent<CapsuleCollider>().enabled = false;
-        charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
-        SendMessage("PowerUpActive", true, SendMessageOptions.DontRequireReceiver);
-    }
+    }*/
 }
