@@ -10,9 +10,9 @@ public class SphereAttackScript : PunchScript
     public GameObject ballForm;
     public GameObject ballShield;
     public KeyCode ballFormKey = KeyCode.LeftControl;
+    public float ballCooldownTime;
 
     private float ballTime;
-    private float ballCooldownTime;
     private float timeAsBall;
     private float cooldownTime;
     private float maxVelocity;
@@ -30,6 +30,7 @@ public class SphereAttackScript : PunchScript
     private CapsuleCollider leftHandCol;
     private float originalRightHandRadius;
     private float originalLeftHandRadius;
+    private GameObject playerUI;
 
     // Use this for initialization
     protected override void Start()
@@ -43,12 +44,14 @@ public class SphereAttackScript : PunchScript
         ballShield.gameObject.SetActive(false);
         ballTime = 10.0f;
         ballForce = 1000f;
-        ballCooldownTime = 2.0f;
+        ballCooldownTime = 10.0f;
         timeAsBall = 0;
         cooldownTime = 0f;
         maxVelocity = 25f;
         onCooldown = false;
         isBall = false;
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<userInterface>().SetCoolDownTime(ballCooldownTime);
     }
 
     // Update is called once per frame
@@ -110,6 +113,7 @@ public class SphereAttackScript : PunchScript
             if(cooldownTime > ballCooldownTime)
             {
                 onCooldown = false;
+                playerUI.GetComponent<userInterface>().SetCoolDownTime(ballCooldownTime);
                 cooldownTime = 0;
             }
             UpdatePos(ballForm.transform, charController.transform);
@@ -160,6 +164,7 @@ public class SphereAttackScript : PunchScript
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
         ballShield.gameObject.SetActive(false);
         onCooldown = true;
+        playerUI.GetComponent<userInterface>().UsedSpecialAttack();
         anim.SetInteger("ActionIndex", -1);
         anim.SetBool("IsStrafing", false);
         if(ballRigid.velocity.sqrMagnitude > 0)

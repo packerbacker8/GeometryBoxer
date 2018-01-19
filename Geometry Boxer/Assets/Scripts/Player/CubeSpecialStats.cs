@@ -7,12 +7,13 @@ using UnityEngine;
 public class CubeSpecialStats : PlayerStatsBaseClass
 {
     public GameObject pelvisJoint;
-    public float Health = 15000;
+    public float Health = 15000f;
     public float Speed = .7f;
     public float Stability;
     public float AttackForce;
     public float FallDamageMultiplier;
-    public float PowerUpTimeLimit = 10;
+    public float PowerUpTimeLimit = 10f;
+    public float specialCooldownTime = 10f;
 
     private float HealthModifier;
     private Rigidbody playerRigidBody;

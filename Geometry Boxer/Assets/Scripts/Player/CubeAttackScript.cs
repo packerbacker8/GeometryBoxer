@@ -20,6 +20,10 @@ public class CubeAttackScript : PunchScript
     private CharacterMeleeDemo charMelDemo;
     private GameObject puppetMast;
     private GameObject gameController;
+    private GameObject playerUI;
+    private float cooldownTime;
+    private float cooldownTimer;
+    private bool onCooldown;
 
     // This is puppetMasters user controler, it controls the players movements
     protected UserControlThirdPerson userControl; // user input
@@ -40,26 +44,41 @@ public class CubeAttackScript : PunchScript
         playerRigidBody = pelvisJoint.GetComponent<Rigidbody>();
         charMelDemo = this.transform.GetComponentInChildren<CharacterMeleeDemo>();
         isGrounded = charMelDemo.animState.onGround;
-
+        cooldownTime = 10;
+        cooldownTimer = 0;
+        onCooldown = false;
         PowerUp = false;
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<userInterface>().SetCoolDownTime(cooldownTime);
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-        if (PowerUp == false && Input.GetKeyDown(attacKey) || PowerUp == false && Input.GetButtonDown("XButton") )
+        if (!onCooldown)
         {
-            PowerUp = true;
-            halo.enabled = true;
-            SendMessage("PowerUpActive", true);
+            if (PowerUp == false && Input.GetKeyDown(attacKey) || PowerUp == false && Input.GetButtonDown("XButton"))
+            {
+                PowerUp = true;
+                halo.enabled = true;
+                SendMessage("PowerUpActive", true);
 
-            puppetMast.transform.localScale += new Vector3(2F, 2F, 2F);
-            charController.transform.localScale += new Vector3(2F, 2F, 2F);
-
+                puppetMast.transform.localScale += new Vector3(2F, 2F, 2F);
+                charController.transform.localScale += new Vector3(2F, 2F, 2F);
+            }
+        }
+        else
+        {
+            cooldownTimer += Time.deltaTime;
+            if (cooldownTimer >= cooldownTime)
+            {
+                onCooldown = false;
+                cooldownTimer = 0;
+                playerUI.GetComponent<userInterface>().SetCoolDownTime(cooldownTime);
+            }
         }
 
-        
 
         if (PowerUp == true)
         {
@@ -73,6 +92,8 @@ public class CubeAttackScript : PunchScript
                 charController.transform.localScale -= new Vector3(2F, 2F, 2F);
                 TimePowerUp = PowerUpTimeLimit;
                 SendMessage("PowerUpDeactivated", false);
+                playerUI.GetComponent<userInterface>().UsedSpecialAttack();
+                onCooldown = true;
             }
         }
 
