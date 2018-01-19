@@ -35,10 +35,11 @@ public class WallClose : MonoBehaviour {
     private float scale;
     private Vector3 targetLocation;
     private AudioSource source;
-    private AudioSource toneSource; 
-
+    private AudioSource toneSource;
+    private float originalLightIntensity;
     // Use this for initialization
     void Start () {
+        originalLightIntensity = RenderSettings.ambientIntensity;
         source = gameObject.AddComponent<AudioSource>();
         toneSource = gameObject.AddComponent<AudioSource>();
         targetLocation = new Vector3(transform.position.x + moveX, transform.position.y + moveY, transform.position.z + moveZ);
@@ -112,6 +113,7 @@ public class WallClose : MonoBehaviour {
                 growCeiling = false;
                 for(int i = 0; i < lights.Count; i++)
                 {
+                    RenderSettings.ambientIntensity = originalLightIntensity;
                     lights[i].SetActive(true);
                 }
                 if(source.isPlaying)
@@ -132,6 +134,7 @@ public class WallClose : MonoBehaviour {
             if(!playedSong)
             {
                 toneSource.Stop();
+                toneSource.loop = true;
                 toneSource.PlayOneShot(cageMatchSong,1f);
             }
         }
