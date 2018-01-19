@@ -105,7 +105,8 @@ public class WallClose : MonoBehaviour {
                 PlayCeilingGrow();
                 ceilingGrowPlayed = true;
             }
-            Ceiling.transform.localScale = Ceiling.transform.localScale = new Vector3(Ceiling.transform.localScale.x, 4f, Ceiling.transform.localScale.z + Time.deltaTime * 10f);
+            RenderSettings.ambientIntensity -= 0.1f * Time.deltaTime;
+            Ceiling.transform.localScale = new Vector3(Ceiling.transform.localScale.x, 4f, Ceiling.transform.localScale.z + Time.deltaTime * 10f);
             if(Ceiling.transform.localScale.z > 90f)
             {
                 growCeiling = false;
