@@ -134,8 +134,9 @@ public class WallClose : MonoBehaviour {
             if(!playedSong)
             {
                 toneSource.Stop();
+                toneSource.clip = cageMatchSong;
                 toneSource.loop = true;
-                toneSource.PlayOneShot(cageMatchSong,1f);
+                toneSource.Play(1);
             }
         }
 	}
