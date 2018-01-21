@@ -10,9 +10,9 @@ public class SphereAttackScript : PunchScript
     public GameObject ballForm;
     public GameObject ballShield;
     public KeyCode ballFormKey = KeyCode.LeftControl;
+    public float ballCooldownTime;
 
     private float ballTime;
-    private float ballCooldownTime;
     private float timeAsBall;
     private float cooldownTime;
     private float maxVelocity;
@@ -21,15 +21,14 @@ public class SphereAttackScript : PunchScript
     private Rigidbody pelvisRigid;
     private float moveVer;
     private float moveHor;
-    private Vector3 moveDir;
     private float ballForce;
-    private bool onCooldown;
     private bool isBall;
 
     private CapsuleCollider rightHandCol;
     private CapsuleCollider leftHandCol;
     private float originalRightHandRadius;
     private float originalLeftHandRadius;
+    private GameObject playerUI;
 
     // Use this for initialization
     protected override void Start()
@@ -43,12 +42,15 @@ public class SphereAttackScript : PunchScript
         ballShield.gameObject.SetActive(false);
         ballTime = 10.0f;
         ballForce = 1000f;
-        ballCooldownTime = 2.0f;
+        ballCooldownTime = 10.0f;
         timeAsBall = 0;
         cooldownTime = 0f;
         maxVelocity = 25f;
         onCooldown = false;
         isBall = false;
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<userInterface>().SetCoolDownTime(ballCooldownTime);
+        ballRigid.useGravity = false;
     }
 
     // Update is called once per frame
@@ -110,6 +112,7 @@ public class SphereAttackScript : PunchScript
             if(cooldownTime > ballCooldownTime)
             {
                 onCooldown = false;
+                playerUI.GetComponent<userInterface>().SetCoolDownTime(ballCooldownTime);
                 cooldownTime = 0;
             }
             UpdatePos(ballForm.transform, charController.transform);
@@ -119,19 +122,10 @@ public class SphereAttackScript : PunchScript
 
     }
 
-    public void UpdatePos(Transform transformToUpdate, Transform targetTransform)
-    {
-        Vector3 targetVec = targetTransform.position;
-        if(transformToUpdate == ballForm.transform)
-        {
-            transformToUpdate.rotation = Quaternion.identity;
-            targetVec = new Vector3(targetVec.x, targetVec.y + 2f, targetVec.z);
-        }
-        transformToUpdate.position = targetVec;
-    }
 
     public void DeactivateRollAttack()
     {
+        ballRigid.useGravity = false;
         UpdatePos(charController.transform, ballForm.transform);
         //play animation of morphing into ball
         isBall = false;
@@ -160,6 +154,7 @@ public class SphereAttackScript : PunchScript
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
         ballShield.gameObject.SetActive(false);
         onCooldown = true;
+        playerUI.GetComponent<userInterface>().UsedSpecialAttack();
         anim.SetInteger("ActionIndex", -1);
         anim.SetBool("IsStrafing", false);
         if(ballRigid.velocity.sqrMagnitude > 0)
@@ -176,6 +171,7 @@ public class SphereAttackScript : PunchScript
 
     public void ActivateRollAttack()
     {
+        ballRigid.useGravity = true;
         leftFistCollider.radius = leftFistStartSize.radius;
         leftFistCollider.height = leftFistStartSize.height;
         rightFistCollider.radius = rightFistStartSize.radius;
