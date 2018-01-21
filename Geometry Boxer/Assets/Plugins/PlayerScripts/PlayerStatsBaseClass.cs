@@ -26,7 +26,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     protected GameObject gameController;
     protected GameObject charController;
     protected BehaviourPuppet behavePuppet;
-
+    
     protected float health;
     protected float stability;
     protected float speed;

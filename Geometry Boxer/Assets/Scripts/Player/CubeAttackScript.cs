@@ -146,8 +146,6 @@ public class CubeAttackScript : PunchScript
 
         }
 
-
-
         if (PowerUp)
         {
             TimePowerUp -= 1 * Time.deltaTime;
