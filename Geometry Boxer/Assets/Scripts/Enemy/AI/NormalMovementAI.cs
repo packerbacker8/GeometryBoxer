@@ -38,6 +38,15 @@ namespace Enemy
             
         }
 
+        void MovementBase.playerFound()
+        {
+            throw new NotImplementedException();
+        }
+
+        void MovementBase.playerLost()
+        {
+            throw new NotImplementedException();
+        }
         // Use this for initialization
         void Start()
         {
@@ -48,6 +57,14 @@ namespace Enemy
         void Update()
         {
 
+        }
+
+        public Quaternion rotateStyle()
+        {
+            float moveSpeed = 1.5f;
+            Vector3 targetDir = moveTarget.position - transform.position;
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
+            return Quaternion.LookRotation(newDir);
         }
     }
 }

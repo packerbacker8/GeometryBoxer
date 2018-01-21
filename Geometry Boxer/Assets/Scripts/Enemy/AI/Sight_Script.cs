@@ -1,0 +1,47 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Sight_Script : MonoBehaviour {
+
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+        RaycastHit hit;
+        Vector3 p1 = transform.position + Vector3.up;
+        Debug.DrawRay(p1, transform.forward + Vector3.up, Color.black, 2);
+        if(Physics.SphereCast(p1, 1, transform.forward, out hit))
+        {
+            if(hit.transform.root.tag == "Player")
+            {
+                SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);
+            }
+        }
+        else
+        {
+            SendMessageUpwards("playerLost", SendMessageOptions.DontRequireReceiver);
+        }
+	}
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log("Triggered started: " + other.gameObject.tag);
+        if (other.transform.root.tag == "Player")
+        {
+            Debug.Log("Player Detected");
+            SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.transform.root.tag == "Player")
+        {
+            this.SendMessageUpwards("playerLost", SendMessageOptions.DontRequireReceiver);
+        }
+    }
+}
