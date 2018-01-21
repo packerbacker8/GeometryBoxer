@@ -38,8 +38,17 @@ public class CubeAttackScript : PunchScript
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
         coolDownTime = 10;
+
+        //THIS NEEDS TO BE FIXED BY MAKING THE PLAYERUI OBJECT A PREFAB
+        //THE PREFAB NEEDS TO AFFECT THE PUNCH SCRIPT SO IT AFFECTS ALL
+        //PLAYERS EQUALLY. SHOUD NOT BE IN ONE PLAYER'S SPECIFIC SCRIPT
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
+        if(playerUI)
+        {
+            playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
+        }
+
+
         playerRigidBody = stats.pelvisJoint.GetComponent<Rigidbody>();
         PowerUp = false;
         isGrounded = checkIfGrounded();
@@ -58,7 +67,6 @@ public class CubeAttackScript : PunchScript
     {
         base.Update();
         isGrounded = checkIfGrounded();
-        Debug.Log(isGrounded);
         if(isGrounded)
         {
             launched = false;
