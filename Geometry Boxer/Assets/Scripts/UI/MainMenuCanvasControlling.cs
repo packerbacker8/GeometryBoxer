@@ -141,5 +141,13 @@ public class MainMenuCanvasControlling : MonoBehaviour
     {
         LoadLevel.loader.ExitGame();
     }
+    /// <summary>
+    /// Helper function to start tutorial.
+    /// </summary>
+    public void Tutorial()
+    {
+        SaveAndLoadGame.saver.SetCharType("Cube");
+        LoadLevel.loader.LoadALevel("Tutorial");
+    }
 
 }
