@@ -7,7 +7,6 @@ using RootMotion.Demos;
 
 public class CubeAttackScript : PunchScript
 {
-
     public bool PowerUp = false;
 
     private Rigidbody playerRigidBody;
@@ -17,10 +16,12 @@ public class CubeAttackScript : PunchScript
     private CubeSpecialStats stats;
 
     private bool isGrounded;
-
+    private GameObject gameController;
+    private GameObject playerUI;
+    private float coolDownTime;
     private float coolDownTimer;
     private float cubeForce;
-
+    
 
     // This is puppetMasters user controler, it controls the players movements
     protected UserControlThirdPerson userControl; // user input
@@ -36,8 +37,10 @@ public class CubeAttackScript : PunchScript
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
+        coolDownTime = 10;
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
         playerRigidBody = stats.pelvisJoint.GetComponent<Rigidbody>();
-
         PowerUp = false;
         isGrounded = checkIfGrounded();
         specialStartSize = new Vector3(0.2f, 0.2f, 0.2f);
@@ -143,7 +146,17 @@ public class CubeAttackScript : PunchScript
 
             puppetMastObject.transform.localScale += new Vector3(2F, 2F, 2F);
             charController.transform.localScale += new Vector3(2F, 2F, 2F);
-
+            
+        }
+        else
+        {
+            coolDownTimer += Time.deltaTime;
+            if (coolDownTimer >= coolDownTime)
+            {
+                onCooldown = false;
+                coolDownTimer = 0;
+                playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
+            }
         }
 
         if (PowerUp)
@@ -158,6 +171,8 @@ public class CubeAttackScript : PunchScript
                 charController.transform.localScale -= new Vector3(2F, 2F, 2F);
                 TimePowerUp = specialAttackActiveTime;
                 SendMessage("PowerUpDeactivated", false);
+                playerUI.GetComponent<userInterface>().UsedSpecialAttack();
+                onCooldown = true;
             }
         }
     }
