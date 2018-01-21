@@ -5,20 +5,21 @@ using UnityEngine;
 public class HealthPickup : MonoBehaviour
 {
     public int healAmount = 100;
+    public float RespawnDelay = 10f;
 
-    private GameObject player;
-    private Vector3 startingPos;
+    private bool waiting;
     private int travelAmount;
     private float moveAmount;
+    private float timer;
+    private Vector3 startingPos;
 
     // Use this for initialization
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-        player = player.transform.root.gameObject;
         startingPos = this.transform.position;
         travelAmount = 1;
         moveAmount = 0.05f;
+        waiting = false;
     }
 
     // Update is called once per frame
@@ -33,14 +34,67 @@ public class HealthPickup : MonoBehaviour
             moveAmount = 0.05f;
         }
         this.transform.position += new Vector3(0, moveAmount,0);
+        if(waiting)
+        {
+            timer += Time.deltaTime;
+            if(timer >= RespawnDelay)
+            {
+                waiting = false;
+                this.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                this.gameObject.GetComponent<SphereCollider>().enabled = true;
+            }
+        }
     }
 
     public void OnTriggerEnter(Collider col)
     {
-        if(col.gameObject.transform.root.tag == "Player")
+        GameObject colObj = col.transform.root.gameObject;
+        bool destroy = false;
+
+        if (col.gameObject.transform.root.tag == "Player")
         {
-            player.GetComponent<PlayerHealthScript>().GiveHealth(healAmount);
-            this.gameObject.SetActive(false);
+            float currentHealth = colObj.GetComponent<PlayerStatsBaseClass>().GetPlayerHealth();
+            float healthToAdd = healAmount;
+            if (colObj.GetComponent<OctahedronStats>() != null)
+            {
+                //If player is not full health
+                if (colObj.GetComponent<OctahedronStats>().GetOriginalHealth() > currentHealth)
+                {
+                    //Set amount of health to add either to amount of pickup if less than difference of currentHealth and player's max health. Otherwise, add the difference
+                    healthToAdd = colObj.GetComponent<OctahedronStats>().GetOriginalHealth() - currentHealth > healAmount ? healAmount : colObj.GetComponent<OctahedronStats>().GetOriginalHealth() - currentHealth;
+                    colObj.GetComponent<OctahedronStats>().GiveHealth((int)healthToAdd);
+                    colObj.GetComponent<OctahedronStats>().UpdateHealthUI();
+                    destroy = true;
+                }
+            }
+            else if (col.transform.root.gameObject.GetComponent<CubeSpecialStats>() != null)
+            {
+                if (colObj.GetComponent<CubeSpecialStats>().GetOriginalHealth() > currentHealth)
+                {
+                    healthToAdd = colObj.GetComponent<CubeSpecialStats>().GetOriginalHealth() - currentHealth > healAmount ? healAmount : colObj.GetComponent<CubeSpecialStats>().GetOriginalHealth() - currentHealth;
+                    colObj.GetComponent<CubeSpecialStats>().GiveHealth((int)healthToAdd);
+                    colObj.GetComponent<CubeSpecialStats>().UpdateHealthUI();
+                    destroy = true;
+                }
+            }
+            else if (col.transform.root.gameObject.GetComponent<SphereSpecialStats>() != null)
+            {
+                if (colObj.GetComponent<SphereSpecialStats>().GetOriginalHealth() > currentHealth)
+                {
+                    healthToAdd = colObj.GetComponent<SphereSpecialStats>().GetOriginalHealth() - currentHealth > healAmount ? healAmount : colObj.GetComponent<SphereSpecialStats>().GetOriginalHealth() - currentHealth;
+                    colObj.GetComponent<SphereSpecialStats>().GiveHealth((int)healthToAdd);
+                    colObj.GetComponent<SphereSpecialStats>().UpdateHealthUI();
+                    destroy = true;
+                }
+            }
+            
+        }
+        if(destroy)
+        {
+            timer = 0f;
+            waiting = true;
+            this.gameObject.GetComponent<MeshRenderer>().enabled = false;
+            this.gameObject.GetComponent<SphereCollider>().enabled = false;
         }
     }
 }

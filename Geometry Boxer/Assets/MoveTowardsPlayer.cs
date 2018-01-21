@@ -8,16 +8,16 @@ public class MoveTowardsPlayer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        _player = GameObject.Find("SphereChar_Player/Character Controller");
+        _player = GameObject.FindGameObjectWithTag("Player").transform.root.gameObject;
         Vector3 test = _player.transform.position;
-        Debug.Log((_player.transform.position - transform.position).ToString());
+        //Debug.Log((_player.transform.position - transform.position).ToString());
         this.GetComponent<Rigidbody>().AddForce((_player.transform.position - transform.position).normalized * 1000);
     }
 	
 	// Update is called once per frame
 	void Update () {
         Vector3 test = _player.transform.position;
-        Debug.Log((_player.transform.position - transform.position).ToString());
+        //Debug.Log((_player.transform.position - transform.position).ToString());
         this.GetComponent<Rigidbody>().AddForce((_player.transform.position - transform.position).normalized * 1000);
     }
 }

@@ -2530,6 +2530,13 @@ MonoBehaviour:
   hiKickKey: 107
   leftJabControllerButton: LeftBumper
   rightJabControllerButton: RightBumper
+  specialForm: {fileID: 1536871662710872}
+  specialFormSize: 4
+  growSpeed: 3
+  specialAttack: 98
+  useAttack: 32
+  specialAttackActiveTime: 10
+  specialAttackCooldownTime: 2
   playerAnimations:
   - actionIndex: 1
     animName: RightPunch
@@ -2564,6 +2571,7 @@ MonoBehaviour:
   ballForm: {fileID: 1536871662710872}
   ballShield: {fileID: 1240495207618862}
   ballFormKey: 98
+  ballCooldownTime: 0
 --- !u!114 &114498298474682464
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2734,9 +2742,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d336601d2bf0d84fb417b075a2d51f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pelvisJoint: {fileID: 1506602983043358}
   deathDelay: 20
   damageThreshold: 100
-  pelvisJoint: {fileID: 1506602983043358}
+  Health: 15000
 --- !u!114 &114758787925825396
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -21,9 +21,7 @@ public class SphereAttackScript : PunchScript
     private Rigidbody pelvisRigid;
     private float moveVer;
     private float moveHor;
-    private Vector3 moveDir;
     private float ballForce;
-    private bool onCooldown;
     private bool isBall;
 
     private CapsuleCollider rightHandCol;
@@ -52,6 +50,7 @@ public class SphereAttackScript : PunchScript
         isBall = false;
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
         playerUI.GetComponent<userInterface>().SetCoolDownTime(ballCooldownTime);
+        ballRigid.useGravity = false;
     }
 
     // Update is called once per frame
@@ -123,19 +122,10 @@ public class SphereAttackScript : PunchScript
 
     }
 
-    public void UpdatePos(Transform transformToUpdate, Transform targetTransform)
-    {
-        Vector3 targetVec = targetTransform.position;
-        if(transformToUpdate == ballForm.transform)
-        {
-            transformToUpdate.rotation = Quaternion.identity;
-            targetVec = new Vector3(targetVec.x, targetVec.y + 2f, targetVec.z);
-        }
-        transformToUpdate.position = targetVec;
-    }
 
     public void DeactivateRollAttack()
     {
+        ballRigid.useGravity = false;
         UpdatePos(charController.transform, ballForm.transform);
         //play animation of morphing into ball
         isBall = false;
@@ -181,6 +171,7 @@ public class SphereAttackScript : PunchScript
 
     public void ActivateRollAttack()
     {
+        ballRigid.useGravity = true;
         leftFistCollider.radius = leftFistStartSize.radius;
         leftFistCollider.height = leftFistStartSize.height;
         rightFistCollider.radius = rightFistStartSize.radius;

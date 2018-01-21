@@ -3,10 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CubeSpecialStats : PlayerStatsBaseClass
 {
-    public GameObject pelvisJoint;
     public float Health = 15000f;
     public float Speed = .7f;
     public float Stability;
@@ -16,17 +16,19 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     public float specialCooldownTime = 10f;
 
     private float HealthModifier;
+    private float TimePowerUp;
+    private float originalHealth;
+    private bool PowerUp = false;
+    private bool isGrounded;
+    private Behaviour halo;
+    private CharacterMeleeDemo charMelDemo;
     private Rigidbody playerRigidBody;
     private PlayerHealthScript HealthScript;
-    private bool PowerUp = false;
-    private float TimePowerUp;
-    private Behaviour halo;
-    private bool isGrounded;
-    private CharacterMeleeDemo charMelDemo;
+    private Image healthBarBackground;
+    private Image healthBarFill;
 
     // This is puppetMasters user controler, it controls the players movements
     protected UserControlThirdPerson userControl; // user input
-
 
     // Use this for initialization
     protected override void Start()
@@ -52,6 +54,9 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         attackForce = AttackForce;
         fallDamageMultiplier = FallDamageMultiplier;
 
+        healthBarBackground = GameObject.FindGameObjectWithTag("HealthBarBackground").GetComponent<Image>();
+        healthBarFill = GameObject.FindGameObjectWithTag("HealthBarBackground").transform.GetChild(0).GetComponent<Image>();
+        originalHealth = Health;
         //HealthScript.PlayerHealth = GetPlayerHealth();
     }
 
@@ -72,7 +77,11 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         {
             attackForce += 1;
             stability += 1;
-            FallDamageMultiplier += 1;
+            FallDamageMultiplier -= 1f;
+            if(FallDamageMultiplier <= 0)
+            {
+                FallDamageMultiplier = 0f;
+            }
             HealthModifier += 1.0f;
         }
         else
@@ -81,6 +90,11 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             stability = 1f;
             ApplyStabilityStat();
             userControl.state.move *= 1f;
+            FallDamageMultiplier += 1f;
+            if(FallDamageMultiplier >= 1000f)
+            {
+                FallDamageMultiplier = 1000f;
+            }
             HealthModifier = 1.0f;
 
         }
@@ -130,6 +144,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
             }
+            UpdateHealthUI();
         }
         else if (hitByEnemy)
         {
@@ -137,12 +152,24 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
             }
+            UpdateHealthUI();
         }
-
     }
 
     public override void PlayerBeingReset(Transform resetLocation)
     {
         LoadLevel.loader.ReloadScene();
+    }
+
+    public void UpdateHealthUI()
+    {
+        if(healthBarFill != null)
+        {
+           healthBarFill.fillAmount = GetPlayerHealth() / originalHealth;
+        }
+    }
+    public float GetOriginalHealth()
+    {
+        return originalHealth;
     }
 }
