@@ -32,6 +32,7 @@ public class EnemyHealthScript : MonoBehaviour
     private string getUpSupine = "GetUpSupine";
     private GameObject puppetMast;
     private GameObject gameController;
+    private GameObject playerUI;
     private int enemyIndex = 0;
     private UserControlAI charController;
 
@@ -55,6 +56,7 @@ public class EnemyHealthScript : MonoBehaviour
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
         charController = GetComponentInChildren<UserControlAI>();
         ShowDmg = this.GetComponent<SwapMaterials>();
         Val4 = 0;
@@ -162,6 +164,7 @@ public class EnemyHealthScript : MonoBehaviour
             }
             puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
             gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
+            playerUI.GetComponent<userInterface>().enemyIsKilled();
             dead = true;
             Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
         }
