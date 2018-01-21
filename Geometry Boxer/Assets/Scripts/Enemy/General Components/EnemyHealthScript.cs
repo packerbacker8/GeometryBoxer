@@ -163,8 +163,16 @@ public class EnemyHealthScript : MonoBehaviour
                 source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
             }
             puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-            gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
-            playerUI.GetComponent<userInterface>().enemyIsKilled();
+            if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+            {
+                gameController.GetComponent<GameControllerScriptTutorial>().isKilled(enemyIndex);
+            }
+            else
+            {
+                gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
+                playerUI.GetComponent<userInterface>().enemyIsKilled();
+            }
+            
             dead = true;
             Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
         }
