@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class CubeSpecialStats : PlayerStatsBaseClass
 {
-    public GameObject pelvisJoint;
+    
     public float Health = 15000;
     public float Speed = .7f;
     public float Stability;
@@ -71,7 +71,11 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         {
             attackForce += 1;
             stability += 1;
-            FallDamageMultiplier += 1;
+            FallDamageMultiplier -= 1f;
+            if(FallDamageMultiplier <= 0)
+            {
+                FallDamageMultiplier = 0f;
+            }
             HealthModifier += 1.0f;
         }
         else
@@ -80,6 +84,11 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             stability = 1f;
             ApplyStabilityStat();
             userControl.state.move *= 1f;
+            FallDamageMultiplier += 1f;
+            if(FallDamageMultiplier >= 1000f)
+            {
+                FallDamageMultiplier = 1000f;
+            }
             HealthModifier = 1.0f;
 
         }

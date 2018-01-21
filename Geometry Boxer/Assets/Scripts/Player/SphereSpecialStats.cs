@@ -7,8 +7,6 @@ using RootMotion.Demos;
 
 public class SphereSpecialStats : PlayerStatsBaseClass
 {
-    public GameObject pelvisJoint;
-
     private float originalHealth;
     private float minSpeed;
     private float maxSpeed;
