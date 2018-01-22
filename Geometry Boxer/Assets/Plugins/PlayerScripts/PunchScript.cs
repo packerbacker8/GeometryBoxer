@@ -20,6 +20,7 @@ public class PunchScript : MonoBehaviour
     public float footGrowMultiplier = 5f;
     [Tooltip("The force by which the rigidbody will move.")]
     public float punchForce = 50f;
+
     [Header("PC punch buttons.")]
     public KeyCode leftJabKey = KeyCode.Q;
     public KeyCode rightJabKey = KeyCode.E;
@@ -28,9 +29,12 @@ public class PunchScript : MonoBehaviour
     public KeyCode leftUppercutKey = KeyCode.R;
     public KeyCode rightUppercutKey = KeyCode.F;
     public KeyCode hiKickKey = KeyCode.K;
+
     [Header("Controller punch buttons.")]
     public string leftJabControllerButton = "LeftBumper";
     public string rightJabControllerButton = "RightBumper";
+    public string upperCutButton = "XButton";
+    public string hiKickButton = "YButton";
 
     [Header("Special Attack Information")]
     public GameObject specialForm;
@@ -248,14 +252,33 @@ public class PunchScript : MonoBehaviour
                 if (useController) //controller controls
                 {
                     //Left arm punching
-
                     if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
                     {
-                        ThrowSinglePunch(Limbs.leftArm);
+                        leftArmAttack = true;
+                        if (Input.GetButtonDown(upperCutButton))
+                        {
+                            ThrowUppercut(Limbs.leftArm);
+                        }
+                        else
+                        {
+                            ThrowSinglePunch(Limbs.leftArm);
+                        }
                     }
                     if (Input.GetButtonDown(rightJabControllerButton))
                     {
-                        ThrowSinglePunch(Limbs.rightArm);
+                        rightArmAttack = true;
+                        if (Input.GetButtonDown(upperCutButton))
+                        {
+                            ThrowUppercut(Limbs.rightArm);
+                        }
+                        else
+                        {
+                            ThrowSinglePunch(Limbs.rightArm);
+                        }
+                    }
+                    if (Input.GetButtonDown(hiKickButton))
+                    {
+                        ThrowHiKick();
                     }
 
                 }
