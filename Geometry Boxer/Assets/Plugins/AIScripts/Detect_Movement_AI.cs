@@ -41,14 +41,15 @@ namespace Enemy
 
         public void playerFound()
         {
-            Debug.Log("Player Found");
+          
             playerTarget = true;
-            Debug.Log("PlayerTarget: " + playerTarget);
+           
         }
 
         public void playerLost()
         {
-            //throw new NotImplementedException();
+           // Debug.Log("Player Lost");
+            playerTarget = false;
         }
 
         public Quaternion rotateStyle()
@@ -64,8 +65,10 @@ namespace Enemy
             else
             {
                 
-                float angle = Mathf.Sin(Time.time) * 70;
-                return Quaternion.AngleAxis(angle, Vector3.up);
+                //float angle = Mathf.Sin(Time.time) * 70;
+                Vector3 result = new Vector3();
+                //return Quaternion.AngleAxis(angle, Vector3.up);
+                return Quaternion.Euler(0, -Mathf.PingPong(Time.time * 50, 100), 0);
                
             }
         }
@@ -79,6 +82,11 @@ namespace Enemy
         void Update()
         {
 
+        }
+
+        public bool getPlayerTarget()
+        {
+            return playerTarget;
         }
     }
 }
