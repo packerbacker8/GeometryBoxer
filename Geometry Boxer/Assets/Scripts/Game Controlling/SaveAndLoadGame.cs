@@ -11,8 +11,10 @@ public class SaveAndLoadGame : MonoBehaviour
     public string[] cityNames;
     public string[] cityStatuses;
 
+    private static InitializeData initData;
     private static GameData saveData;
     private bool hasSavedGame;
+    private bool forceTutorial;
     private string currentSavePath;
 
     //use player information and store it in a singleton game object
@@ -20,7 +22,38 @@ public class SaveAndLoadGame : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        if(saver == null)
+        string[] firstSaveFound = Directory.GetFiles(Application.persistentDataPath + "/SetUp/", "Initialize.dat", SearchOption.TopDirectoryOnly);
+        
+        forceTutorial = !(firstSaveFound.Length > 0);
+        
+        if(forceTutorial)
+        {
+            initData = new InitializeData(DateTime.Today);
+            BinaryFormatter binaryForm = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/SetUp/Initialize.dat", FileMode.OpenOrCreate);
+
+            binaryForm.Serialize(file, initData);
+            file.Close();
+        }
+        else
+        {
+            if (File.Exists(Application.persistentDataPath + "/SetUp/Initialize.dat"))
+            {
+                BinaryFormatter binaryForm = new BinaryFormatter();
+                FileStream file = File.Open(Application.persistentDataPath + "/SetUp/Initialize.dat", FileMode.Open);
+                initData = (InitializeData)binaryForm.Deserialize(file);
+                file.Close();
+            }
+            else
+            {
+                foreach(string filePath in firstSaveFound)
+                {
+                    Debug.Log("Oops, actually at: " + filePath);
+                }
+            }
+        }
+
+        if (saver == null)
         {
             //might want to not destroy on load
             DontDestroyOnLoad(this.gameObject);
@@ -38,6 +71,11 @@ public class SaveAndLoadGame : MonoBehaviour
     private void Start()
     {
         SetCityNamesAndStatus();
+        if(forceTutorial)
+        {
+            forceTutorial = false;
+            LoadLevel.loader.LoadALevel("Tutorial");
+        }
     }
 
     private void OnApplicationQuit()
@@ -236,6 +274,23 @@ public class SaveAndLoadGame : MonoBehaviour
     }
 
     /// <summary>
+    /// Function to get the city name of the type that is passed in.
+    /// </summary>
+    /// <param name="typeToFind">What type to search for (Cube,Octahedron,Sphere).</param>
+    /// <returns></returns>
+    public string GetCityName(string typeToFind)
+    {
+        foreach(string city in cityNames)
+        {
+            if(city.Contains(typeToFind))
+            {
+                return city;
+            }
+        }
+        return "nothing";
+    }
+
+    /// <summary>
     /// Go through the city statuses and check if all conquered.
     /// </summary>
     /// <returns>Returns true if all cities are conquered, else false.</returns>
@@ -315,6 +370,17 @@ public class SaveAndLoadGame : MonoBehaviour
     public void SetGameStatus(string status)
     {
         saveData.gameStatus = status;
+    }
+
+    [Serializable]
+    private class InitializeData
+    {
+        public bool tutorialCompleted = false;
+        public DateTime dateLaunched;
+        public InitializeData(DateTime today)
+        {
+            dateLaunched = today;
+        }
     }
 
     [Serializable]

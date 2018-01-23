@@ -162,10 +162,8 @@ public class PunchScript : MonoBehaviour
         onCooldown = false;
         growingSpecial = false;
         controllerInfo = Input.GetJoystickNames();
-        if (controllerInfo.Length > 0)
-        {
-            useController = true;
-        }
+        useController = controllerInfo.Length > 0;
+
         leftArmXAxis = 0f;
         leftArmYAxis = 0f;
         rightArmXAxis = 0f;
