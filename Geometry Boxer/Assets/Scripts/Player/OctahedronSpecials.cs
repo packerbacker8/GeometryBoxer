@@ -10,6 +10,7 @@ public class OctahedronSpecials : PunchScript
     public float launchLength = 1f;
     public float angularDragAmount = 2f;
     public float floatHeight = 1f;
+    public float octahedronExtension = 5f;
     public bool debugMode = false;
 
     CharacterMeleeDemo charMeleeDemoRef;
@@ -24,7 +25,6 @@ public class OctahedronSpecials : PunchScript
     private float SpecialTime = 0.0f;
     private float coolDownTimer;
     private float floatOffset;
-    private float octahedronExtension;
     private float launchTime;
     private bool executingSpecial = false;
     private bool specialIsSpeed = false;
@@ -61,7 +61,6 @@ public class OctahedronSpecials : PunchScript
         floatOffset = 0.2f;
         specialRigid.useGravity = false;
         specialRigid.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        octahedronExtension = 5f;
         specialStartSize = new Vector3(0.1f * octahedronExtension, 0.1f, 0.1f);
         specialEndSize = new Vector3(specialFormSize * octahedronExtension, specialFormSize, specialFormSize);
 
