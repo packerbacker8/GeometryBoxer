@@ -63,8 +63,7 @@ public class OctahedronSpecials : PunchScript
         floatHeight = 1.5f;
         floatOffset = 0.2f;
         specialRigid.useGravity = false;
-        specialRigid.constraints = RigidbodyConstraints.FreezeRotationX;
-        specialRigid.constraints = RigidbodyConstraints.FreezeRotationZ;
+        specialRigid.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         octahedronExtension = 5f;
         specialStartSize = new Vector3(0.1f * octahedronExtension, 0.1f, 0.1f);
         specialEndSize = new Vector3(specialFormSize * octahedronExtension, specialFormSize, specialFormSize);

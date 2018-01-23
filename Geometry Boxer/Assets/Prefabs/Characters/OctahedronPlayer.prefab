@@ -1351,7 +1351,7 @@ Transform:
   m_GameObject: {fileID: 1854228603315806}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.75, z: 0}
-  m_LocalScale: {x: 1.74964, y: 1.7496394, z: 1.7496394}
+  m_LocalScale: {x: 5, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4076834313311158}
   m_RootOrder: 5
@@ -1880,7 +1880,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!54 &54192452768491422
 Rigidbody:
@@ -2072,7 +2072,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
+  m_Convex: 1
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 6d30d089cc209fa4fb7d37fb2241f5d7, type: 3}
@@ -3221,8 +3221,8 @@ MonoBehaviour:
   leftJabControllerButton: LeftBumper
   rightJabControllerButton: RightBumper
   specialForm: {fileID: 1854228603315806}
-  specialFormSize: 4
-  growSpeed: 3
+  specialFormSize: 1.5
+  growSpeed: 1.25
   specialAttack: 98
   useAttack: 32
   specialAttackActiveTime: 10
@@ -3258,6 +3258,7 @@ MonoBehaviour:
     animLayer: 0
     transitionTime: 0.1
     playTime: 0.1
+  spinForceMult: 500
 --- !u!114 &114972377129981982
 MonoBehaviour:
   m_ObjectHideFlags: 1
