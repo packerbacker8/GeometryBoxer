@@ -7,6 +7,10 @@ using RootMotion;
 public class OctahedronSpecials : PunchScript
 {
     public float spinForceMult = 500f;
+    public float launchLength = 1f;
+    public float angularDragAmount = 2f;
+    public float floatHeight = 1f;
+    public bool debugMode = false;
 
     CharacterMeleeDemo charMeleeDemoRef;
     UserControlThirdPerson userControlThirdPersonRef;
@@ -19,13 +23,9 @@ public class OctahedronSpecials : PunchScript
     private float currentTime = 0.0f;
     private float SpecialTime = 0.0f;
     private float coolDownTimer;
-    private float octaForce;
-    private float launchTime;
-    private float launchLength;
-    private float floatHeight;
     private float floatOffset;
     private float octahedronExtension;
-
+    private float launchTime;
     private bool executingSpecial = false;
     private bool specialIsSpeed = false;
     private bool tornadoMode = false;
@@ -57,10 +57,7 @@ public class OctahedronSpecials : PunchScript
         specialRigid = specialForm.GetComponent<Rigidbody>();
 
         coolDownTimer = 0f;
-        octaForce = 1000f;
         launchTime = 0;
-        launchLength = 1f;
-        floatHeight = 1.5f;
         floatOffset = 0.2f;
         specialRigid.useGravity = false;
         specialRigid.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
@@ -70,6 +67,8 @@ public class OctahedronSpecials : PunchScript
 
         isGrounded = checkIfGrounded();
         isFloating = 0;
+        specialRigid.maxAngularVelocity = Mathf.Infinity;
+        specialRigid.angularDrag = angularDragAmount;
     }
 
     // Update is called once per frame
@@ -102,7 +101,7 @@ public class OctahedronSpecials : PunchScript
             else if(isFloating < 0)
             {
                 specialRigid.useGravity = false;
-                specialRigid.AddForce(Vector3.up * octaForce);
+                specialRigid.AddForce(Vector3.up * specialAttackForce);
             }
             //in range
             else
@@ -128,28 +127,28 @@ public class OctahedronSpecials : PunchScript
                 moveDir = cam.transform.TransformDirection(moveDir);
                 moveDir.y = 0;
                 moveDir = Vector3.Normalize(moveDir);
-                moveDir.x = moveDir.x * octaForce * 100f;
-                moveDir.z = moveDir.z * octaForce * 100f;
+                moveDir.x = moveDir.x * specialAttackForce * 100f;
+                moveDir.z = moveDir.z * specialAttackForce * 100f;
                 specialRigid.AddForce(moveDir);
-                //octaRigid.AddForce(Vector3.forward * octaForce * 100f);
                 launched = true;
-                specialRigid.AddForce(Vector3.up * octaForce * 2f);
+                specialRigid.AddForce(Vector3.up * specialAttackForce * 2f);
             }
             else if(launched)
             {
-                launchTime += Time.deltaTime;
-                if(launchTime >= launchLength)
-                {
-                    launched = false;
-                }
                 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
                 moveDir = cam.transform.TransformDirection(moveDir);
                 moveDir.y = 0;
                 moveDir = Vector3.Normalize(moveDir);
-                moveDir.x = moveDir.x * octaForce * stats.GetPlayerSpeed();
-                moveDir.z = moveDir.z * octaForce * stats.GetPlayerSpeed();
-                specialRigid.AddForce(moveDir);
-                specialRigid.AddTorque(Vector3.up * octaForce * spinForceMult);
+                moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
+                moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
+                //specialRigid.AddForce(moveDir);
+                specialRigid.AddTorque(Vector3.up * specialAttackForce * spinForceMult);
+                launchTime += Time.deltaTime;
+                if (launchTime >= launchLength)
+                {
+                    launched = false;
+                    launchTime = 0;
+                }
             }
             
         }
@@ -174,6 +173,7 @@ public class OctahedronSpecials : PunchScript
         }
 
         /***************************************************************************************************/
+        /*
         if (tornadoMode)
         {
             Vector3 vec = userControlThirdPersonRef.state.move;
@@ -245,7 +245,7 @@ public class OctahedronSpecials : PunchScript
             executingSpecial = true;
             SpecialTime = 3.0f;
             specialIsSpeed = true;
-        }
+        }*/
     }
 
     
@@ -259,21 +259,27 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     /// <returns>Returns 0 if above lower range and below upper range.
     /// Returns greater than 0 if outside range of both upper and lower.
-    /// Returns less than 0 if within range of both upper and lower.</returns>
+    /// Returns less than 0 if within range of both upper and lower, too low.</returns>
     private int checkIfFloating()
     {
         int result = 0;
-        Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialFormCollider.bounds.size.y * 2f , specialForm.transform.position.z);
-        Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
+        Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialFormCollider.bounds.size.y * floatHeight , specialForm.transform.position.z);
         bool lower = Physics.Raycast(specialForm.transform.position, -Vector3.up, specialFormCollider.bounds.size.y * floatHeight);
         bool upper = Physics.Raycast(specialForm.transform.position, -Vector3.up, specialFormCollider.bounds.size.y * (floatHeight + floatOffset));
         if (lower && upper) //within cast range of both raycasts
         {
             result = -1;
+            if(debugMode) Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 2f);
         }
         else if(!lower && !upper) //outside both
         {
             result = 1;
+            if(debugMode) Debug.DrawLine(specialForm.transform.position, endPoint, Color.yellow, 2f);
+        }
+        else if(debugMode)
+        {
+            Debug.DrawLine(specialForm.transform.position, endPoint, Color.green, 2f);
+            Debug.DrawLine(specialForm.transform.position, new Vector3(endPoint.x, endPoint.y + floatOffset , endPoint.z), Color.blue, 2f);
         }
         return result;
     }
@@ -309,8 +315,11 @@ public class OctahedronSpecials : PunchScript
     protected override void DeactivateSpecialAttack()
     {
         playerGrowing = true;
+        specialRigid.angularDrag = 100f;
+        specialRigid.angularVelocity = Vector3.zero;
         charController.transform.localScale = playerStartSize;
         charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
+        charController.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         specialRigid.useGravity = false;
         launched = false;
         UpdatePos(charController.transform, specialForm.transform);
@@ -355,6 +364,7 @@ public class OctahedronSpecials : PunchScript
     protected override void ActivateSpecialAttack()
     {
         specialRigid.useGravity = true;
+        specialRigid.angularDrag = angularDragAmount;
         leftFistCollider.radius = leftFistStartSize.radius;
         leftFistCollider.height = leftFistStartSize.height;
         rightFistCollider.radius = rightFistStartSize.radius;

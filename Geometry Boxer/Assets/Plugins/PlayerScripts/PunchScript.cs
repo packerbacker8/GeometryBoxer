@@ -38,6 +38,7 @@ public class PunchScript : MonoBehaviour
     public float growSpeed = 3f;
     public KeyCode specialAttack = KeyCode.B;
     public KeyCode useAttack = KeyCode.Space;
+    public float specialAttackForce = 1000f;
     public float specialAttackActiveTime = 10f;
     public float specialAttackCooldownTime = 2f;
 
@@ -641,7 +642,7 @@ public class PunchScript : MonoBehaviour
     protected virtual void UpdatePos(Transform transformToUpdate, Transform targetTransform)
     {
         Vector3 targetVec = targetTransform.position;
-        transformToUpdate.rotation = Quaternion.identity;
+        transformToUpdate.rotation = Quaternion.Euler(0, transformToUpdate.eulerAngles.y, 0);
         if (transformToUpdate == specialForm.transform)
         {
             targetVec = new Vector3(targetVec.x, targetVec.y + 1f, targetVec.z);

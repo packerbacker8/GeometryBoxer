@@ -20,7 +20,6 @@ public class CubeAttackScript : PunchScript
     private GameObject playerUI;
     private float coolDownTime;
     private float coolDownTimer;
-    private float cubeForce;
     
 
     // This is puppetMasters user controler, it controls the players movements
@@ -58,7 +57,6 @@ public class CubeAttackScript : PunchScript
         specialForm.GetComponent<BoxCollider>().enabled = false;
         specialRigid = specialForm.GetComponent<Rigidbody>();
         coolDownTimer = 0f;
-        cubeForce = 1000f;
         specialRigid.useGravity = false;
     }
 
@@ -97,11 +95,11 @@ public class CubeAttackScript : PunchScript
             }
             if (Input.GetKeyDown(useAttack) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
             {
-                specialRigid.AddForce(Vector3.up * cubeForce * 100f);
+                specialRigid.AddForce(Vector3.up * specialAttackForce * 100f);
             }
             else if (Input.GetKeyDown(useAttack) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
             {
-                specialRigid.AddForce(-Vector3.up * cubeForce * 300f);
+                specialRigid.AddForce(-Vector3.up * specialAttackForce * 300f);
                 launched = true;
 
             }
@@ -111,8 +109,8 @@ public class CubeAttackScript : PunchScript
                 moveDir = cam.transform.TransformDirection(moveDir);
                 moveDir.y = 0;
                 moveDir = Vector3.Normalize(moveDir);
-                moveDir.x = moveDir.x * cubeForce * stats.GetPlayerSpeed();
-                moveDir.z = moveDir.z * cubeForce * stats.GetPlayerSpeed();
+                moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
+                moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
                 specialRigid.AddForce(moveDir);
             }
         }
