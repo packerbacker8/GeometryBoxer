@@ -67,7 +67,7 @@ public class OctahedronSpecials : PunchScript
     {
         base.Update();
         //anim.SetFloat("Forward", 1.0f);
-        //Debug.Log(userControlThirdPersonRef.state.move + " forward: " + charMeleeDemoRef.transform.forward);
+        //Debug.Log(userControlThirdPersonRef.state.move + " forward: " + charMeleeDemoRef.transform.forward);  
 
         if (growingSpecial)
         {
@@ -106,13 +106,14 @@ public class OctahedronSpecials : PunchScript
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if ((Input.GetKeyDown(specialAttack)))
+            if ((Input.GetKeyDown(specialAttack)) || Input.GetButtonDown(specialAttackButton))
             {
+                Debug.Log("Special!");
                 DeactivateSpecialAttack();
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if (Input.GetKeyDown(useAttack) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
+            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
             {
                 moveDir = Vector3.forward;
                 moveDir = cam.transform.TransformDirection(moveDir);
@@ -146,7 +147,7 @@ public class OctahedronSpecials : PunchScript
         else
         {
             UpdatePos(specialForm.transform, charController.transform);
-            if ((Input.GetKeyDown(specialAttack)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
             {
                 growingSpecial = true;
                 ActivateSpecialAttack();

@@ -35,6 +35,7 @@ public class PunchScript : MonoBehaviour
     public string rightJabControllerButton = "RightBumper";
     public string upperCutButton = "XButton";
     public string hiKickButton = "YButton";
+    public string specialAttackButton = "BButton";
 
     [Header("Special Attack Information")]
     public GameObject specialForm;
@@ -254,39 +255,46 @@ public class PunchScript : MonoBehaviour
                     //Left arm punching
                     if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
                     {
+                        Debug.Log("LeftJab");
                         leftArmAttack = true;
-                        if (Input.GetButtonDown(upperCutButton))
+                        if (Input.GetButton(upperCutButton))
                         {
+                            Debug.Log("LeftUpper");
                             ThrowUppercut(Limbs.leftArm);
                         }
                         else
                         {
+                            Debug.Log("LeftJab");
                             ThrowSinglePunch(Limbs.leftArm);
                         }
                     }
                     if (Input.GetButtonDown(rightJabControllerButton))
                     {
+                        Debug.Log("rightBump");
                         rightArmAttack = true;
-                        if (Input.GetButtonDown(upperCutButton))
+                        if (Input.GetButton(upperCutButton))
                         {
+                            Debug.Log("RightUpper");
                             ThrowUppercut(Limbs.rightArm);
                         }
                         else
                         {
+                            Debug.Log("RightJab");
                             ThrowSinglePunch(Limbs.rightArm);
                         }
                     }
                     if (Input.GetButtonDown(hiKickButton))
                     {
+                        Debug.Log("HighKick");
                         ThrowHiKick();
                     }
 
                 }
                 else  // keyboard controls
                 {
-
                     if (Input.GetKeyDown(leftJabKey))
                     {
+                        Debug.Log("LeftJab");
                         //currently a combo attack
                         leftArmAttack = true;
                         rightArmAttack = true;
