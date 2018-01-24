@@ -126,6 +126,11 @@ public class CharacterSelectController : MonoBehaviour
     public void BeginDominationClicked()
     {
         SaveAndLoadGame.saver.SetCharType(characterSelected);
-        LoadLevel.loader.LoadALevel("CitySelectMap");
+        string yourCity = SaveAndLoadGame.saver.GetCityName(characterSelected);
+        if(yourCity == "nothing")
+        {
+            Debug.Log("problem, city not found");
+        }
+        LoadLevel.loader.LoadALevel(yourCity);
     }
 }

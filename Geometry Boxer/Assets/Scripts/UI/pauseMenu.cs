@@ -45,6 +45,14 @@ public class pauseMenu : MonoBehaviour
             CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
             punchScript = character.gameObject.GetComponent<PunchScript>();
         }
+        else if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+        {
+            Debug.Log("Tutorial pause");
+            isCombatScene = true;
+            character = control.GetComponent<GameControllerScriptTutorial>().GetActivePlayer();
+            CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
+            punchScript = character.gameObject.GetComponent<PunchScript>();
+        }
     }
 
     // Update is called once per frame
