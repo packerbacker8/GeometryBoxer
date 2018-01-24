@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Demos;
@@ -8,11 +9,21 @@ namespace Enemy
 {
     public interface MovementBase
     {
+
+
         Vector3 move();
 
         bool canMove();
 
-        void setUp(float stopDist, float stopThresh, float jumpDis, 
+        void setUp(float stopDist, float stopThresh, float jumpDis,
             Transform move);
+
+        void playerFound();
+
+        void playerLost();
+
+        Quaternion rotateStyle();
+
+        bool getPlayerTarget();
     }
 }

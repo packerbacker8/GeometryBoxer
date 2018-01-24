@@ -22,9 +22,10 @@ namespace Enemy
 
         public Vector3 move()
         {
-                if (canMove()) {
-                    return moveTarget.position;
-                }
+            if (canMove())
+            {
+                return moveTarget.position;
+            }
             return transform.position;
         }
 
@@ -35,13 +36,22 @@ namespace Enemy
             jumpDistance = jumpDis;
             //anim = animator;
             moveTarget = move;
-            
+
         }
 
+        void MovementBase.playerFound()
+        {
+            throw new NotImplementedException();
+        }
+
+        void MovementBase.playerLost()
+        {
+            throw new NotImplementedException();
+        }
         // Use this for initialization
         void Start()
         {
-           
+
         }
 
         // Update is called once per frame
@@ -49,6 +59,18 @@ namespace Enemy
         {
 
         }
+
+        public Quaternion rotateStyle()
+        {
+            float moveSpeed = 1.5f;
+            Vector3 targetDir = moveTarget.position - transform.position;
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
+            return Quaternion.LookRotation(newDir);
+        }
+
+        public bool getPlayerTarget()
+        {
+            return true;
+        }
     }
 }
- 
