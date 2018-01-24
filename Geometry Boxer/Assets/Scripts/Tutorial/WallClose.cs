@@ -91,10 +91,6 @@ public class WallClose : MonoBehaviour {
                     growCeiling = true;
                     Ceiling.transform.localScale = new Vector3(Ceiling.transform.localScale.x, 4f, 0f);
                     break;
-                    if(source.isPlaying)
-                    {
-                        source.Stop();
-                    }
                 }
             }
         }
