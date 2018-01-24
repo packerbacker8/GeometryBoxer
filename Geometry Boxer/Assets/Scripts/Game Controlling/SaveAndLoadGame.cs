@@ -22,6 +22,10 @@ public class SaveAndLoadGame : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+        if(!Directory.Exists(Application.persistentDataPath + "/SetUp/"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/SetUp/");
+        }
         string[] firstSaveFound = Directory.GetFiles(Application.persistentDataPath + "/SetUp/", "Initialize.dat", SearchOption.TopDirectoryOnly);
         
         forceTutorial = !(firstSaveFound.Length > 0);
@@ -74,7 +78,12 @@ public class SaveAndLoadGame : MonoBehaviour
         if(forceTutorial)
         {
             forceTutorial = false;
+            saveData = new GameData {characterType = "Cube"};
             LoadLevel.loader.LoadALevel("Tutorial");
+        }
+        else
+        {
+            LoadLevel.loader.LoadMainMenu();
         }
     }
 
