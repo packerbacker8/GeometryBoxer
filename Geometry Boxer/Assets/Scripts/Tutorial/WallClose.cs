@@ -7,6 +7,7 @@ public class WallClose : MonoBehaviour {
     public List<GameObject> walls;
     public List<GameObject> weaponStands;
     public List<GameObject> lights;
+
     public AudioClip doorShut0;
     public AudioClip doorShut1;
     public AudioClip wallGrow;
