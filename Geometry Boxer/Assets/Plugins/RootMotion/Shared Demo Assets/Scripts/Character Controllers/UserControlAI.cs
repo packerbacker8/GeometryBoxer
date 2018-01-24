@@ -127,7 +127,7 @@ namespace RootMotion.Demos
                 }
 
                 //transform.rotation = Quaternion.LookRotation(newDir);
-                transform.localRotation = movementStyle.rotateStyle();
+                transform.rotation = movementStyle.rotateStyle();
             }
             else
             {

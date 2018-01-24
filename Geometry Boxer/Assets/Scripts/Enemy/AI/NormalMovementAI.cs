@@ -69,7 +69,7 @@ namespace Enemy
 
         public bool getPlayerTarget()
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }
