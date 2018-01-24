@@ -704,8 +704,8 @@ public class PunchScript : MonoBehaviour
     protected virtual bool checkIfGrounded()
     {
         Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialForm.GetComponent<BoxCollider>().size.y * 2f, specialForm.transform.position.z);
-        Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
-        Debug.Log("Size now: " + specialForm.GetComponent<BoxCollider>().size.y);
+        //Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
+        //Debug.Log("Size now: " + specialForm.GetComponent<BoxCollider>().size.y);
         return Physics.Raycast(specialForm.transform.position, -Vector3.up, specialForm.GetComponent<BoxCollider>().size.y * specialForm.transform.localScale.y + 0.1f);
     }
 
