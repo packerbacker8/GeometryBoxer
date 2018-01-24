@@ -28,6 +28,7 @@ public class PunchScript : MonoBehaviour
     public KeyCode leftUppercutKey = KeyCode.R;
     public KeyCode rightUppercutKey = KeyCode.F;
     public KeyCode hiKickKey = KeyCode.K;
+    public KeyCode dropWeapon = KeyCode.X;
     [Header("Controller punch buttons.")]
     public string leftJabControllerButton = "LeftBumper";
     public string rightJabControllerButton = "RightBumper";
@@ -225,6 +226,11 @@ public class PunchScript : MonoBehaviour
     protected virtual void Update()
     {
         useController = controllerInfo.Length > 0;
+
+        if (Input.GetKeyDown(dropWeapon))
+        {
+            charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
+        }
 
         if (numberOfMuscleComponents < puppetMaster.muscles.Length) //number of muscles increased from beginning, a prop has been picked up
         {
