@@ -6,9 +6,13 @@ public class Sight_Script : MonoBehaviour {
 
 
     private bool inZone;
+    public float sightLine;
+    public float sightForwardRadius;
 	// Use this for initialization
 	void Start () {
         inZone = false;
+        sightLine = 1;
+        sightForwardRadius = 1;
 	}
 	
 	// Update is called once per frame
@@ -17,7 +21,7 @@ public class Sight_Script : MonoBehaviour {
         Vector3 p1 = transform.position + Vector3.up;
         Debug.DrawRay(p1, transform.forward + Vector3.up, Color.black, 2);
 
-        if(Physics.SphereCast(p1, 1, transform.forward, out hit, 1))
+        if(Physics.SphereCast(p1, sightForwardRadius, transform.forward, out hit, sightLine))
         {
             if(hit.transform.root.tag == "Player")
             {

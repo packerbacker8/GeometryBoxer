@@ -15,8 +15,8 @@ namespace Enemy
         public bool playerTarget;
         public float bounceAngle;
         private bool inZone;
-        private float startAngle; 
-
+        private float startAngle;
+        public float rotateSpeed;
         public bool canMove()
         {
                 return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
@@ -63,9 +63,9 @@ namespace Enemy
             //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
             if (playerTarget)
             {
-                float moveSpeed = 1.5f;
+                //float moveSpeed = 1.5f;
                 Vector3 targetDir = moveTarget.position - transform.position;
-                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
+                Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * rotateSpeed, 0.0f);
                 return Quaternion.LookRotation(newDir);
             }
             else
@@ -82,6 +82,7 @@ namespace Enemy
             playerTarget = false;
             bounceAngle = 70f;
             startAngle = transform.eulerAngles.y;
+            rotateSpeed = 1.5f;
         }
 
         // Update is called once per frame
