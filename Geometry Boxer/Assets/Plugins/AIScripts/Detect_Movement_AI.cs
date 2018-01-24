@@ -13,6 +13,9 @@ namespace Enemy
         float jumpDistance;
         Transform moveTarget;
         public bool playerTarget;
+        public float bounceAngle;
+        private bool inZone;
+        private float startAngle; 
 
         public bool canMove()
         {
@@ -41,14 +44,21 @@ namespace Enemy
 
         public void playerFound()
         {
-            Debug.Log("Player Found");
+            //Debug.Log("Player Found");
             playerTarget = true;
-            Debug.Log("PlayerTarget: " + playerTarget);
+            //Debug.Log("PlayerTarget: " + playerTarget);
+            
         }
 
         public void playerLost()
         {
-            //throw new NotImplementedException();
+            if (playerTarget)
+            {
+                startAngle = transform.eulerAngles.y;
+            }
+            playerTarget = false;
+           
+            
         }
 
         public Quaternion rotateStyle()
@@ -64,7 +74,7 @@ namespace Enemy
             else
             {
                 
-                float angle = Mathf.Sin(Time.time) * 70;
+                float angle = (Mathf.Sin(Time.time) * bounceAngle) + startAngle;
                 return Quaternion.AngleAxis(angle, Vector3.up);
                
             }
@@ -73,6 +83,8 @@ namespace Enemy
         void Start()
         {
             playerTarget = false;
+            bounceAngle = 70f;
+            startAngle = transform.eulerAngles.y;
         }
 
         // Update is called once per frame

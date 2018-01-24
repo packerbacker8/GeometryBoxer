@@ -8,6 +8,7 @@ namespace Enemy
 {
     public interface MovementBase
     {
+
         
         Vector3 move();
 
