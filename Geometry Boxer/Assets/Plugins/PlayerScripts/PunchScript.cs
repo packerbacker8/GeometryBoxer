@@ -13,9 +13,9 @@ public class PunchScript : MonoBehaviour
     [Tooltip("Object designated as the collider in front of the right fist.")]
     public CapsuleCollider rightFistCollider;
     [Tooltip("Object designated as the collider in front of the left foot.")]
-    public Collider leftFootCollider;
+    public BoxCollider leftFootCollider;
     [Tooltip("Object designated as the collider in front of the right foot.")]
-    public Collider rightFootCollider;
+    public BoxCollider rightFootCollider;
     public float fistGrowMultiplier = 2f;
     public float footGrowMultiplier = 5f;
     [Tooltip("The force by which the rigidbody will move.")]
@@ -74,6 +74,22 @@ public class PunchScript : MonoBehaviour
             height = h;
         }
     }
+
+
+    /// <summary>
+    /// Class object for expanding a box collider
+    /// </summary>
+    protected class BoxColliderSizing
+    {
+        public Vector3 center;
+        public Vector3 size;
+        public BoxColliderSizing(Vector3 center, Vector3 size)
+        {
+            this.center = center;
+            this.size = size;
+        }
+    }
+
     /// <summary>
     /// Private variables for controls in punching and moving arms.
     /// </summary>
@@ -84,6 +100,8 @@ public class PunchScript : MonoBehaviour
     protected bool isAttacking;
     protected bool leftArmAttack;
     protected bool rightArmAttack;
+    protected bool leftFootAttack;
+    protected bool rightFootAttack;
     protected bool playerGrowing;
     protected bool launched;
     protected bool onCooldown;
@@ -132,6 +150,8 @@ public class PunchScript : MonoBehaviour
     protected List<Muscle> armMuscles;
     protected CapsuleColliderSizing leftFistStartSize;
     protected CapsuleColliderSizing rightFistStartSize;
+    protected BoxColliderSizing leftFootStartSize;
+    protected BoxColliderSizing rightFootStartSize;
     protected Vector3 playerStartSize;
     protected Vector3 playerFinalSize;
     protected Vector3 specialStartSize;
@@ -150,10 +170,15 @@ public class PunchScript : MonoBehaviour
     {
         leftFistStartSize = new CapsuleColliderSizing(leftFistCollider.transform.position, leftFistCollider.radius, leftFistCollider.height);
         rightFistStartSize = new CapsuleColliderSizing(rightFistCollider.transform.position, rightFistCollider.radius, rightFistCollider.height);
+        leftFootStartSize = new BoxColliderSizing(leftFootCollider.center, leftFootCollider.size);
+        rightFootStartSize = new BoxColliderSizing(rightFootCollider.center, rightFootCollider.size);
+
         leftGrab = false;
         rightGrab = false;
         leftArmAttack = false;
         rightArmAttack = false;
+        leftFootAttack = false;
+        rightFootAttack = false;
         movementAndCameraDisabled = false;
         useController = false;
         isAttacking = false;
@@ -226,14 +251,32 @@ public class PunchScript : MonoBehaviour
                 rightFistCollider.radius = rightFistStartSize.radius * fistGrowMultiplier;
                 rightFistCollider.height = rightFistStartSize.height * fistGrowMultiplier;
             }
+            if(leftFootAttack)
+            {
+				leftFootCollider.size = leftFootStartSize.size * footGrowMultiplier;
+            }
+            if(rightFootAttack)
+            {
+				rightFootCollider.size = rightFootStartSize.size * footGrowMultiplier;
+            }
             currentAnimLength -= Time.deltaTime;
             if (currentAnimLength <= 0f)
             {
                 isAttacking = false;
+				leftArmAttack = false;
+				rightArmAttack = false;
+				leftFootAttack = false;
+				rightFootAttack = false;
+
                 leftFistCollider.radius = leftFistStartSize.radius;
                 leftFistCollider.height = leftFistStartSize.height;
                 rightFistCollider.radius = rightFistStartSize.radius;
                 rightFistCollider.height = rightFistStartSize.height;
+
+                leftFootCollider.center = leftFootStartSize.center;
+                leftFootCollider.size = leftFootStartSize.size;
+                rightFootCollider.center = rightFootStartSize.center;
+                rightFootCollider.size = rightFootStartSize.size;
             }
         }
         else
@@ -242,6 +285,11 @@ public class PunchScript : MonoBehaviour
             leftFistCollider.height = leftFistStartSize.height;
             rightFistCollider.radius = rightFistStartSize.radius;
             rightFistCollider.height = rightFistStartSize.height;
+
+            leftFootCollider.center = leftFootStartSize.center;
+            leftFootCollider.size = leftFootStartSize.size;
+            rightFootCollider.center = rightFootStartSize.center;
+            rightFootCollider.size = rightFootStartSize.size;
             if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
             {
                 if (useController) //controller controls
@@ -286,6 +334,7 @@ public class PunchScript : MonoBehaviour
                     }
                     else if (Input.GetKeyDown(hiKickKey))
                     {
+                        rightFootAttack = true;
                         ThrowHiKick();
                     }
                 }
