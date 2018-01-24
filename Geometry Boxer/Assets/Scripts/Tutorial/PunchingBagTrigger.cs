@@ -79,7 +79,7 @@ public class PunchingBagTrigger : MonoBehaviour {
                 }
                 weaponStandsUp = true;
             }
-            text.text = "Grab a melee weapon from behind you!\nThe same buttons swing it around. Press X to drop items. Whack the punching bag some more.";
+            text.text = "Grab a melee weapon from behind you!\nThe same buttons swing it around. Press X to drop items. \nWhack the punching bag some more.";
             meleeDamageStart = damageTaken;
             meleeDamageEnd = meleeDamageStart + 50f;
         }

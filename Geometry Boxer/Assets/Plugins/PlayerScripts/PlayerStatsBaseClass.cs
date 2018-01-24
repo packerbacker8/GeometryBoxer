@@ -7,6 +7,7 @@ using System;
 
 public class PlayerStatsBaseClass : MonoBehaviour
 {
+    public GameObject pelvisJoint;
     public float deathDelay = 20f;
     [Header("How much force is required for the player to take damage.")]
     public float damageThreshold = 100f;

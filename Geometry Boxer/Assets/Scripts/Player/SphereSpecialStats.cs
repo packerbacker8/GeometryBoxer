@@ -8,11 +8,12 @@ using RootMotion.Demos;
 
 public class SphereSpecialStats : PlayerStatsBaseClass
 {
-    public GameObject pelvisJoint;
+
     public float Health;
     
     private Image healthBarBackground;
     private Image healthBarFill;
+
     private float originalHealth;
     private float HealthModifier;
     private float minSpeed;

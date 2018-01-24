@@ -56,7 +56,7 @@ public class SafetyNet : MonoBehaviour
         {
             HandleSafteyNetCatch(other.transform.root.gameObject);
         }
-        else
+        else if(other.transform.root.tag.Contains("Enemy"))
         {
             GameObject findingRoot = other.gameObject;
             while (findingRoot.tag != "EnemyRoot")
@@ -64,6 +64,10 @@ public class SafetyNet : MonoBehaviour
                 findingRoot = findingRoot.transform.parent.gameObject;
             }
             HandleSafteyNetCatch(findingRoot);
+        }
+        else
+        {
+            Destroy(other.gameObject);
         }
         
     }
