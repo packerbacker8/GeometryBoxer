@@ -66,6 +66,11 @@ namespace Enemy
             Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
             return Quaternion.LookRotation(newDir);
         }
+
+        public bool getPlayerTarget()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
  

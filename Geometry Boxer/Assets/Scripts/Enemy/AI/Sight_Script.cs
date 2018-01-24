@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Sight_Script : MonoBehaviour {
 
+
     private bool inZone;
 	// Use this for initialization
 	void Start () {
@@ -15,12 +16,16 @@ public class Sight_Script : MonoBehaviour {
         RaycastHit hit;
         Vector3 p1 = transform.position + Vector3.up;
         Debug.DrawRay(p1, transform.forward + Vector3.up, Color.black, 2);
+
         if(Physics.SphereCast(p1, 1, transform.forward, out hit, 1))
         {
             if(hit.transform.root.tag == "Player")
             {
+               
+                inZone = true;
                 SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);
             }
+            
         }
         else if(!inZone)
         {
@@ -33,8 +38,9 @@ public class Sight_Script : MonoBehaviour {
         //Debug.Log("Triggered started: " + other.gameObject.tag);
         if (other.transform.root.tag == "Player")
         {
-            Debug.Log("Player Detected");
+
             inZone = true;
+
             SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);
         }
     }
@@ -43,6 +49,7 @@ public class Sight_Script : MonoBehaviour {
     {
         if(other.transform.root.tag == "Player")
         {
+           
             this.SendMessageUpwards("playerLost", SendMessageOptions.DontRequireReceiver);
             inZone = false;
         }

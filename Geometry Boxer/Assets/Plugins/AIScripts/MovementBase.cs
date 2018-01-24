@@ -22,5 +22,7 @@ namespace Enemy
         void playerLost();
 
         Quaternion rotateStyle();
+
+        bool getPlayerTarget();
     }
 }

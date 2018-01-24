@@ -44,10 +44,9 @@ namespace Enemy
 
         public void playerFound()
         {
-            //Debug.Log("Player Found");
+ 
             playerTarget = true;
-            //Debug.Log("PlayerTarget: " + playerTarget);
-            
+
         }
 
         public void playerLost()
@@ -57,8 +56,6 @@ namespace Enemy
                 startAngle = transform.eulerAngles.y;
             }
             playerTarget = false;
-           
-            
         }
 
         public Quaternion rotateStyle()
@@ -73,7 +70,7 @@ namespace Enemy
             }
             else
             {
-                
+               
                 float angle = (Mathf.Sin(Time.time) * bounceAngle) + startAngle;
                 return Quaternion.AngleAxis(angle, Vector3.up);
                
@@ -91,6 +88,11 @@ namespace Enemy
         void Update()
         {
 
+        }
+
+        public bool getPlayerTarget()
+        {
+            return playerTarget;
         }
     }
 }

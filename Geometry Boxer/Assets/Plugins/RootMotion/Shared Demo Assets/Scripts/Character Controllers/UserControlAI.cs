@@ -84,7 +84,14 @@ namespace RootMotion.Demos
                 //Vector3 targetDir = moveTarget.position - transform.position;
                 //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
                 AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-
+                if (!movementStyle.getPlayerTarget())
+                {
+                    agent.enabled = false;
+                }
+                else
+                {
+                    agent.enabled = true;
+                }
                 if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
                 {
                     if (!agent.isOnOffMeshLink)
@@ -120,7 +127,7 @@ namespace RootMotion.Demos
                 }
 
                 //transform.rotation = Quaternion.LookRotation(newDir);
-                transform.rotation = movementStyle.rotateStyle();
+                transform.localRotation = movementStyle.rotateStyle();
             }
             else
             {
