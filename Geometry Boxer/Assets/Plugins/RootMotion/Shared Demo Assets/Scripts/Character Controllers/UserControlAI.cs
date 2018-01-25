@@ -28,6 +28,7 @@ namespace RootMotion.Demos
 
         private GameObject activePlayer;
         private GameObject[] playerOptions;
+
         private AudioSource source;
         private SFX_Manager sfxManager;
         private System.Random rand = new System.Random();
@@ -50,6 +51,8 @@ namespace RootMotion.Demos
         private string fall = "Fall";
         private string onGround = "OnGround";
 
+
+        private bool dead;
         void Start()
         {
             playerOptions = new GameObject[3];
@@ -69,49 +72,67 @@ namespace RootMotion.Demos
             movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget);
             attackStyle.setUp(stoppingDistance, stoppingThreshold,
                 jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
-
+            dead = false;
 
         }
 
         protected override void Update()
         {
-            float moveSpeed = walkByDefault ? 1.0f : 1.5f;
-            Vector3 targetDir = moveTarget.position - transform.position;
-            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
-            AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-
-            if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
+            if (!dead)
             {
-                if (!agent.isOnOffMeshLink)
+                //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
+                //Vector3 targetDir = moveTarget.position - transform.position;
+                //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
+                AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+                if (!movementStyle.getPlayerTarget())
                 {
-                    agent.nextPosition = transform.position;
                     agent.enabled = false;
                 }
                 else
                 {
-                    drop = true;
+                    agent.enabled = true;
                 }
-
-            }
-            else if (!agent.enabled)
-            {
-                drop = false;
-                agent.enabled = true;
-                agent.nextPosition = transform.position;
-            }
-
-            attackStyle.attack();
-            if (agent.enabled && agent.isOnNavMesh)
-            {
-                agent.destination = movementStyle.move();
-                if (agent.pathStatus == NavMeshPathStatus.PathComplete)
+                if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
                 {
-                    state.move = agent.velocity;
+                    if (!agent.isOnOffMeshLink)
+                    {
+                        agent.nextPosition = transform.position;
+                        agent.enabled = false;
+                    }
+                    else
+                    {
+                        drop = true;
+                    }
+
                 }
+                else if (!agent.enabled)
+                {
+                    drop = false;
+                    agent.enabled = true;
+                    agent.nextPosition = transform.position;
+                }
+
+                attackStyle.attack();
+                if (agent.enabled && agent.isOnNavMesh && !((info.IsName(getUpProne) || info.IsName(getUpSupine) || info.IsName(fall)) && anim.GetBool(onGround)))
+                {
+                    agent.destination = movementStyle.move();
+                    if (agent.pathStatus == NavMeshPathStatus.PathComplete)
+                    {
+                        state.move = agent.velocity;
+                    }
+                }
+                else
+                {
+                    state.move = Vector3.zero;
+                }
+
+                //transform.rotation = Quaternion.LookRotation(newDir);
+                transform.rotation = movementStyle.rotateStyle();
             }
-
-            transform.rotation = Quaternion.LookRotation(newDir);
-
+            else
+            {
+                state.move = Vector3.zero;
+            }
         }
 
         /// <summary>
@@ -122,6 +143,13 @@ namespace RootMotion.Demos
         {
             moveTarget = move.GetChild(characterControllerIndex);
         }
+
+        public void deathUpdate()
+        {
+            dead = true;
+            agent.enabled = false;
+        }
+
+
     }
 }
-
