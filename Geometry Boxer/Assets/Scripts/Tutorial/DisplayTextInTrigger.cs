@@ -9,13 +9,20 @@ public class DisplayTextInTrigger : MonoBehaviour {
     public string textKeyboard;
     [TextArea]
     public string textController;
+    public AudioClip ping;
 
     [TextArea]
     private string text;
     private Text textComponent;
-	
+    private bool pingPlayed;
+    private AudioSource pinger;
+
     // Use this for initialization
-	void Start () {
+	void Start ()
+    {
+        pingPlayed = false;
+        pinger = this.gameObject.AddComponent<AudioSource>();
+        pinger.clip = ping;
 		if(canvas != null)
         {
             textComponent = canvas.transform.GetChild(0).GetComponent<Text>();
@@ -29,6 +36,14 @@ public class DisplayTextInTrigger : MonoBehaviour {
             text = textKeyboard;
         }
 	}
+    void OnTriggerEnter(Collider col)
+    {
+        if(col.transform.root.tag == "Player" && !pingPlayed && ping != null)
+        {
+            pinger.PlayOneShot(ping, 0.5f);
+            pingPlayed = true;
+        }
+    }
     void OnTriggerStay(Collider col)
     {
         if(col.transform.root.tag == "Player")
