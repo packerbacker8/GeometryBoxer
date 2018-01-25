@@ -8,18 +8,17 @@ public class GameControllerScriptTutorial : MonoBehaviour {
     public string mainMenu = "MainMenu";
     public float loadLevelTimeOut = 20f;
     public GameObject[] playerOptions;
+    public List<GameObject> enemiesInWorld;
 
     private string currentMapName;
     private GameObject activePlayer;
     private int numEnemiesAlive;
-    private GameObject[] enemiesInWorld;
-    private GameObject enemyContainer;
     private bool playerAlive;
 
     // Use this for initialization
     void Awake()
     {
-        numEnemiesAlive = 100;
+        numEnemiesAlive = enemiesInWorld.Count;
         
         for (int i = 0; i < playerOptions.Length; i++)
         {
