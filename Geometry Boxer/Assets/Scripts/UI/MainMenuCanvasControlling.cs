@@ -73,7 +73,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
             GameObject button = Instantiate(fileButtonPrefab) as GameObject;
             button.GetComponentInChildren<Text>().text = files[i];
             button.transform.SetParent(scrollView.transform,false);
-            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 200f - (30f * i));
+            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, ((loadFileCanvas.GetComponent<RectTransform>().rect.size.y * 0.65f) * 0.5f - 10f) - (30f * i));
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetFileToLoadString(button.GetComponentInChildren<Text>().text); });
             loadFileButtons.Add(button);
         }
@@ -140,6 +140,14 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public void QuitGame()
     {
         LoadLevel.loader.ExitGame();
+    }
+    /// <summary>
+    /// Helper function to start tutorial.
+    /// </summary>
+    public void Tutorial()
+    {
+        SaveAndLoadGame.saver.SetCharType("Cube");
+        LoadLevel.loader.LoadALevel("Tutorial");
     }
 
 }

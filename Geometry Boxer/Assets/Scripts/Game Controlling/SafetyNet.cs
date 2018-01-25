@@ -20,6 +20,7 @@ public class SafetyNet : MonoBehaviour
     {
         resetLocation = GameObject.FindGameObjectWithTag("Respawn");
 
+
         for (int i = 0; i < playerOptions.Length; i++)
         {
             if (playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()))
@@ -48,6 +49,12 @@ public class SafetyNet : MonoBehaviour
                 enemies[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
         }
+
+        if (resetLocation == null)
+        {
+            resetLocation = new GameObject("ResetSpot");
+            resetLocation.transform.position = activePlayer.transform.position;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -56,7 +63,7 @@ public class SafetyNet : MonoBehaviour
         {
             HandleSafteyNetCatch(other.transform.root.gameObject);
         }
-        else
+        else if(other.transform.root.tag.Contains("Enemy"))
         {
             GameObject findingRoot = other.gameObject;
             while (findingRoot.tag != "EnemyRoot")
@@ -64,6 +71,10 @@ public class SafetyNet : MonoBehaviour
                 findingRoot = findingRoot.transform.parent.gameObject;
             }
             HandleSafteyNetCatch(findingRoot);
+        }
+        else
+        {
+            Destroy(other.gameObject);
         }
         
     }

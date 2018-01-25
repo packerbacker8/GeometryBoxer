@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class pauseMenu : MonoBehaviour
 {
-
     public GameObject scrollView;
+    public GameObject scrollViewContent;
     public GameObject fileButtonPrefab;
 
     private GameObject character;
@@ -42,6 +42,14 @@ public class pauseMenu : MonoBehaviour
         if (isCombatScene)
         {
             character = control.GetComponent<GameControllerScript>().GetActivePlayer();
+            CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
+            punchScript = character.gameObject.GetComponent<PunchScript>();
+        }
+        else if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+        {
+            Debug.Log("Tutorial pause");
+            isCombatScene = true;
+            character = control.GetComponent<GameControllerScriptTutorial>().GetActivePlayer();
             CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
             punchScript = character.gameObject.GetComponent<PunchScript>();
         }
@@ -176,8 +184,8 @@ public class pauseMenu : MonoBehaviour
             files[i] = files[i].Substring(Application.persistentDataPath.Length + 1, files[i].Length - Application.persistentDataPath.Length - 5);
             GameObject button = Instantiate(fileButtonPrefab) as GameObject;
             button.GetComponentInChildren<Text>().text = files[i];
-            button.transform.SetParent(scrollView.transform, false);
-            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 200f - (30f * i));
+            button.transform.SetParent(scrollViewContent.transform, false);
+            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, ((scrollView.GetComponent<RectTransform>().rect.size.y * 0.85f) * 0.5f - 10f) - (30f * i));
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetSaveFileName(button.GetComponentInChildren<Text>().text); });
             saveFileButtons.Add(button);
         }

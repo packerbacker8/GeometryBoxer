@@ -28,8 +28,18 @@ public class Fade : MonoBehaviour
         return (fadeSpeed);
     }
 
-    void OnLevelWasLoaded()
+    void LevelFinishedLoading(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
         BeginFade(-1);//Fade in
+    }
+
+    private void OnEnable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += LevelFinishedLoading;
+    }
+
+    private void OnDisable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= LevelFinishedLoading;
     }
 }

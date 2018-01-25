@@ -32,6 +32,7 @@ public class EnemyHealthScript : MonoBehaviour
     private string getUpSupine = "GetUpSupine";
     private GameObject puppetMast;
     private GameObject gameController;
+    private GameObject playerUI;
     private int enemyIndex = 0;
     private UserControlAI charController;
 
@@ -55,6 +56,7 @@ public class EnemyHealthScript : MonoBehaviour
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
         charController = GetComponentInChildren<UserControlAI>();
         ShowDmg = this.GetComponent<SwapMaterials>();
         Val4 = 0;
@@ -89,7 +91,6 @@ public class EnemyHealthScript : MonoBehaviour
             damageIsFromPlayer = true; //after animator states enemy has stood up, change this to false.
         }
 
-        Debug.Log("Impact force: " + collisionMagnitude + "\n Tag: " + tagOfCollision);
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
         if (!dead && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)) && !charController.drop)
         {
@@ -162,7 +163,16 @@ public class EnemyHealthScript : MonoBehaviour
                 source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
             }
             puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-            gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
+            if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+            {
+                gameController.GetComponent<GameControllerScriptTutorial>().isKilled(enemyIndex);
+            }
+            else
+            {
+                gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
+                playerUI.GetComponent<userInterface>().enemyIsKilled();
+            }
+            
             dead = true;
             Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
         }

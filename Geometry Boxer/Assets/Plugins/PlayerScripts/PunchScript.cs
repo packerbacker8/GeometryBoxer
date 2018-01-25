@@ -13,9 +13,9 @@ public class PunchScript : MonoBehaviour
     [Tooltip("Object designated as the collider in front of the right fist.")]
     public CapsuleCollider rightFistCollider;
     [Tooltip("Object designated as the collider in front of the left foot.")]
-    public Collider leftFootCollider;
+    public BoxCollider leftFootCollider;
     [Tooltip("Object designated as the collider in front of the right foot.")]
-    public Collider rightFootCollider;
+    public BoxCollider rightFootCollider;
     public float fistGrowMultiplier = 2f;
     public float footGrowMultiplier = 5f;
     [Tooltip("The force by which the rigidbody will move.")]
@@ -28,9 +28,20 @@ public class PunchScript : MonoBehaviour
     public KeyCode leftUppercutKey = KeyCode.R;
     public KeyCode rightUppercutKey = KeyCode.F;
     public KeyCode hiKickKey = KeyCode.K;
+    public KeyCode dropWeapon = KeyCode.X;
     [Header("Controller punch buttons.")]
     public string leftJabControllerButton = "LeftBumper";
     public string rightJabControllerButton = "RightBumper";
+
+    [Header("Special Attack Information")]
+    public GameObject specialForm;
+    public float specialFormSize = 4f;
+    public float growSpeed = 3f;
+    public KeyCode specialAttack = KeyCode.B;
+    public KeyCode useAttack = KeyCode.Space;
+    public float specialAttackForce = 1000f;
+    public float specialAttackActiveTime = 10f;
+    public float specialAttackCooldownTime = 2f;
 
     [Header("Player Combat Animations")]
     [Tooltip("Array of fighting animations the player character can use.")]
@@ -64,6 +75,22 @@ public class PunchScript : MonoBehaviour
             height = h;
         }
     }
+
+
+    /// <summary>
+    /// Class object for expanding a box collider
+    /// </summary>
+    protected class BoxColliderSizing
+    {
+        public Vector3 center;
+        public Vector3 size;
+        public BoxColliderSizing(Vector3 center, Vector3 size)
+        {
+            this.center = center;
+            this.size = size;
+        }
+    }
+
     /// <summary>
     /// Private variables for controls in punching and moving arms.
     /// </summary>
@@ -74,6 +101,12 @@ public class PunchScript : MonoBehaviour
     protected bool isAttacking;
     protected bool leftArmAttack;
     protected bool rightArmAttack;
+    protected bool leftFootAttack;
+    protected bool rightFootAttack;
+    protected bool playerGrowing;
+    protected bool launched;
+    protected bool onCooldown;
+    protected bool growingSpecial;
 
     protected float leftArmXAxis;
     protected float leftArmYAxis;
@@ -111,12 +144,21 @@ public class PunchScript : MonoBehaviour
 
     protected GameObject puppetArmBehavior;
     protected GameObject puppetMastObject;
+    protected Rigidbody specialRigid;
     protected PuppetMaster puppetMaster;
     protected GameObject charController;
     protected GameObject cam;
     protected List<Muscle> armMuscles;
     protected CapsuleColliderSizing leftFistStartSize;
     protected CapsuleColliderSizing rightFistStartSize;
+    protected BoxColliderSizing leftFootStartSize;
+    protected BoxColliderSizing rightFootStartSize;
+    protected Vector3 playerStartSize;
+    protected Vector3 playerFinalSize;
+    protected Vector3 specialStartSize;
+    protected Vector3 specialEndSize;
+    protected PlayerStatsBaseClass baseStats;
+    protected Vector3 moveDir;
 
     public enum Limbs
     {
@@ -129,18 +171,25 @@ public class PunchScript : MonoBehaviour
     {
         leftFistStartSize = new CapsuleColliderSizing(leftFistCollider.transform.position, leftFistCollider.radius, leftFistCollider.height);
         rightFistStartSize = new CapsuleColliderSizing(rightFistCollider.transform.position, rightFistCollider.radius, rightFistCollider.height);
+        leftFootStartSize = new BoxColliderSizing(leftFootCollider.center, leftFootCollider.size);
+        rightFootStartSize = new BoxColliderSizing(rightFootCollider.center, rightFootCollider.size);
+
         leftGrab = false;
         rightGrab = false;
         leftArmAttack = false;
         rightArmAttack = false;
+        leftFootAttack = false;
+        rightFootAttack = false;
         movementAndCameraDisabled = false;
         useController = false;
         isAttacking = false;
+        playerGrowing = false;
+        launched = false;
+        onCooldown = false;
+        growingSpecial = false;
         controllerInfo = Input.GetJoystickNames();
-        if (controllerInfo.Length > 0)
-        {
-            useController = true;
-        }
+        useController = controllerInfo.Length > 0;
+
         leftArmXAxis = 0f;
         leftArmYAxis = 0f;
         rightArmXAxis = 0f;
@@ -167,11 +216,21 @@ public class PunchScript : MonoBehaviour
                 armMuscles.Add(m);
             }
         }
+
+        playerStartSize = new Vector3(0.1f, 0.1f, 0.1f);
+        playerFinalSize = new Vector3(1.53119f, 1.53119f, 1.53119f);
+        specialStartSize = new Vector3(0.1f, 0.1f, 0.1f);
+        specialEndSize = new Vector3(specialFormSize, specialFormSize, specialFormSize);
     }
     // Update is called once per frame
     protected virtual void Update()
     {
         useController = controllerInfo.Length > 0;
+
+        if (Input.GetKeyDown(dropWeapon))
+        {
+            charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
+        }
 
         if (numberOfMuscleComponents < puppetMaster.muscles.Length) //number of muscles increased from beginning, a prop has been picked up
         {
@@ -198,14 +257,32 @@ public class PunchScript : MonoBehaviour
                 rightFistCollider.radius = rightFistStartSize.radius * fistGrowMultiplier;
                 rightFistCollider.height = rightFistStartSize.height * fistGrowMultiplier;
             }
+            if(leftFootAttack)
+            {
+				leftFootCollider.size = leftFootStartSize.size * footGrowMultiplier;
+            }
+            if(rightFootAttack)
+            {
+				rightFootCollider.size = rightFootStartSize.size * footGrowMultiplier;
+            }
             currentAnimLength -= Time.deltaTime;
             if (currentAnimLength <= 0f)
             {
                 isAttacking = false;
+				leftArmAttack = false;
+				rightArmAttack = false;
+				leftFootAttack = false;
+				rightFootAttack = false;
+
                 leftFistCollider.radius = leftFistStartSize.radius;
                 leftFistCollider.height = leftFistStartSize.height;
                 rightFistCollider.radius = rightFistStartSize.radius;
                 rightFistCollider.height = rightFistStartSize.height;
+
+                leftFootCollider.center = leftFootStartSize.center;
+                leftFootCollider.size = leftFootStartSize.size;
+                rightFootCollider.center = rightFootStartSize.center;
+                rightFootCollider.size = rightFootStartSize.size;
             }
         }
         else
@@ -214,6 +291,11 @@ public class PunchScript : MonoBehaviour
             leftFistCollider.height = leftFistStartSize.height;
             rightFistCollider.radius = rightFistStartSize.radius;
             rightFistCollider.height = rightFistStartSize.height;
+
+            leftFootCollider.center = leftFootStartSize.center;
+            leftFootCollider.size = leftFootStartSize.size;
+            rightFootCollider.center = rightFootStartSize.center;
+            rightFootCollider.size = rightFootStartSize.size;
             if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
             {
                 if (useController) //controller controls
@@ -258,6 +340,7 @@ public class PunchScript : MonoBehaviour
                     }
                     else if (Input.GetKeyDown(hiKickKey))
                     {
+                        rightFootAttack = true;
                         ThrowHiKick();
                     }
                 }
@@ -500,6 +583,7 @@ public class PunchScript : MonoBehaviour
             GameObject findingRoot = collision.gameObject;
             while (findingRoot.tag != "EnemyRoot")
             {
+                Debug.Log("Hit by: " + collision.gameObject.name);
                 findingRoot = findingRoot.transform.parent.gameObject;
             }
             BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
@@ -514,4 +598,170 @@ public class PunchScript : MonoBehaviour
         currentAnimLength = anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.playTime + (anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.transitionTime);
         isAttacking = true;
     }
+
+    /// <summary>
+    /// Turn off the special attack and reactivate the player character.
+    /// </summary>
+    protected virtual void DeactivateSpecialAttack()
+    {
+        playerGrowing = true;
+        charController.transform.localScale = playerStartSize;
+        charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
+        specialRigid.useGravity = false;
+        launched = false;
+        UpdatePos(charController.transform, specialForm.transform);
+        //play animation of morphing into ball
+        isAttacking = false;
+        for (int i = 0; i < this.transform.childCount; i++) //move camera back to player here
+        {
+            if (this.transform.GetChild(i).gameObject != specialForm)
+            {
+                if (this.transform.GetChild(i).gameObject.tag == "MainCamera") //move camera to follow ball here
+                {
+                    this.transform.GetChild(i).gameObject.GetComponent<CameraController>().target = baseStats.pelvisJoint.transform;
+                }
+                else if (this.transform.GetChild(i).gameObject != charController)
+                {
+                    this.transform.GetChild(i).gameObject.SetActive(true);
+                }
+            }
+        }
+        charController.GetComponent<UserControlMelee>().enabled = true;
+        charController.GetComponent<CharacterMeleeDemo>().enabled = true;
+        charController.GetComponent<CapsuleCollider>().enabled = true;
+        charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
+        onCooldown = true;
+        anim.SetInteger("ActionIndex", -1);
+        anim.SetBool("IsStrafing", false);
+        if (specialRigid.velocity.sqrMagnitude > 0)
+        {
+            anim.SetFloat("Forward", 1);
+        }
+        else
+        {
+            anim.SetFloat("Forward", 0);
+        }
+        anim.Play("Grounded Directional");
+        SendMessage("PowerUpDeactivated", false, SendMessageOptions.DontRequireReceiver);
+    }
+
+    /// <summary>
+    /// Turn on the special attack and deactivate the player character.
+    /// </summary>
+    protected virtual void ActivateSpecialAttack()
+    {
+        specialRigid.useGravity = true;
+        leftFistCollider.radius = leftFistStartSize.radius;
+        leftFistCollider.height = leftFistStartSize.height;
+        rightFistCollider.radius = rightFistStartSize.radius;
+        rightFistCollider.height = rightFistStartSize.height;
+        UpdatePos(specialForm.transform, charController.transform);
+        isAttacking = true;
+        //play animation of morphing into ball
+        for (int i = 0; i < this.transform.childCount; i++)
+        {
+            if (this.transform.GetChild(i).gameObject != specialForm)
+            {
+                if (this.transform.GetChild(i).gameObject.tag == "MainCamera") //move camera to follow ball here
+                {
+                    this.transform.GetChild(i).gameObject.GetComponent<CameraController>().target = specialForm.transform;
+                }
+                else if (this.transform.GetChild(i).gameObject != charController)
+                {
+                    this.transform.GetChild(i).gameObject.SetActive(false);
+                }
+            }
+        }
+        specialForm.SetActive(true);
+        charController.SetActive(true);
+        specialForm.transform.localScale = specialStartSize;
+        specialForm.transform.localRotation = Quaternion.identity;
+        specialForm.GetComponent<MeshRenderer>().enabled = true;
+        specialForm.GetComponent<BoxCollider>().enabled = true;
+        charController.GetComponent<UserControlMelee>().enabled = false;
+        charController.GetComponent<CharacterMeleeDemo>().enabled = false;
+        charController.GetComponent<CapsuleCollider>().enabled = false;
+        charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+        SendMessage("PowerUpActive", true, SendMessageOptions.DontRequireReceiver);
+    }
+
+    /// <summary>
+    /// Update the position of one transform to the target transform of another game object.
+    /// This specifically accounts bonus movement of the special form upwards to avoid clipping 
+    /// through the floor when spawning.
+    /// </summary>
+    /// <param name="transformToUpdate">The transform object to move.</param>
+    /// <param name="targetTransform">The transform object to move the other object to.</param>
+    protected virtual void UpdatePos(Transform transformToUpdate, Transform targetTransform)
+    {
+        Vector3 targetVec = targetTransform.position;
+        transformToUpdate.rotation = Quaternion.Euler(0, transformToUpdate.eulerAngles.y, 0);
+        if (transformToUpdate == specialForm.transform)
+        {
+            targetVec = new Vector3(targetVec.x, targetVec.y + 1f, targetVec.z);
+        }
+        transformToUpdate.position = targetVec;
+    }
+
+    /// <summary>
+    /// Raycast from center of special form to ground to see if on the ground.
+    /// </summary>
+    /// <returns>Returns true if on ground, false otherwise, with some tolerance.</returns>
+    protected virtual bool checkIfGrounded()
+    {
+        Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialForm.GetComponent<BoxCollider>().size.y * 2f, specialForm.transform.position.z);
+        Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
+        Debug.Log("Size now: " + specialForm.GetComponent<BoxCollider>().size.y);
+        return Physics.Raycast(specialForm.transform.position, -Vector3.up, specialForm.GetComponent<BoxCollider>().size.y * specialForm.transform.localScale.y + 0.1f);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected virtual void GrowSpecial()
+    {
+        specialForm.transform.localScale += specialStartSize * growSpeed;
+        if (specialForm.transform.localScale.magnitude >= specialEndSize.magnitude)
+        {
+            specialForm.transform.localScale = specialEndSize;
+            growingSpecial = false;
+        }
+    }
+
+    /// <summary>
+    /// Method that grows the player and shrinks the special form at the same time.
+    /// This allows the feeling of changing form.
+    /// Defaults to box collider.
+    /// </summary>
+    protected virtual void GrowPlayer()
+    {
+        charController.transform.localScale += playerStartSize;
+        specialForm.transform.localScale -= specialStartSize * growSpeed;
+        UpdatePos(specialForm.transform, charController.transform);
+        if (CompareGreaterThanEqualVectors(charController.transform.localScale, playerFinalSize))
+        {
+            charController.transform.localScale = playerFinalSize;
+            specialForm.GetComponent<MeshRenderer>().enabled = false;
+            specialForm.GetComponent<BoxCollider>().enabled = false; //CHANGE TO MESH COLLIDER WHEN OCTAHEDRON BROUGHT IN
+            specialForm.transform.localScale = specialStartSize;
+            specialRigid.velocity = Vector3.zero;
+            playerGrowing = false;
+        }
+        if (CompareLessThanEqualVectors(specialForm.transform.localScale, specialStartSize))
+        {
+            specialForm.transform.localScale = specialStartSize;
+
+        }
+    }
+
+    protected bool CompareLessThanEqualVectors(Vector3 v1, Vector3 v2)
+    {
+        return v1.x <= v2.x && v1.y <= v2.y && v1.z <= v2.z;
+    }
+
+    protected bool CompareGreaterThanEqualVectors(Vector3 v1, Vector3 v2)
+    {
+        return v1.x >= v2.x && v1.y >= v2.y && v1.z >= v2.z;
+    }
+
 }
