@@ -112,6 +112,8 @@ public class PunchScript : MonoBehaviour
     protected bool readyToExecuteQueuedAttack;
     protected CharacterAnimations queuedAttack;
     protected float leewayTime;
+	protected bool queuedLeftArmAttack;
+	protected bool queuedRightArmAttack;
 
     protected float leftArmXAxis;
     protected float leftArmYAxis;
@@ -190,7 +192,8 @@ public class PunchScript : MonoBehaviour
         queuedAttack = InitCharacterAnimationStruct();
         readyToExecuteQueuedAttack = false;
         leewayTime = 0.4f;
-
+		queuedLeftArmAttack = false;
+		queuedRightArmAttack = false;
         movementAndCameraDisabled = false;
         useController = false;
         isAttacking = false;
@@ -403,11 +406,13 @@ public class PunchScript : MonoBehaviour
                     }
                     else if (!isAttacking && readyToExecuteQueuedAttack)
                     {
-                        Debug.Log("EXECUTING QUEUED ATTACK");
+                        //Debug.Log("EXECUTING QUEUED ATTACK");
                         anim.SetInteger("ActionIndex", queuedAttack.actionIndex);
                         anim.CrossFadeInFixedTime(queuedAttack.animName, queuedAttack.transitionTime, queuedAttack.animLayer, queuedAttack.playTime);
                         SetCurrentAnimTime(queuedAttack);
                         anim.SetInteger("ActionIndex", -1);
+						leftArmAttack = queuedLeftArmAttack;
+						rightArmAttack = queuedRightArmAttack;
                         //return;
                     }
 					
@@ -472,6 +477,8 @@ public class PunchScript : MonoBehaviour
                     if (canQueueAttack)
                     {
                         queuedAttack = currentAnim;
+						queuedLeftArmAttack = leftArmAttack;
+						queuedRightArmAttack = rightArmAttack;
                     }
                     break;
                 }
@@ -500,6 +507,8 @@ public class PunchScript : MonoBehaviour
                     if (canQueueAttack)
                     {
                         queuedAttack = currentAnim;
+						queuedLeftArmAttack = leftArmAttack;
+						queuedRightArmAttack = rightArmAttack;
                     }
                     break;
                 }
@@ -534,6 +543,8 @@ public class PunchScript : MonoBehaviour
                 if (canQueueAttack)
                 {
                     queuedAttack = currentAnim;
+					queuedLeftArmAttack = leftArmAttack;
+					queuedRightArmAttack = rightArmAttack;
                 }
                 break;
             }
@@ -553,6 +564,8 @@ public class PunchScript : MonoBehaviour
                 if (canQueueAttack)
                 {
                     queuedAttack = currentAnim;
+					queuedLeftArmAttack = leftArmAttack;
+					queuedRightArmAttack = rightArmAttack;
                 }
                 break;
             }
