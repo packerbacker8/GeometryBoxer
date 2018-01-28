@@ -89,7 +89,7 @@ public class CubeAttackScript : PunchScript
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown("XButton")))
+            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown("BButton")))
             {
                 DeactivateSpecialAttack();
                 UpdatePos(charController.transform, specialForm.transform);
@@ -120,7 +120,7 @@ public class CubeAttackScript : PunchScript
         {
             UpdatePos(specialForm.transform, charController.transform);
 
-            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown("XButton")) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown("BButton")) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
             {
                 growingSpecial = true;
                 ActivateSpecialAttack();
@@ -146,7 +146,7 @@ public class CubeAttackScript : PunchScript
     /// </summary>
     private void GrowBigPower()
     {
-        if (!PowerUp && Input.GetKeyDown(useAttack) || !PowerUp && Input.GetButtonDown("XButton"))
+        if (!PowerUp && Input.GetKeyDown(useAttack) || !PowerUp && Input.GetButtonDown("AButton"))
         {
             PowerUp = true;
             halo.enabled = true;
