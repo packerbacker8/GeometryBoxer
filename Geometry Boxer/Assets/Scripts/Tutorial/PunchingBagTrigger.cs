@@ -72,13 +72,13 @@ public class PunchingBagTrigger : MonoBehaviour {
             text.text = "Nice! Combo hit the punching bag with " + combo.ToString();
             pinger.PlayOneShot(ping, 0.5f);
         }
-        else if(Input.GetKeyDown(combo) && !comboed && hooked && damageTaken > prevDamage)
+        else if(Input.GetKeyDown(combo) && !comboed && hooked && jabbed && damageTaken > prevDamage)
         {
             comboed = true;
             text.text = "Ouch! Kick the bag with " + kick.ToString();
             pinger.PlayOneShot(ping, 0.5f);
         }
-        else if(Input.GetKeyDown(kick) && !kicked && damageTaken > prevDamage)
+        else if(Input.GetKeyDown(kick) && !kicked && jabbed && hooked && comboed && damageTaken > prevDamage)
         {
             kicked = true;
             if (!weaponStandsUp)
