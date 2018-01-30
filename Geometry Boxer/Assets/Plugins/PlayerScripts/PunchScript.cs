@@ -583,7 +583,7 @@ public class PunchScript : MonoBehaviour
             GameObject findingRoot = collision.gameObject;
             while (findingRoot.tag != "EnemyRoot")
             {
-                Debug.Log("Hit by: " + collision.gameObject.name);
+                //Debug.Log("Hit by: " + collision.gameObject.name);
                 findingRoot = findingRoot.transform.parent.gameObject;
             }
             BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
