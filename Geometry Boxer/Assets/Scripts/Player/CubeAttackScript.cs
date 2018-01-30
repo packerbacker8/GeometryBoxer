@@ -89,17 +89,17 @@ public class CubeAttackScript : PunchScript
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown("BButton")))
+            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown(specialAttackButton)))
             {
                 DeactivateSpecialAttack();
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if (Input.GetKeyDown(useAttack) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
+            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
             {
                 specialRigid.AddForce(Vector3.up * cubeForce * 100f);
             }
-            else if (Input.GetKeyDown(useAttack) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
+            else if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
             {
                 specialRigid.AddForce(-Vector3.up * cubeForce * 300f);
                 launched = true;
@@ -120,7 +120,7 @@ public class CubeAttackScript : PunchScript
         {
             UpdatePos(specialForm.transform, charController.transform);
 
-            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown("BButton")) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
             {
                 growingSpecial = true;
                 ActivateSpecialAttack();
@@ -146,7 +146,7 @@ public class CubeAttackScript : PunchScript
     /// </summary>
     private void GrowBigPower()
     {
-        if (!PowerUp && Input.GetKeyDown(useAttack) || !PowerUp && Input.GetButtonDown("AButton"))
+        if ((!PowerUp && Input.GetKeyDown(useAttack)) || (!PowerUp && Input.GetButtonDown("AButton")))
         {
             PowerUp = true;
             halo.enabled = true;
