@@ -64,6 +64,28 @@ public class CubeAttackScript : PunchScript
     protected override void Update()
     {
         base.Update();
+        if (updateCollisionCheck)
+        {
+            //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            GameObject walker3 = rightThigh;
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = true;
+                walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+                walker3 = walker3.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = true;
+            walker2.GetComponent<CollisionReceived>().sendDamage = true;
+            walker3.GetComponent<CollisionReceived>().sendDamage = true;
+            updateCollisionCheck = false;
+        }
+
         isGrounded = checkIfGrounded();
         if(isGrounded)
         {
@@ -138,6 +160,86 @@ public class CubeAttackScript : PunchScript
 
         //GrowBigPower();
     }
+
+    /*
+     * Overriding these functions as a way to turn off collisions for the arms and 
+     * legs when fighting.
+     */
+    public override void ThrowSinglePunch(Limbs limb)
+    {
+        base.ThrowSinglePunch(limb);
+        if (limb == Limbs.leftArm)
+        {
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            walker2.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+        else
+        {
+            GameObject walker = rightShoulder;
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+    }
+
+    public override void ThrowHiKick()
+    {
+        base.ThrowHiKick();
+        GameObject walker = rightThigh;
+        while (walker.transform.childCount > 0)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            //assumes there is only one child
+            walker = walker.transform.GetChild(0).gameObject;
+        }
+        walker.GetComponent<CollisionReceived>().sendDamage = false;
+    }
+
+    public override void ThrowUppercut(Limbs limb)
+    {
+        base.ThrowUppercut(limb);
+        if (limb == Limbs.leftArm)
+        {
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            walker2.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+        else
+        {
+            GameObject walker = rightShoulder;
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+    }
+
     /// <summary>
     /// Allows character to grow larger when attack key is pressed. Shrinks back down after a certain
     /// amount of time.
