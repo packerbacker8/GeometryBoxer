@@ -9,12 +9,14 @@ public class GameControllerScript : MonoBehaviour
     public string dominationMap = "CitySelectMap";
     public float loadLevelTimeOut = 20f;
     public GameObject[] playerOptions;
+    public GameObject enemyCubeContainer;
+    public GameObject enemyOctahedronContainer;
 
     private string currentMapName;
     private GameObject activePlayer;
     private int numEnemiesAlive;
-    private GameObject[] enemiesInWorld;
     private GameObject enemyContainer;
+    private GameObject[] enemiesInWorld;
     private bool playerAlive;
 
     // Use this for initialization
@@ -32,7 +34,16 @@ public class GameControllerScript : MonoBehaviour
                 playerOptions[i].SetActive(false);
             }
         }
-        enemyContainer = GameObject.FindGameObjectWithTag("EnemyContainer");
+        enemyContainer = activePlayer.name.Contains("Cube") ? enemyOctahedronContainer : enemyCubeContainer;
+        if(enemyContainer == enemyOctahedronContainer)
+        {
+            enemyCubeContainer.SetActive(false);
+        }
+        else
+        {
+            enemyOctahedronContainer.SetActive(false);
+        }
+
         numEnemiesAlive = enemyContainer.transform.childCount;
         for (int i = 0; i < numEnemiesAlive; i++)
         {

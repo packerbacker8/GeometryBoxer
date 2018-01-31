@@ -60,11 +60,11 @@ public class pauseMenu : MonoBehaviour
     {
         TimeSinceEsc = TimeSinceEsc += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && !isPaused)
         {
             pauseGameHelper();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused)
+        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && isPaused)
         {
             resumeGameHelper();
         }
@@ -125,7 +125,6 @@ public class pauseMenu : MonoBehaviour
     /// </summary>
     public void pauseGame()
     {
-
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 0.0f;

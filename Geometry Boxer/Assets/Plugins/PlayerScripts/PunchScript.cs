@@ -20,6 +20,7 @@ public class PunchScript : MonoBehaviour
     public float footGrowMultiplier = 5f;
     [Tooltip("The force by which the rigidbody will move.")]
     public float punchForce = 50f;
+
     [Header("PC punch buttons.")]
     public KeyCode leftJabKey = KeyCode.Q;
     public KeyCode rightJabKey = KeyCode.E;
@@ -29,9 +30,13 @@ public class PunchScript : MonoBehaviour
     public KeyCode rightUppercutKey = KeyCode.F;
     public KeyCode hiKickKey = KeyCode.K;
     public KeyCode dropWeapon = KeyCode.X;
+
     [Header("Controller punch buttons.")]
     public string leftJabControllerButton = "LeftBumper";
     public string rightJabControllerButton = "RightBumper";
+    public string upperCutButton = "XButton";
+    public string hiKickButton = "YButton";
+    public string specialAttackButton = "BButton";
 
     [Header("Special Attack Information")]
     public GameObject specialForm;
@@ -301,22 +306,48 @@ public class PunchScript : MonoBehaviour
                 if (useController) //controller controls
                 {
                     //Left arm punching
-
                     if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
                     {
-                        ThrowSinglePunch(Limbs.leftArm);
+                        Debug.Log("LeftJab");
+                        leftArmAttack = true;
+                        if (Input.GetButton(upperCutButton))
+                        {
+                            Debug.Log("LeftUpper");
+                            ThrowUppercut(Limbs.leftArm);
+                        }
+                        else
+                        {
+                            Debug.Log("LeftJab");
+                            ThrowSinglePunch(Limbs.leftArm);
+                        }
                     }
                     if (Input.GetButtonDown(rightJabControllerButton))
                     {
-                        ThrowSinglePunch(Limbs.rightArm);
+                        Debug.Log("rightBump");
+                        rightArmAttack = true;
+                        if (Input.GetButton(upperCutButton))
+                        {
+                            Debug.Log("RightUpper");
+                            ThrowUppercut(Limbs.rightArm);
+                        }
+                        else
+                        {
+                            Debug.Log("RightJab");
+                            ThrowSinglePunch(Limbs.rightArm);
+                        }
+                    }
+                    if (Input.GetButtonDown(hiKickButton))
+                    {
+                        Debug.Log("HighKick");
+                        ThrowHiKick();
                     }
 
                 }
                 else  // keyboard controls
                 {
-
                     if (Input.GetKeyDown(leftJabKey))
                     {
+                        Debug.Log("LeftJab");
                         //currently a combo attack
                         leftArmAttack = true;
                         rightArmAttack = true;
@@ -583,7 +614,7 @@ public class PunchScript : MonoBehaviour
             GameObject findingRoot = collision.gameObject;
             while (findingRoot.tag != "EnemyRoot")
             {
-                Debug.Log("Hit by: " + collision.gameObject.name);
+                //Debug.Log("Hit by: " + collision.gameObject.name);
                 findingRoot = findingRoot.transform.parent.gameObject;
             }
             BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
