@@ -74,8 +74,27 @@ public class OctahedronSpecials : PunchScript
     protected override void Update()
     {
         base.Update();
-        //anim.SetFloat("Forward", 1.0f);
-        //Debug.Log(userControlThirdPersonRef.state.move + " forward: " + charMeleeDemoRef.transform.forward);  
+        if(updateCollisionCheck)
+        {
+            //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            GameObject walker3 = rightThigh;
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = true;
+                walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+                walker3 = walker3.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = true;
+            walker2.GetComponent<CollisionReceived>().sendDamage = true;
+            walker3.GetComponent<CollisionReceived>().sendDamage = true;
+            updateCollisionCheck = false;
+        }
 
         if (growingSpecial)
         {
@@ -325,6 +344,7 @@ public class OctahedronSpecials : PunchScript
         UpdatePos(charController.transform, specialForm.transform);
         //play animation of morphing into ball
         isAttacking = false;
+        updateCollisionCheck = true;
         for (int i = 0; i < this.transform.childCount; i++) //move camera back to player here
         {
             if (this.transform.GetChild(i).gameObject != specialForm)
@@ -397,6 +417,85 @@ public class OctahedronSpecials : PunchScript
         charController.GetComponent<CapsuleCollider>().enabled = false;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
         SendMessage("PowerUpActive", true, SendMessageOptions.DontRequireReceiver);
+    }
+
+    /*
+     * Overriding these functions as a way to turn off collisions for the arms and 
+     * legs when fighting.
+     */
+    public override void ThrowSinglePunch(Limbs limb)
+    {
+        base.ThrowSinglePunch(limb);
+        if (limb == Limbs.leftArm)
+        {
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            walker2.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+        else
+        {
+            GameObject walker = rightShoulder;
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+    }
+
+    public override void ThrowHiKick()
+    {
+        base.ThrowHiKick();
+        GameObject walker = rightThigh;
+        while (walker.transform.childCount > 0)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            //assumes there is only one child
+            walker = walker.transform.GetChild(0).gameObject;
+        }
+        walker.GetComponent<CollisionReceived>().sendDamage = false;
+    }
+
+    public override void ThrowUppercut(Limbs limb)
+    {
+        base.ThrowUppercut(limb);
+        if (limb == Limbs.leftArm)
+        {
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            walker2.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+        else
+        {
+            GameObject walker = rightShoulder;
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
     }
 
 }

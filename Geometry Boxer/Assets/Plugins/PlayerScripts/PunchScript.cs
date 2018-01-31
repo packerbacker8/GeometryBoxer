@@ -20,6 +20,10 @@ public class PunchScript : MonoBehaviour
     public float footGrowMultiplier = 5f;
     [Tooltip("The force by which the rigidbody will move.")]
     public float punchForce = 50f;
+    public GameObject rightShoulder;
+    public GameObject leftShoulder;
+    public GameObject rightThigh;
+    public GameObject leftThigh;
 
     [Header("PC punch buttons.")]
     public KeyCode leftJabKey = KeyCode.Q;
@@ -112,6 +116,7 @@ public class PunchScript : MonoBehaviour
     protected bool launched;
     protected bool onCooldown;
     protected bool growingSpecial;
+    protected bool updateCollisionCheck;
 
     protected float leftArmXAxis;
     protected float leftArmYAxis;
@@ -192,6 +197,7 @@ public class PunchScript : MonoBehaviour
         launched = false;
         onCooldown = false;
         growingSpecial = false;
+        updateCollisionCheck = false;
         controllerInfo = Input.GetJoystickNames();
         useController = controllerInfo.Length > 0;
 
@@ -274,6 +280,7 @@ public class PunchScript : MonoBehaviour
             if (currentAnimLength <= 0f)
             {
                 isAttacking = false;
+                updateCollisionCheck = true;
 				leftArmAttack = false;
 				rightArmAttack = false;
 				leftFootAttack = false;
@@ -644,6 +651,7 @@ public class PunchScript : MonoBehaviour
         UpdatePos(charController.transform, specialForm.transform);
         //play animation of morphing into ball
         isAttacking = false;
+        updateCollisionCheck = true;
         for (int i = 0; i < this.transform.childCount; i++) //move camera back to player here
         {
             if (this.transform.GetChild(i).gameObject != specialForm)
