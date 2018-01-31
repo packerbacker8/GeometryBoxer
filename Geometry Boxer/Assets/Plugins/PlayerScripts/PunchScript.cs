@@ -13,9 +13,9 @@ public class PunchScript : MonoBehaviour
     [Tooltip("Object designated as the collider in front of the right fist.")]
     public CapsuleCollider rightFistCollider;
     [Tooltip("Object designated as the collider in front of the left foot.")]
-    public Collider leftFootCollider;
+    public BoxCollider leftFootCollider;
     [Tooltip("Object designated as the collider in front of the right foot.")]
-    public Collider rightFootCollider;
+    public BoxCollider rightFootCollider;
     public float fistGrowMultiplier = 2f;
     public float footGrowMultiplier = 5f;
     [Tooltip("The force by which the rigidbody will move.")]
@@ -29,6 +29,7 @@ public class PunchScript : MonoBehaviour
     public KeyCode leftUppercutKey = KeyCode.R;
     public KeyCode rightUppercutKey = KeyCode.F;
     public KeyCode hiKickKey = KeyCode.K;
+    public KeyCode dropWeapon = KeyCode.X;
 
     [Header("Controller punch buttons.")]
     public string leftJabControllerButton = "LeftBumper";
@@ -43,6 +44,7 @@ public class PunchScript : MonoBehaviour
     public float growSpeed = 3f;
     public KeyCode specialAttack = KeyCode.B;
     public KeyCode useAttack = KeyCode.Space;
+    public float specialAttackForce = 1000f;
     public float specialAttackActiveTime = 10f;
     public float specialAttackCooldownTime = 2f;
 
@@ -78,6 +80,22 @@ public class PunchScript : MonoBehaviour
             height = h;
         }
     }
+
+
+    /// <summary>
+    /// Class object for expanding a box collider
+    /// </summary>
+    protected class BoxColliderSizing
+    {
+        public Vector3 center;
+        public Vector3 size;
+        public BoxColliderSizing(Vector3 center, Vector3 size)
+        {
+            this.center = center;
+            this.size = size;
+        }
+    }
+
     /// <summary>
     /// Private variables for controls in punching and moving arms.
     /// </summary>
@@ -88,6 +106,8 @@ public class PunchScript : MonoBehaviour
     protected bool isAttacking;
     protected bool leftArmAttack;
     protected bool rightArmAttack;
+    protected bool leftFootAttack;
+    protected bool rightFootAttack;
     protected bool playerGrowing;
     protected bool launched;
     protected bool onCooldown;
@@ -136,6 +156,8 @@ public class PunchScript : MonoBehaviour
     protected List<Muscle> armMuscles;
     protected CapsuleColliderSizing leftFistStartSize;
     protected CapsuleColliderSizing rightFistStartSize;
+    protected BoxColliderSizing leftFootStartSize;
+    protected BoxColliderSizing rightFootStartSize;
     protected Vector3 playerStartSize;
     protected Vector3 playerFinalSize;
     protected Vector3 specialStartSize;
@@ -154,10 +176,15 @@ public class PunchScript : MonoBehaviour
     {
         leftFistStartSize = new CapsuleColliderSizing(leftFistCollider.transform.position, leftFistCollider.radius, leftFistCollider.height);
         rightFistStartSize = new CapsuleColliderSizing(rightFistCollider.transform.position, rightFistCollider.radius, rightFistCollider.height);
+        leftFootStartSize = new BoxColliderSizing(leftFootCollider.center, leftFootCollider.size);
+        rightFootStartSize = new BoxColliderSizing(rightFootCollider.center, rightFootCollider.size);
+
         leftGrab = false;
         rightGrab = false;
         leftArmAttack = false;
         rightArmAttack = false;
+        leftFootAttack = false;
+        rightFootAttack = false;
         movementAndCameraDisabled = false;
         useController = false;
         isAttacking = false;
@@ -166,10 +193,8 @@ public class PunchScript : MonoBehaviour
         onCooldown = false;
         growingSpecial = false;
         controllerInfo = Input.GetJoystickNames();
-        if (controllerInfo.Length > 0)
-        {
-            useController = true;
-        }
+        useController = controllerInfo.Length > 0;
+
         leftArmXAxis = 0f;
         leftArmYAxis = 0f;
         rightArmXAxis = 0f;
@@ -207,6 +232,11 @@ public class PunchScript : MonoBehaviour
     {
         useController = controllerInfo.Length > 0;
 
+        if (Input.GetKeyDown(dropWeapon))
+        {
+            charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
+        }
+
         if (numberOfMuscleComponents < puppetMaster.muscles.Length) //number of muscles increased from beginning, a prop has been picked up
         {
             rightGrab = true;
@@ -232,14 +262,32 @@ public class PunchScript : MonoBehaviour
                 rightFistCollider.radius = rightFistStartSize.radius * fistGrowMultiplier;
                 rightFistCollider.height = rightFistStartSize.height * fistGrowMultiplier;
             }
+            if(leftFootAttack)
+            {
+				leftFootCollider.size = leftFootStartSize.size * footGrowMultiplier;
+            }
+            if(rightFootAttack)
+            {
+				rightFootCollider.size = rightFootStartSize.size * footGrowMultiplier;
+            }
             currentAnimLength -= Time.deltaTime;
             if (currentAnimLength <= 0f)
             {
                 isAttacking = false;
+				leftArmAttack = false;
+				rightArmAttack = false;
+				leftFootAttack = false;
+				rightFootAttack = false;
+
                 leftFistCollider.radius = leftFistStartSize.radius;
                 leftFistCollider.height = leftFistStartSize.height;
                 rightFistCollider.radius = rightFistStartSize.radius;
                 rightFistCollider.height = rightFistStartSize.height;
+
+                leftFootCollider.center = leftFootStartSize.center;
+                leftFootCollider.size = leftFootStartSize.size;
+                rightFootCollider.center = rightFootStartSize.center;
+                rightFootCollider.size = rightFootStartSize.size;
             }
         }
         else
@@ -248,6 +296,11 @@ public class PunchScript : MonoBehaviour
             leftFistCollider.height = leftFistStartSize.height;
             rightFistCollider.radius = rightFistStartSize.radius;
             rightFistCollider.height = rightFistStartSize.height;
+
+            leftFootCollider.center = leftFootStartSize.center;
+            leftFootCollider.size = leftFootStartSize.size;
+            rightFootCollider.center = rightFootStartSize.center;
+            rightFootCollider.size = rightFootStartSize.size;
             if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
             {
                 if (useController) //controller controls
@@ -318,6 +371,7 @@ public class PunchScript : MonoBehaviour
                     }
                     else if (Input.GetKeyDown(hiKickKey))
                     {
+                        rightFootAttack = true;
                         ThrowHiKick();
                     }
                 }
@@ -672,7 +726,7 @@ public class PunchScript : MonoBehaviour
     protected virtual void UpdatePos(Transform transformToUpdate, Transform targetTransform)
     {
         Vector3 targetVec = targetTransform.position;
-        transformToUpdate.rotation = Quaternion.identity;
+        transformToUpdate.rotation = Quaternion.Euler(0, transformToUpdate.eulerAngles.y, 0);
         if (transformToUpdate == specialForm.transform)
         {
             targetVec = new Vector3(targetVec.x, targetVec.y + 1f, targetVec.z);
@@ -687,8 +741,8 @@ public class PunchScript : MonoBehaviour
     protected virtual bool checkIfGrounded()
     {
         Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialForm.GetComponent<BoxCollider>().size.y * 2f, specialForm.transform.position.z);
-        Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
-        Debug.Log("Size now: " + specialForm.GetComponent<BoxCollider>().size.y);
+        //Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
+        //Debug.Log("Size now: " + specialForm.GetComponent<BoxCollider>().size.y);
         return Physics.Raycast(specialForm.transform.position, -Vector3.up, specialForm.GetComponent<BoxCollider>().size.y * specialForm.transform.localScale.y + 0.1f);
     }
 

@@ -48,10 +48,6 @@ namespace RootMotion.Demos {
 		}
 
 		protected override void Update() {
-            if(Input.GetKeyDown(KeyCode.X))
-            {
-                propRoot.currentProp = null;
-            }
 
 			// Actions
 			if (puppet.state == BehaviourPuppet.State.Puppet) {

@@ -20,6 +20,7 @@ public class SafetyNet : MonoBehaviour
     {
         resetLocation = GameObject.FindGameObjectWithTag("Respawn");
 
+
         for (int i = 0; i < playerOptions.Length; i++)
         {
             if (playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()))
@@ -47,6 +48,12 @@ public class SafetyNet : MonoBehaviour
             {
                 enemies[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
+        }
+
+        if (resetLocation == null)
+        {
+            resetLocation = new GameObject("ResetSpot");
+            resetLocation.transform.position = activePlayer.transform.position;
         }
     }
 

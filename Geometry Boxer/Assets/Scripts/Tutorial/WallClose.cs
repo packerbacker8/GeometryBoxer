@@ -7,6 +7,7 @@ public class WallClose : MonoBehaviour {
     public List<GameObject> walls;
     public List<GameObject> weaponStands;
     public List<GameObject> lights;
+
     public AudioClip doorShut0;
     public AudioClip doorShut1;
     public AudioClip wallGrow;
@@ -91,10 +92,6 @@ public class WallClose : MonoBehaviour {
                     growCeiling = true;
                     Ceiling.transform.localScale = new Vector3(Ceiling.transform.localScale.x, 4f, 0f);
                     break;
-                    if(source.isPlaying)
-                    {
-                        source.Stop();
-                    }
                 }
             }
         }
