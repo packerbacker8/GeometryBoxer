@@ -10,8 +10,7 @@ public class DisplayTextInTrigger : MonoBehaviour {
     [TextArea]
     public string textController;
     public AudioClip ping;
-
-    [TextArea]
+    
     private string text;
     private Text textComponent;
     private bool pingPlayed;
