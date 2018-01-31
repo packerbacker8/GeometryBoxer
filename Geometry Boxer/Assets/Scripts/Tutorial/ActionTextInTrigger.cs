@@ -30,7 +30,6 @@ public class ActionTextInTrigger : MonoBehaviour {
         {
             textComponent = canvas.transform.GetChild(0).GetComponent<Text>();
         }
-        text = prompt.Replace(key,);
     }
 	
 	// Update is called once per frame

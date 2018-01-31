@@ -12,15 +12,18 @@ public class TriggerWall : MonoBehaviour {
     {
     }
 
-	void OnTriggerEnter ()
+	void OnTriggerEnter(Collider col)
     {
-	    wall.BroadcastMessage("CloseWall", SendMessageOptions.RequireReceiver);
-        if(!playedSound)
+        if(col.transform.root.tag == "Player")
         {
-            InvisibleContainer.SetActive(true);
-            punchingBag.SetActive(false);
-            GetComponent<AudioSource>().Play();
-            playedSound = true;
+            wall.BroadcastMessage("CloseWall", SendMessageOptions.RequireReceiver);
+            if (!playedSound)
+            {
+                InvisibleContainer.SetActive(true);
+                punchingBag.SetActive(false);
+                GetComponent<AudioSource>().Play();
+                playedSound = true;
+            }
         }
     }
 }
