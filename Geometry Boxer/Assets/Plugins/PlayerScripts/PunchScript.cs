@@ -238,7 +238,7 @@ public class PunchScript : MonoBehaviour
     {
         useController = controllerInfo.Length > 0;
 
-        if (Input.GetKeyDown(dropWeapon))
+        if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw("DPadY") == -1))
         {
             charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
         }
@@ -336,6 +336,7 @@ public class PunchScript : MonoBehaviour
                         {
                             Debug.Log("RightUpper");
                             ThrowUppercut(Limbs.rightArm);
+
                         }
                         else
                         {
@@ -802,5 +803,8 @@ public class PunchScript : MonoBehaviour
     {
         return v1.x >= v2.x && v1.y >= v2.y && v1.z >= v2.z;
     }
-
+    public bool getUseController()
+    {
+        return useController;
+    }
 }
