@@ -119,9 +119,9 @@ public class EnemyHealthScript : MonoBehaviour
                 }
             }
         }
-        if (!charController.drop)
+        if (damageIsFromPlayer)
         {
-            damageIsFromPlayer = false;
+            damageIsFromPlayer = charController.IsKnockedDown();
         }
         if (EnemyHealth > Val0)
         {
