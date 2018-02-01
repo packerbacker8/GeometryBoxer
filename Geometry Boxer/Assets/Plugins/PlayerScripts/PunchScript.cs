@@ -118,6 +118,13 @@ public class PunchScript : MonoBehaviour
     protected bool growingSpecial;
     protected bool updateCollisionCheck;
 
+    protected bool canQueueAttack;
+    protected bool readyToExecuteQueuedAttack;
+    protected CharacterAnimations queuedAttack;
+    protected float leewayTime;
+	protected bool queuedLeftArmAttack;
+	protected bool queuedRightArmAttack;
+
     protected float leftArmXAxis;
     protected float leftArmYAxis;
     protected float rightArmXAxis;
@@ -190,6 +197,13 @@ public class PunchScript : MonoBehaviour
         rightArmAttack = false;
         leftFootAttack = false;
         rightFootAttack = false;
+
+        canQueueAttack = false;
+        queuedAttack = InitCharacterAnimationStruct();
+        readyToExecuteQueuedAttack = false;
+        leewayTime = 0.4f;
+		queuedLeftArmAttack = false;
+		queuedRightArmAttack = false;
         movementAndCameraDisabled = false;
         useController = false;
         isAttacking = false;
@@ -285,6 +299,7 @@ public class PunchScript : MonoBehaviour
 				rightArmAttack = false;
 				leftFootAttack = false;
 				rightFootAttack = false;
+                canQueueAttack = false;
 
                 leftFistCollider.radius = leftFistStartSize.radius;
                 leftFistCollider.height = leftFistStartSize.height;
@@ -295,21 +310,67 @@ public class PunchScript : MonoBehaviour
                 leftFootCollider.size = leftFootStartSize.size;
                 rightFootCollider.center = rightFootStartSize.center;
                 rightFootCollider.size = rightFootStartSize.size;
+
+                if (queuedAttack.actionIndex != -1)
+                {
+                    readyToExecuteQueuedAttack = true;
+                    return;
+                }
+
+
             }
         }
-        else
-        {
-            leftFistCollider.radius = leftFistStartSize.radius;
-            leftFistCollider.height = leftFistStartSize.height;
-            rightFistCollider.radius = rightFistStartSize.radius;
-            rightFistCollider.height = rightFistStartSize.height;
+       // else if (readyToExecuteQueuedAttack)
+      //  {
+       //     anim.SetInteger("ActionIndex", queuedAttack.actionIndex);
+       //     anim.CrossFadeInFixedTime(queuedAttack.animName, queuedAttack.transitionTime, queuedAttack.animLayer, queuedAttack.playTime);
+       //     SetCurrentAnimTime(queuedAttack);
+       //     anim.SetInteger("ActionIndex", -1);
+       //
+       //     readyToExecuteQueuedAttack = false;
+       //     queuedAttack = InitCharacterAnimationStruct();
+       //     return;
+       // }
+       // else //if()
+       // {
+            //leftFistCollider.radius = leftFistStartSize.radius;
+           // leftFistCollider.height = leftFistStartSize.height;
+           // rightFistCollider.radius = rightFistStartSize.radius;
+           // rightFistCollider.height = rightFistStartSize.height;
 
-            leftFootCollider.center = leftFootStartSize.center;
-            leftFootCollider.size = leftFootStartSize.size;
-            rightFootCollider.center = rightFootStartSize.center;
-            rightFootCollider.size = rightFootStartSize.size;
+           // leftFootCollider.center = leftFootStartSize.center;
+           // leftFootCollider.size = leftFootStartSize.size;
+           // rightFootCollider.center = rightFootStartSize.center;
+            //rightFootCollider.size = rightFootStartSize.size;
             if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
             {
+                if (isAttacking)
+                {
+                //do not allow player to queue up an attack if currently attacking and is over leeway time... so do nothing this frame
+                    if (currentAnimLength <= leewayTime)
+                    {
+                        canQueueAttack = true;
+                    }
+                    else
+                    {
+                        canQueueAttack = false;
+                        return;
+                    }
+                    
+                }
+
+
+               // if (readyToExecuteQueuedAttack)
+                //{
+               //     anim.SetInteger("ActionIndex", queuedAttack.actionIndex);
+               //     anim.CrossFadeInFixedTime(queuedAttack.animName, queuedAttack.transitionTime, queuedAttack.animLayer, queuedAttack.playTime);
+              //      SetCurrentAnimTime(queuedAttack);
+              //      anim.SetInteger("ActionIndex", -1);
+
+              //      readyToExecuteQueuedAttack = false;
+               //     queuedAttack = InitCharacterAnimationStruct();
+              //      return;
+              //  }
                 if (useController) //controller controls
                 {
                     //Left arm punching
@@ -382,13 +443,49 @@ public class PunchScript : MonoBehaviour
                         rightFootAttack = true;
                         ThrowHiKick();
                     }
+                    else if (!isAttacking && readyToExecuteQueuedAttack)
+                    {
+                        //Debug.Log("EXECUTING QUEUED ATTACK");
+                        anim.SetInteger("ActionIndex", queuedAttack.actionIndex);
+                        anim.CrossFadeInFixedTime(queuedAttack.animName, queuedAttack.transitionTime, queuedAttack.animLayer, queuedAttack.playTime);
+                        SetCurrentAnimTime(queuedAttack);
+                        anim.SetInteger("ActionIndex", -1);
+						leftArmAttack = queuedLeftArmAttack;
+						rightArmAttack = queuedRightArmAttack;
+                        //return;
+                    }
+					
+
                 }
+
+			if (readyToExecuteQueuedAttack)
+			{
+				readyToExecuteQueuedAttack = false;
+				queuedAttack = InitCharacterAnimationStruct();
+			}
+
+				
             }
             else
             {
-                //do something if down on the ground, ground combat
-            }
+            //do something if down on the ground, ground combat
+            leftFistCollider.radius = leftFistStartSize.radius;
+            leftFistCollider.height = leftFistStartSize.height;
+            rightFistCollider.radius = rightFistStartSize.radius;
+            rightFistCollider.height = rightFistStartSize.height;
+
+            leftFootCollider.center = leftFootStartSize.center;
+            leftFootCollider.size = leftFootStartSize.size;
+            rightFootCollider.center = rightFootStartSize.center;
+            rightFootCollider.size = rightFootStartSize.size;
+
+			if (readyToExecuteQueuedAttack)
+			{
+				readyToExecuteQueuedAttack = false;
+				queuedAttack = InitCharacterAnimationStruct();
+			}
         }
+        //}
 
     }
 
@@ -416,6 +513,12 @@ public class PunchScript : MonoBehaviour
                     {
                         currentAnim.animLayer = 0;
                     }
+                    if (canQueueAttack)
+                    {
+                        queuedAttack = currentAnim;
+						queuedLeftArmAttack = leftArmAttack;
+						queuedRightArmAttack = rightArmAttack;
+                    }
                     break;
                 }
             }
@@ -440,15 +543,25 @@ public class PunchScript : MonoBehaviour
                     {
                         currentAnim.animLayer = 1;
                     }
+                    if (canQueueAttack)
+                    {
+                        queuedAttack = currentAnim;
+						queuedLeftArmAttack = leftArmAttack;
+						queuedRightArmAttack = rightArmAttack;
+                    }
                     break;
                 }
             }
         }
-        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
-        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
-        //going to need to determine when animation ends to allow next triggering event
-        SetCurrentAnimTime(currentAnim);
-        anim.SetInteger("ActionIndex", -1);
+
+        if (!isAttacking)
+        {
+            anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+            anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+            //going to need to determine when animation ends to allow next triggering event
+            SetCurrentAnimTime(currentAnim);
+            anim.SetInteger("ActionIndex", -1);
+        }
     }
 
     /// <summary>
@@ -465,6 +578,13 @@ public class PunchScript : MonoBehaviour
             {
                 leftFistCollider.enabled = true;
                 currentAnim = action;
+
+                if (canQueueAttack)
+                {
+                    queuedAttack = currentAnim;
+					queuedLeftArmAttack = leftArmAttack;
+					queuedRightArmAttack = rightArmAttack;
+                }
                 break;
             }
             if (limb == Limbs.rightArm && action.animName == "RightUpperCut")
@@ -479,13 +599,24 @@ public class PunchScript : MonoBehaviour
                 {
                     currentAnim.animLayer = 1; //forced
                 }
+
+                if (canQueueAttack)
+                {
+                    queuedAttack = currentAnim;
+					queuedLeftArmAttack = leftArmAttack;
+					queuedRightArmAttack = rightArmAttack;
+                }
                 break;
             }
         }
-        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
-        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
-        SetCurrentAnimTime(currentAnim);
-        anim.SetInteger("ActionIndex", -1);
+
+        if (!isAttacking)
+        {
+            anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+            anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+            SetCurrentAnimTime(currentAnim);
+            anim.SetInteger("ActionIndex", -1);
+        }
 
     }
 
@@ -501,13 +632,21 @@ public class PunchScript : MonoBehaviour
             {
                 rightFootCollider.enabled = true;
                 currentAnim = action;
+                if (canQueueAttack)
+                {
+                    queuedAttack = currentAnim;
+                }
                 break;
             }
         }
-        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
-        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
-        SetCurrentAnimTime(currentAnim);
-        anim.SetInteger("ActionIndex", -1);
+
+        if (!isAttacking)
+        {
+            anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+            anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+            SetCurrentAnimTime(currentAnim);
+            anim.SetInteger("ActionIndex", -1);
+        }
     }
 
 
