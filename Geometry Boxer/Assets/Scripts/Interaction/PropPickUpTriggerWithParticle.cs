@@ -17,7 +17,7 @@ namespace RootMotion.Demos
 
         void OnTriggerEnter(Collider collider)
         {
-            if(collider.transform.root.tag == "Player" || collider.transform.root.tag == "EnemyContainer")
+            if(collider.transform.root.tag == "Player" || collider.tag.Contains("Enemy"))
             {
                 particles.gameObject.transform.parent = null;
                 particles.transform.localScale = Vector3.one;

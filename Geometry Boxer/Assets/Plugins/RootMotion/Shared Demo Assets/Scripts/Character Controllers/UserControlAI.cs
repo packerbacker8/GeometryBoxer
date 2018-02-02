@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.AI;
 using Enemy;
+using RootMotion.Dynamics;
+
 namespace RootMotion.Demos
 {
 
@@ -35,6 +37,7 @@ namespace RootMotion.Demos
 
         private NavMeshAgent agent;
         private CharacterPuppet characterPuppet;
+        private BehaviourPuppet behaviourPuppet;
 
         private int attackIndex;
         private int swingAnimLayer = 1;
@@ -63,7 +66,9 @@ namespace RootMotion.Demos
             sfxManager = FindObjectOfType<SFX_Manager>();
             agent = GetComponent<NavMeshAgent>();
             characterPuppet = GetComponent<CharacterPuppet>();
-            anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+            behaviourPuppet = transform.parent.gameObject.GetComponentInChildren<BehaviourPuppet>();
+
+            anim = transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
             //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
             agent.nextPosition = transform.position;
             drop = false;
@@ -73,7 +78,6 @@ namespace RootMotion.Demos
             attackStyle.setUp(stoppingDistance, stoppingThreshold,
                 jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
             dead = false;
-
         }
 
         protected override void Update()
@@ -84,6 +88,7 @@ namespace RootMotion.Demos
                 //Vector3 targetDir = moveTarget.position - transform.position;
                 //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
                 AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+
                 if (!movementStyle.getPlayerTarget())
                 {
                     agent.enabled = false;
@@ -150,6 +155,13 @@ namespace RootMotion.Demos
             agent.enabled = false;
         }
 
-
+        /// <summary>
+        /// Returns if the enemy is knocked down or active.
+        /// </summary>
+        /// <returns>If the enemy is in unpinned state returns true, otherwise false.</returns>
+        public bool IsKnockedDown()
+        {
+            return behaviourPuppet.state == BehaviourPuppet.State.Unpinned;
+        }
     }
 }

@@ -10,10 +10,7 @@ public class FireHydrantForce : MonoBehaviour
     private Collider capCollider;
     private float activateTime;
     private float activateCount;
-    //private float abcTime;
-    //private float abcTimeThreshold;
-    //private GameObject abcObj;
-    //private GameObject abcObjLoop;
+
 
     private void Start()
     {
@@ -22,45 +19,26 @@ public class FireHydrantForce : MonoBehaviour
         capCollider.enabled = false;
         activateTime = 1f;
         activateCount = 0f;
-        //abcTime = 0f;
-        //abcTimeThreshold = 2.3f;
-        //abcObj = this.transform.GetChild(0).gameObject;
-        //abcObjLoop = this.transform.GetChild(1).gameObject;
-        //abcObj.SetActive(false);
-        //abcObjLoop.SetActive(false);
     }
 
     public void LateUpdate()
     {
-        if(!this.transform.parent && !particles.isEmitting)
+        if (!this.transform.parent && !particles.isEmitting)
         {
             activateCount += Time.deltaTime;
-            if(activateCount > activateTime)
+            if (activateCount > activateTime)
             {
                 particles.Play();
                 capCollider.enabled = true;
-                //abcObj.SetActive(true);
             }
         }
-        /*
-        if(abcObj.activeInHierarchy)
-        {
-            abcTime += Time.deltaTime;
-            if(abcTime > abcTimeThreshold)
-            {
-                abcObj.SetActive(false);
-                abcObjLoop.SetActive(true);
-            }
-        }*/
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.transform.tag.Contains("Player"))
+        if (other.transform.tag.Contains("Player"))
         {
-            //other.transform.root.GetComponentInChildren<PuppetMaster>().pinWeight = 0;
-            //other.transform.root.GetComponentInChildren<PuppetMaster>().muscleWeight = 0;
-            if(other.transform.root.GetComponentInChildren<BehaviourPuppet>() == null)
+            if (other.transform.root.GetComponentInChildren<BehaviourPuppet>() == null)
             {
                 other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
             }
@@ -71,7 +49,7 @@ public class FireHydrantForce : MonoBehaviour
                 other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
             }
         }
-        else if(other.transform.tag.Contains("Enemy"))
+        else if (other.transform.tag.Contains("Enemy"))
         {
             GameObject findingRoot = other.gameObject;
             while (findingRoot.tag != "EnemyRoot")
@@ -88,7 +66,7 @@ public class FireHydrantForce : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.transform.tag.Contains("Player")|| other.transform.tag.Contains("Enemy"))
+        if (other.transform.tag.Contains("Player") || other.transform.tag.Contains("Enemy"))
         {
             other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
         }
@@ -119,5 +97,5 @@ public class FireHydrantForce : MonoBehaviour
             behavePup.dropProps = true;
             other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
         }
-        }
+    }
 }
