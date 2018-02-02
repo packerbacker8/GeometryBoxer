@@ -11,6 +11,7 @@ public class EnemyHealthScript : MonoBehaviour
     public float deathDelay = 20f;
     public float damageThreshold = 5f;
     public float heavyDamageOffset = 10f;
+    public GameObject deathObject;
 
     //Sound Engine Needs
     private AudioSource source;
@@ -59,6 +60,7 @@ public class EnemyHealthScript : MonoBehaviour
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
         charController = GetComponentInChildren<UserControlAI>();
         ShowDmg = this.GetComponent<SwapMaterials>();
+        deathObject.SetActive(false);
         Val4 = 0;
         Val0 = 4 * (EnemyHealth / 5);
         Val1 = 3 * (EnemyHealth / 5);
@@ -156,7 +158,7 @@ public class EnemyHealthScript : MonoBehaviour
     {
         if (!dead)
         {
-            anim.Play("Death");
+            //anim.Play("Death");
 
             if (sfxManager.maleDeath.Count > 0)
             {
@@ -174,7 +176,11 @@ public class EnemyHealthScript : MonoBehaviour
             }
 
             dead = true;
-            Destroy(this.transform.gameObject, deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+
+            deathObject.SetActive(true);
+            deathObject.GetComponent<ScatterAndDestroy>().BeginDestruction(deathDelay);
+
+            Destroy(this.transform.gameObject);  //To be destroyed by game manager if body count exceeds certain amout.
         }
     }
 
