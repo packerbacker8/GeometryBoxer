@@ -8,6 +8,9 @@ public class CharacterSelectController : MonoBehaviour
     public GameObject cubeChar;
     public GameObject octahedronChar;
     public Selectable beginButton;
+    public Text textElement;
+    public Text cubemanText;
+    public Text octahedronText;
     public float speed = 1.0f;
 
     private string characterSelected;
@@ -23,28 +26,46 @@ public class CharacterSelectController : MonoBehaviour
     void Start()
     {
         characterSelected = "";
+        beginButton.GetComponent<Image>().color = Color.clear;
         beginButton.interactable = false;
         cubeChar.GetComponentInChildren<Light>().enabled = false;
         octahedronChar.GetComponentInChildren<Light>().enabled = false;
         cubeOrginalPos = cubeChar.transform.position;
         octahedronOriginalPos = octahedronChar.transform.position;
-        cubeForwardPos = new Vector3(cubeChar.transform.position.x, cubeChar.transform.position.y, cubeChar.transform.position.z + 5.5f);
-        octahedronForwardPos = new Vector3(octahedronChar.transform.position.x, octahedronChar.transform.position.y, octahedronChar.transform.position.z + 5.5f);
+        cubeForwardPos = new Vector3(cubeChar.transform.position.x, cubeChar.transform.position.y, cubeChar.transform.position.z - 0.5f);
+        octahedronForwardPos = new Vector3(octahedronChar.transform.position.x, octahedronChar.transform.position.y, octahedronChar.transform.position.z - 0.5f);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        textElement.text = "Pick Your Faction";
+        cubemanText.enabled = false;
+        octahedronText.enabled = false;
     }
 
     void Update()
     {
-        if(cubeSelected && !octaSelected)
+        if(!cubeSelected && !octaSelected)
         {
-            cubeChar.transform.position = Vector3.MoveTowards(cubeOrginalPos, cubeForwardPos, speed * Time.deltaTime);
-            octahedronChar.transform.position = Vector3.MoveTowards(octahedronForwardPos, octahedronOriginalPos, speed * Time.deltaTime);
+            beginButton.enabled = false;
         }
-        else if(octaSelected && !cubeSelected)
+        if(cubeSelected && !octaSelected)
         {
             cubeChar.transform.position = Vector3.MoveTowards(cubeForwardPos, cubeOrginalPos, speed * Time.deltaTime);
             octahedronChar.transform.position = Vector3.MoveTowards(octahedronOriginalPos, octahedronForwardPos, speed * Time.deltaTime);
+            beginButton.enabled = true;
+            textElement.text = "Fight as a Cubeman";
+            cubemanText.enabled = true;
+            octahedronText.enabled = false;
+            beginButton.GetComponent<Image>().color = Color.grey;
+        }
+        else if(octaSelected && !cubeSelected)
+        {
+            cubeChar.transform.position = Vector3.MoveTowards(cubeOrginalPos, cubeForwardPos, speed * Time.deltaTime);
+            octahedronChar.transform.position = Vector3.MoveTowards(octahedronForwardPos, octahedronOriginalPos, speed * Time.deltaTime);
+            beginButton.enabled = true;
+            textElement.text = "Fight as an Octahedron";
+            cubemanText.enabled = false;
+            octahedronText.enabled = true;
+            beginButton.GetComponent<Image>().color = Color.grey;
         }
     }
 
