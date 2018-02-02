@@ -105,7 +105,7 @@ namespace RootMotion.Demos
                     }
 
                 }
-                else if (!agent.enabled)
+                else if (!agent.enabled || drop)
                 {
                     drop = false;
                     agent.enabled = true;
@@ -148,6 +148,7 @@ namespace RootMotion.Demos
         {
             dead = true;
             agent.enabled = false;
+            Destroy(this);
         }
 
 
