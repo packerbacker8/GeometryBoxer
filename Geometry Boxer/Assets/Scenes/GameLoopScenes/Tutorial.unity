@@ -150,112 +150,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bb1270abca3964748819397b580c9a26, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &20634530
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 20634531}
-  - component: {fileID: 20634535}
-  - component: {fileID: 20634534}
-  - component: {fileID: 20634533}
-  - component: {fileID: 20634532}
-  m_Layer: 0
-  m_Name: Trigger5 (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &20634531
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 20634530}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 30, y: 4.49, z: -95.1}
-  m_LocalScale: {x: 46.16951, y: 26.22148, z: 38.757828}
-  m_Children: []
-  m_Father: {fileID: 2069398525}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &20634532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 20634530}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5acf18d90b4b30842a064987fd04fe7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvas: {fileID: 2128757378}
-  textKeyboard: 'Press B to activate/deactivate your Cube Power!
-
-    Press SPACE to jump.
-
-    Press SPACE again to slam down.'
-  textController: 'Press B to activate/deactivate your Cube Powers!
-
-    Press A to jump.
-
-    Press A again to slam down.'
-  ping: {fileID: 0}
---- !u!23 &20634533
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 20634530}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!65 &20634534
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 20634530}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &20634535
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 20634530}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &38219653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1018,7 +912,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: feb7e0c337885234f90773ce27fec0ad, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 879dfdcceb014744dad1d604c60073e4, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.435
   m_Pitch: 1
@@ -1746,7 +1640,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wall: {fileID: 1220199965}
-  punchingBag: {fileID: 1585625042}
   InvisibleContainer: {fileID: 560703296}
 --- !u!23 &290671249
 MeshRenderer:
@@ -1806,8 +1699,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 290671247}
   m_LocalRotation: {x: -0, y: 0.4176085, z: -0, w: 0.9086271}
-  m_LocalPosition: {x: 31.74, y: 2.69, z: -67.03}
-  m_LocalScale: {x: 9.460939, y: 9.460933, z: 33.369297}
+  m_LocalPosition: {x: 29.24, y: 2.69, z: -72.18}
+  m_LocalScale: {x: 9.460939, y: 9.460933, z: 16.521746}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 17
@@ -2348,9 +2241,9 @@ RectTransform:
   m_Father: {fileID: 2128757381}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1016.24, y: 52.28}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 732.3, y: -80}
   m_SizeDelta: {x: 1920, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &359160379
@@ -3298,112 +3191,6 @@ Transform:
   m_Father: {fileID: 136708756}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &554334922
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 554334923}
-  - component: {fileID: 554334927}
-  - component: {fileID: 554334926}
-  - component: {fileID: 554334925}
-  - component: {fileID: 554334924}
-  m_Layer: 0
-  m_Name: Trigger5 (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &554334923
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 554334922}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 51.4, y: 4.49, z: -81.5}
-  m_LocalScale: {x: 46.16951, y: 26.22148, z: 38.75783}
-  m_Children: []
-  m_Father: {fileID: 2069398525}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &554334924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 554334922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5acf18d90b4b30842a064987fd04fe7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvas: {fileID: 2128757378}
-  textKeyboard: 'Press B to activate/deactivate your Cube Power!
-
-    Press SPACE to jump.
-
-    Press SPACE again to slam down.'
-  textController: 'Press B to activate/deactivate your Cube Powers!
-
-    Press A to jump.
-
-    Press A again to slam down.'
-  ping: {fileID: 0}
---- !u!23 &554334925
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 554334922}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!65 &554334926
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 554334922}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &554334927
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 554334922}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &560703296
 GameObject:
   m_ObjectHideFlags: 0
@@ -5242,7 +5029,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 933349241}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 40.38, y: 6, z: -51.11}
+  m_LocalPosition: {x: 37.95, y: 6, z: -53.42}
   m_LocalScale: {x: 12.352789, y: 12.352789, z: 12.352789}
   m_Children: []
   m_Father: {fileID: 136708756}
@@ -10053,6 +9840,7 @@ GameObject:
   - component: {fileID: 1818993428}
   - component: {fileID: 1818993427}
   - component: {fileID: 1818993426}
+  - component: {fileID: 1818993430}
   m_Layer: 0
   m_Name: Trigger5
   m_TagString: Untagged
@@ -10066,13 +9854,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1818993424}
-  m_LocalRotation: {x: -0, y: 0.9510584, z: -0, w: 0.30901128}
-  m_LocalPosition: {x: 28.23, y: 4.49, z: -71.2}
-  m_LocalScale: {x: 15.860767, y: 9.007939, z: 7.9053335}
+  m_LocalRotation: {x: 0, y: 0.41760543, z: 0, w: 0.9086285}
+  m_LocalPosition: {x: 45.21, y: 4.49, z: -86.24}
+  m_LocalScale: {x: 55.722176, y: 16.159918, z: 50.751255}
   m_Children: []
   m_Father: {fileID: 2069398525}
   m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 144.001, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 49.367, z: 0}
 --- !u!114 &1818993426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10147,6 +9935,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1818993424}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1818993430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1818993424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd4007849174c174b8cb726ddfcc9cfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time: 15
+  punchingBag: {fileID: 1585625042}
 --- !u!1 &1860363997
 GameObject:
   m_ObjectHideFlags: 0
@@ -11431,8 +11232,6 @@ Transform:
   - {fileID: 1138980289}
   - {fileID: 346957311}
   - {fileID: 1818993425}
-  - {fileID: 554334923}
-  - {fileID: 20634531}
   m_Father: {fileID: 0}
   m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
