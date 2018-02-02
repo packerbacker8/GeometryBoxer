@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Demos;
 using RootMotion;
+using PlayerUI;
 
 public class OctahedronSpecials : PunchScript
 {
@@ -36,7 +37,7 @@ public class OctahedronSpecials : PunchScript
     private OctahedronStats stats;
 
     private MeshCollider specialFormCollider;
-    
+    protected GameObject playerUI;
 
     // Use this for initialization
     protected override void Start()
@@ -68,6 +69,9 @@ public class OctahedronSpecials : PunchScript
         isFloating = 0;
         specialRigid.maxAngularVelocity = Mathf.Infinity;
         specialRigid.angularDrag = angularDragAmount;
+
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<PlayerUserInterface>().SetDefultcoolDownTime(specialAttackCooldownTime);
     }
 
     // Update is called once per frame
@@ -364,6 +368,7 @@ public class OctahedronSpecials : PunchScript
         charController.GetComponent<CapsuleCollider>().enabled = true;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
         onCooldown = true;
+        playerUI.GetComponent<PlayerUserInterface>().UsedSpecialAttack();
         anim.SetInteger("ActionIndex", -1);
         anim.SetBool("IsStrafing", false);
         if (specialRigid.velocity.sqrMagnitude > 0)
