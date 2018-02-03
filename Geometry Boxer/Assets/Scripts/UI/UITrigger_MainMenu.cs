@@ -41,7 +41,7 @@ public class UITrigger_MainMenu : MonoBehaviour {
     {
         if(col.transform.root.tag == "Player")
         {
-            ui_root.SetActive(true);
+            //ui_root.SetActive(true);
             cameraTarget = cameraAngles[0];
         }
     }
@@ -53,7 +53,7 @@ public class UITrigger_MainMenu : MonoBehaviour {
     {
         if (col.transform.root.tag == "Player")
         {
-            ui_root.SetActive(false);
+            //ui_root.SetActive(false);
             cameraTarget = cameraAngles[1];
         }
     }
