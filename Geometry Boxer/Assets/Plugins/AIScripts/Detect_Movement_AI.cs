@@ -17,6 +17,7 @@ namespace Enemy
         private bool inZone;
         private float startAngle;
         public float rotateSpeed;
+        public float distance;
         public bool canMove()
         {
             return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
@@ -25,10 +26,13 @@ namespace Enemy
 
         public Vector3 move()
         {
-            if (canMove() && playerTarget)
+
+            if (canMove() && playerTarget)//playerTarget)
             {
+
                 return moveTarget.position;
             }
+
             return transform.position;
         }
 
@@ -39,23 +43,22 @@ namespace Enemy
             jumpDistance = jumpDis;
             //anim = animator;
             moveTarget = move;
-
+            StartCoroutine(checkDistance());
         }
 
         public void playerFound()
         {
-
-            playerTarget = true;
+            //playerTarget = true;
 
         }
 
         public void playerLost()
         {
-            if (playerTarget)
-            {
-                startAngle = transform.eulerAngles.y;
-            }
-            playerTarget = false;
+            //if (playerTarget)
+            //{
+            //    startAngle = transform.eulerAngles.y;
+            //}
+            //playerTarget = false;
         }
 
         public Quaternion rotateStyle()
@@ -83,6 +86,7 @@ namespace Enemy
             bounceAngle = 70f;
             startAngle = transform.eulerAngles.y;
             rotateSpeed = 1.5f;
+
         }
 
         // Update is called once per frame
@@ -94,6 +98,24 @@ namespace Enemy
         public bool getPlayerTarget()
         {
             return playerTarget;
+        }
+
+        private IEnumerator checkDistance()
+        {
+            while (true)
+            {
+                distance = Vector3.Distance(moveTarget.position, transform.position);
+                if (distance < 20f)
+                {
+                    Debug.Log("Found Player");
+                    playerTarget = true;
+                }
+                else
+                {
+                    playerTarget = false;
+                }
+                yield return new WaitForSeconds(.1f);
+            }
         }
     }
 }
