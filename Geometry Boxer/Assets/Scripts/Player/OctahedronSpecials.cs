@@ -30,6 +30,7 @@ public class OctahedronSpecials : PunchScript
     private bool specialIsSpeed = false;
     private bool tornadoMode = false;
     private bool isGrounded;
+    private bool floatCapped;
 
     private int isFloating;
 
@@ -65,6 +66,7 @@ public class OctahedronSpecials : PunchScript
         specialEndSize = new Vector3(specialFormSize * octahedronExtension, specialFormSize, specialFormSize);
 
         isGrounded = checkIfGrounded();
+        floatCapped = false;
         isFloating = 0;
         specialRigid.maxAngularVelocity = Mathf.Infinity;
         specialRigid.angularDrag = angularDragAmount;
@@ -113,6 +115,12 @@ public class OctahedronSpecials : PunchScript
             //too high
             if (isFloating > 0) 
             {
+                if(specialRigid.velocity.y > 0f)
+                {
+                    floatCapped = false;
+                }
+                if(!floatCapped) specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
+                floatCapped = true;
                 specialRigid.useGravity = true;
             }
             //too low
@@ -340,6 +348,7 @@ public class OctahedronSpecials : PunchScript
         charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
         charController.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         specialRigid.useGravity = false;
+        floatCapped = false;
         launched = false;
         UpdatePos(charController.transform, specialForm.transform);
         //play animation of morphing into ball
