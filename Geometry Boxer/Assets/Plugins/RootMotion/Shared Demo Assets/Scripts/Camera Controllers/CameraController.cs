@@ -50,6 +50,8 @@ namespace RootMotion
         private bool useController;
         private string[] controllerInfo;
         private float distanceOffset;
+        private int layer;
+        private int layermask;
 
         // Initiate, set the params to the current transformation of the camera relative to the target
         protected virtual void Awake()
@@ -64,6 +66,8 @@ namespace RootMotion
             cam = GetComponent<Camera>();
 
             lastUp = rotationSpace != null ? rotationSpace.up : Vector3.up;
+            layer = 4;
+            layermask = 1 << layer;
         }
 
         protected virtual void Start()
@@ -182,9 +186,11 @@ namespace RootMotion
 
             Vector3 relativePos = target.position - desiredPos;
             RaycastHit hit;
-
-            if (Physics.Raycast(desiredPos, relativePos, out hit, LayerMask.GetMask("Water")))
+            
+            if (Physics.Raycast(desiredPos, relativePos, out hit, 100f, layermask))
             {
+                Debug.Log("Hit this: " + hit.transform.gameObject.name);
+                Debug.Log("Hit this layer: " + hit.transform.gameObject.layer);
                 Debug.DrawLine(target.position, hit.point);
                 distanceOffset = distance - hit.distance + 0.8f;
                 //distanceOffset += Time.deltaTime * 10f;
@@ -197,7 +203,6 @@ namespace RootMotion
                 {
                     distanceOffset = 0;
                 }
-
             }
 
             // Position
