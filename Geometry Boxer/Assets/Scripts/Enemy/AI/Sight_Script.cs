@@ -34,6 +34,7 @@ public class Sight_Script : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Sight Radius OnTriggerEnter, root = " + other.transform.name);
         //Debug.Log("Triggered started: " + other.gameObject.tag);
         if (other.transform.root.tag == "Player")
         {

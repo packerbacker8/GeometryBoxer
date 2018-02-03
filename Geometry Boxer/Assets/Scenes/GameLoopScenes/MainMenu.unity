@@ -390,6 +390,10 @@ MonoBehaviour:
   fistGrowMultiplier: 2
   footGrowMultiplier: 5
   punchForce: 50
+  rightShoulder: {fileID: 0}
+  leftShoulder: {fileID: 0}
+  rightThigh: {fileID: 0}
+  leftThigh: {fileID: 0}
   leftJabKey: 113
   rightJabKey: 101
   hookModifierKey: 306
@@ -399,6 +403,9 @@ MonoBehaviour:
   dropWeapon: 120
   leftJabControllerButton: LeftBumper
   rightJabControllerButton: RightBumper
+  upperCutButton: XButton
+  hiKickButton: YButton
+  specialAttackButton: BButton
   specialForm: {fileID: 405899326}
   specialFormSize: 4
   growSpeed: 3
@@ -1168,7 +1175,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.58694863}
+  m_AnchoredPosition: {x: 0, y: -0.000001989305}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &349708142
@@ -2498,7 +2505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2506,7 +2513,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 5984c29f9da553f43b3742fba93feb66, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
@@ -3180,7 +3187,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!82 &953985081
+--- !u!82 &953985079
 AudioSource:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -3189,9 +3196,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: a04e77e1aeaa3fa428767f96398a53e8, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 87d977f38b5cb1e45a8fdbb0af72beab, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.39
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -3229,7 +3236,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 2
       time: 0
-      value: 0.792
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -3253,7 +3260,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 2
       time: 0
-      value: 1
+      value: 1.1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -4281,7 +4288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -4289,7 +4296,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 5984c29f9da553f43b3742fba93feb66, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
@@ -5060,7 +5067,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1828200954}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.90179306
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5998,7 +6005,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4755918137444782, guid: d4bff88945df6ee4d86ce74f4c97b402, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.516
       objectReference: {fileID: 0}
     - target: {fileID: 4755918137444782, guid: d4bff88945df6ee4d86ce74f4c97b402, type: 2}
       propertyPath: m_LocalPosition.z
@@ -6023,6 +6030,16 @@ Prefab:
     - target: {fileID: 4755918137444782, guid: d4bff88945df6ee4d86ce74f4c97b402, type: 2}
       propertyPath: m_RootOrder
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 153906358533034778, guid: d4bff88945df6ee4d86ce74f4c97b402,
+        type: 2}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.30499995
+      objectReference: {fileID: 0}
+    - target: {fileID: 153772474646223914, guid: d4bff88945df6ee4d86ce74f4c97b402,
+        type: 2}
+      propertyPath: m_ConnectedAnchor.y
+      value: 0.516
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d4bff88945df6ee4d86ce74f4c97b402, type: 2}
@@ -6195,7 +6212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.35294116, g: 0.35294116, b: 0.35294116, a: 1}
+  m_Color: {r: 0.35294116, g: 0.35294116, b: 0.35294116, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6380,7 +6397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.894}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6635,7 +6652,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.90179306}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7579,7 +7596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0.5}
+  m_Color: {r: 1, g: 0, b: 0, a: 0.5}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -7587,7 +7604,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 5984c29f9da553f43b3742fba93feb66, type: 3}
     m_FontSize: 14
     m_FontStyle: 2
     m_BestFit: 0
@@ -7663,7 +7680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -7671,7 +7688,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 5984c29f9da553f43b3742fba93feb66, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
