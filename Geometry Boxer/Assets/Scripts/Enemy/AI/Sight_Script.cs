@@ -49,7 +49,7 @@ public class Sight_Script : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Triggered started: " + other.gameObject.tag);
+
         if (other.transform.root.tag == "Player")
         {
             //SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);

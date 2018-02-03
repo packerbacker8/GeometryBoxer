@@ -13,6 +13,11 @@ public class PunchingBagTrigger : MonoBehaviour {
     public AudioClip up;
     public AudioClip open;
 
+    public string controllerJab;
+    public string controllerKick;
+    public string controllerCombo;
+    public string controllerHook;
+
     private KeyCode jab;
     private KeyCode hook;
     private KeyCode combo;
@@ -36,6 +41,12 @@ public class PunchingBagTrigger : MonoBehaviour {
     private bool kicked = false;
     private bool lastPing = false;
 
+    private string leftJabControllerButton = "LeftBumper";
+    private string rightJabControllerButton = "RightBumper";
+    private string upperCutButton = "XButton";
+    private string hiKickButton = "YButton";
+    private string specialAttackButton = "BButton";
+
     // Use this for initialization
     void Start ()
     {
@@ -52,33 +63,40 @@ public class PunchingBagTrigger : MonoBehaviour {
         kick = punchScript.hiKickKey;
 
         wallTargetLocation = new Vector3(wall.transform.position.x, wall.transform.position.y - 20f, wall.transform.position.z);
-	}
+
+        leftJabControllerButton = punchScript.leftJabControllerButton;
+        rightJabControllerButton = punchScript.rightJabControllerButton;
+        upperCutButton = punchScript.upperCutButton;
+        hiKickButton = punchScript.hiKickButton;
+        specialAttackButton = punchScript.specialAttackButton;
+
+    }
     public void setJabText()
     {
-        text.text = "Hit the punching bag with " + jab.ToString();
+        text.text = "Hit the punching bag with " + (punchScript.getUseController() ? controllerJab : jab.ToString());
         pinger.PlayOneShot(ping, 0.5f);
     }
     void Update()
     {
-        if(Input.GetKeyDown(jab) && !jabbed && damageTaken > prevDamage)
+        if((Input.GetKeyDown(jab) || Input.GetButtonDown(rightJabControllerButton)) && !jabbed && damageTaken > prevDamage)
         {
             jabbed = true;
-            text.text = "Good! Hook the bag with " + hook.ToString();
+            text.text = "Good! Hook the bag with " + (punchScript.getUseController() ? controllerHook : hook.ToString());
             pinger.PlayOneShot(ping, 0.5f);
         }
-        else if (Input.GetKeyDown(hook) && !hooked && jabbed && damageTaken > prevDamage)
+        else if ((Input.GetKeyDown(hook) || (Input.GetButtonDown(rightJabControllerButton) && Input.GetButton(upperCutButton)) ) && !hooked && jabbed && damageTaken > prevDamage)
         {
             hooked = true;
-            text.text = "Nice! Combo hit the punching bag with " + combo.ToString();
+            text.text = "Nice! Combo hit the punching bag with " + (punchScript.getUseController() ? controllerCombo : combo.ToString());
             pinger.PlayOneShot(ping, 0.5f);
         }
-        else if(Input.GetKeyDown(combo) && !comboed && hooked && damageTaken > prevDamage)
+        else if((Input.GetKeyDown(combo) || Input.GetButtonDown(leftJabControllerButton)) && !comboed && hooked && jabbed && damageTaken > prevDamage)
         {
             comboed = true;
-            text.text = "Ouch! Kick the bag with " + kick.ToString();
+            text.text = "Ouch! Kick the bag with " + (punchScript.getUseController() ? controllerKick : kick.ToString());
             pinger.PlayOneShot(ping, 0.5f);
         }
-        else if(Input.GetKeyDown(kick) && !kicked && damageTaken > prevDamage)
+        else if((Input.GetKeyDown(kick) || Input.GetButtonDown(hiKickButton)) && !kicked && jabbed && hooked && comboed && damageTaken > prevDamage)
         {
             kicked = true;
             if (!weaponStandsUp)
@@ -90,7 +108,7 @@ public class PunchingBagTrigger : MonoBehaviour {
                 weaponStandsUp = true;
                 pinger.PlayOneShot(up, 0.25f);
             }
-            text.text = "Grab a melee weapon from behind you!\nThe same buttons swing it around. Press X to drop items. \nWhack the punching bag some more.";
+            text.text = "Grab a melee weapon from behind you!\nThe same buttons swing it around. Press " + (punchScript.getUseController() ? "D-Pad Down" : "X") + " to drop items. \nWhack the punching bag some more.";
             pinger.PlayOneShot(ping, 0.5f);
             meleeDamageStart = damageTaken;
             meleeDamageEnd = meleeDamageStart + 50f;

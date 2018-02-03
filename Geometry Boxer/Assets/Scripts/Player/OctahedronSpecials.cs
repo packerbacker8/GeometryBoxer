@@ -30,6 +30,7 @@ public class OctahedronSpecials : PunchScript
     private bool specialIsSpeed = false;
     private bool tornadoMode = false;
     private bool isGrounded;
+    private bool floatCapped;
 
     private int isFloating;
 
@@ -65,6 +66,7 @@ public class OctahedronSpecials : PunchScript
         specialEndSize = new Vector3(specialFormSize * octahedronExtension, specialFormSize, specialFormSize);
 
         isGrounded = checkIfGrounded();
+        floatCapped = false;
         isFloating = 0;
         specialRigid.maxAngularVelocity = Mathf.Infinity;
         specialRigid.angularDrag = angularDragAmount;
@@ -74,8 +76,27 @@ public class OctahedronSpecials : PunchScript
     protected override void Update()
     {
         base.Update();
-        //anim.SetFloat("Forward", 1.0f);
-        //Debug.Log(userControlThirdPersonRef.state.move + " forward: " + charMeleeDemoRef.transform.forward);
+        if(updateCollisionCheck)
+        {
+            //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            GameObject walker3 = rightThigh;
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = true;
+                walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+                walker3 = walker3.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = true;
+            walker2.GetComponent<CollisionReceived>().sendDamage = true;
+            walker3.GetComponent<CollisionReceived>().sendDamage = true;
+            updateCollisionCheck = false;
+        }
 
         if (growingSpecial)
         {
@@ -94,6 +115,12 @@ public class OctahedronSpecials : PunchScript
             //too high
             if (isFloating > 0) 
             {
+                if(specialRigid.velocity.y > 0f)
+                {
+                    floatCapped = false;
+                }
+                if(!floatCapped) specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
+                floatCapped = true;
                 specialRigid.useGravity = true;
             }
             //too low
@@ -114,13 +141,14 @@ public class OctahedronSpecials : PunchScript
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if ((Input.GetKeyDown(specialAttack)))
+            if ((Input.GetKeyDown(specialAttack)) || Input.GetButtonDown(specialAttackButton))
             {
+                Debug.Log("Special!");
                 DeactivateSpecialAttack();
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if (Input.GetKeyDown(useAttack) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
+            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
             {
                 moveDir = Vector3.forward;
                 moveDir = cam.transform.TransformDirection(moveDir);
@@ -154,7 +182,7 @@ public class OctahedronSpecials : PunchScript
         else
         {
             UpdatePos(specialForm.transform, charController.transform);
-            if ((Input.GetKeyDown(specialAttack)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
             {
                 growingSpecial = true;
                 ActivateSpecialAttack();
@@ -320,10 +348,12 @@ public class OctahedronSpecials : PunchScript
         charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
         charController.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         specialRigid.useGravity = false;
+        floatCapped = false;
         launched = false;
         UpdatePos(charController.transform, specialForm.transform);
         //play animation of morphing into ball
         isAttacking = false;
+        updateCollisionCheck = true;
         for (int i = 0; i < this.transform.childCount; i++) //move camera back to player here
         {
             if (this.transform.GetChild(i).gameObject != specialForm)
@@ -396,6 +426,85 @@ public class OctahedronSpecials : PunchScript
         charController.GetComponent<CapsuleCollider>().enabled = false;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
         SendMessage("PowerUpActive", true, SendMessageOptions.DontRequireReceiver);
+    }
+
+    /*
+     * Overriding these functions as a way to turn off collisions for the arms and 
+     * legs when fighting.
+     */
+    public override void ThrowSinglePunch(Limbs limb)
+    {
+        base.ThrowSinglePunch(limb);
+        if (limb == Limbs.leftArm)
+        {
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            walker2.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+        else
+        {
+            GameObject walker = rightShoulder;
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+    }
+
+    public override void ThrowHiKick()
+    {
+        base.ThrowHiKick();
+        GameObject walker = rightThigh;
+        while (walker.transform.childCount > 0)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            //assumes there is only one child
+            walker = walker.transform.GetChild(0).gameObject;
+        }
+        walker.GetComponent<CollisionReceived>().sendDamage = false;
+    }
+
+    public override void ThrowUppercut(Limbs limb)
+    {
+        base.ThrowUppercut(limb);
+        if (limb == Limbs.leftArm)
+        {
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            walker2.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+        else
+        {
+            GameObject walker = rightShoulder;
+            while (walker.transform.childCount > 0)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+            }
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
     }
 
 }

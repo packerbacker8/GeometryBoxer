@@ -83,6 +83,7 @@ public class SaveAndLoadGame : MonoBehaviour
         }
         else
         {
+            saveData = new GameData { characterType = "Cube" };
             LoadLevel.loader.LoadMainMenu();
         }
     }

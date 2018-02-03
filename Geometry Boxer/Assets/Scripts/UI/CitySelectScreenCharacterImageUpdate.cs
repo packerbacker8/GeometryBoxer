@@ -29,7 +29,7 @@ public class CitySelectScreenCharacterImageUpdate : MonoBehaviour {
             }
         }
 
-        Debug.Log("Active Player Name: " + activePlayer.name.ToString());
+
 
         image = playerImage.GetComponent<Image>();
 
