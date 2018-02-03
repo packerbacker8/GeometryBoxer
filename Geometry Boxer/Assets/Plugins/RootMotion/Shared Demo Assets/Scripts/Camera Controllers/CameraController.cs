@@ -40,12 +40,13 @@ namespace RootMotion {
 		public float y { get; private set; } // The current y rotation of the camera
 		public float distanceTarget { get; private set; } // Get/set distance
 
-		private Vector3 targetDistance, position;
+		private Vector3 targetDistance, position, desiredPos;
 		private Quaternion rotation = Quaternion.identity;
 		private Vector3 smoothPosition;
 		private Camera cam;
         private bool useController;
         private string[] controllerInfo;
+        private float distanceOffset;
 
         // Initiate, set the params to the current transformation of the camera relative to the target
         protected virtual void Awake () {
@@ -69,6 +70,8 @@ namespace RootMotion {
             {
                 useController = true;
             }
+            distanceOffset = 0;
+            desiredPos = this.transform.position;
         }
 
 
@@ -163,11 +166,32 @@ namespace RootMotion {
 			if (!smoothFollow) smoothPosition = target.position;
 			else smoothPosition = Vector3.Lerp(smoothPosition, target.position, deltaTime * followSpeed);
 
-			// Position
-			position = smoothPosition + rotation * (offset - Vector3.forward * distance);
-			
-			// Translating the camera
-			transform.position = position;
+            desiredPos = smoothPosition + rotation * (offset - Vector3.forward * distance);
+
+            Vector3 relativePos = target.position - desiredPos;
+            RaycastHit hit;
+            
+            if (Physics.Raycast(desiredPos, relativePos, out hit, LayerMask.GetMask("Water")))
+            {
+                Debug.DrawLine(target.position, hit.point);
+                distanceOffset = distance - hit.distance + 0.8f;
+                //distanceOffset += Time.deltaTime * 10f;
+                distanceOffset = Mathf.Clamp(distanceOffset, 0, distance);
+            }
+            else if(distanceOffset > 0)
+            {
+                distanceOffset -= Time.deltaTime;
+                if(distanceOffset < 0)
+                {
+                    distanceOffset = 0;
+                }
+                
+            }
+            // Position
+            position = smoothPosition + rotation * (offset + Vector3.forward * (-distance + distanceOffset));
+
+            // Translating the camera
+            transform.position = position;
 			transform.rotation = rotation;
 		}
 
