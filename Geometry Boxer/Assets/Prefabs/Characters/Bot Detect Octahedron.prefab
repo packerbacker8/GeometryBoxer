@@ -255,10 +255,10 @@ GameObject:
   - component: {fileID: 114572585457740700}
   - component: {fileID: 54451332316909650}
   - component: {fileID: 136904562361669302}
+  - component: {fileID: 114270143605663190}
   - component: {fileID: 195170302509651472}
   - component: {fileID: 114970562261635286}
   - component: {fileID: 114328992854906530}
-  - component: {fileID: 114055964071723224}
   m_Layer: 8
   m_Name: Character Controller
   m_TagString: Enemy
@@ -818,21 +818,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1921624184321272
-GameObject:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4531895097535984}
-  m_Layer: 8
-  m_Name: SightRadius
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1973775493238286
 GameObject:
   m_ObjectHideFlags: 1
@@ -1131,7 +1116,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4744169708196062}
-  - {fileID: 4531895097535984}
   m_Father: {fileID: 4346007422413412}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1202,19 +1186,6 @@ Transform:
   - {fileID: 4357168996383918}
   m_Father: {fileID: 4511849155652574}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4531895097535984
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1921624184321272}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4410383767786506}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4550010173926140
 Transform:
@@ -1962,17 +1933,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
---- !u!114 &114055964071723224
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1246335931154570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cbdc13ec2246684389937aad74e516f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114066739062963490
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2309,6 +2269,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114270143605663190
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1246335931154570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1dc32ba6a517024781820aa1034869f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTarget: 0
+  bounceAngle: 0
+  rotateSpeed: 0
+  distance: 0
 --- !u!114 &114319160262049676
 MonoBehaviour:
   m_ObjectHideFlags: 1
