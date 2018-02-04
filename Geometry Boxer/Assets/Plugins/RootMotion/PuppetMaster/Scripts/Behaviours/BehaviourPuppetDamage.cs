@@ -76,8 +76,12 @@ namespace RootMotion.Dynamics {
 				float mlp = PuppetMasterSettings.instance != null? (1f + PuppetMasterSettings.instance.currentlyActivePuppets * PuppetMasterSettings.instance.activePuppetCollisionThresholdMlp): 1f;
 				if (i < collisionThreshold * mlp) return 0f;
 			}
-
-			i /= puppetMaster.muscles [m.muscleIndex].rigidbody.mass;
+            //Added by chandler to try and avoid error where muscle index is greater than number of muscles due to dropping of a prop mid way during
+            //this function call
+            if (m.muscleIndex < puppetMaster.muscles.Length)
+            {
+                i /= puppetMaster.muscles[m.muscleIndex].rigidbody.mass;
+            }
 			i *= 0.3f; // Coeficient for evening out for pre-0.3 versions
 
 			// Collision resistance multipliers

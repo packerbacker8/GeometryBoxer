@@ -139,8 +139,8 @@ namespace RootMotion.Dynamics {
 					newMuscles[added] = muscles[i];
 					added ++;
 				} else {
-					if (muscles[i].broadcaster != null) DestroyImmediate(muscles[i].broadcaster);
-					if (muscles[i].jointBreakBroadcaster != null) DestroyImmediate(muscles[i].jointBreakBroadcaster);
+					if (muscles[i].broadcaster != null) Destroy(muscles[i].broadcaster);
+					if (muscles[i].jointBreakBroadcaster != null) Destroy(muscles[i].jointBreakBroadcaster); //ALTERED FROM DESTROYIMMMEDIATE DUE TO ERRORS BEING THROWN
 				}
 			}
 
