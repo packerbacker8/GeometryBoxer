@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class pauseMenu : MonoBehaviour
 {
@@ -136,6 +137,8 @@ public class pauseMenu : MonoBehaviour
         CameraControllerScript.enabled = false;
 
         pauseMenuCanvas.SetActive(true);
+        GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+        EventSystem.current.SetSelectedGameObject(obj);
         isPaused = true;
     }
 
