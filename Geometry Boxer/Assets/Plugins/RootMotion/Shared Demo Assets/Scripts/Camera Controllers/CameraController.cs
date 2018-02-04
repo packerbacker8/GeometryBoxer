@@ -30,6 +30,7 @@ namespace RootMotion
         public float maxDistance = 10; // The maximum distance to target
         public float zoomSpeed = 10f; // The speed of interpolating the distance
         public float zoomSensitivity = 1f; // The sensitivity of mouse zoom
+        public float offsetSpeed = 10f;
         public float rotationSensitivity = 3.5f; // The sensitivity of rotation
         public float yMinLimit = -20; // Min vertical angle
         public float yMaxLimit = 160; // Max vertical angle
@@ -50,6 +51,8 @@ namespace RootMotion
         private bool useController;
         private string[] controllerInfo;
         private float distanceOffset;
+        private int layer;
+        private int layermask;
 
         // Initiate, set the params to the current transformation of the camera relative to the target
         protected virtual void Awake()
@@ -64,6 +67,8 @@ namespace RootMotion
             cam = GetComponent<Camera>();
 
             lastUp = rotationSpace != null ? rotationSpace.up : Vector3.up;
+            layer = 4;
+            layermask = 1 << layer;
         }
 
         protected virtual void Start()
@@ -175,29 +180,34 @@ namespace RootMotion
 
 
             // Smooth follow
-            if (!smoothFollow) smoothPosition = target.position;
-            else smoothPosition = Vector3.Lerp(smoothPosition, target.position, deltaTime * followSpeed);
+            if (!smoothFollow)
+            {
+                smoothPosition = target.position;
+            }
+            else
+            {
+                smoothPosition = Vector3.Lerp(smoothPosition, target.position, deltaTime * followSpeed);
+            }
 
             desiredPos = smoothPosition + rotation * (offset - Vector3.forward * distance);
 
             Vector3 relativePos = target.position - desiredPos;
             RaycastHit hit;
 
-            if (Physics.Raycast(desiredPos, relativePos, out hit, LayerMask.GetMask("Water")))
+            if (Physics.Raycast(desiredPos, relativePos, out hit, maxDistance/2, layermask))
             {
-                Debug.DrawLine(target.position, hit.point);
-                distanceOffset = distance - hit.distance + 0.8f;
-                //distanceOffset += Time.deltaTime * 10f;
+                //Debug.DrawRay(desiredPos, relativePos, Color.red);
+                //distanceOffset = distance - hit.distance + 0.8f;
+                distanceOffset += Time.deltaTime * offsetSpeed;
                 distanceOffset = Mathf.Clamp(distanceOffset, 0, distance);
             }
             else if (distanceOffset > 0)
             {
-                distanceOffset -= Time.deltaTime;
+                distanceOffset -= Time.deltaTime * offsetSpeed;
                 if (distanceOffset < 0)
                 {
                     distanceOffset = 0;
                 }
-
             }
 
             // Position
