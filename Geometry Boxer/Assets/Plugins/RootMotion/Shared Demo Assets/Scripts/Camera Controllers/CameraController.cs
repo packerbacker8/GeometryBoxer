@@ -30,6 +30,7 @@ namespace RootMotion
         public float maxDistance = 10; // The maximum distance to target
         public float zoomSpeed = 10f; // The speed of interpolating the distance
         public float zoomSensitivity = 1f; // The sensitivity of mouse zoom
+        public float offsetSpeed = 10f;
         public float rotationSensitivity = 3.5f; // The sensitivity of rotation
         public float yMinLimit = -20; // Min vertical angle
         public float yMaxLimit = 160; // Max vertical angle
@@ -179,26 +180,30 @@ namespace RootMotion
 
 
             // Smooth follow
-            if (!smoothFollow) smoothPosition = target.position;
-            else smoothPosition = Vector3.Lerp(smoothPosition, target.position, deltaTime * followSpeed);
+            if (!smoothFollow)
+            {
+                smoothPosition = target.position;
+            }
+            else
+            {
+                smoothPosition = Vector3.Lerp(smoothPosition, target.position, deltaTime * followSpeed);
+            }
 
             desiredPos = smoothPosition + rotation * (offset - Vector3.forward * distance);
 
             Vector3 relativePos = target.position - desiredPos;
             RaycastHit hit;
-            
-            if (Physics.Raycast(desiredPos, relativePos, out hit, 100f, layermask))
+
+            if (Physics.Raycast(desiredPos, relativePos, out hit, maxDistance/2, layermask))
             {
-                Debug.Log("Hit this: " + hit.transform.gameObject.name);
-                Debug.Log("Hit this layer: " + hit.transform.gameObject.layer);
-                Debug.DrawLine(target.position, hit.point);
-                distanceOffset = distance - hit.distance + 0.8f;
-                //distanceOffset += Time.deltaTime * 10f;
+                //Debug.DrawRay(desiredPos, relativePos, Color.red);
+                //distanceOffset = distance - hit.distance + 0.8f;
+                distanceOffset += Time.deltaTime * offsetSpeed;
                 distanceOffset = Mathf.Clamp(distanceOffset, 0, distance);
             }
             else if (distanceOffset > 0)
             {
-                distanceOffset -= Time.deltaTime;
+                distanceOffset -= Time.deltaTime * offsetSpeed;
                 if (distanceOffset < 0)
                 {
                     distanceOffset = 0;
