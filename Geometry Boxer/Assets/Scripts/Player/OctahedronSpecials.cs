@@ -82,7 +82,7 @@ public class OctahedronSpecials : PunchScript
             GameObject walker = leftShoulder;
             GameObject walker2 = rightShoulder; //need both for sake of combo
             GameObject walker3 = rightThigh;
-            while (walker.transform.childCount > 0)
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
             {
                 walker.GetComponent<CollisionReceived>().sendDamage = true;
                 walker2.GetComponent<CollisionReceived>().sendDamage = true;
@@ -92,9 +92,13 @@ public class OctahedronSpecials : PunchScript
                 walker2 = walker2.transform.GetChild(0).gameObject;
                 walker3 = walker3.transform.GetChild(0).gameObject;
             }
-            walker.GetComponent<CollisionReceived>().sendDamage = true;
-            walker2.GetComponent<CollisionReceived>().sendDamage = true;
-            walker3.GetComponent<CollisionReceived>().sendDamage = true;
+            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null && walker3.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = true;
+                walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                walker3.GetComponent<CollisionReceived>().sendDamage = true;
+            }
+            
             updateCollisionCheck = false;
         }
 
@@ -439,7 +443,7 @@ public class OctahedronSpecials : PunchScript
         {
             GameObject walker = leftShoulder;
             GameObject walker2 = rightShoulder; //need both for sake of combo
-            while (walker.transform.childCount > 0)
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
             {
                 walker.GetComponent<CollisionReceived>().sendDamage = false;
                 walker2.GetComponent<CollisionReceived>().sendDamage = false;
@@ -447,19 +451,25 @@ public class OctahedronSpecials : PunchScript
                 walker = walker.transform.GetChild(0).gameObject;
                 walker2 = walker2.transform.GetChild(0).gameObject;
             }
-            walker.GetComponent<CollisionReceived>().sendDamage = false;
-            walker2.GetComponent<CollisionReceived>().sendDamage = false;
+            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+            }
         }
         else
         {
             GameObject walker = rightShoulder;
-            while (walker.transform.childCount > 0)
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
             {
                 walker.GetComponent<CollisionReceived>().sendDamage = false;
                 //assumes there is only one child
                 walker = walker.transform.GetChild(0).gameObject;
             }
-            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            if (walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+            }
         }
     }
 
@@ -467,13 +477,16 @@ public class OctahedronSpecials : PunchScript
     {
         base.ThrowHiKick();
         GameObject walker = rightThigh;
-        while (walker.transform.childCount > 0)
+        while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
         {
             walker.GetComponent<CollisionReceived>().sendDamage = false;
             //assumes there is only one child
             walker = walker.transform.GetChild(0).gameObject;
         }
-        walker.GetComponent<CollisionReceived>().sendDamage = false;
+        if (walker.GetComponent<CollisionReceived>() != null)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
     }
 
     public override void ThrowUppercut(Limbs limb)
@@ -483,7 +496,7 @@ public class OctahedronSpecials : PunchScript
         {
             GameObject walker = leftShoulder;
             GameObject walker2 = rightShoulder; //need both for sake of combo
-            while (walker.transform.childCount > 0)
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
             {
                 walker.GetComponent<CollisionReceived>().sendDamage = false;
                 walker2.GetComponent<CollisionReceived>().sendDamage = false;
@@ -491,19 +504,25 @@ public class OctahedronSpecials : PunchScript
                 walker = walker.transform.GetChild(0).gameObject;
                 walker2 = walker2.transform.GetChild(0).gameObject;
             }
-            walker.GetComponent<CollisionReceived>().sendDamage = false;
-            walker2.GetComponent<CollisionReceived>().sendDamage = false;
+            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+            }
         }
         else
         {
             GameObject walker = rightShoulder;
-            while (walker.transform.childCount > 0)
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
             {
                 walker.GetComponent<CollisionReceived>().sendDamage = false;
                 //assumes there is only one child
                 walker = walker.transform.GetChild(0).gameObject;
             }
-            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            if (walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+            }
         }
     }
 
