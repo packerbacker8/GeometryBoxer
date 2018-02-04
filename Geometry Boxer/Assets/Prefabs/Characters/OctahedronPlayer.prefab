@@ -979,7 +979,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1901142967609700}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -33.72, y: 0, z: -54.3}
+  m_LocalPosition: {x: -28.18, y: 0.659, z: -44.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4114906205740234}
@@ -2435,6 +2435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114044594437751170
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2446,6 +2447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114052186667431530
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2483,6 +2485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114123817353945816
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2534,6 +2537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114291011149059108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2545,6 +2549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114344307327911132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2571,6 +2576,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114403940100180854
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2692,6 +2698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114427647959702582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2703,6 +2710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114432638957785910
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2750,6 +2758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114495761136122156
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3088,6 +3097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114591671803839550
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3099,6 +3109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114635379431589918
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3110,6 +3121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114637441402435778
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3121,6 +3133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114756386904439218
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3175,10 +3188,11 @@ MonoBehaviour:
   maxDistance: 10
   zoomSpeed: 10
   zoomSensitivity: 1
+  offsetSpeed: 10
   rotationSensitivity: 3.5
   yMinLimit: -10
   yMaxLimit: 80
-  offset: {x: 0.55, y: 0, z: 0.5}
+  offset: {x: 0, y: 1, z: 0}
   rotateAlways: 1
   rotateOnLeftButton: 0
   rotateOnRightButton: 0
@@ -3194,6 +3208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!114 &114937082839511408
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3212,14 +3227,22 @@ MonoBehaviour:
   fistGrowMultiplier: 2
   footGrowMultiplier: 5
   punchForce: 50
+  rightShoulder: {fileID: 1806058014245700}
+  leftShoulder: {fileID: 1521381743660672}
+  rightThigh: {fileID: 1272125661464546}
+  leftThigh: {fileID: 1877761613916850}
   leftJabKey: 113
   rightJabKey: 101
   hookModifierKey: 306
   leftUppercutKey: 114
   rightUppercutKey: 102
   hiKickKey: 107
+  dropWeapon: 120
   leftJabControllerButton: LeftBumper
   rightJabControllerButton: RightBumper
+  upperCutButton: XButton
+  hiKickButton: YButton
+  specialAttackButton: BButton
   specialForm: {fileID: 1854228603315806}
   specialFormSize: 1.5
   growSpeed: 1.25
@@ -3259,7 +3282,7 @@ MonoBehaviour:
     animLayer: 0
     transitionTime: 0.1
     playTime: 0.1
-  spinForceMult: 500
+  spinForceMult: 50
   launchLength: 1
   angularDragAmount: 2
   floatHeight: 0.4
@@ -3276,6 +3299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06788f4aec42cad4d93dc6d496cd2877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sendDamage: 1
 --- !u!124 &124271402003850256
 Behaviour:
   m_ObjectHideFlags: 1
@@ -3510,7 +3534,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.022241177, y: -0.09637066, z: 0}
+  m_ConnectedAnchor: {x: 0.022241177, y: -0.09636876, z: 0}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: 1}
   m_XMotion: 0
@@ -3698,7 +3722,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.3750801, y: 0.018075228, z: 0.021304302}
+  m_ConnectedAnchor: {x: -0.37508017, y: 0.018075213, z: 0.021304302}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: 1}
   m_XMotion: 0
@@ -3792,7 +3816,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.022241155, y: 0.09637066, z: 0}
+  m_ConnectedAnchor: {x: 0.022241155, y: 0.09636876, z: 0}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: -1}
   m_XMotion: 0
@@ -4168,7 +4192,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -1, z: -0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.05954837, y: 0.0000001207059, z: -0.005062768}
+  m_ConnectedAnchor: {x: 0.05954834, y: 0.000000090529426, z: -0.005062768}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: 1}
   m_XMotion: 0
@@ -4732,7 +4756,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -33.72, y: 0.9102918, z: -54.3}
+  m_ConnectedAnchor: {x: -28.18, y: 1.5692918, z: -44.6}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 2
@@ -4826,7 +4850,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.37504846, y: -0.02010937, z: -0.020000944}
+  m_ConnectedAnchor: {x: 0.3750484, y: -0.02010937, z: -0.020000942}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: -1}
   m_XMotion: 0

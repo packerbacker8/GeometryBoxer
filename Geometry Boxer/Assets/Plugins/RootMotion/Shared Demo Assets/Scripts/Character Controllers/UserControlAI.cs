@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine.AI;
 using Enemy;
+using RootMotion.Dynamics;
+
 namespace RootMotion.Demos
 {
 
@@ -28,12 +30,14 @@ namespace RootMotion.Demos
 
         private GameObject activePlayer;
         private GameObject[] playerOptions;
+
         private AudioSource source;
         private SFX_Manager sfxManager;
         private System.Random rand = new System.Random();
 
         private NavMeshAgent agent;
         private CharacterPuppet characterPuppet;
+        private BehaviourPuppet behaviourPuppet;
 
         private int attackIndex;
         private int swingAnimLayer = 1;
@@ -50,6 +54,8 @@ namespace RootMotion.Demos
         private string fall = "Fall";
         private string onGround = "OnGround";
 
+
+        private bool dead;
         void Start()
         {
             playerOptions = new GameObject[3];
@@ -60,7 +66,9 @@ namespace RootMotion.Demos
             sfxManager = FindObjectOfType<SFX_Manager>();
             agent = GetComponent<NavMeshAgent>();
             characterPuppet = GetComponent<CharacterPuppet>();
-            anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+            behaviourPuppet = transform.parent.gameObject.GetComponentInChildren<BehaviourPuppet>();
+
+            anim = transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
             //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
             agent.nextPosition = transform.position;
             drop = false;
@@ -69,49 +77,67 @@ namespace RootMotion.Demos
             movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget);
             attackStyle.setUp(stoppingDistance, stoppingThreshold,
                 jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
-
-
+            dead = false;
         }
 
         protected override void Update()
         {
-            float moveSpeed = walkByDefault ? 1.0f : 1.5f;
-            Vector3 targetDir = moveTarget.position - transform.position;
-            Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
-            AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-
-            if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
+            if (!dead)
             {
-                if (!agent.isOnOffMeshLink)
+                //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
+                //Vector3 targetDir = moveTarget.position - transform.position;
+                //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
+                AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+
+                if (!movementStyle.getPlayerTarget())
                 {
-                    agent.nextPosition = transform.position;
                     agent.enabled = false;
                 }
                 else
                 {
-                    drop = true;
+                    agent.enabled = true;
                 }
-
-            }
-            else if (!agent.enabled)
-            {
-                drop = false;
-                agent.enabled = true;
-                agent.nextPosition = transform.position;
-            }
-
-            attackStyle.attack();
-            if (agent.enabled && agent.isOnNavMesh)
-            {
-                agent.destination = movementStyle.move();
-                if (agent.pathStatus == NavMeshPathStatus.PathComplete)
+                if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
                 {
-                    state.move = agent.velocity;
+                    if (!agent.isOnOffMeshLink)
+                    {
+                        agent.nextPosition = transform.position;
+                        agent.enabled = false;
+                    }
+                    else
+                    {
+                        drop = true;
+                    }
+
                 }
+                else if (!agent.enabled || drop)
+                {
+                    drop = false;
+                    agent.enabled = true;
+                    agent.nextPosition = transform.position;
+                }
+
+                attackStyle.attack();
+                if (agent.enabled && agent.isOnNavMesh && !((info.IsName(getUpProne) || info.IsName(getUpSupine) || info.IsName(fall)) && anim.GetBool(onGround)))
+                {
+                    agent.destination = movementStyle.move();
+                    if (agent.pathStatus == NavMeshPathStatus.PathComplete)
+                    {
+                        state.move = agent.velocity;
+                    }
+                }
+                else
+                {
+                    state.move = Vector3.zero;
+                }
+
+                //transform.rotation = Quaternion.LookRotation(newDir);
+                transform.rotation = movementStyle.rotateStyle();
             }
-
-            transform.rotation = Quaternion.LookRotation(newDir);
-
+            else
+            {
+                state.move = Vector3.zero;
+            }
         }
 
         /// <summary>
@@ -122,6 +148,21 @@ namespace RootMotion.Demos
         {
             moveTarget = move.GetChild(characterControllerIndex);
         }
+
+        public void deathUpdate()
+        {
+            dead = true;
+            agent.enabled = false;
+            Destroy(this);
+        }
+
+        /// <summary>
+        /// Returns if the enemy is knocked down or active.
+        /// </summary>
+        /// <returns>If the enemy is in unpinned state returns true, otherwise false.</returns>
+        public bool IsKnockedDown()
+        {
+            return behaviourPuppet.state == BehaviourPuppet.State.Unpinned;
+        }
     }
 }
-

@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class TriggerWall : MonoBehaviour {
     public GameObject wall;
+    public GameObject InvisibleContainer;
     bool playedSound = false;
-    
-	void OnTriggerEnter ()
+
+	void OnTriggerEnter(Collider col)
     {
-	    wall.BroadcastMessage("CloseWall", SendMessageOptions.RequireReceiver);
-        if(!playedSound)
+        if(col.transform.root.tag == "Player")
         {
-            GetComponent<AudioSource>().Play();
-            playedSound = true;
+            wall.BroadcastMessage("CloseWall", SendMessageOptions.RequireReceiver);
+            if (!playedSound)
+            {
+                InvisibleContainer.SetActive(true);
+                GetComponent<AudioSource>().Play();
+                playedSound = true;
+            }
         }
     }
 }

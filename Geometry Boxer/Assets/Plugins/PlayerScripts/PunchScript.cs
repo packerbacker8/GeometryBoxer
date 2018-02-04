@@ -20,6 +20,11 @@ public class PunchScript : MonoBehaviour
     public float footGrowMultiplier = 5f;
     [Tooltip("The force by which the rigidbody will move.")]
     public float punchForce = 50f;
+    public GameObject rightShoulder;
+    public GameObject leftShoulder;
+    public GameObject rightThigh;
+    public GameObject leftThigh;
+
     [Header("PC punch buttons.")]
     public KeyCode leftJabKey = KeyCode.Q;
     public KeyCode rightJabKey = KeyCode.E;
@@ -28,9 +33,14 @@ public class PunchScript : MonoBehaviour
     public KeyCode leftUppercutKey = KeyCode.R;
     public KeyCode rightUppercutKey = KeyCode.F;
     public KeyCode hiKickKey = KeyCode.K;
+    public KeyCode dropWeapon = KeyCode.X;
+
     [Header("Controller punch buttons.")]
     public string leftJabControllerButton = "LeftBumper";
     public string rightJabControllerButton = "RightBumper";
+    public string upperCutButton = "XButton";
+    public string hiKickButton = "YButton";
+    public string specialAttackButton = "BButton";
 
     [Header("Special Attack Information")]
     public GameObject specialForm;
@@ -106,6 +116,7 @@ public class PunchScript : MonoBehaviour
     protected bool launched;
     protected bool onCooldown;
     protected bool growingSpecial;
+    protected bool updateCollisionCheck;
 
     protected float leftArmXAxis;
     protected float leftArmYAxis;
@@ -186,6 +197,7 @@ public class PunchScript : MonoBehaviour
         launched = false;
         onCooldown = false;
         growingSpecial = false;
+        updateCollisionCheck = false;
         controllerInfo = Input.GetJoystickNames();
         useController = controllerInfo.Length > 0;
 
@@ -226,6 +238,11 @@ public class PunchScript : MonoBehaviour
     {
         useController = controllerInfo.Length > 0;
 
+        if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw("DPadY") == -1))
+        {
+            charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
+        }
+
         if (numberOfMuscleComponents < puppetMaster.muscles.Length) //number of muscles increased from beginning, a prop has been picked up
         {
             rightGrab = true;
@@ -263,6 +280,7 @@ public class PunchScript : MonoBehaviour
             if (currentAnimLength <= 0f)
             {
                 isAttacking = false;
+                updateCollisionCheck = true;
 				leftArmAttack = false;
 				rightArmAttack = false;
 				leftFootAttack = false;
@@ -295,22 +313,49 @@ public class PunchScript : MonoBehaviour
                 if (useController) //controller controls
                 {
                     //Left arm punching
-
                     if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
                     {
-                        ThrowSinglePunch(Limbs.leftArm);
+                        Debug.Log("LeftJab");
+                        leftArmAttack = true;
+                        if (Input.GetButton(upperCutButton))
+                        {
+                            Debug.Log("LeftUpper");
+                            ThrowUppercut(Limbs.leftArm);
+                        }
+                        else
+                        {
+                            Debug.Log("LeftJab");
+                            ThrowSinglePunch(Limbs.leftArm);
+                        }
                     }
                     if (Input.GetButtonDown(rightJabControllerButton))
                     {
-                        ThrowSinglePunch(Limbs.rightArm);
+                        Debug.Log("rightBump");
+                        rightArmAttack = true;
+                        if (Input.GetButton(upperCutButton))
+                        {
+                            Debug.Log("RightUpper");
+                            ThrowUppercut(Limbs.rightArm);
+
+                        }
+                        else
+                        {
+                            Debug.Log("RightJab");
+                            ThrowSinglePunch(Limbs.rightArm);
+                        }
+                    }
+                    if (Input.GetButtonDown(hiKickButton))
+                    {
+                        Debug.Log("HighKick");
+                        ThrowHiKick();
                     }
 
                 }
                 else  // keyboard controls
                 {
-
                     if (Input.GetKeyDown(leftJabKey))
                     {
+                        Debug.Log("LeftJab");
                         //currently a combo attack
                         leftArmAttack = true;
                         rightArmAttack = true;
@@ -577,7 +622,7 @@ public class PunchScript : MonoBehaviour
             GameObject findingRoot = collision.gameObject;
             while (findingRoot.tag != "EnemyRoot")
             {
-                Debug.Log("Hit by: " + collision.gameObject.name);
+                //Debug.Log("Hit by: " + collision.gameObject.name);
                 findingRoot = findingRoot.transform.parent.gameObject;
             }
             BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
@@ -606,6 +651,7 @@ public class PunchScript : MonoBehaviour
         UpdatePos(charController.transform, specialForm.transform);
         //play animation of morphing into ball
         isAttacking = false;
+        updateCollisionCheck = true;
         for (int i = 0; i < this.transform.childCount; i++) //move camera back to player here
         {
             if (this.transform.GetChild(i).gameObject != specialForm)
@@ -704,8 +750,8 @@ public class PunchScript : MonoBehaviour
     protected virtual bool checkIfGrounded()
     {
         Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialForm.GetComponent<BoxCollider>().size.y * 2f, specialForm.transform.position.z);
-        Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
-        Debug.Log("Size now: " + specialForm.GetComponent<BoxCollider>().size.y);
+        //Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
+        //Debug.Log("Size now: " + specialForm.GetComponent<BoxCollider>().size.y);
         return Physics.Raycast(specialForm.transform.position, -Vector3.up, specialForm.GetComponent<BoxCollider>().size.y * specialForm.transform.localScale.y + 0.1f);
     }
 
@@ -757,5 +803,8 @@ public class PunchScript : MonoBehaviour
     {
         return v1.x >= v2.x && v1.y >= v2.y && v1.z >= v2.z;
     }
-
+    public bool getUseController()
+    {
+        return useController;
+    }
 }

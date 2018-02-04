@@ -64,6 +64,32 @@ public class CubeAttackScript : PunchScript
     protected override void Update()
     {
         base.Update();
+        if (updateCollisionCheck)
+        {
+            //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            GameObject walker3 = rightThigh;
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = true;
+                walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+                walker3 = walker3.transform.GetChild(0).gameObject;
+            }
+            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null && walker3.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = true;
+                walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                walker3.GetComponent<CollisionReceived>().sendDamage = true;
+            }
+
+            updateCollisionCheck = false;
+        }
+
         isGrounded = checkIfGrounded();
         if(isGrounded)
         {
@@ -87,17 +113,17 @@ public class CubeAttackScript : PunchScript
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown("XButton")))
+            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown(specialAttackButton)))
             {
                 DeactivateSpecialAttack();
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if (Input.GetKeyDown(useAttack) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
+            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
             {
                 specialRigid.AddForce(Vector3.up * specialAttackForce * 100f);
             }
-            else if (Input.GetKeyDown(useAttack) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
+            else if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
             {
                 specialRigid.AddForce(-Vector3.up * specialAttackForce * 300f);
                 launched = true;
@@ -118,7 +144,7 @@ public class CubeAttackScript : PunchScript
         {
             UpdatePos(specialForm.transform, charController.transform);
 
-            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown("XButton")) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
             {
                 growingSpecial = true;
                 ActivateSpecialAttack();
@@ -138,13 +164,109 @@ public class CubeAttackScript : PunchScript
 
         //GrowBigPower();
     }
+
+    /*
+     * Overriding these functions as a way to turn off collisions for the arms and 
+     * legs when fighting.
+     */
+    public override void ThrowSinglePunch(Limbs limb)
+    {
+        base.ThrowSinglePunch(limb);
+        if (limb == Limbs.leftArm)
+        {
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+            }
+            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+            }
+        }
+        else
+        {
+            GameObject walker = rightShoulder;
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+            }
+            if (walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+            }
+        }
+    }
+
+    public override void ThrowHiKick()
+    {
+        base.ThrowHiKick();
+        GameObject walker = rightThigh;
+        while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            //assumes there is only one child
+            walker = walker.transform.GetChild(0).gameObject;
+        }
+        if (walker.GetComponent<CollisionReceived>() != null)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
+    }
+
+    public override void ThrowUppercut(Limbs limb)
+    {
+        base.ThrowUppercut(limb);
+        if (limb == Limbs.leftArm)
+        {
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+            }
+            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+            }
+        }
+        else
+        {
+            GameObject walker = rightShoulder;
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+            }
+
+            if (walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+            }
+        }
+    }
+
     /// <summary>
     /// Allows character to grow larger when attack key is pressed. Shrinks back down after a certain
     /// amount of time.
     /// </summary>
     private void GrowBigPower()
     {
-        if (!PowerUp && Input.GetKeyDown(useAttack) || !PowerUp && Input.GetButtonDown("XButton"))
+        if ((!PowerUp && Input.GetKeyDown(useAttack)) || (!PowerUp && Input.GetButtonDown("AButton")))
         {
             PowerUp = true;
             halo.enabled = true;

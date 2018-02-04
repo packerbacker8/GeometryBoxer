@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class pauseMenu : MonoBehaviour
 {
-
     public GameObject scrollView;
+    public GameObject scrollViewContent;
     public GameObject fileButtonPrefab;
 
     private GameObject character;
@@ -60,11 +60,11 @@ public class pauseMenu : MonoBehaviour
     {
         TimeSinceEsc = TimeSinceEsc += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && !isPaused)
         {
             pauseGameHelper();
         }
-        else if (Input.GetKeyDown(KeyCode.Escape) && isPaused)
+        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && isPaused)
         {
             resumeGameHelper();
         }
@@ -125,7 +125,6 @@ public class pauseMenu : MonoBehaviour
     /// </summary>
     public void pauseGame()
     {
-
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
         Time.timeScale = 0.0f;
@@ -184,8 +183,8 @@ public class pauseMenu : MonoBehaviour
             files[i] = files[i].Substring(Application.persistentDataPath.Length + 1, files[i].Length - Application.persistentDataPath.Length - 5);
             GameObject button = Instantiate(fileButtonPrefab) as GameObject;
             button.GetComponentInChildren<Text>().text = files[i];
-            button.transform.SetParent(scrollView.transform, false);
-            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 200f - (30f * i));
+            button.transform.SetParent(scrollViewContent.transform, false);
+            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, ((scrollView.GetComponent<RectTransform>().rect.size.y * 0.85f) * 0.5f - 10f) - (30f * i));
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetSaveFileName(button.GetComponentInChildren<Text>().text); });
             saveFileButtons.Add(button);
         }

@@ -11,6 +11,7 @@ public class EnemyHealthScript : MonoBehaviour
     public float deathDelay = 20f;
     public float damageThreshold = 5f;
     public float heavyDamageOffset = 10f;
+    public GameObject deathObject;
 
     //Sound Engine Needs
     private AudioSource source;
@@ -59,6 +60,7 @@ public class EnemyHealthScript : MonoBehaviour
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
         charController = GetComponentInChildren<UserControlAI>();
         ShowDmg = this.GetComponent<SwapMaterials>();
+        deathObject.SetActive(false);
         Val4 = 0;
         Val0 = 4 * (EnemyHealth / 5);
         Val1 = 3 * (EnemyHealth / 5);
@@ -84,7 +86,6 @@ public class EnemyHealthScript : MonoBehaviour
         float lightImpactThreshold = damageThreshold;
         float heavyImpactThreshold = damageThreshold + heavyDamageOffset;
         float collisionMagnitude = collision.impulse.magnitude;
-
         string tagOfCollision = collision.gameObject.transform.root.tag;
         if (tagOfCollision == "Player")
         {
@@ -92,20 +93,18 @@ public class EnemyHealthScript : MonoBehaviour
         }
 
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (!dead && (!info.IsName(getUpProne) && !info.IsName(getUpSupine)) && !charController.drop)
+        if (!dead && damageIsFromPlayer)           //&& (!info.IsName(getUpProne) && !info.IsName(getUpSupine)) && !charController.drop)
         {
-            if (damageIsFromPlayer)
+            if (collisionMagnitude <= heavyImpactThreshold)
             {
-                if (collisionMagnitude <= heavyImpactThreshold)
-                {
-                    EnemyHealth -= Math.Abs(collisionMagnitude);
-                }
-                else if (collisionMagnitude > heavyImpactThreshold)
-                {
-                    EnemyHealth -= Math.Abs(collisionMagnitude + heavyDamageOffset);
-                }
+                EnemyHealth -= Math.Abs(collisionMagnitude);
             }
-            if(sfxManager.malePain.Count > 0 && !source.isPlaying && damageIsFromPlayer)
+            else if (collisionMagnitude > heavyImpactThreshold)
+            {
+                EnemyHealth -= Math.Abs(collisionMagnitude + heavyDamageOffset);
+            }
+
+            if (sfxManager.malePain.Count > 0 && !source.isPlaying && damageIsFromPlayer)
             {
                 painIndex = rand.Next(0, sfxManager.malePain.Count);
                 lightImpactIndex = rand.Next(0, sfxManager.lightPunches.Count);
@@ -122,7 +121,10 @@ public class EnemyHealthScript : MonoBehaviour
                 }
             }
         }
-        damageIsFromPlayer = false;
+        if (damageIsFromPlayer)
+        {
+            damageIsFromPlayer = charController.IsKnockedDown();
+        }
         if (EnemyHealth > Val0)
         {
             ShowDmg.SetMaterial0();
@@ -156,14 +158,14 @@ public class EnemyHealthScript : MonoBehaviour
     {
         if (!dead)
         {
-            anim.Play("Death");
+            //anim.Play("Death");
 
             if (sfxManager.maleDeath.Count > 0)
             {
                 source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
             }
             puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-            if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
             {
                 gameController.GetComponent<GameControllerScriptTutorial>().isKilled(enemyIndex);
             }
@@ -172,9 +174,13 @@ public class EnemyHealthScript : MonoBehaviour
                 gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
                 playerUI.GetComponent<userInterface>().enemyIsKilled();
             }
-            
+
             dead = true;
-            Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+
+            deathObject.SetActive(true);
+            deathObject.GetComponent<ScatterAndDestroy>().BeginDestruction(deathDelay);
+
+            Destroy(this.transform.gameObject);  //To be destroyed by game manager if body count exceeds certain amout.
         }
     }
 
