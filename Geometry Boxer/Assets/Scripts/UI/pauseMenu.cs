@@ -27,6 +27,8 @@ public class pauseMenu : MonoBehaviour
     private float TimeSinceEsc = 0.0f;
     private List<GameObject> saveFileButtons;
 
+    private bool controllerMode = false;
+
     // Use this for initialization
     void Start()
     {
@@ -63,6 +65,10 @@ public class pauseMenu : MonoBehaviour
 
         if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && !isPaused)
         {
+            if (Input.GetButtonDown("StartButton"))
+            {
+                controllerMode = true;
+            }
             pauseGameHelper();
         }
         else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && isPaused)
@@ -137,8 +143,14 @@ public class pauseMenu : MonoBehaviour
         CameraControllerScript.enabled = false;
 
         pauseMenuCanvas.SetActive(true);
-        GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
-        EventSystem.current.SetSelectedGameObject(obj);
+        if (controllerMode)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            EventSystem.current.SetSelectedGameObject(obj);
+            controllerMode = false;
+        }
+        
         isPaused = true;
     }
 
