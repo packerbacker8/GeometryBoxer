@@ -17,7 +17,6 @@ public class CubeAttackScript : PunchScript
 
     private bool isGrounded;
     private GameObject gameController;
-    private GameObject playerUI;
     private float coolDownTime;
     private float coolDownTimer;
     
@@ -37,16 +36,6 @@ public class CubeAttackScript : PunchScript
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
         coolDownTime = 10;
-
-        //THIS NEEDS TO BE FIXED BY MAKING THE PLAYERUI OBJECT A PREFAB
-        //THE PREFAB NEEDS TO AFFECT THE PUNCH SCRIPT SO IT AFFECTS ALL
-        //PLAYERS EQUALLY. SHOUD NOT BE IN ONE PLAYER'S SPECIFIC SCRIPT
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        if(playerUI)
-        {
-            playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
-        }
-
 
         playerRigidBody = stats.pelvisJoint.GetComponent<Rigidbody>();
         PowerUp = false;
@@ -283,7 +272,6 @@ public class CubeAttackScript : PunchScript
             {
                 onCooldown = false;
                 coolDownTimer = 0;
-                playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
             }
         }
 
@@ -299,7 +287,6 @@ public class CubeAttackScript : PunchScript
                 charController.transform.localScale -= new Vector3(2F, 2F, 2F);
                 TimePowerUp = specialAttackActiveTime;
                 SendMessage("PowerUpDeactivated", false);
-                playerUI.GetComponent<userInterface>().UsedSpecialAttack();
                 onCooldown = true;
             }
         }

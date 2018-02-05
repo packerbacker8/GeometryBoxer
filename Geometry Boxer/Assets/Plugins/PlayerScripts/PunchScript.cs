@@ -4,6 +4,7 @@ using UnityEngine;
 using RootMotion;
 using RootMotion.Dynamics;
 using RootMotion.Demos;
+using PlayerUI;
 
 public class PunchScript : MonoBehaviour
 {
@@ -169,6 +170,7 @@ public class PunchScript : MonoBehaviour
     protected Vector3 specialEndSize;
     protected PlayerStatsBaseClass baseStats;
     protected Vector3 moveDir;
+    protected GameObject playerUI;
 
     public enum Limbs
     {
@@ -232,6 +234,9 @@ public class PunchScript : MonoBehaviour
         playerFinalSize = new Vector3(1.53119f, 1.53119f, 1.53119f);
         specialStartSize = new Vector3(0.1f, 0.1f, 0.1f);
         specialEndSize = new Vector3(specialFormSize, specialFormSize, specialFormSize);
+
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<PlayerUserInterface>().SetDefultcoolDownTime(specialAttackCooldownTime);
     }
     // Update is called once per frame
     protected virtual void Update()
@@ -258,33 +263,33 @@ public class PunchScript : MonoBehaviour
         }
         if (isAttacking)
         {
-            if(leftArmAttack)
+            if (leftArmAttack)
             {
                 leftFistCollider.radius = leftFistStartSize.radius * fistGrowMultiplier;
                 leftFistCollider.height = leftFistStartSize.height * fistGrowMultiplier;
             }
-            if(rightArmAttack)
+            if (rightArmAttack)
             {
                 rightFistCollider.radius = rightFistStartSize.radius * fistGrowMultiplier;
                 rightFistCollider.height = rightFistStartSize.height * fistGrowMultiplier;
             }
-            if(leftFootAttack)
+            if (leftFootAttack)
             {
-				leftFootCollider.size = leftFootStartSize.size * footGrowMultiplier;
+                leftFootCollider.size = leftFootStartSize.size * footGrowMultiplier;
             }
-            if(rightFootAttack)
+            if (rightFootAttack)
             {
-				rightFootCollider.size = rightFootStartSize.size * footGrowMultiplier;
+                rightFootCollider.size = rightFootStartSize.size * footGrowMultiplier;
             }
             currentAnimLength -= Time.deltaTime;
             if (currentAnimLength <= 0f)
             {
                 isAttacking = false;
                 updateCollisionCheck = true;
-				leftArmAttack = false;
-				rightArmAttack = false;
-				leftFootAttack = false;
-				rightFootAttack = false;
+                leftArmAttack = false;
+                rightArmAttack = false;
+                leftFootAttack = false;
+                rightFootAttack = false;
 
                 leftFistCollider.radius = leftFistStartSize.radius;
                 leftFistCollider.height = leftFistStartSize.height;
@@ -671,6 +676,7 @@ public class PunchScript : MonoBehaviour
         charController.GetComponent<CapsuleCollider>().enabled = true;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
         onCooldown = true;
+        playerUI.GetComponent<PlayerUserInterface>().UsedSpecialAttack();
         anim.SetInteger("ActionIndex", -1);
         anim.SetBool("IsStrafing", false);
         if (specialRigid.velocity.sqrMagnitude > 0)

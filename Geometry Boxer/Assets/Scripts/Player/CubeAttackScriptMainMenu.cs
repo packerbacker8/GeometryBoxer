@@ -17,7 +17,6 @@ public class CubeAttackScriptMainMenu : PunchScript
 
     private bool isGrounded;
     private GameObject gameController;
-    private GameObject playerUI;
     private float coolDownTime;
     private float coolDownTimer;
     private float cubeForce;
@@ -38,8 +37,6 @@ public class CubeAttackScriptMainMenu : PunchScript
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
         coolDownTime = 10;
-        //playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        //playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
         playerRigidBody = stats.pelvisJoint.GetComponent<Rigidbody>();
         PowerUp = false;
         isGrounded = checkIfGrounded();
@@ -157,7 +154,6 @@ public class CubeAttackScriptMainMenu : PunchScript
             {
                 onCooldown = false;
                 coolDownTimer = 0;
-                playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
             }
         }
 
@@ -173,7 +169,6 @@ public class CubeAttackScriptMainMenu : PunchScript
                 charController.transform.localScale -= new Vector3(2F, 2F, 2F);
                 TimePowerUp = specialAttackActiveTime;
                 SendMessage("PowerUpDeactivated", false);
-                playerUI.GetComponent<userInterface>().UsedSpecialAttack();
                 onCooldown = true;
             }
         }
