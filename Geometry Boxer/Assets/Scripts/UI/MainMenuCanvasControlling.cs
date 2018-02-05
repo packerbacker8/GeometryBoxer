@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+using RootMotion.Demos;
 
 public class MainMenuCanvasControlling : MonoBehaviour
 {
@@ -17,6 +20,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private string fileToLoad;
     private List<GameObject> loadFileButtons;
 
+    private bool controllerMode;
+
     // Use this for initialization
     void Start()
     {
@@ -29,6 +34,45 @@ public class MainMenuCanvasControlling : MonoBehaviour
         loadFileButtons = new List<GameObject>();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        controllerMode = false;
+        string[] inputNames = Input.GetJoystickNames();
+        for (int i = 0; i < inputNames.Length; i++)
+        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
+            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+            {
+                controllerMode = true;
+            }
+        }
+
+        if (controllerMode)
+        {
+            if (hasSaveGameCanvas.activeSelf)
+            {
+                //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+                EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+            else if(noSaveGameCanvas.activeSelf)
+            {
+                EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+
+
+            GameObject CharacterController = null;
+            GameObject[] listOfPlayerObjects = GameObject.FindGameObjectsWithTag("Player");
+            for (int i = 0; i < listOfPlayerObjects.Length; i++)
+            {
+                if (listOfPlayerObjects[i].name == "Character Controller")
+                { 
+                    CharacterController = listOfPlayerObjects[i];
+                    break;
+                }
+            }
+
+            //disable UserControlMelee on CubeMan
+            CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
+        }
+
     }
 
     /// <summary>
@@ -42,11 +86,28 @@ public class MainMenuCanvasControlling : MonoBehaviour
         {
             hasSaveGameCanvas.SetActive(false);
             noSaveGameCanvas.SetActive(false);
+
+            if (controllerMode)
+            {
+                EventSystem.current.SetSelectedGameObject(optionsMenu.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+
         }
         else
         {
             hasSaveGameCanvas.SetActive(hasSavedGame);
             noSaveGameCanvas.SetActive(!hasSavedGame);
+            if(controllerMode)
+            {
+                if (hasSaveGameCanvas.activeSelf)
+                {
+                    EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                }
+                else if (noSaveGameCanvas.activeSelf)
+                {
+                    EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                }
+            }
         }
     }
 
