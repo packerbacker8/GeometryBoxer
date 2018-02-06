@@ -42,10 +42,6 @@ namespace Enemy
 
         public Vector3 move()
         {
-            if(moveTargetObj == null)
-            {
-                gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
-            }
             if (canMove()) //&& playerTarget)
             {
 
@@ -83,7 +79,7 @@ namespace Enemy
         public Quaternion rotateStyle()
         {
             //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
-            if (playerTarget)
+            if (moveTargetObj != null)  //was playerTarget
             {
                 //float moveSpeed = 1.5f;
                 Vector3 targetDir = moveTarget.position - transform.position;
@@ -113,14 +109,15 @@ namespace Enemy
 
         private void Update()
         {
-            if (!playerTarget)
+            if (moveTargetObj == null)
             {
-                distance = Vector3.Distance(playerTransform.position, transform.position);
-                if (distance < sightRange)
-                {
-                    playerTarget = true;
-                    this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget();
-                }
+                gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
+            }
+            distance = Vector3.Distance(playerTransform.position, transform.position);
+            if (distance < sightRange)
+            {
+                //playerTarget = true;
+                this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget();
             }
         }
 
