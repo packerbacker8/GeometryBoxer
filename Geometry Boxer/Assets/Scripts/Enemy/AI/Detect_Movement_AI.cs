@@ -8,16 +8,31 @@ namespace Enemy
 
     public class Detect_Movement_AI : MonoBehaviour, MovementBase
     {
-        float stoppingDistance;
-        float stoppingThreshold;
-        float jumpDistance;
-        Transform moveTarget;
+        public float rotateSpeed = 1.5f;
+        public float bounceAngle = 70f;
+        public float sightRange = 20f;
         public bool playerTarget;
-        public float bounceAngle;
-        private bool inZone;
+
+        private float distance;
+        private float stoppingDistance;
+        private float stoppingThreshold;
+        private float jumpDistance;
         private float startAngle;
-        public float rotateSpeed;
-        public float distance;
+        private Transform moveTarget;
+        private Transform playerTransform;
+        private GameObject gameController;
+        private bool inZone;
+
+        /// <summary>
+        /// Function to allow game controller to set the transform of the active player at the start so the 
+        /// AI can detect if it is close enough to the player yet or not.
+        /// </summary>
+        /// <param name="player">The transform of the player that the AI is continually 'looking' for.</param>
+        public void SetPlayerTransform(Transform player)
+        {
+            playerTransform = player;
+        }
+
         public bool canMove()
         {
             return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
@@ -26,13 +41,16 @@ namespace Enemy
 
         public Vector3 move()
         {
-
-            if (canMove() && playerTarget)//playerTarget)
+            if(moveTarget == null)
             {
-                
+                gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
+            }
+            if (canMove()) //&& playerTarget)
+            {
+
                 return moveTarget.position;
             }
-            
+
             return transform.position;
         }
 
@@ -43,7 +61,7 @@ namespace Enemy
             jumpDistance = jumpDis;
             //anim = animator;
             moveTarget = move;
-            StartCoroutine(checkDistance());
+            //StartCoroutine(checkDistance());
         }
 
         public void playerFound()
@@ -83,16 +101,8 @@ namespace Enemy
         void Start()
         {
             playerTarget = false;
-            bounceAngle = 70f;
             startAngle = transform.eulerAngles.y;
-            rotateSpeed = 1.5f;
-           
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            
+            gameController = GameObject.FindGameObjectWithTag("GameController");
         }
 
         public bool getPlayerTarget()
@@ -100,12 +110,25 @@ namespace Enemy
             return playerTarget;
         }
 
+        private void Update()
+        {
+            if (!playerTarget)
+            {
+                distance = Vector3.Distance(playerTransform.position, transform.position);
+                if (distance < sightRange)
+                {
+                    playerTarget = true;
+                    this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget();
+                }
+            }
+        }
+
         private IEnumerator checkDistance()
         {
             while (true)
             {
                 distance = Vector3.Distance(moveTarget.position, transform.position);
-                if (distance < 20f)
+                if (distance < sightRange)
                 {
                     Debug.Log("Found Player");
                     playerTarget = true;

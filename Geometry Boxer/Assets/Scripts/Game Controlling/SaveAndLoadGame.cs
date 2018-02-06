@@ -11,7 +11,7 @@ public class SaveAndLoadGame : MonoBehaviour
     public string[] cityNames;
     public string[] cityStatuses;
     [Tooltip("If set to true, the main menu scene will not be forced.")]
-    public bool debugMode;
+    public bool debugMode = false;
 
     private static InitializeData initData;
     private static GameData saveData;

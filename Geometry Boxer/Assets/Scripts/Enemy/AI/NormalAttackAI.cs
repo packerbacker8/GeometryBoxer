@@ -37,11 +37,6 @@ public class NormalAttackAI : MonoBehaviour ,AttackBase {
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void attack()
     {
         if (canAttack())

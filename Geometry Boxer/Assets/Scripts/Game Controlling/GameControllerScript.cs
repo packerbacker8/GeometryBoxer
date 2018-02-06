@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Demos;
+using Enemy;
 
 public class GameControllerScript : MonoBehaviour
 {
@@ -11,12 +12,18 @@ public class GameControllerScript : MonoBehaviour
     public GameObject[] playerOptions;
     public GameObject enemyCubeContainer;
     public GameObject enemyOctahedronContainer;
+    [Tooltip("If set to true, the enemy container that matches the type of the player will be used as a group of allies in the fight.")]
+    public bool hasAllies = false;
 
     private string currentMapName;
-    private GameObject activePlayer;
     private int numEnemiesAlive;
+    private int charControllerIndex;
+    private GameObject activePlayer;
     private GameObject enemyContainer;
     private GameObject[] enemiesInWorld;
+    private GameObject allyContainer;
+    private GameObject[] alliesInWorld;
+    private GameObject playerCharController;
     private bool playerAlive;
 
     // Use this for initialization
@@ -34,22 +41,73 @@ public class GameControllerScript : MonoBehaviour
                 playerOptions[i].SetActive(false);
             }
         }
+        charControllerIndex = 2;
+        playerCharController = activePlayer.transform.GetChild(charControllerIndex).gameObject;
         enemyContainer = activePlayer.name.Contains("Cube") ? enemyOctahedronContainer : enemyCubeContainer;
-        if(enemyContainer == enemyOctahedronContainer)
+        //if we have allies the setup has to include their targets and health along with some tag changes
+        if (hasAllies)
         {
-            enemyCubeContainer.SetActive(false);
+            enemyCubeContainer.SetActive(true);
+            enemyOctahedronContainer.SetActive(true);
+            if (enemyContainer == enemyOctahedronContainer)
+            {
+                allyContainer = enemyCubeContainer;
+            }
+            else
+            {
+                allyContainer = enemyOctahedronContainer;
+            }
+            allyContainer.tag = "AllyContainer"; 
+            numEnemiesAlive = enemyContainer.transform.childCount;
+            enemiesInWorld = new GameObject[numEnemiesAlive];
+            alliesInWorld = new GameObject[allyContainer.transform.childCount];
+            int iterationAmount = alliesInWorld.Length > numEnemiesAlive ? alliesInWorld.Length : numEnemiesAlive;
+
+            for (int i = 0; i < iterationAmount; i++)
+            {
+                if(i < numEnemiesAlive)
+                {
+                    enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
+                    enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(allyContainer.transform.GetChild(i % alliesInWorld.Length).GetChild(charControllerIndex));
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                    enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
+                }
+                if(i < alliesInWorld.Length)
+                {
+                    allyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
+                    allyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Enemy", false);
+                    allyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(enemyContainer.transform.GetChild(i % numEnemiesAlive).GetChild(charControllerIndex));
+                    allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform); //might need to change
+                    allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().sightRange = 0f; //set sight range to zero so that allied bots never try to switch targets
+                    ChangeAllTags(allyContainer.transform.GetChild(i).gameObject, "Ally");
+                    allyContainer.transform.GetChild(i).gameObject.tag = "AllyRoot";
+                    alliesInWorld[i] = allyContainer.transform.GetChild(i).gameObject;
+                }
+            }
         }
         else
         {
-            enemyOctahedronContainer.SetActive(false);
+            if (enemyContainer == enemyOctahedronContainer)
+            {
+                enemyCubeContainer.SetActive(false);
+            }
+            else
+            {
+                enemyOctahedronContainer.SetActive(false);
+            }
+
+            numEnemiesAlive = enemyContainer.transform.childCount;
+            enemiesInWorld = new GameObject[numEnemiesAlive];
+            for (int i = 0; i < numEnemiesAlive; i++)
+            {
+                enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
+                enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController.transform);
+                enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
+            }
         }
 
-        numEnemiesAlive = enemyContainer.transform.childCount;
-        for (int i = 0; i < numEnemiesAlive; i++)
-        {
-            enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
-            enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(activePlayer.transform);
-        }
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
@@ -67,13 +125,47 @@ public class GameControllerScript : MonoBehaviour
         }
     }
 
+    private void ChangeAllTags(GameObject objToChange, string tagToUse)
+    {
+        objToChange.tag = tagToUse;
+        for(int i = 0; i < objToChange.transform.childCount; i++)
+        {
+            ChangeAllTags(objToChange.transform.GetChild(i).gameObject, tagToUse);
+        }
+    }
+
     /// <summary>
     /// Updates how many enemies are alive after one is killed.
     /// </summary>
-    /// <param name="index"></param>
-    public void isKilled(int index)
+    /// <param name="index">Index in the respective array.</param>
+    /// <param name="tag">Tag of the object sent.</param>
+    public void isKilled(int index, string tag)
     {
-        numEnemiesAlive--;
+        if(tag.Contains("Enemy"))
+        {
+            numEnemiesAlive--;
+            for(int i = 0; i < alliesInWorld.Length; i++)
+            {
+                if(alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTarget == enemiesInWorld[index].transform.GetChild(2))
+                {
+                    SetNewTarget(i, alliesInWorld[i].tag);
+                    return;
+                }
+            }
+            //enemiesInWorld[index] = null;
+        }
+        else
+        {
+            for (int i = 0; i < enemiesInWorld.Length; i++)
+            {
+                if (enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<UserControlAI>().moveTarget == alliesInWorld[index].transform.GetChild(2))
+                {
+                    SetNewTarget(i, enemiesInWorld[i].tag);
+                    return;
+                }
+            }
+            //alliesInWorld[index] = null;
+        }
     }
 
     /// <summary>
@@ -101,5 +193,64 @@ public class GameControllerScript : MonoBehaviour
     public GameObject GetActivePlayer()
     {
         return activePlayer;
+    }
+
+    /// <summary>
+    /// Function to change the target of the enemy to the player.
+    /// </summary>
+    /// <param name="indexOfEnemy">This index indicates which enemy to change their target.</param>
+    public void ChangeTarget(int indexOfEnemy)
+    {
+        enemiesInWorld[indexOfEnemy].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController.transform);
+    }
+
+    /// <summary>
+    /// Function to set new target for bots to attack.
+    /// </summary>
+    /// <param name="index">The bot index in their respective array.</param>
+    /// <param name="tag">Tag of their root object</param>
+    public void SetNewTarget(int index, string tag)
+    {
+        Debug.Log("Need to make a new target");
+        if(tag.Contains("Enemy"))
+        {
+            for(int i = 0; i < alliesInWorld.Length; i++)
+            {
+                if(alliesInWorld[i] != null)
+                {
+                    enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(alliesInWorld[i].transform.GetChild(charControllerIndex));
+                    return;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < enemiesInWorld.Length; i++)
+            {
+                if (enemiesInWorld[i] != null)
+                {
+                    alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(enemiesInWorld[i].transform.GetChild(charControllerIndex));
+                    return;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Function to change the allied bot's target after their original target has died.
+    /// </summary>
+    /// <param name="indexOfAlly">Index indicates which ally to change their target for.</param>
+    private void SwitchAlliedTarget(int indexOfAlly)
+    {
+
+    }
+
+    /// <summary>
+    /// How many enemies are alive in the scene.
+    /// </summary>
+    /// <returns></returns>
+    public int NumberOfEnemiesAlive()
+    {
+        return numEnemiesAlive;
     }
 }
