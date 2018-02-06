@@ -14,6 +14,7 @@ public class SFX_Manager : MonoBehaviour {
     public List<AudioClip> malePain = new List<AudioClip>();
     public List<AudioClip> femalePain = new List<AudioClip>();
 
+    public List<AudioClip> shatterDeath = new List<AudioClip>();
     public List<AudioClip> maleDeath = new List<AudioClip>();
     public List<AudioClip> femaleDeath = new List<AudioClip>();
 
@@ -22,14 +23,4 @@ public class SFX_Manager : MonoBehaviour {
     public List<AudioClip> swishes = new List<AudioClip>();
 
     public List<AudioClip> meleeMetal = new List<AudioClip>();
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

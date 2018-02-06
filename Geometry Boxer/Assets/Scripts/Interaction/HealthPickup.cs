@@ -6,12 +6,14 @@ public class HealthPickup : MonoBehaviour
 {
     public int healAmount = 100;
     public float RespawnDelay = 10f;
+    public AudioClip healthPickup;
 
     private bool waiting;
     private int travelAmount;
     private float moveAmount;
     private float timer;
     private Vector3 startingPos;
+    private AudioSource source;
 
     // Use this for initialization
     void Start()
@@ -20,6 +22,7 @@ public class HealthPickup : MonoBehaviour
         travelAmount = 1;
         moveAmount = 0.05f;
         waiting = false;
+        source = gameObject.AddComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -95,6 +98,7 @@ public class HealthPickup : MonoBehaviour
             waiting = true;
             this.gameObject.GetComponent<MeshRenderer>().enabled = false;
             this.gameObject.GetComponent<SphereCollider>().enabled = false;
+            source.PlayOneShot(healthPickup, 1f);
         }
     }
 }
