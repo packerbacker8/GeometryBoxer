@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using UnityEngine.EventSystems;
+
 public class CharacterSelectController : MonoBehaviour
 {
     public GameObject cubeChar;
@@ -22,6 +24,7 @@ public class CharacterSelectController : MonoBehaviour
     private bool cubeSelected = false;
     private bool octaSelected = false;
 
+    private bool controllerMode = false;
     // Use this for initialization
     void Start()
     {
@@ -39,10 +42,32 @@ public class CharacterSelectController : MonoBehaviour
         textElement.text = "Pick Your Faction";
         cubemanText.enabled = false;
         octahedronText.enabled = false;
+
+        controllerMode = false;
+        string[] inputNames = Input.GetJoystickNames();
+        for (int i = 0; i < inputNames.Length; i++)
+        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
+            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+            {
+                controllerMode = true;
+            }
+        }
     }
 
     void Update()
     {
+        if (controllerMode)
+        {
+            //Debug.Log(Input.GetAxis("HorizontalLeft"));
+            if (Input.GetAxis("HorizontalLeft") < -0.5f)
+            {
+                CharacterSelected("Cube");
+            }
+            else if (Input.GetAxis("HorizontalLeft") > 0.5f)
+            {
+                CharacterSelected("Octahedron");
+            }
+        }
         if(!cubeSelected && !octaSelected)
         {
             beginButton.enabled = false;
@@ -56,6 +81,8 @@ public class CharacterSelectController : MonoBehaviour
             cubemanText.enabled = true;
             octahedronText.enabled = false;
             beginButton.GetComponent<Image>().color = Color.grey;
+
+            EventSystem.current.SetSelectedGameObject(beginButton.gameObject);
         }
         else if(octaSelected && !cubeSelected)
         {
@@ -66,6 +93,8 @@ public class CharacterSelectController : MonoBehaviour
             cubemanText.enabled = false;
             octahedronText.enabled = true;
             beginButton.GetComponent<Image>().color = Color.grey;
+
+            EventSystem.current.SetSelectedGameObject(beginButton.gameObject);
         }
     }
 
