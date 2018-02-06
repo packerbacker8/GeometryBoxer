@@ -16,6 +16,7 @@ namespace Enemy
         private float startAngle;
         public float rotateSpeed;
         public List<GameObject> patrolPositions;
+        private GameObject playerObj;
         private Transform playerTransform;
         int currentSpot = 0;
 
@@ -47,14 +48,15 @@ namespace Enemy
             return transform.position;
         }
 
-        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, Transform move)
+        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
         {
             stoppingDistance = stopDist;
             stoppingThreshold = stopThresh;
             jumpDistance = jumpDis;
             //anim = animator;
             moveTarget = patrolPositions[0].transform;
-            playerTransform = move;
+            playerObj = moveObj;
+            playerTransform = playerObj.transform;
         }
 
         public void playerFound()

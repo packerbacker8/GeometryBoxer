@@ -18,6 +18,7 @@ namespace Enemy
         private float stoppingThreshold;
         private float jumpDistance;
         private float startAngle;
+        private GameObject moveTargetObj;
         private Transform moveTarget;
         private Transform playerTransform;
         private GameObject gameController;
@@ -41,7 +42,7 @@ namespace Enemy
 
         public Vector3 move()
         {
-            if(moveTarget == null)
+            if(moveTargetObj == null)
             {
                 gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
             }
@@ -54,13 +55,13 @@ namespace Enemy
             return transform.position;
         }
 
-        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, Transform move)
+        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
         {
             stoppingDistance = stopDist;
             stoppingThreshold = stopThresh;
             jumpDistance = jumpDis;
-            //anim = animator;
-            moveTarget = move;
+            moveTargetObj = moveObj;
+            moveTarget = moveTargetObj.transform;
             //StartCoroutine(checkDistance());
         }
 

@@ -6,12 +6,13 @@ using Enemy;
 using RootMotion.Demos;
 using UnityEngine.AI;
 
-public class NormalAttackAI : MonoBehaviour ,AttackBase {
+public class NormalAttackAI : MonoBehaviour, AttackBase {
 
     float stoppingDistance;
     float stoppingThreshold;
     float jumpDistance;
     Animator anim;
+    GameObject moveTargetObj;
     Transform moveTarget;
     float attackRange;
     UserControlThirdPerson.State state;
@@ -69,13 +70,14 @@ public class NormalAttackAI : MonoBehaviour ,AttackBase {
     }
 
     public void setUp(float stopDist, float stopThresh, float jumpDis, 
-        Transform move, CharacterPuppet charPup,  AudioSource src, 
+        GameObject moveObj, CharacterPuppet charPup,  AudioSource src, 
         SFX_Manager sfx, float rangeAttack)
     {
         stoppingDistance = stopDist;
         stoppingThreshold = stopThresh;
         jumpDistance = jumpDis;
-        moveTarget = move;
+        moveTargetObj = moveObj;
+        moveTarget = moveTargetObj.transform;
         characterPuppet = charPup;
         source = src;
         sfxManager = sfx;

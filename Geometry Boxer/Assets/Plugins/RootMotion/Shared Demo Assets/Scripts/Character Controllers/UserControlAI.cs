@@ -25,6 +25,7 @@ namespace RootMotion.Demos
         public AttackBase attackStyle;
         public Animator anim;
         public Transform goal;
+        public GameObject moveTargetObj;
         public Transform moveTarget;
         public bool drop;
 
@@ -90,7 +91,7 @@ namespace RootMotion.Demos
 
         protected override void Update()
         {
-            if (!dead && moveTarget != null)
+            if (!dead && moveTargetObj != null)
             {
                 //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
                 //Vector3 targetDir = moveTarget.position - transform.position;
@@ -152,11 +153,12 @@ namespace RootMotion.Demos
         /// Function to set player's move controller.
         /// </summary>
         /// <param name="move"></param>
-        public void SetMoveTarget(Transform move)
+        public void SetMoveTarget(GameObject moveObj)
         {
-            moveTarget = move;
-            movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget);
-            attackStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
+            moveTargetObj = moveObj;
+            moveTarget = moveTargetObj.transform;
+            movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTargetObj);
+            attackStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTargetObj, characterPuppet, source, sfxManager, attackRange);
         }
 
         public void deathUpdate()

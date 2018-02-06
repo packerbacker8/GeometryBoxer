@@ -12,6 +12,7 @@ namespace Enemy
         float stoppingDistance;
         float stoppingThreshold;
         float jumpDistance;
+        private GameObject moveTargetObj;
         Transform moveTarget;
         UserControlThirdPerson.State state;
 
@@ -29,13 +30,14 @@ namespace Enemy
             return transform.position;
         }
 
-        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, Transform move)
+        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
         {
             stoppingDistance = stopDist;
             stoppingThreshold = stopThresh;
             jumpDistance = jumpDis;
             //anim = animator;
-            moveTarget = move;
+            moveTargetObj = moveObj;
+            moveTarget = moveTargetObj.transform;
 
         }
 

@@ -69,7 +69,7 @@ public class GameControllerScript : MonoBehaviour
                 {
                     enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
                     enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
-                    enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(allyContainer.transform.GetChild(i % alliesInWorld.Length).GetChild(charControllerIndex));
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(allyContainer.transform.GetChild(i % alliesInWorld.Length).GetChild(charControllerIndex).gameObject);
                     enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
                     enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
                 }
@@ -77,7 +77,7 @@ public class GameControllerScript : MonoBehaviour
                 {
                     allyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
                     allyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Enemy", false);
-                    allyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(enemyContainer.transform.GetChild(i % numEnemiesAlive).GetChild(charControllerIndex));
+                    allyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(enemyContainer.transform.GetChild(i % numEnemiesAlive).GetChild(charControllerIndex).gameObject);
                     allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform); //might need to change
                     allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().sightRange = 0f; //set sight range to zero so that allied bots never try to switch targets
                     ChangeAllTags(allyContainer.transform.GetChild(i).gameObject, "Ally");
@@ -102,7 +102,7 @@ public class GameControllerScript : MonoBehaviour
             for (int i = 0; i < numEnemiesAlive; i++)
             {
                 enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
-                enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController.transform);
+                enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
                 enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
                 enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
@@ -146,25 +146,24 @@ public class GameControllerScript : MonoBehaviour
             numEnemiesAlive--;
             for(int i = 0; i < alliesInWorld.Length; i++)
             {
-                if(alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTarget == enemiesInWorld[index].transform.GetChild(2))
+                if(enemiesInWorld[i] != null && alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == enemiesInWorld[index])
                 {
+                    enemiesInWorld[index] = null;
                     SetNewTarget(i, alliesInWorld[i].tag);
-                    return;
                 }
             }
-            //enemiesInWorld[index] = null;
         }
         else
         {
             for (int i = 0; i < enemiesInWorld.Length; i++)
             {
-                if (enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<UserControlAI>().moveTarget == alliesInWorld[index].transform.GetChild(2))
+                if (alliesInWorld[index] != null && enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == alliesInWorld[index])
                 {
+                    alliesInWorld[index] = null;
                     SetNewTarget(i, enemiesInWorld[i].tag);
-                    return;
+                    
                 }
             }
-            //alliesInWorld[index] = null;
         }
     }
 
@@ -201,7 +200,7 @@ public class GameControllerScript : MonoBehaviour
     /// <param name="indexOfEnemy">This index indicates which enemy to change their target.</param>
     public void ChangeTarget(int indexOfEnemy)
     {
-        enemiesInWorld[indexOfEnemy].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController.transform);
+        enemiesInWorld[indexOfEnemy].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
     }
 
     /// <summary>
@@ -211,14 +210,13 @@ public class GameControllerScript : MonoBehaviour
     /// <param name="tag">Tag of their root object</param>
     public void SetNewTarget(int index, string tag)
     {
-        Debug.Log("Need to make a new target");
         if(tag.Contains("Enemy"))
         {
             for(int i = 0; i < alliesInWorld.Length; i++)
             {
                 if(alliesInWorld[i] != null)
                 {
-                    enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(alliesInWorld[i].transform.GetChild(charControllerIndex));
+                    enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(alliesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
                     return;
                 }
             }
@@ -229,7 +227,7 @@ public class GameControllerScript : MonoBehaviour
             {
                 if (enemiesInWorld[i] != null)
                 {
-                    alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(enemiesInWorld[i].transform.GetChild(charControllerIndex));
+                    alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(enemiesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
                     return;
                 }
             }
