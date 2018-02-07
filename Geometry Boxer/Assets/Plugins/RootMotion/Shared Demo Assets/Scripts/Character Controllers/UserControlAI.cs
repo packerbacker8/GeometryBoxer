@@ -98,11 +98,11 @@ namespace RootMotion.Demos
                 //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
                 AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
-                if (!movementStyle.getPlayerTarget() && moveTargetObj.transform.root.tag.Contains("Player"))
+                if (moveTargetObj == null)   
                 {
                     agent.enabled = false;
                 }
-                else if(moveTargetObj == null)
+                else if (!movementStyle.getPlayerTarget() && moveTargetObj.transform.root.tag.Contains("Player"))
                 {
                     agent.enabled = false;
                 }

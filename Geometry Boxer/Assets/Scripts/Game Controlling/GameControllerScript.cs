@@ -163,30 +163,39 @@ public class GameControllerScript : MonoBehaviour
     /// <param name="tag">Tag of the object sent.</param>
     public void isKilled(int index, string tag)
     {
-        if(tag.Contains("Enemy"))
+        if(hasAllies)
         {
-            numEnemiesAlive--;
-            for(int i = 0; i < alliesInWorld.Length; i++)
+            if (tag.Contains("Enemy"))
             {
-                if(enemiesInWorld[i] != null && alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == enemiesInWorld[index])
+                numEnemiesAlive--;
+                for (int i = 0; i < alliesInWorld.Length; i++)
                 {
-                    enemiesInWorld[index] = null;
-                    SetNewTarget(i, alliesInWorld[i].tag);
+                    if (enemiesInWorld[index] != null && alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == enemiesInWorld[index])
+                    {
+                        enemiesInWorld[index] = null;
+                        SetNewTarget(i, alliesInWorld[i].tag);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < enemiesInWorld.Length; i++)
+                {
+                    if (alliesInWorld[index] != null && enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == alliesInWorld[index])
+                    {
+                        alliesInWorld[index] = null;
+                        SetNewTarget(i, enemiesInWorld[i].tag);
+
+                    }
                 }
             }
         }
         else
         {
-            for (int i = 0; i < enemiesInWorld.Length; i++)
-            {
-                if (alliesInWorld[index] != null && enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == alliesInWorld[index])
-                {
-                    alliesInWorld[index] = null;
-                    SetNewTarget(i, enemiesInWorld[i].tag);
-                    
-                }
-            }
+            numEnemiesAlive--;
+            enemiesInWorld[index] = null;
         }
+        
     }
 
     /// <summary>
