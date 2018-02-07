@@ -116,8 +116,12 @@ namespace Enemy
             distance = Vector3.Distance(playerTransform.position, transform.position);
             if (distance < sightRange)
             {
-                //playerTarget = true;
+                playerTarget = true;
                 this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget();
+            }
+            else
+            {
+                playerTarget = false;
             }
         }
 

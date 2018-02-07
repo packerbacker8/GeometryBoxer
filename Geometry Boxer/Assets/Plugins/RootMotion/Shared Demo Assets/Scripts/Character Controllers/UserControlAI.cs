@@ -91,21 +91,25 @@ namespace RootMotion.Demos
 
         protected override void Update()
         {
-            if (!dead && moveTargetObj != null)
+            if (!dead)   //&& moveTargetObj != null)
             {
                 //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
                 //Vector3 targetDir = moveTarget.position - transform.position;
                 //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
                 AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
-                /*if (!movementStyle.getPlayerTarget())
+                if (!movementStyle.getPlayerTarget() && moveTargetObj.transform.root.tag.Contains("Player"))
+                {
+                    agent.enabled = false;
+                }
+                else if(moveTargetObj == null)
                 {
                     agent.enabled = false;
                 }
                 else
                 {
                     agent.enabled = true;
-                }*/
+                }
                 if (!(!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)))
                 {
                     if (!agent.isOnOffMeshLink)

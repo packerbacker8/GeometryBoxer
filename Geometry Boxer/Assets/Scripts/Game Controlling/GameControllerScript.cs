@@ -70,7 +70,14 @@ public class GameControllerScript : MonoBehaviour
                     enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
                     enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
                     enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(allyContainer.transform.GetChild(i % alliesInWorld.Length).GetChild(charControllerIndex).gameObject);
-                    enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                    if(enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
+                    {
+                        enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                    }
+                    else if(enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
+                    {
+                        enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
+                    }
                     enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
                 }
                 if(i < alliesInWorld.Length)
@@ -78,8 +85,15 @@ public class GameControllerScript : MonoBehaviour
                     allyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
                     allyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Enemy", false);
                     allyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(enemyContainer.transform.GetChild(i % numEnemiesAlive).GetChild(charControllerIndex).gameObject);
-                    allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform); //might need to change
-                    allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().sightRange = 0f; //set sight range to zero so that allied bots never try to switch targets
+                    if(allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
+                    {
+                        allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform); //might need to change
+                        allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().sightRange = 0f; //set sight range to zero so that allied bots never try to switch targets
+                    }
+                    else if (allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
+                    {
+                        //do nothing?
+                    }
                     ChangeAllTags(allyContainer.transform.GetChild(i).gameObject, "Ally");
                     allyContainer.transform.GetChild(i).gameObject.tag = "AllyRoot";
                     alliesInWorld[i] = allyContainer.transform.GetChild(i).gameObject;
@@ -102,8 +116,16 @@ public class GameControllerScript : MonoBehaviour
             for (int i = 0; i < numEnemiesAlive; i++)
             {
                 enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
+                enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
                 enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
-                enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                if (enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
+                {
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                }
+                else if (enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
+                {
+                    //nothing?
+                }
                 enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
         }
@@ -220,6 +242,7 @@ public class GameControllerScript : MonoBehaviour
                     return;
                 }
             }
+            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
         }
         else
         {
