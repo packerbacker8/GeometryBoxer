@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 195930834809157444}
   - component: {fileID: 114359054782935760}
   - component: {fileID: 114780309314943374}
-  - component: {fileID: 114473041927732974}
+  - component: {fileID: 114139652538952052}
   m_Layer: 8
   m_Name: Character Controller
   m_TagString: Enemy
@@ -2960,6 +2960,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sendDamage: 1
+--- !u!114 &114139652538952052
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1068587238557984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1dc32ba6a517024781820aa1034869f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateSpeed: 1.5
+  bounceAngle: 70
+  sightRange: 20
+  playerTarget: 0
 --- !u!114 &114196622715694110
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3236,21 +3251,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sendDamage: 1
---- !u!114 &114473041927732974
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1068587238557984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6301a09d9e82e45429a3e56c823620b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTarget: 0
-  bounceAngle: 0
-  rotateSpeed: 0
-  distance: 20
 --- !u!114 &114566707750940556
 MonoBehaviour:
   m_ObjectHideFlags: 1

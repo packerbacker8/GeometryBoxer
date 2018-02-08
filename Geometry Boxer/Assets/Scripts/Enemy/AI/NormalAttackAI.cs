@@ -6,12 +6,13 @@ using Enemy;
 using RootMotion.Demos;
 using UnityEngine.AI;
 
-public class NormalAttackAI : MonoBehaviour ,AttackBase {
+public class NormalAttackAI : MonoBehaviour, AttackBase {
 
     float stoppingDistance;
     float stoppingThreshold;
     float jumpDistance;
     Animator anim;
+    GameObject moveTargetObj;
     Transform moveTarget;
     float attackRange;
     UserControlThirdPerson.State state;
@@ -37,11 +38,6 @@ public class NormalAttackAI : MonoBehaviour ,AttackBase {
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
     }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public void attack()
     {
         if (canAttack())
@@ -70,17 +66,22 @@ public class NormalAttackAI : MonoBehaviour ,AttackBase {
 
     public bool canAttack()
     {
+        if(moveTargetObj == null)
+        {
+            return false;
+        }
         return (Vector3.Distance(moveTarget.position, transform.position) <= attackRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Hit")) ;
     }
 
     public void setUp(float stopDist, float stopThresh, float jumpDis, 
-        Transform move, CharacterPuppet charPup,  AudioSource src, 
+        GameObject moveObj, CharacterPuppet charPup,  AudioSource src, 
         SFX_Manager sfx, float rangeAttack)
     {
         stoppingDistance = stopDist;
         stoppingThreshold = stopThresh;
         jumpDistance = jumpDis;
-        moveTarget = move;
+        moveTargetObj = moveObj;
+        moveTarget = moveTargetObj.transform;
         characterPuppet = charPup;
         source = src;
         sfxManager = sfx;
