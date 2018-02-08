@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -411,11 +411,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c267fa9c116b99744947890072a861a2, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &65035959 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1093907478265458, guid: c267fa9c116b99744947890072a861a2,
-    type: 2}
-  m_PrefabInternal: {fileID: 65035958}
 --- !u!1001 &68949466
 Prefab:
   m_ObjectHideFlags: 0
@@ -1634,9 +1629,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerOptions:
-  - {fileID: 0}
+  - {fileID: 786394018}
   - {fileID: 1374829211}
-  - {fileID: 65035959}
   playerImage: {fileID: 251814238}
   cube: {fileID: 21300000, guid: d5ec042f5654d6d438c4ee74263bde03, type: 3}
   sphere: {fileID: 21300000, guid: 57845035ecbcd89419c44f34ece6be52, type: 3}
@@ -4051,9 +4045,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wonGameCanvas: {fileID: 1327897778}
   playerOptions:
-  - {fileID: 65035959}
-  - {fileID: 0}
   - {fileID: 1374829211}
+  - {fileID: 786394018}
 --- !u!224 &638962930
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4939,6 +4932,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 427de71a12c6d004cbd285943409c7a7, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &786394018 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1901142967609700, guid: 427de71a12c6d004cbd285943409c7a7,
+    type: 2}
+  m_PrefabInternal: {fileID: 786394017}
 --- !u!1001 &815878506
 Prefab:
   m_ObjectHideFlags: 0
@@ -6597,15 +6595,6 @@ Prefab:
     - target: {fileID: 4165296775922130, guid: e69b09739c130e9449555b60e80f9cb7, type: 2}
       propertyPath: m_RootOrder
       value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 114059141406363036, guid: e69b09739c130e9449555b60e80f9cb7,
-        type: 2}
-      propertyPath: cityNames.Array.data[1]
-      value: City
-      objectReference: {fileID: 0}
-    - target: {fileID: 1703511656577592, guid: e69b09739c130e9449555b60e80f9cb7, type: 2}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e69b09739c130e9449555b60e80f9cb7, type: 2}
