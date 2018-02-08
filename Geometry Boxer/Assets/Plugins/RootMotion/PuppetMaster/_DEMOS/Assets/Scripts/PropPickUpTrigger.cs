@@ -10,8 +10,14 @@ namespace RootMotion.Demos {
 		public LayerMask characterLayers;
 
 		private CharacterPuppet characterPuppet;
+        private GameObject light;
 
-		void OnTriggerEnter(Collider collider) {
+        void Start()
+        {
+            light = this.transform.parent.GetChild(5).gameObject;   
+        }
+
+        void OnTriggerEnter(Collider collider) {
 			if (prop.isPickedUp) return;
 			if (!LayerMaskExtensions.Contains(characterLayers, collider.gameObject.layer)) return;
 
@@ -24,6 +30,7 @@ namespace RootMotion.Demos {
 			if (characterPuppet.propRoot.currentProp != null) return;
 
 			characterPuppet.propRoot.currentProp = prop;
+            light.SetActive(false);
 		}
 	}
 }

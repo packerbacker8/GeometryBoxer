@@ -13,7 +13,12 @@ namespace RootMotion.Demos
         public ParticleSystem particles;
 
         private CharacterPuppet characterPuppet;
+        private GameObject light;
 
+        void Start()
+        {
+            light = this.transform.parent.GetChild(5).gameObject;
+        }
 
         void OnTriggerEnter(Collider collider)
         {
@@ -36,6 +41,7 @@ namespace RootMotion.Demos
             if (characterPuppet.propRoot.currentProp != null) return;
 
             characterPuppet.propRoot.currentProp = prop;
+            light.SetActive(false);
         }
     }
 }
