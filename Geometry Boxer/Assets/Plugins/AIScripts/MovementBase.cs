@@ -23,5 +23,7 @@ namespace Enemy
         Quaternion rotateStyle();
 
         bool getPlayerTarget();
+
+        void UpdateTarget();
     }
 }

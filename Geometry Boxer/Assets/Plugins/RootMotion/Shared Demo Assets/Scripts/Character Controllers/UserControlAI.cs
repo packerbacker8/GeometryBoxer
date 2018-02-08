@@ -101,6 +101,11 @@ namespace RootMotion.Demos
                 if (moveTargetObj == null)   
                 {
                     agent.enabled = false;
+                    movementStyle.UpdateTarget();
+                    if(moveTargetObj != null)
+                    {
+                        agent.enabled = true;
+                    }
                 }
                 else if (!movementStyle.getPlayerTarget() && moveTargetObj.transform.root.tag.Contains("Player"))
                 {

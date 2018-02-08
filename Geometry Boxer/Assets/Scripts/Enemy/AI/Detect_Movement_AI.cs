@@ -36,6 +36,10 @@ namespace Enemy
 
         public bool canMove()
         {
+            if(moveTargetObj == null)
+            {
+                return false;
+            }
             return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
 
         }
@@ -111,7 +115,7 @@ namespace Enemy
         {
             if (moveTargetObj == null)
             {
-                gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
+                UpdateTarget();
             }
             distance = Vector3.Distance(playerTransform.position, transform.position);
             if (distance < sightRange)
@@ -123,6 +127,14 @@ namespace Enemy
             {
                 playerTarget = false;
             }
+        }
+
+        /// <summary>
+        /// When the current move to target has been detected as null, update the movetargetobj to something new.
+        /// </summary>
+        public void UpdateTarget()
+        {
+            gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
         }
 
         private IEnumerator checkDistance()

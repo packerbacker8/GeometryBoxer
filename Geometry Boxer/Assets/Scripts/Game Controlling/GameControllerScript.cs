@@ -168,6 +168,7 @@ public class GameControllerScript : MonoBehaviour
             if (tag.Contains("Enemy"))
             {
                 numEnemiesAlive--;
+                Debug.Log("This person just died counted as an enemy: " + enemiesInWorld[index].name);
                 for (int i = 0; i < alliesInWorld.Length; i++)
                 {
                     if (enemiesInWorld[index] != null && alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == enemiesInWorld[index])

@@ -6,23 +6,27 @@ namespace Enemy
 {
     public class Patrol_Movement_AI : MonoBehaviour, MovementBase
     {
-        float stoppingDistance;
-        float stoppingThreshold;
-        float jumpDistance;
-        Transform moveTarget;
         public bool playerTarget;
         public float bounceAngle;
-        private bool inZone;
-        private float startAngle;
         public float rotateSpeed;
         public List<GameObject> patrolPositions;
-        private GameObject playerObj;
-        private Transform playerTransform;
-        int currentSpot = 0;
 
-        float patrolStopDistance = 1f;
+        private float stoppingDistance;
+        private float stoppingThreshold;
+        private float jumpDistance;
+        private float startAngle;
+        private float patrolStopDistance = 1f;
+        private GameObject playerObj;
+        private GameObject gameController;
+        private Transform playerTransform;
+        private Transform moveTarget;
+        private int currentSpot = 0;
+        private bool inZone;
+
+
         public bool canMove()
         {
+
             if (playerTarget)
             {
                 return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
@@ -100,18 +104,21 @@ namespace Enemy
             bounceAngle = 70f;
             startAngle = transform.eulerAngles.y;
             rotateSpeed = 1.5f;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            gameController = GameObject.FindGameObjectWithTag("GameController");
         }
 
         public bool getPlayerTarget()
         {
             //return playerTarget;
             return true;
+        }
+
+        /// <summary>
+        /// When the current move to target has been detected as null, update the movetargetobj to something new.
+        /// </summary>
+        public void UpdateTarget()
+        {
+            gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
         }
     }
 

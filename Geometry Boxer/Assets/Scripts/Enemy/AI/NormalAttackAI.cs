@@ -66,6 +66,10 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
 
     public bool canAttack()
     {
+        if(moveTargetObj == null)
+        {
+            return false;
+        }
         return (Vector3.Distance(moveTarget.position, transform.position) <= attackRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Hit")) ;
     }
 
