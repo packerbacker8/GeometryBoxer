@@ -33,6 +33,30 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     private int punchAnimLayer = 0;
     private int animationControllerIndex = 0;
     private int characterControllerIndex = 2;
+
+    public GameObject rightShoulder;
+    public GameObject leftShoulder;
+    public GameObject rightThigh;
+    public GameObject leftThigh;
+
+    /// <summary>
+    /// Information relating to a character animation.
+    /// </summary>
+    [System.Serializable]
+    public struct CharacterAnimations
+    {
+        public int actionIndex;
+        public string animName;
+        public int animLayer;
+        public float transitionTime;
+        public float playTime;
+    }
+
+    public enum Limbs
+    {
+        leftArm = 0,
+        rightArm
+    };
     // Use this for initialization
     void Start () {
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
@@ -86,5 +110,105 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         source = src;
         sfxManager = sfx;
         attackRange = rangeAttack;
+    }
+    public virtual void ThrowUppercut(Limbs limb)
+    {
+        CharacterAnimations currentAnim = InitCharacterAnimationStruct();
+        //anim.Play(leftUppercutAnimation, punchAnimLayer);
+        foreach (CharacterAnimations action in playerAnimations)
+        {
+            if (limb == Limbs.leftArm && action.animName == "LeftUpperCut")
+            {
+                leftFistCollider.enabled = true;
+                currentAnim = action;
+                break;
+            }
+            if (limb == Limbs.rightArm && action.animName == "RightUpperCut")
+            {
+                rightFistCollider.enabled = true;
+                currentAnim = action;
+                if (anim.GetFloat("Forward") < 0.5f)
+                {
+                    currentAnim.animLayer = 0;
+                }
+                else
+                {
+                    currentAnim.animLayer = 1; //forced
+                }
+                break;
+            }
+        }
+        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        SetCurrentAnimTime(currentAnim);
+        anim.SetInteger("ActionIndex", -1);
+
+    }
+    public void ThrowUppercut(Limbs limb)
+    {
+        //base.ThrowUppercut(limb);
+        CharacterAnimations currentAnim = InitCharacterAnimationStruct();
+        //anim.Play(leftUppercutAnimation, punchAnimLayer);
+        foreach (CharacterAnimations action in playerAnimations)
+        {
+            if (limb == Limbs.leftArm && action.animName == "LeftUpperCut")
+            {
+                leftFistCollider.enabled = true;
+                currentAnim = action;
+                break;
+            }
+            if (limb == Limbs.rightArm && action.animName == "RightUpperCut")
+            {
+                rightFistCollider.enabled = true;
+                currentAnim = action;
+                if (anim.GetFloat("Forward") < 0.5f)
+                {
+                    currentAnim.animLayer = 0;
+                }
+                else
+                {
+                    currentAnim.animLayer = 1; //forced
+                }
+                break;
+            }
+        }
+        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        SetCurrentAnimTime(currentAnim);
+        anim.SetInteger("ActionIndex", -1);
+
+        if (limb == Limbs.leftArm)
+        {
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+            }
+            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                walker2.GetComponent<CollisionReceived>().sendDamage = false;
+            }
+        }
+        else
+        {
+            GameObject walker = rightShoulder;
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+            }
+
+            if (walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = false;
+            }
+        }
     }
 }
