@@ -9,6 +9,7 @@ public class pauseMenu : MonoBehaviour
     public GameObject scrollView;
     public GameObject scrollViewContent;
     public GameObject fileButtonPrefab;
+    public GameObject optionsMenu;
 
     private GameObject character;
     private GameObject control;
@@ -40,6 +41,17 @@ public class pauseMenu : MonoBehaviour
         pauseMenuCanvas.SetActive(false);
         saveFileName = "";
         saveFileButtons = new List<GameObject>();
+        if (optionsMenu == null)
+        {
+            try
+            {
+                optionsMenu = GameObject.Find("OptionsMenu");
+            }
+            catch
+            {
+                throw new MissingComponentException();
+            }
+        }
         //if game controller found is game controller for combat levels, grab player info
         isCombatScene = control.name.Equals("GameController");
         if (isCombatScene)
@@ -246,6 +258,18 @@ public class pauseMenu : MonoBehaviour
     public void QuitGame()
     {
         LoadLevel.loader.ExitGame();
+    }
+
+    public void openOptions()
+    {
+        if (optionsMenu.active)
+        {
+            optionsMenu.SetActive(false);
+        }
+        else
+        {
+            optionsMenu.SetActive(true);
+        }
     }
 
 }
