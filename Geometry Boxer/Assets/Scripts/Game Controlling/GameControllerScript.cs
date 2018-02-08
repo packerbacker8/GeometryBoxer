@@ -89,8 +89,9 @@ public class GameControllerScript : MonoBehaviour
                     {
                         allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform); //might need to change
                         allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().sightRange = 0f; //set sight range to zero so that allied bots never try to switch targets
+
                     }
-                    else if (allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
+                    else if (allyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
                     {
                         //do nothing?
                     }
@@ -121,6 +122,7 @@ public class GameControllerScript : MonoBehaviour
                 if (enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
                 {
                     enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+
                 }
                 else if (enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
                 {
@@ -142,7 +144,6 @@ public class GameControllerScript : MonoBehaviour
         if (numEnemiesAlive <= 0)
         {
             SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
-            this.SendMessage("NewSceneIsLoading", SendMessageOptions.DontRequireReceiver);
             StartCoroutine(changeLevel(dominationMap));
         }
     }
@@ -168,26 +169,30 @@ public class GameControllerScript : MonoBehaviour
             if (tag.Contains("Enemy"))
             {
                 numEnemiesAlive--;
+                /*
+                bool[] alliesToChange = new bool[alliesInWorld.Length];
                 for (int i = 0; i < alliesInWorld.Length; i++)
                 {
-                    if (enemiesInWorld[index] != null && alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == enemiesInWorld[index])
+                    if ( alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == enemiesInWorld[index])
                     {
-                        enemiesInWorld[index] = null;
-                        SetNewTarget(i, alliesInWorld[i].tag);
+                        alliesToChange[i] = true;
                     }
-                }
+                }*/
+                enemiesInWorld[index] = null;
+                //SetNewTarget(i, alliesInWorld[i].tag);
             }
             else
             {
+                /*
                 for (int i = 0; i < enemiesInWorld.Length; i++)
                 {
                     if (alliesInWorld[index] != null && enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == alliesInWorld[index])
                     {
-                        alliesInWorld[index] = null;
                         SetNewTarget(i, enemiesInWorld[i].tag);
 
                     }
-                }
+                }*/
+                alliesInWorld[index] = null;
             }
         }
         else
