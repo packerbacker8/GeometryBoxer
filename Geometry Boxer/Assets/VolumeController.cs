@@ -18,5 +18,7 @@ public class VolumeController : MonoBehaviour {
         {
             a.volume = VolumeSlider.value;
         }
+
+        AudioListener.volume = VolumeSlider.value;
 	}
 }

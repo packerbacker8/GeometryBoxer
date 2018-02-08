@@ -9,7 +9,7 @@ public class pauseMenu : MonoBehaviour
     public GameObject scrollView;
     public GameObject scrollViewContent;
     public GameObject fileButtonPrefab;
-    public GameObject optionsMenu;
+    public GameObject optionsMenuCanvas;
 
     private GameObject character;
     private GameObject control;
@@ -39,13 +39,14 @@ public class pauseMenu : MonoBehaviour
         saveInputField = saveCanvas.GetComponentInChildren<InputField>();
         saveCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(false);
+        optionsMenuCanvas.SetActive(false);
         saveFileName = "";
         saveFileButtons = new List<GameObject>();
-        if (optionsMenu == null)
+        if (optionsMenuCanvas == null)
         {
             try
             {
-                optionsMenu = GameObject.Find("OptionsMenu");
+                optionsMenuCanvas = GameObject.Find("OptionsMenu");
             }
             catch
             {
@@ -136,6 +137,7 @@ public class pauseMenu : MonoBehaviour
         Cursor.visible = false;
 
         pauseMenuCanvas.SetActive(false);
+        optionsMenuCanvas.SetActive(false);
         isPaused = false;
     }
 
@@ -262,13 +264,13 @@ public class pauseMenu : MonoBehaviour
 
     public void openOptions()
     {
-        if (optionsMenu.active)
+        if (optionsMenuCanvas.active)
         {
-            optionsMenu.SetActive(false);
+            optionsMenuCanvas.SetActive(false);
         }
         else
         {
-            optionsMenu.SetActive(true);
+            optionsMenuCanvas.SetActive(true);
         }
     }
 
