@@ -45,6 +45,7 @@ public class EnemyHealthScript : MonoBehaviour
     private float Val2;
     private float Val3;
     private float Val4;
+    private float originalHealth;
 
     // Use this for initialization
     void Start()
@@ -69,6 +70,7 @@ public class EnemyHealthScript : MonoBehaviour
         Val1 = 3 * (EnemyHealth / 5);
         Val2 = 2 * (EnemyHealth / 5);
         Val3 = 1 * (EnemyHealth / 5);
+        originalHealth = EnemyHealth;
     }
 
     // Update is called once per frame
@@ -247,5 +249,21 @@ public class EnemyHealthScript : MonoBehaviour
         gameController.GetComponent<GameControllerScript>().ChangeTarget(enemyIndex);
     }
 
+    /// Return the health the enemy originally started out with.
+    /// </summary>
+    /// <returns>Float of health the enemy started with.</returns>
+    public float GetEnemyOriginalHealth()
+    {
+        return originalHealth;
+    }
+
+    /// <summary>
+    /// Give the enemy bot more health from pickup.
+    /// </summary>
+    /// <param name="toAdd">How much the health is going to up by.</param>
+    public void AddHealth(float toAdd)
+    {
+        EnemyHealth += toAdd;
+    }
 }
 
