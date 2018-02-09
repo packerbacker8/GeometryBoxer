@@ -7,6 +7,7 @@ using RootMotion.Demos;
 using UnityEngine.AI;
 
 public class NormalAttackAI : MonoBehaviour, AttackBase {
+    //protected float currentAnimLength;
 
     float stoppingDistance;
     float stoppingThreshold;
@@ -39,6 +40,12 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     public GameObject rightThigh;
     public GameObject leftThigh;
 
+    public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
+    //protected virtual void SetCurrentAnimTime(CharacterAnimations currentAnim)
+    //{
+    //    currentAnimLength = anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.playTime + (anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.transitionTime);
+    //    //isAttacking = true;
+    //}
     /// <summary>
     /// Information relating to a character animation.
     /// </summary>
@@ -57,6 +64,18 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         leftArm = 0,
         rightArm
     };
+
+    private CharacterAnimations InitCharacterAnimationStruct()
+    {
+        CharacterAnimations result;
+        result.animName = "Grounded Directional";
+        result.actionIndex = -1;
+        result.animLayer = 1;
+        result.playTime = 1f;
+        result.transitionTime = 1f;
+        return result;
+    }
+
     // Use this for initialization
     void Start () {
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
@@ -82,7 +101,8 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
                 }
                 else//No melee object in hand of puppet
                 {
-                    anim.Play(rightSwingAnimation, punchAnimLayer);
+                    //anim.Play(rightSwingAnimation, punchAnimLayer);
+                    ThrowUppercut(Limbs.rightArm);
                 }
             }
         }
@@ -111,55 +131,15 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         sfxManager = sfx;
         attackRange = rangeAttack;
     }
-    public virtual void ThrowUppercut(Limbs limb)
-    {
-        CharacterAnimations currentAnim = InitCharacterAnimationStruct();
-        //anim.Play(leftUppercutAnimation, punchAnimLayer);
-        foreach (CharacterAnimations action in playerAnimations)
-        {
-            if (limb == Limbs.leftArm && action.animName == "LeftUpperCut")
-            {
-                leftFistCollider.enabled = true;
-                currentAnim = action;
-                break;
-            }
-            if (limb == Limbs.rightArm && action.animName == "RightUpperCut")
-            {
-                rightFistCollider.enabled = true;
-                currentAnim = action;
-                if (anim.GetFloat("Forward") < 0.5f)
-                {
-                    currentAnim.animLayer = 0;
-                }
-                else
-                {
-                    currentAnim.animLayer = 1; //forced
-                }
-                break;
-            }
-        }
-        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
-        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
-        SetCurrentAnimTime(currentAnim);
-        anim.SetInteger("ActionIndex", -1);
 
-    }
     public void ThrowUppercut(Limbs limb)
     {
-        //base.ThrowUppercut(limb);
         CharacterAnimations currentAnim = InitCharacterAnimationStruct();
-        //anim.Play(leftUppercutAnimation, punchAnimLayer);
-        foreach (CharacterAnimations action in playerAnimations)
+        foreach (CharacterAnimations action in enemyAnimations)
         {
-            if (limb == Limbs.leftArm && action.animName == "LeftUpperCut")
-            {
-                leftFistCollider.enabled = true;
-                currentAnim = action;
-                break;
-            }
             if (limb == Limbs.rightArm && action.animName == "RightUpperCut")
             {
-                rightFistCollider.enabled = true;
+                //rightFistCollider.enabled = true;
                 currentAnim = action;
                 if (anim.GetFloat("Forward") < 0.5f)
                 {
@@ -174,41 +154,48 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         }
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);
         anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
-        SetCurrentAnimTime(currentAnim);
+        anim.SetInteger("ActionIndex", -1);
+        //base.ThrowUppercut(limb);
+        
+        //anim.Play(leftUppercutAnimation, punchAnimLayer);
+       
+        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        //SetCurrentAnimTime(currentAnim);
         anim.SetInteger("ActionIndex", -1);
 
-        if (limb == Limbs.leftArm)
-        {
-            GameObject walker = leftShoulder;
-            GameObject walker2 = rightShoulder; //need both for sake of combo
-            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
-            {
-                walker.GetComponent<CollisionReceived>().sendDamage = false;
-                walker2.GetComponent<CollisionReceived>().sendDamage = false;
-                //assumes there is only one child
-                walker = walker.transform.GetChild(0).gameObject;
-                walker2 = walker2.transform.GetChild(0).gameObject;
-            }
-            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null)
-            {
-                walker.GetComponent<CollisionReceived>().sendDamage = false;
-                walker2.GetComponent<CollisionReceived>().sendDamage = false;
-            }
-        }
-        else
-        {
-            GameObject walker = rightShoulder;
-            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
-            {
-                walker.GetComponent<CollisionReceived>().sendDamage = false;
-                //assumes there is only one child
-                walker = walker.transform.GetChild(0).gameObject;
-            }
+        //if (limb == Limbs.leftArm)
+        //{
+        //    GameObject walker = leftShoulder;
+        //    GameObject walker2 = rightShoulder; //need both for sake of combo
+        //    while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+        //    {
+        //        //walker.GetComponent<CollisionReceived>().sendDamage = false;
+        //        //walker2.GetComponent<CollisionReceived>().sendDamage = false;
+        //        //assumes there is only one child
+        //        walker = walker.transform.GetChild(0).gameObject;
+        //        walker2 = walker2.transform.GetChild(0).gameObject;
+        //    }
+        //    if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null)
+        //    {
+        //        walker.GetComponent<CollisionReceived>().sendDamage = false;
+        //        walker2.GetComponent<CollisionReceived>().sendDamage = false;
+        //    }
+        //}
+        //else
+        //{
+        //    GameObject walker = rightShoulder;
+        //    while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+        //    {
+        //        walker.GetComponent<CollisionReceived>().sendDamage = false;
+        //        //assumes there is only one child
+        //        walker = walker.transform.GetChild(0).gameObject;
+        //    }
 
-            if (walker.GetComponent<CollisionReceived>() != null)
-            {
-                walker.GetComponent<CollisionReceived>().sendDamage = false;
-            }
-        }
+        //    if (walker.GetComponent<CollisionReceived>() != null)
+        //    {
+        //        walker.GetComponent<CollisionReceived>().sendDamage = false;
+        //    }
+        //}
     }
 }
