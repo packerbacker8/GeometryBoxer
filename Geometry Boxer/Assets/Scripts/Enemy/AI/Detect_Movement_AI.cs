@@ -126,6 +126,10 @@ namespace Enemy
             else
             {
                 playerTarget = false;
+                if (moveTarget == playerTransform) //allow enemy bots to retarget other bots
+                {
+                    UpdateTarget();
+                }
             }
         }
 

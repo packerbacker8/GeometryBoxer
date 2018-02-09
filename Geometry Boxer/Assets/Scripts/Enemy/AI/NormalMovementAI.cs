@@ -9,9 +9,11 @@ namespace Enemy
 {
     public class NormalMovementAI : MonoBehaviour, MovementBase
     {
-        float stoppingDistance;
-        float stoppingThreshold;
-        float jumpDistance;
+        private float stoppingDistance;
+        private float stoppingThreshold;
+        private float jumpDistance;
+        private float moveSpeed;
+
         private GameObject moveTargetObj;
         private GameObject gameController;
         Transform moveTarget;
@@ -20,6 +22,7 @@ namespace Enemy
         private void Start()
         {
             gameController = GameObject.FindGameObjectWithTag("GameController");
+            moveSpeed = 1.5f;
         }
 
         public bool canMove()
@@ -71,7 +74,10 @@ namespace Enemy
 
         public Quaternion rotateStyle()
         {
-            float moveSpeed = 1.5f;
+            if(moveTargetObj == null)
+            {
+                return transform.rotation;
+            }
             Vector3 targetDir = moveTarget.position - transform.position;
             Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
             return Quaternion.LookRotation(newDir);
