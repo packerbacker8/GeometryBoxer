@@ -2471,7 +2471,7 @@ Rigidbody:
   m_GameObject: {fileID: 1189436090008082}
   serializedVersion: 2
   m_Mass: 50
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -3022,6 +3022,7 @@ MonoBehaviour:
   jumpDistance: 10
   anim: {fileID: 0}
   goal: {fileID: 0}
+  moveTargetObj: {fileID: 0}
   moveTarget: {fileID: 0}
   drop: 0
 --- !u!114 &114586165358919732
@@ -3072,6 +3073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRandomAudio: 30
+  enemyAnimations: []
 --- !u!114 &114653299894691094
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4480,7 +4482,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.022241168, y: 0.096368186, z: -0.0000000628015}
+  m_ConnectedAnchor: {x: 0.022241168, y: 0.096369885, z: -0.000000062802606}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: -1}
   m_XMotion: 0
@@ -4950,7 +4952,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.022241194, y: -0.096368186, z: 0.0000000628015}
+  m_ConnectedAnchor: {x: 0.022241194, y: -0.096369885, z: 0.000000062802606}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: 1}
   m_XMotion: 0
@@ -5044,7 +5046,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -1, z: -0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.011497154, y: 0.104943216, z: -0.00000006838982}
+  m_ConnectedAnchor: {x: -0.011497154, y: 0.10494152, z: -0.000000068388715}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: 1}
   m_XMotion: 0
@@ -5232,7 +5234,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: -0, y: -1, z: -0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -0.011497094, y: -0.10494322, z: 0.00000006838982}
+  m_ConnectedAnchor: {x: -0.011497094, y: -0.104941525, z: 0.000000068388715}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 0, z: -1}
   m_XMotion: 0

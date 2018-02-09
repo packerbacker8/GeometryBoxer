@@ -198,6 +198,8 @@ public class EnemyHealthScript : MonoBehaviour
     /// </summary>
     public void ResetEnemy()
     {
+        Debug.Log("y velocity of bot: " + this.transform.GetChild(2).gameObject.GetComponent<Rigidbody>().velocity.y);
+
         this.GetComponentInChildren<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         KillEnemy();
     }

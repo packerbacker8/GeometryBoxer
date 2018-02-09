@@ -2615,7 +2615,7 @@ Rigidbody:
   m_GameObject: {fileID: 1068587238557984}
   serializedVersion: 2
   m_Mass: 50
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -3381,6 +3381,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRandomAudio: 30
+  enemyAnimations: []
 --- !u!114 &114834132832508312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3831,6 +3832,7 @@ MonoBehaviour:
   jumpDistance: 10
   anim: {fileID: 0}
   goal: {fileID: 0}
+  moveTargetObj: {fileID: 0}
   moveTarget: {fileID: 0}
   drop: 0
 --- !u!136 &136064811932381498

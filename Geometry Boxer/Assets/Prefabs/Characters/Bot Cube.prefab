@@ -1583,7 +1583,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1580138071602084}
   m_LocalRotation: {x: -0, y: -1, z: -0, w: -0.00000016292068}
-  m_LocalPosition: {x: 5.0309057, y: 11.340628, z: -27.757566}
+  m_LocalPosition: {x: 5.03, y: 11.340628, z: -20.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4492113262696428}
@@ -1592,7 +1592,7 @@ Transform:
   - {fileID: 4081501024997274}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 269.16998, z: 0}
 --- !u!4 &4728683331793606
 Transform:
   m_ObjectHideFlags: 1
@@ -2510,7 +2510,7 @@ Rigidbody:
   m_GameObject: {fileID: 1771923860353404}
   serializedVersion: 2
   m_Mass: 50
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -2904,11 +2904,12 @@ MonoBehaviour:
   canJump: 0
   attackRandomAudio: 250
   stoppingDistance: 1
-  stoppingThreshold: 1
+  stoppingThreshold: 1.1
   attackRange: 1
   jumpDistance: 10
   anim: {fileID: 0}
   goal: {fileID: 0}
+  moveTargetObj: {fileID: 0}
   moveTarget: {fileID: 0}
   drop: 0
 --- !u!114 &114100273873475492
@@ -3447,6 +3448,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRandomAudio: 30
+  enemyAnimations:
+  - actionIndex: 3
+    animName: RightUpperCut
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 0.4
 --- !u!114 &114574459732380758
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4796,7 +4803,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 5.0309057, y: 11.981817, z: -27.757566}
+  m_ConnectedAnchor: {x: 5.03, y: 11.981817, z: -20.48}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 2

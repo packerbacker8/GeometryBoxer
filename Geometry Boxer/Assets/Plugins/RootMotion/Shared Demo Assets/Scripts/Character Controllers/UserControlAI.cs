@@ -54,7 +54,7 @@ namespace RootMotion.Demos
         private string getUpSupine = "GetUpSupine";
         private string fall = "Fall";
         private string onGround = "OnGround";
-
+        private Rigidbody physicBody;
 
         private bool dead;
 
@@ -71,7 +71,7 @@ namespace RootMotion.Demos
             sfxManager = FindObjectOfType<SFX_Manager>();
             agent = GetComponent<NavMeshAgent>();
             behaviourPuppet = transform.parent.gameObject.GetComponentInChildren<BehaviourPuppet>();
-
+            physicBody = GetComponent<Rigidbody>();
             anim = transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
 
         }
@@ -141,7 +141,17 @@ namespace RootMotion.Demos
                     agent.destination = movementStyle.move();
                     if (agent.pathStatus == NavMeshPathStatus.PathComplete)
                     {
-                        state.move = agent.velocity;
+                        if (agent.destination == transform.position)
+                        {
+                            physicBody.velocity = Vector3.zero;
+                            state.move = Vector3.zero;
+                        }
+                        else
+                        {
+                            state.move = agent.velocity;
+                        }
+                        
+                       
                     }
                 }
                 else
@@ -150,10 +160,10 @@ namespace RootMotion.Demos
                 }
 
                 //transform.rotation = Quaternion.LookRotation(newDir);
-                if (!attackStyle.isAttacking())
-                {
+                //if (!attackStyle.isAttacking())
+                //{
                     transform.rotation = movementStyle.rotateStyle();
-                }
+                //}
             }
             else
             {
