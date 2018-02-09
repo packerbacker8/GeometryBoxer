@@ -12,8 +12,12 @@ public class GameControllerScript : MonoBehaviour
     public GameObject[] playerOptions;
     public GameObject enemyCubeContainer;
     public GameObject enemyOctahedronContainer;
+    [Header("Ally Information")]
     [Tooltip("If set to true, the enemy container that matches the type of the player will be used as a group of allies in the fight.")]
     public bool hasAllies = false;
+    [Tooltip("This integer will divide the number of bots in the other container that will be the allies. The higher the number, the lower the number of allies.")]
+    [Range(1, 100)]
+    public int fractionalAllies = 3;
 
     private string currentMapName;
     private int numEnemiesAlive;
@@ -60,7 +64,7 @@ public class GameControllerScript : MonoBehaviour
             allyContainer.tag = "AllyContainer"; 
             numEnemiesAlive = enemyContainer.transform.childCount;
             enemiesInWorld = new GameObject[numEnemiesAlive];
-            alliesInWorld = new GameObject[allyContainer.transform.childCount];
+            alliesInWorld = new GameObject[allyContainer.transform.childCount / fractionalAllies];
             int iterationAmount = alliesInWorld.Length > numEnemiesAlive ? alliesInWorld.Length : numEnemiesAlive;
 
             for (int i = 0; i < iterationAmount; i++)
@@ -99,6 +103,11 @@ public class GameControllerScript : MonoBehaviour
                     allyContainer.transform.GetChild(i).gameObject.tag = "AllyRoot";
                     alliesInWorld[i] = allyContainer.transform.GetChild(i).gameObject;
                 }
+            }
+            //Turn off the remaining allies.
+            for(int i = alliesInWorld.Length; i < allyContainer.transform.childCount; i++)
+            {
+                allyContainer.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
         else
