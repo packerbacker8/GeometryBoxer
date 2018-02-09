@@ -64,7 +64,7 @@ public class GameControllerScript : MonoBehaviour
             allyContainer.tag = "AllyContainer"; 
             numEnemiesAlive = enemyContainer.transform.childCount;
             enemiesInWorld = new GameObject[numEnemiesAlive];
-            alliesInWorld = new GameObject[allyContainer.transform.childCount / fractionalAllies];
+            alliesInWorld = new GameObject[allyContainer.transform.childCount / fractionalAllies == 0 ? 1 : allyContainer.transform.childCount / fractionalAllies];
             int iterationAmount = alliesInWorld.Length > numEnemiesAlive ? alliesInWorld.Length : numEnemiesAlive;
 
             for (int i = 0; i < iterationAmount; i++)
@@ -105,6 +105,7 @@ public class GameControllerScript : MonoBehaviour
                 }
             }
             //Turn off the remaining allies.
+            Debug.Log("Length of ally in world " + alliesInWorld.Length);
             for(int i = alliesInWorld.Length; i < allyContainer.transform.childCount; i++)
             {
                 allyContainer.transform.GetChild(i).gameObject.SetActive(false);
