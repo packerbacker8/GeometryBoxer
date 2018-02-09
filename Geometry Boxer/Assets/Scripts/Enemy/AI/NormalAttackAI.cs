@@ -29,16 +29,13 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     private string getUpSupine = "GetUpSupine";
     private string fall = "Fall";
     private string onGround = "OnGround";
+    private float currentAnimLength;
 
     private int swingAnimLayer = 1;
     private int punchAnimLayer = 0;
     private int animationControllerIndex = 0;
     private int characterControllerIndex = 2;
-
-    public GameObject rightShoulder;
-    public GameObject leftShoulder;
-    public GameObject rightThigh;
-    public GameObject leftThigh;
+    private bool attackStatus;
 
     public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
     //protected virtual void SetCurrentAnimTime(CharacterAnimations currentAnim)
@@ -79,8 +76,24 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     // Use this for initialization
     void Start () {
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+        attackStatus = false;
     }
-	
+
+    private void Update()
+    {
+        currentAnimLength -= Time.deltaTime;
+        if (currentAnimLength <= 0f)
+        {
+            currentAnimLength = 0;
+            attackStatus = false;
+        }
+    }
+
+    protected virtual void SetCurrentAnimTime(CharacterAnimations currentAnim)
+    {
+        currentAnimLength = anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.playTime + (anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.transitionTime);
+        attackStatus = true;
+    }
     public void attack()
     {
         if (canAttack())
@@ -103,6 +116,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
                 {
                     //anim.Play(rightSwingAnimation, punchAnimLayer);
                     ThrowUppercut(Limbs.rightArm);
+                    //anim.Play("UpperRightCut", 1);
                 }
             }
         }
@@ -110,7 +124,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
 
     public bool canAttack()
     {
-        if(moveTargetObj == null)
+        if(moveTargetObj == null || attackStatus)
         {
             return false;
         }
@@ -141,28 +155,30 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
             {
                 //rightFistCollider.enabled = true;
                 currentAnim = action;
-                if (anim.GetFloat("Forward") < 0.5f)
-                {
-                    currentAnim.animLayer = 0;
-                }
-                else
-                {
-                    currentAnim.animLayer = 1; //forced
-                }
-                break;
+                //if (anim.GetFloat("Forward") < 0.5f)
+                //{
+                //    currentAnim.animLayer = 0;
+                //}
+                //else
+                //{
+                //    currentAnim.animLayer = 1; //forced
+                //}
+                //break;
+                currentAnim.animLayer = 0;
             }
         }
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);
         anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        SetCurrentAnimTime(currentAnim);
         anim.SetInteger("ActionIndex", -1);
         //base.ThrowUppercut(limb);
         
         //anim.Play(leftUppercutAnimation, punchAnimLayer);
        
-        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
-        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
-        //SetCurrentAnimTime(currentAnim);
-        anim.SetInteger("ActionIndex", -1);
+        //anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+        //anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        ////SetCurrentAnimTime(currentAnim);
+        //anim.SetInteger("ActionIndex", -1);
 
         //if (limb == Limbs.leftArm)
         //{
@@ -197,5 +213,11 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         //        walker.GetComponent<CollisionReceived>().sendDamage = false;
         //    }
         //}
+    }
+
+    public bool isAttacking()
+    {
+        return attackStatus;
+        //throw new NotImplementedException();
     }
 }

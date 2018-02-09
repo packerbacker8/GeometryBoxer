@@ -15,5 +15,7 @@ namespace Enemy
         GameObject moveObj, CharacterPuppet charPup, AudioSource src,
         SFX_Manager sfx, float rangeAttack);
 
+        bool isAttacking();
+
     }
 }

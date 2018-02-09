@@ -150,7 +150,10 @@ namespace RootMotion.Demos
                 }
 
                 //transform.rotation = Quaternion.LookRotation(newDir);
-                transform.rotation = movementStyle.rotateStyle();
+                if (!attackStyle.isAttacking())
+                {
+                    transform.rotation = movementStyle.rotateStyle();
+                }
             }
             else
             {
