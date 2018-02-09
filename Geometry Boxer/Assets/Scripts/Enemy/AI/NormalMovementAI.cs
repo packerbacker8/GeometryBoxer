@@ -12,11 +12,22 @@ namespace Enemy
         float stoppingDistance;
         float stoppingThreshold;
         float jumpDistance;
+        private GameObject moveTargetObj;
+        private GameObject gameController;
         Transform moveTarget;
         UserControlThirdPerson.State state;
 
+        private void Start()
+        {
+            gameController = GameObject.FindGameObjectWithTag("GameController");
+        }
+
         public bool canMove()
         {
+            if (moveTargetObj == null)
+            {
+                return false;
+            }
             return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
         }
 
@@ -29,13 +40,14 @@ namespace Enemy
             return transform.position;
         }
 
-        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, Transform move)
+        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
         {
             stoppingDistance = stopDist;
             stoppingThreshold = stopThresh;
             jumpDistance = jumpDis;
             //anim = animator;
-            moveTarget = move;
+            moveTargetObj = moveObj;
+            moveTarget = moveTargetObj.transform;
 
         }
 
@@ -48,16 +60,13 @@ namespace Enemy
         {
             throw new NotImplementedException();
         }
-        // Use this for initialization
-        void Start()
+
+        /// <summary>
+        /// When the current move to target has been detected as null, update the movetargetobj to something new.
+        /// </summary>
+        public void UpdateTarget()
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
         }
 
         public Quaternion rotateStyle()

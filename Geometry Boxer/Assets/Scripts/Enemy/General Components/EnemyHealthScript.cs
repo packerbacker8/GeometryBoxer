@@ -25,12 +25,14 @@ public class EnemyHealthScript : MonoBehaviour
 
     private bool dead;
     private bool damageIsFromPlayer;
+    private bool damageFromAllies;
     private Animator anim;
     private int characterControllerIndex = 2;
     private int animationControllerIndex = 0;
     private int puppetMasterIndex = 1;
     private string getUpProne = "GetUpProne";
     private string getUpSupine = "GetUpSupine";
+    private string damageSource = "Player";
     private GameObject puppetMast;
     private GameObject gameController;
     private GameObject playerUI;
@@ -43,6 +45,7 @@ public class EnemyHealthScript : MonoBehaviour
     private float Val2;
     private float Val3;
     private float Val4;
+    private float originalHealth;
 
     // Use this for initialization
     void Start()
@@ -54,6 +57,7 @@ public class EnemyHealthScript : MonoBehaviour
         sfxManager = FindObjectOfType<SFX_Manager>();
         dead = false;
         damageIsFromPlayer = false;
+        
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
@@ -66,6 +70,7 @@ public class EnemyHealthScript : MonoBehaviour
         Val1 = 3 * (EnemyHealth / 5);
         Val2 = 2 * (EnemyHealth / 5);
         Val3 = 1 * (EnemyHealth / 5);
+        originalHealth = EnemyHealth;
     }
 
     // Update is called once per frame
@@ -87,9 +92,14 @@ public class EnemyHealthScript : MonoBehaviour
         float heavyImpactThreshold = damageThreshold + heavyDamageOffset;
         float collisionMagnitude = collision.impulse.magnitude;
         string tagOfCollision = collision.gameObject.transform.root.tag;
-        if (tagOfCollision == "Player")
+        if (tagOfCollision.Contains(damageSource))
         {
             damageIsFromPlayer = true; //after animator states enemy has stood up, change this to false.
+        }
+        //way to make enemy bots also take damage from allied bots
+        if(damageFromAllies && tagOfCollision.Contains("Ally"))
+        {
+            damageIsFromPlayer = true;
         }
 
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
@@ -171,8 +181,7 @@ public class EnemyHealthScript : MonoBehaviour
             }
             else
             {
-                gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex);
-                playerUI.GetComponent<userInterface>().enemyIsKilled();
+                gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex, this.gameObject.tag);
             }
 
             dead = true;
@@ -189,8 +198,8 @@ public class EnemyHealthScript : MonoBehaviour
     /// </summary>
     public void ResetEnemy()
     {
-        KillEnemy();
         this.GetComponentInChildren<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        KillEnemy();
     }
 
     /// <summary>
@@ -218,6 +227,43 @@ public class EnemyHealthScript : MonoBehaviour
     public bool GetIsDead()
     {
         return dead;
+    }
+
+    /// <summary>
+    /// Function to allow the changing of where damage can come from against the bot.
+    /// </summary>
+    /// <param name="source">Set to 'Player' to take damage from the player, and 'Enemy' to take damage from other bots.</param>
+    /// <param name="allies">If this is true, the enemy bot will also take damage from collisions tagged Ally.</param>
+    public void SetDamageSource(string source, bool allies)
+    {
+        damageSource = source;
+        damageFromAllies = allies;
+    }
+
+    /// <summary>
+    /// Helper function called by detect movement ai to tell the game controller to change the target of 
+    /// the given enemy based on its index.
+    /// </summary>
+    public void ChangeOurTarget()
+    {
+        gameController.GetComponent<GameControllerScript>().ChangeTarget(enemyIndex);
+    }
+
+    /// Return the health the enemy originally started out with.
+    /// </summary>
+    /// <returns>Float of health the enemy started with.</returns>
+    public float GetEnemyOriginalHealth()
+    {
+        return originalHealth;
+    }
+
+    /// <summary>
+    /// Give the enemy bot more health from pickup.
+    /// </summary>
+    /// <param name="toAdd">How much the health is going to up by.</param>
+    public void AddHealth(float toAdd)
+    {
+        EnemyHealth += toAdd;
     }
 }
 

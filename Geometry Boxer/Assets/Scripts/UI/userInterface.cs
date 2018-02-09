@@ -10,6 +10,7 @@ public class userInterface : MonoBehaviour {
 
     private GameObject player;
     private GameObject enemies;
+    private GameControllerScript gameController;
     private int numEnemiesAlive;
     private bool usingSpecialAttack = false;
     private float playerCoolDownTimer;
@@ -18,8 +19,9 @@ public class userInterface : MonoBehaviour {
     void Start () {
         enemies = GameObject.FindGameObjectWithTag("EnemyContainer");
         player = GameObject.FindGameObjectWithTag("Player");
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
         numEnemiesAlive = enemies.transform.childCount;
-        enemyCounter.text = numEnemiesAlive.ToString();
+        enemyCounter.text = gameController.NumberOfEnemiesAlive().ToString();
         playerCoolDownTimer = coolDownTime;
 
         PlayerSpecialTimer.text = playerCoolDownTimer.ToString();
@@ -27,7 +29,7 @@ public class userInterface : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        enemyCounter.text = numEnemiesAlive.ToString();
+        enemyCounter.text = gameController.NumberOfEnemiesAlive().ToString();
 
         if (usingSpecialAttack)
         {
@@ -40,11 +42,6 @@ public class userInterface : MonoBehaviour {
         }
 
         PlayerSpecialTimer.text = coolDownTime.ToString("n2");
-    }
-
-    public void enemyIsKilled()
-    {
-        numEnemiesAlive--;
     }
 
     public void UsedSpecialAttack()

@@ -95,6 +95,23 @@ public class HealthPickup : MonoBehaviour
             }
             
         }
+        else if(col.gameObject.transform.root.tag.Contains("Enemy"))
+        {
+            colObj = col.gameObject;
+            while(!colObj.tag.Contains("EnemyRoot"))
+            {
+                colObj = colObj.transform.parent.gameObject;
+            }
+            float currentHealth = colObj.GetComponent<EnemyHealthScript>().EnemyHealth;
+            float originalHealth = colObj.GetComponent<EnemyHealthScript>().GetEnemyOriginalHealth();
+            float healthToAdd = healAmount;
+            if (originalHealth > currentHealth)
+            {
+                healthToAdd = originalHealth - currentHealth > healAmount ? healAmount : originalHealth - currentHealth;
+                colObj.GetComponent<EnemyHealthScript>().AddHealth(healthToAdd);
+                destroy = true;
+            }
+        }
         if(destroy)
         {
             timer = 0f;

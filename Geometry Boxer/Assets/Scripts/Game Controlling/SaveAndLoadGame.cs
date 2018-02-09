@@ -10,6 +10,8 @@ public class SaveAndLoadGame : MonoBehaviour
     public static SaveAndLoadGame saver;
     public string[] cityNames;
     public string[] cityStatuses;
+    [Tooltip("If set to true, the main menu scene will not be forced.")]
+    public bool debugMode = false;
 
     private static InitializeData initData;
     private static GameData saveData;
@@ -75,16 +77,19 @@ public class SaveAndLoadGame : MonoBehaviour
     private void Start()
     {
         SetCityNamesAndStatus();
-        if(forceTutorial)
+        if(!debugMode)
         {
-            forceTutorial = false;
-            saveData = new GameData {characterType = "Cube"};
-            LoadLevel.loader.LoadALevel("Tutorial");
-        }
-        else
-        {
-            saveData = new GameData { characterType = "Cube" };
-            LoadLevel.loader.LoadMainMenu();
+            if (forceTutorial)
+            {
+                forceTutorial = false;
+                saveData = new GameData { characterType = "Cube" };
+                LoadLevel.loader.LoadALevel("Tutorial");
+            }
+            else
+            {
+                saveData = new GameData { characterType = "Cube" };
+                LoadLevel.loader.LoadMainMenu();
+            }
         }
     }
 

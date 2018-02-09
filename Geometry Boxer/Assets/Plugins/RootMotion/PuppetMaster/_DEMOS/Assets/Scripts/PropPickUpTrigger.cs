@@ -8,13 +8,16 @@ namespace RootMotion.Demos {
 
 		public Prop prop;
 		public LayerMask characterLayers;
+        public AudioClip pickup;
 
-		private CharacterPuppet characterPuppet;
+        private CharacterPuppet characterPuppet;
         private GameObject light;
+        private AudioSource source;
 
         void Start()
         {
-            light = this.transform.parent.GetChild(5).gameObject;   
+            light = this.transform.parent.GetChild(5).gameObject;
+            source = this.gameObject.AddComponent<AudioSource>();
         }
 
         void OnTriggerEnter(Collider collider) {
@@ -31,6 +34,7 @@ namespace RootMotion.Demos {
 
 			characterPuppet.propRoot.currentProp = prop;
             light.SetActive(false);
-		}
+            source.PlayOneShot(pickup, 0.5f);
+        }
 	}
 }

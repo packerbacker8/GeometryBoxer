@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class InteractableCity : Interactable
 {
@@ -58,6 +59,9 @@ public class InteractableCity : Interactable
             Canvas.SetActive(true);
             citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
             cityImageLink.sprite = citySprite;
+
+            //for controller
+            EventSystem.current.SetSelectedGameObject(Canvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
         }
     }
     void OnTriggerExit(Collider col)
