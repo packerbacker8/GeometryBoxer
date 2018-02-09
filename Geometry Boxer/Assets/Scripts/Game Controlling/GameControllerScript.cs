@@ -8,6 +8,7 @@ public class GameControllerScript : MonoBehaviour
 {
     [Tooltip("What string value of the level to load in the build order.")]
     public string dominationMap = "CitySelectMap";
+    public string deathReloadMap;
     public float loadLevelTimeOut = 20f;
     public GameObject[] playerOptions;
     public GameObject enemyCubeContainer;
@@ -232,7 +233,7 @@ public class GameControllerScript : MonoBehaviour
     {
         playerAlive = false;
         SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
-        LoadLevel.loader.LoadALevel(dominationMap); //index of the scene the player is currently on
+        LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
     }
 
     public GameObject GetActivePlayer()
