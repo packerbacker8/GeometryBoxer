@@ -257,38 +257,36 @@ public class GameControllerScript : MonoBehaviour
     /// <param name="tag">Tag of their root object</param>
     public void SetNewTarget(int index, string tag)
     {
-        if(tag.Contains("Enemy"))
+        if(hasAllies)
         {
-            for(int i = 0; i < alliesInWorld.Length; i++)
+            if (tag.Contains("Enemy"))
             {
-                if(alliesInWorld[i] != null)
+                for (int i = 0; i < alliesInWorld.Length; i++)
                 {
-                    enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(alliesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
-                    return;
+                    if (alliesInWorld[i] != null)
+                    {
+                        enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(alliesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
+                        return;
+                    }
+                }
+                enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
+            }
+            else
+            {
+                for (int i = 0; i < enemiesInWorld.Length; i++)
+                {
+                    if (enemiesInWorld[i] != null)
+                    {
+                        alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(enemiesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
+                        return;
+                    }
                 }
             }
-            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
         }
         else
         {
-            for (int i = 0; i < enemiesInWorld.Length; i++)
-            {
-                if (enemiesInWorld[i] != null)
-                {
-                    alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(enemiesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
-                    return;
-                }
-            }
+            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
         }
-    }
-
-    /// <summary>
-    /// Function to change the allied bot's target after their original target has died.
-    /// </summary>
-    /// <param name="indexOfAlly">Index indicates which ally to change their target for.</param>
-    private void SwitchAlliedTarget(int indexOfAlly)
-    {
-
     }
 
     /// <summary>
@@ -298,5 +296,14 @@ public class GameControllerScript : MonoBehaviour
     public int NumberOfEnemiesAlive()
     {
         return numEnemiesAlive;
+    }
+
+    /// <summary>
+    /// Return active enemy container
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetEnemyContainer()
+    {
+        return enemyContainer;
     }
 }

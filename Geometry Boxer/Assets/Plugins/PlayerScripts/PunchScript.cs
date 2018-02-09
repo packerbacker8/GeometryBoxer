@@ -798,4 +798,12 @@ public class PunchScript : MonoBehaviour
     {
         return useController;
     }
+    public bool GetOnCooldown()
+    {
+        return onCooldown;
+    }
+    public bool GetSpecialActivated()
+    {
+        return isAttacking;
+    }
 }

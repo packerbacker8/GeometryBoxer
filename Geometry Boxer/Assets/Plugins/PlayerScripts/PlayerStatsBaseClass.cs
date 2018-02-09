@@ -36,7 +36,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public PlayerStatsBaseClass()
     {
         health = 1000f;
-        stability = 1.0f;
+        //stability = 1.0f;
         speed = 1.0f;
         attackForce = 1.0f;
         fallDamageMultiplier = 1.0f;
@@ -56,7 +56,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     protected virtual void Start()
     {
         health = 1000f;
-        stability = 1.0f;
+        //stability = 1.0f;
         speed = 1.0f;
         attackForce = 1.0f;
         fallDamageMultiplier = 1.0f;
@@ -181,6 +181,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// </summary>
     public virtual void ApplyStabilityStat()
     {
+        Debug.Log("Stability: " + stability);
         behavePuppet.collisionResistance = new Weight(behavePuppet.collisionResistance.floatValue * stability);
     }
 

@@ -51,7 +51,9 @@ public class EnemyHealthScript : MonoBehaviour
     void Start()
     {
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 0.75f;
         impactSource = gameObject.AddComponent<AudioSource>();
+        impactSource.spatialBlend = 0.75f;
         source.spatialize = true;
         source.volume = 0.6f;
         sfxManager = FindObjectOfType<SFX_Manager>();
@@ -119,6 +121,8 @@ public class EnemyHealthScript : MonoBehaviour
                 painIndex = rand.Next(0, sfxManager.malePain.Count);
                 lightImpactIndex = rand.Next(0, sfxManager.lightPunches.Count);
                 heavyImpactIndex = rand.Next(0, sfxManager.heavyPunches.Count);
+                //source.clip = sfxManager.malePain[painIndex];
+                //source.Play();
                 source.PlayOneShot(sfxManager.malePain[painIndex], 1f);
 
                 if (collisionMagnitude <= heavyImpactThreshold)
