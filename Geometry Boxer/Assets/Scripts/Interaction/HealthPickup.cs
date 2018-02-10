@@ -9,20 +9,23 @@ public class HealthPickup : MonoBehaviour
     public AudioClip healthPickup;
 
     private bool waiting;
-    private int travelAmount;
+    private float travelAmount;
     private float moveAmount;
     private float timer;
     private Vector3 startingPos;
     private AudioSource source;
+    private GameObject light;
 
     // Use this for initialization
     void Start()
     {
         startingPos = this.transform.position;
-        travelAmount = 1;
+        travelAmount = 0.5f;
         moveAmount = 0.05f;
         waiting = false;
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 0.75f;
+        light = gameObject.transform.GetChild(0).gameObject;
     }
 
     // Update is called once per frame
@@ -45,6 +48,7 @@ public class HealthPickup : MonoBehaviour
                 waiting = false;
                 this.gameObject.GetComponent<MeshRenderer>().enabled = true;
                 this.gameObject.GetComponent<SphereCollider>().enabled = true;
+                light.SetActive(true);
             }
         }
     }
@@ -92,6 +96,24 @@ public class HealthPickup : MonoBehaviour
             }
             
         }
+        else if(col.gameObject.transform.root.tag.Contains("Enemy"))
+        {
+            colObj = col.gameObject;
+            while(!colObj.tag.Contains("EnemyRoot"))
+            {
+                colObj = colObj.transform.parent.gameObject;
+            }
+            float currentHealth = colObj.GetComponent<EnemyHealthScript>().EnemyHealth;
+            float originalHealth = colObj.GetComponent<EnemyHealthScript>().GetEnemyOriginalHealth();
+            float healthToAdd = healAmount;
+            if (originalHealth > currentHealth)
+            {
+                healthToAdd = originalHealth - currentHealth > healAmount ? healAmount : originalHealth - currentHealth;
+                colObj.GetComponent<EnemyHealthScript>().AddHealth(healthToAdd);
+                colObj.GetComponent<EnemyHealthScript>().SetOurTarget();
+                destroy = true;
+            }
+        }
         if(destroy)
         {
             timer = 0f;
@@ -99,6 +121,7 @@ public class HealthPickup : MonoBehaviour
             this.gameObject.GetComponent<MeshRenderer>().enabled = false;
             this.gameObject.GetComponent<SphereCollider>().enabled = false;
             source.PlayOneShot(healthPickup, 1f);
+            light.SetActive(false);
         }
     }
 }

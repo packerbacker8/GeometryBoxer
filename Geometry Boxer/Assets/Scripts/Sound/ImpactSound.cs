@@ -16,6 +16,7 @@ public class ImpactSound : MonoBehaviour {
 	void Start ()
     {
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 1.0f;
         source.clip = clips[0];
         source.volume = 0.6f;
 	}
@@ -24,7 +25,14 @@ public class ImpactSound : MonoBehaviour {
     {
         if(Mathf.Abs(col.impulse.magnitude) > punchSoundForceThreshold && col.transform.root.tag == "Player")
         {
-            source.PlayOneShot(clips[index], 1f);
+            if(source != null)
+            {
+                source.PlayOneShot(clips[index], 1f);
+            }
+            else
+            {
+                Debug.Log("Source was null when trying to play sound.");
+            }
             index = rand.Next(0, clips.Count);
         }
     }

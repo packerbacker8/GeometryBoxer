@@ -17,6 +17,7 @@ public class DeathSoundOnAwake : MonoBehaviour {
         sfxManager = FindObjectOfType<SFX_Manager>();
         deathIndex = rand.Next(0, sfxManager.shatterDeath.Count);
         source = this.gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 1.0f;
         source.PlayOneShot(sfxManager.shatterDeath[deathIndex], volume);
     }
 

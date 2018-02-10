@@ -1046,7 +1046,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1798918362888838}
   m_LocalRotation: {x: -0, y: 0.44181553, z: -0, w: 0.89710593}
-  m_LocalPosition: {x: -32.28, y: 1.36, z: -35.34}
+  m_LocalPosition: {x: -32.28, y: 0.677, z: -35.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4940239308246698}
@@ -2048,10 +2048,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pelvisJoint: {fileID: 1983625813745298}
   deathDelay: 20
-  damageThreshold: 25
+  damageThreshold: 18
   Health: 15000
   Speed: 0.7
-  Stability: 0
+  Stability: 10
   AttackForce: 0
   FallDamageMultiplier: 0
   PowerUpTimeLimit: 10
@@ -2133,13 +2133,13 @@ MonoBehaviour:
   mappingWeight: 1
   pinWeight: 1
   muscleWeight: 1
-  muscleSpring: 1000
+  muscleSpring: 200
   muscleDamper: 0
-  pinPow: 8
+  pinPow: 3
   pinDistanceFalloff: 0
   updateJointAnchors: 1
   supportTranslationAnimation: 0
-  angularLimits: 1
+  angularLimits: 0
   internalCollisions: 0
   muscles:
   - name: pelvis_result_JNT

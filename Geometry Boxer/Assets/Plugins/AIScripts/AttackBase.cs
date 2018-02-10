@@ -12,8 +12,10 @@ namespace Enemy
 
         void attack();
         void setUp(float stopDist, float stopThresh, float jumpDis, 
-        Transform move, CharacterPuppet charPup, AudioSource src,
+        GameObject moveObj, CharacterPuppet charPup, AudioSource src,
         SFX_Manager sfx, float rangeAttack);
+
+        bool isAttacking();
 
     }
 }

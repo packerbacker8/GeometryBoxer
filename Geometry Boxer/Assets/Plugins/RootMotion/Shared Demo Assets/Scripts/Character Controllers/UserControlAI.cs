@@ -25,6 +25,7 @@ namespace RootMotion.Demos
         public AttackBase attackStyle;
         public Animator anim;
         public Transform goal;
+        public GameObject moveTargetObj;
         public Transform moveTarget;
         public bool drop;
 
@@ -53,11 +54,15 @@ namespace RootMotion.Demos
         private string getUpSupine = "GetUpSupine";
         private string fall = "Fall";
         private string onGround = "OnGround";
-
+        private Rigidbody physicBody;
 
         private bool dead;
-        void Start()
+
+        private void Awake()
         {
+            movementStyle = GetComponent<MovementBase>();
+            attackStyle = GetComponent<AttackBase>();
+            characterPuppet = GetComponent<CharacterPuppet>();
             playerOptions = new GameObject[3];
             rand.Next(0, 1);
             source = gameObject.AddComponent<AudioSource>();
@@ -65,31 +70,44 @@ namespace RootMotion.Demos
             source.volume = 0.6f;
             sfxManager = FindObjectOfType<SFX_Manager>();
             agent = GetComponent<NavMeshAgent>();
-            characterPuppet = GetComponent<CharacterPuppet>();
             behaviourPuppet = transform.parent.gameObject.GetComponentInChildren<BehaviourPuppet>();
-
+            physicBody = GetComponent<Rigidbody>();
             anim = transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+
+        }
+
+        void Start()
+        {
+
             //agent.updatePosition = false; //New line automatically makes it where the agent no longer affects movement
             agent.nextPosition = transform.position;
             drop = false;
-            movementStyle = GetComponent<MovementBase>();
-            attackStyle = GetComponent<AttackBase>();
-            movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget);
-            attackStyle.setUp(stoppingDistance, stoppingThreshold,
-                jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
+            //movementStyle = GetComponent<MovementBase>();
+            //attackStyle = GetComponent<AttackBase>();
+            //movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget);
+            //attackStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
             dead = false;
         }
 
         protected override void Update()
         {
-            if (!dead)
+            if (!dead)   //&& moveTargetObj != null)
             {
                 //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
                 //Vector3 targetDir = moveTarget.position - transform.position;
                 //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
                 AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
-                if (!movementStyle.getPlayerTarget())
+                if (moveTargetObj == null)   
+                {
+                    agent.enabled = false;
+                    movementStyle.UpdateTarget();
+                    if(moveTargetObj != null)
+                    {
+                        agent.enabled = true;
+                    }
+                }
+                else if (!movementStyle.getPlayerTarget() && moveTargetObj.transform.root.tag.Contains("Player"))
                 {
                     agent.enabled = false;
                 }
@@ -123,7 +141,17 @@ namespace RootMotion.Demos
                     agent.destination = movementStyle.move();
                     if (agent.pathStatus == NavMeshPathStatus.PathComplete)
                     {
-                        state.move = agent.velocity;
+                        if (agent.destination == transform.position)
+                        {
+                            physicBody.velocity = Vector3.zero;
+                            state.move = Vector3.zero;
+                        }
+                        else
+                        {
+                            state.move = agent.velocity;
+                        }
+                        
+                       
                     }
                 }
                 else
@@ -131,8 +159,7 @@ namespace RootMotion.Demos
                     state.move = Vector3.zero;
                 }
 
-                //transform.rotation = Quaternion.LookRotation(newDir);
-                transform.rotation = movementStyle.rotateStyle();
+                    transform.rotation = movementStyle.rotateStyle();
             }
             else
             {
@@ -141,12 +168,16 @@ namespace RootMotion.Demos
         }
 
         /// <summary>
-        /// Function to set player's move controller.
+        /// Function to set the move object of the enemies. This then makes it the move target transform
+        /// they look to find and attack.
         /// </summary>
-        /// <param name="move"></param>
-        public void SetMoveTarget(Transform move)
+        /// <param name="move">Expects this game object to be the character controller of the combatant, as that is the part that actually moves.</param>
+        public void SetMoveTarget(GameObject moveObj)
         {
-            moveTarget = move.GetChild(characterControllerIndex);
+            moveTargetObj = moveObj;
+            moveTarget = moveTargetObj.transform;
+            movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTargetObj);
+            attackStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTargetObj, characterPuppet, source, sfxManager, attackRange);
         }
 
         public void deathUpdate()

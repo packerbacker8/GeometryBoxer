@@ -11,7 +11,7 @@ public class CitySelectSceneController : MonoBehaviour
     private GameObject activePlayer;
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         for (int i = 0; i < playerOptions.Length; i++)
         {
@@ -65,5 +65,11 @@ public class CitySelectSceneController : MonoBehaviour
     public void GoToMainMenuButton()
     {
         LoadLevel.loader.LoadMainMenu();
+    }
+
+    //Return active player
+    public GameObject GetActivePlayer()
+    {
+        return activePlayer;
     }
 }

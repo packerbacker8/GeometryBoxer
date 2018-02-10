@@ -18,7 +18,6 @@ public class CubeAttackScript : PunchScript
     private bool isGrounded;
     private GameObject gameController;
     private GameObject playerUI;
-    private float coolDownTime;
     private float coolDownTimer;
     
 
@@ -36,7 +35,6 @@ public class CubeAttackScript : PunchScript
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
-        coolDownTime = 10;
 
         //THIS NEEDS TO BE FIXED BY MAKING THE PLAYERUI OBJECT A PREFAB
         //THE PREFAB NEEDS TO AFFECT THE PUNCH SCRIPT SO IT AFFECTS ALL
@@ -44,7 +42,7 @@ public class CubeAttackScript : PunchScript
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
         if(playerUI)
         {
-            playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
+            playerUI.GetComponent<userInterface>().SetCoolDownTime(specialAttackCooldownTime);
         }
 
 
@@ -264,6 +262,8 @@ public class CubeAttackScript : PunchScript
     /// Allows character to grow larger when attack key is pressed. Shrinks back down after a certain
     /// amount of time.
     /// </summary>
+    /// 
+    /*
     private void GrowBigPower()
     {
         if ((!PowerUp && Input.GetKeyDown(useAttack)) || (!PowerUp && Input.GetButtonDown("AButton")))
@@ -303,7 +303,7 @@ public class CubeAttackScript : PunchScript
                 onCooldown = true;
             }
         }
-    }
+    }*/
 
 }
 

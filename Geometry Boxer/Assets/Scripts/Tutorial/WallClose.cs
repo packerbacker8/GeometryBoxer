@@ -133,7 +133,7 @@ public class WallClose : MonoBehaviour {
                 toneSource.Stop();
                 toneSource.clip = cageMatchSong;
                 toneSource.loop = true;
-                toneSource.Play(1);
+                toneSource.PlayDelayed(1);
             }
         }
 	}

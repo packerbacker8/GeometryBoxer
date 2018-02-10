@@ -1,4 +1,5 @@
 using RootMotion.Demos;
+using RootMotion.Dynamics;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +14,6 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     public float AttackForce;
     public float FallDamageMultiplier;
     public float PowerUpTimeLimit = 10f;
-    public float specialCooldownTime = 10f;
 
     private float HealthModifier;
     private float TimePowerUp;
@@ -64,6 +64,11 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     protected override void LateUpdate()
     {
         base.LateUpdate();
+        if (GetPlayerHealth() <= 0f && !dead)
+        {
+            dead = true;
+            KillPlayer();
+        }
         //HealthScript.setCubeHealthModifier(HealthModifier);
         if (PowerUp == true)
         {
@@ -87,7 +92,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         else
         {
             attackForce = 1;
-            stability = 1f;
+            stability = Stability;
             ApplyStabilityStat();
             userControl.state.move *= 1f;
             FallDamageMultiplier += 1f;
@@ -98,8 +103,6 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             HealthModifier = 1.0f;
 
         }
-
-
     }
 
     public void PowerUpActive(bool active)
@@ -113,7 +116,14 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         PowerUp = deActivate;
         SendMessage("CubeDeactivatedSfx");
     }
+    public override void KillPlayer()
+    {
+        anim.Play("Death");
+        puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
+        gameController.GetComponent<GameControllerScript>().playerKilled();
 
+        //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+    }
     /// <summary>
     /// Function receives impulse received by colliders on the enemy characters.
     /// </summary>

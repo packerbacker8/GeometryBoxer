@@ -304,7 +304,7 @@ GameObject:
   - component: {fileID: 195175451944125086}
   - component: {fileID: 114425721694957152}
   - component: {fileID: 114642364814636622}
-  - component: {fileID: 114274494986673462}
+  - component: {fileID: 114947307307214608}
   m_Layer: 8
   m_Name: Character Controller
   m_TagString: Enemy
@@ -2471,7 +2471,7 @@ Rigidbody:
   m_GameObject: {fileID: 1189436090008082}
   serializedVersion: 2
   m_Mass: 50
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -2875,26 +2875,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e7eec7e577cfc43b8b0dccfa08b43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyHealth: 1000
+  EnemyHealth: 3000
   deathDelay: 20
-  damageThreshold: 20
+  damageThreshold: 25
   heavyDamageOffset: 15
   deathObject: {fileID: 1790079404976228}
---- !u!114 &114274494986673462
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1189436090008082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6301a09d9e82e45429a3e56c823620b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerTarget: 0
-  bounceAngle: 0
-  rotateSpeed: 0
-  distance: 20
 --- !u!114 &114365348801581570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3037,6 +3022,7 @@ MonoBehaviour:
   jumpDistance: 10
   anim: {fileID: 0}
   goal: {fileID: 0}
+  moveTargetObj: {fileID: 0}
   moveTarget: {fileID: 0}
   drop: 0
 --- !u!114 &114586165358919732
@@ -3086,7 +3072,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453b6d9467d1c534ea3d564979e23546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRandomAudio: 30
+  rightShoulder: {fileID: 1083128594588728}
+  leftShoulder: {fileID: 1909788225495632}
+  rightThigh: {fileID: 1045555789231222}
+  leftThigh: {fileID: 1647651773565886}
+  attackRandomAudio: 1000
+  enemyAnimations:
+  - actionIndex: 1
+    animName: RightPunch
+    animLayer: 1
+    transitionTime: 0.2
+    playTime: 0.2
+  - actionIndex: 3
+    animName: RightUpperCut
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 0.4
+  - actionIndex: 5
+    animName: HiKick
+    animLayer: 0
+    transitionTime: 0.1
+    playTime: 0.1
 --- !u!114 &114653299894691094
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3459,6 +3465,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sendDamage: 1
+--- !u!114 &114947307307214608
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1189436090008082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1dc32ba6a517024781820aa1034869f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateSpeed: 1.5
+  bounceAngle: 70
+  sightRange: 20
+  playerTarget: 0
 --- !u!114 &114986244203990358
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -2531,7 +2531,7 @@ Rigidbody:
   m_GameObject: {fileID: 1393648088365764}
   serializedVersion: 2
   m_Mass: 50
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -2809,7 +2809,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453b6d9467d1c534ea3d564979e23546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRandomAudio: 30
+  rightShoulder: {fileID: 1978581818186364}
+  leftShoulder: {fileID: 1773664331246258}
+  rightThigh: {fileID: 1381376707319966}
+  leftThigh: {fileID: 1494567599632326}
+  attackRandomAudio: 1000
+  enemyAnimations:
+  - actionIndex: 1
+    animName: RightPunch
+    animLayer: 1
+    transitionTime: 0.2
+    playTime: 0.2
+  - actionIndex: 3
+    animName: RightUpperCut
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 0.4
+  - actionIndex: 5
+    animName: HiKick
+    animLayer: 0
+    transitionTime: 0.1
+    playTime: 0.1
 --- !u!114 &114102178716952906
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2905,6 +2925,7 @@ MonoBehaviour:
   jumpDistance: 10
   anim: {fileID: 0}
   goal: {fileID: 0}
+  moveTargetObj: {fileID: 0}
   moveTarget: {fileID: 0}
   drop: 0
 --- !u!114 &114291766925110384
@@ -3314,9 +3335,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e7eec7e577cfc43b8b0dccfa08b43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyHealth: 1000
+  EnemyHealth: 3000
   deathDelay: 20
-  damageThreshold: 20
+  damageThreshold: 25
   heavyDamageOffset: 15
   deathObject: {fileID: 1736962731191242}
 --- !u!114 &114753783662171100
