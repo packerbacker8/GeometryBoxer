@@ -24,6 +24,7 @@ public class HealthPickup : MonoBehaviour
         moveAmount = 0.05f;
         waiting = false;
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 1f;
         light = gameObject.transform.GetChild(0).gameObject;
     }
 
@@ -109,6 +110,7 @@ public class HealthPickup : MonoBehaviour
             {
                 healthToAdd = originalHealth - currentHealth > healAmount ? healAmount : originalHealth - currentHealth;
                 colObj.GetComponent<EnemyHealthScript>().AddHealth(healthToAdd);
+                colObj.GetComponent<EnemyHealthScript>().SetOurTarget();
                 destroy = true;
             }
         }

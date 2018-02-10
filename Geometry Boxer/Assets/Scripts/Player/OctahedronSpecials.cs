@@ -147,7 +147,6 @@ public class OctahedronSpecials : PunchScript
             }
             if ((Input.GetKeyDown(specialAttack)) || Input.GetButtonDown(specialAttackButton))
             {
-                Debug.Log("Special!");
                 DeactivateSpecialAttack();
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;

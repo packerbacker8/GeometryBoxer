@@ -106,7 +106,6 @@ public class GameControllerScript : MonoBehaviour
                 }
             }
             //Turn off the remaining allies.
-            Debug.Log("Length of ally in world " + alliesInWorld.Length);
             for(int i = alliesInWorld.Length; i < allyContainer.transform.childCount; i++)
             {
                 allyContainer.transform.GetChild(i).gameObject.SetActive(false);
@@ -305,5 +304,24 @@ public class GameControllerScript : MonoBehaviour
     public GameObject GetEnemyContainer()
     {
         return enemyContainer;
+    }
+
+
+    public void SetTargetHealthPack(int index, GameObject objOfHealth, string tag)
+    {
+        if(tag.Contains("Ally"))
+        {
+            if(alliesInWorld[index] != null)
+            {
+                alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
+            }
+        }
+        else
+        {
+            if(enemiesInWorld[index] != null)
+            {
+                enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
+            }
+        }
     }
 }
