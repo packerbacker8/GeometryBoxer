@@ -24,6 +24,7 @@ public class HealthPickup : MonoBehaviour
         moveAmount = 0.05f;
         waiting = false;
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 0.75f;
         light = gameObject.transform.GetChild(0).gameObject;
     }
 

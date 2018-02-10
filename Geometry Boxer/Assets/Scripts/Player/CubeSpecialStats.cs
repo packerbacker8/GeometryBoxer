@@ -14,7 +14,6 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     public float AttackForce;
     public float FallDamageMultiplier;
     public float PowerUpTimeLimit = 10f;
-    public float specialCooldownTime = 10f;
 
     private float HealthModifier;
     private float TimePowerUp;
@@ -93,7 +92,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         else
         {
             attackForce = 1;
-            stability = 1f;
+            stability = Stability;
             ApplyStabilityStat();
             userControl.state.move *= 1f;
             FallDamageMultiplier += 1f;

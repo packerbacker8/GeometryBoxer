@@ -117,6 +117,7 @@ public class PunchScript : MonoBehaviour
     protected bool onCooldown;
     protected bool growingSpecial;
     protected bool updateCollisionCheck;
+    protected bool specialActivated;
 
     protected float leftArmXAxis;
     protected float leftArmYAxis;
@@ -635,6 +636,7 @@ public class PunchScript : MonoBehaviour
     /// </summary>
     protected virtual void DeactivateSpecialAttack()
     {
+        specialActivated = false;
         playerGrowing = true;
         charController.transform.localScale = playerStartSize;
         charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
@@ -681,6 +683,7 @@ public class PunchScript : MonoBehaviour
     /// </summary>
     protected virtual void ActivateSpecialAttack()
     {
+        specialActivated = true;
         specialRigid.useGravity = true;
         leftFistCollider.radius = leftFistStartSize.radius;
         leftFistCollider.height = leftFistStartSize.height;
@@ -797,5 +800,13 @@ public class PunchScript : MonoBehaviour
     public bool getUseController()
     {
         return useController;
+    }
+    public bool GetOnCooldown()
+    {
+        return onCooldown;
+    }
+    public bool GetSpecialActivated()
+    {
+        return specialActivated;
     }
 }

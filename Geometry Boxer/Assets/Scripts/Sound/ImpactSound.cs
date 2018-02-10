@@ -16,6 +16,7 @@ public class ImpactSound : MonoBehaviour {
 	void Start ()
     {
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 1.0f;
         source.clip = clips[0];
         source.volume = 0.6f;
 	}

@@ -138,6 +138,8 @@ public class CubeAttackScriptMainMenu : PunchScript
     /// Allows character to grow larger when attack key is pressed. Shrinks back down after a certain
     /// amount of time.
     /// </summary>
+    /// 
+    /*
     private void GrowBigPower()
     {
         if (!PowerUp && Input.GetKeyDown(useAttack) || !PowerUp && Input.GetButtonDown("XButton"))
@@ -178,5 +180,6 @@ public class CubeAttackScriptMainMenu : PunchScript
             }
         }
     }
+    */
 
 }

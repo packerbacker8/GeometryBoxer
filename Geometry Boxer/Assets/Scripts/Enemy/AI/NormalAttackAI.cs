@@ -11,6 +11,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     public GameObject leftShoulder;
     public GameObject rightThigh;
     public GameObject leftThigh;
+
     float stoppingDistance;
     float stoppingThreshold;
     float jumpDistance;
@@ -24,7 +25,6 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     private AudioSource source;
     private SFX_Manager sfxManager;
     private System.Random rand = new System.Random();
-    public int attackRandomAudio = 30;
     private string leftSwingAnimation = "SwingProp";
     private string rightSwingAnimation = "SwingProp";
     private string getUpProne = "GetUpProne";
@@ -33,6 +33,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     private string onGround = "OnGround";
     private float currentAnimLength;
 
+    private int attackRandomAudio = 20;
     private int swingAnimLayer = 1;
     private int punchAnimLayer = 0;
     private int animationControllerIndex = 0;
@@ -133,7 +134,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         if (canAttack())
         {
             AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-            if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying)
+            if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying && rand.Next(0,attackRandomAudio + 1) == attackRandomAudio)
             {
                 source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
             }

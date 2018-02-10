@@ -290,21 +290,21 @@ public class GameControllerScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Function to change the allied bot's target after their original target has died.
-    /// </summary>
-    /// <param name="indexOfAlly">Index indicates which ally to change their target for.</param>
-    private void SwitchAlliedTarget(int indexOfAlly)
-    {
-
-    }
-
-    /// <summary>
     /// How many enemies are alive in the scene.
     /// </summary>
     /// <returns></returns>
     public int NumberOfEnemiesAlive()
     {
         return numEnemiesAlive;
+    }
+
+    /// <summary>
+    /// Return active enemy container
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetEnemyContainer()
+    {
+        return enemyContainer;
     }
 
 
