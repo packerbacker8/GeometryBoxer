@@ -76,7 +76,6 @@ public class userInterface : MonoBehaviour
             {
                 if(startOctaCount)
                 {
-                    Debug.Log("Setting cooldown start to: " + playerCoolDownTimer);
                     coolDownTime = playerCoolDownTimer;
                     startOctaCount = false;
                 }
