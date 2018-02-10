@@ -159,11 +159,7 @@ namespace RootMotion.Demos
                     state.move = Vector3.zero;
                 }
 
-                //transform.rotation = Quaternion.LookRotation(newDir);
-                //if (!attackStyle.isAttacking())
-                //{
                     transform.rotation = movementStyle.rotateStyle();
-                //}
             }
             else
             {
