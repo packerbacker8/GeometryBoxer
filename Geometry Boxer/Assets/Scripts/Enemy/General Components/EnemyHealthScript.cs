@@ -98,6 +98,10 @@ public class EnemyHealthScript : MonoBehaviour
     /// </summary>
     private void GetHealth()
     {
+        if(healthContainer == null)
+        {
+            return; //no healthpacks in arena
+        }
         findHealth = true;
         System.Random rand = new System.Random();
         rand.Next();

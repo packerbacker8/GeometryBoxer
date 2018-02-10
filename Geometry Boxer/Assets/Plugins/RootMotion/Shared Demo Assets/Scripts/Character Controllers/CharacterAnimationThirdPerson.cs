@@ -28,6 +28,10 @@ namespace RootMotion.Demos {
 		}
 		
 		public override Vector3 GetPivotPoint() {
+            if(animator == null)
+            {
+                return Vector3.zero;
+            }
 			return animator.pivotPosition;
 		}
 		
@@ -79,6 +83,11 @@ namespace RootMotion.Demos {
 		
 		// Call OnAnimatorMove manually on the character controller because it doesn't have the Animator component
 		void OnAnimatorMove() {
+            if(animator == null)
+            {
+                Debug.Log("Animator was null, couldn't do .Move function.");
+                return;
+            }
 			characterController.Move(animator.deltaPosition, animator.deltaRotation);
 		}
 	}

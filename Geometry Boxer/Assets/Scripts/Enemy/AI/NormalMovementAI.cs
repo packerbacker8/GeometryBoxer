@@ -16,6 +16,8 @@ namespace Enemy
         private float jumpDistance;
         private float moveSpeed;
 
+        private bool tutorialScene;
+
         private GameObject moveTargetObj;
         private GameObject gameController;
         Transform moveTarget;
@@ -25,7 +27,7 @@ namespace Enemy
         {
             gameController = GameObject.FindGameObjectWithTag("GameController");
             moveSpeed = 1.5f;
-            
+            tutorialScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Tutorial";
         }
 
         public bool canMove()
@@ -72,7 +74,15 @@ namespace Enemy
         /// </summary>
         public void UpdateTarget()
         {
-            gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
+            //check only needed for regular bots as tutorial scene only uses regular bots
+            if(tutorialScene)
+            {
+                gameController.GetComponent<GameControllerScriptTutorial>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
+            }
+            else
+            {
+                gameController.GetComponent<GameControllerScript>().SetNewTarget(this.transform.parent.GetComponent<EnemyHealthScript>().GetEnemyIndex(), this.transform.root.tag);
+            }
         }
 
         public Quaternion rotateStyle()

@@ -168,9 +168,10 @@ namespace RootMotion.Demos
         }
 
         /// <summary>
-        /// Function to set player's move controller.
+        /// Function to set the move object of the enemies. This then makes it the move target transform
+        /// they look to find and attack.
         /// </summary>
-        /// <param name="move"></param>
+        /// <param name="move">Expects this game object to be the character controller of the combatant, as that is the part that actually moves.</param>
         public void SetMoveTarget(GameObject moveObj)
         {
             moveTargetObj = moveObj;
