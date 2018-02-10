@@ -23,7 +23,6 @@ public class PunchingBagSFX : MonoBehaviour {
     {
         if(col.transform.root.tag == "Player" && !source.isPlaying && col.impulse.magnitude > 5f)
         {
-            Debug.Log(col.impulse.magnitude);
             source.PlayOneShot(sfxManager.lightPunches[rand.Next(0, sfxManager.lightPunches.Count)], col.impulse.magnitude/100f);
         }
     }
