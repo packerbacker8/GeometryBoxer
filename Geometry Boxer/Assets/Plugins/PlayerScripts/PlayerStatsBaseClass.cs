@@ -181,7 +181,6 @@ public class PlayerStatsBaseClass : MonoBehaviour
     /// </summary>
     public virtual void ApplyStabilityStat()
     {
-        Debug.Log("Stability: " + stability);
         behavePuppet.collisionResistance = new Weight(behavePuppet.collisionResistance.floatValue * stability);
     }
 
