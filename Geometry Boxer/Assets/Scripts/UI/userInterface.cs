@@ -15,6 +15,7 @@ public class userInterface : MonoBehaviour
     private GameControllerScript gameController;
     private int numEnemiesAlive;
     private bool usingSpecialAttack = false;
+    private bool startOctaCount = true;
     private CubeAttackScript cubePunchScript;
     private OctahedronSpecials octahedronPunchScript;
 
@@ -73,10 +74,18 @@ public class userInterface : MonoBehaviour
         {
             if(octahedronPunchScript.GetOnCooldown())
             {
-                coolDownTime -= Time.deltaTime;
+                if(startOctaCount)
+                {
+                    Debug.Log("Setting cooldown start to: " + playerCoolDownTimer);
+                    coolDownTime = playerCoolDownTimer;
+                    startOctaCount = false;
+                }
+                coolDownTime -= (Time.deltaTime);
+                
                 PlayerSpecialTimer.text = "Cooling down: " + coolDownTime.ToString("n2");
                 if (coolDownTime <= 0)
                 {
+                    startOctaCount = true;
                     usingSpecialAttack = false;
                 }
             }

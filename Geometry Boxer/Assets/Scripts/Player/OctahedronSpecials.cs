@@ -37,7 +37,8 @@ public class OctahedronSpecials : PunchScript
     private OctahedronStats stats;
 
     private MeshCollider specialFormCollider;
-    
+    private GameObject playerUI;
+
 
     // Use this for initialization
     protected override void Start()
@@ -70,6 +71,12 @@ public class OctahedronSpecials : PunchScript
         isFloating = 0;
         specialRigid.maxAngularVelocity = Mathf.Infinity;
         specialRigid.angularDrag = angularDragAmount;
+
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        if (playerUI)
+        {
+            playerUI.GetComponent<userInterface>().SetCoolDownTime(specialAttackCooldownTime);
+        }
     }
 
     // Update is called once per frame
@@ -344,6 +351,7 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     protected override void DeactivateSpecialAttack()
     {
+        specialActivated = false;
         playerGrowing = true;
         specialRigid.angularDrag = 100f;
         specialRigid.angularVelocity = Vector3.zero;
@@ -395,6 +403,7 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     protected override void ActivateSpecialAttack()
     {
+        specialActivated = true;
         specialRigid.useGravity = true;
         specialRigid.angularDrag = angularDragAmount;
         leftFistCollider.radius = leftFistStartSize.radius;

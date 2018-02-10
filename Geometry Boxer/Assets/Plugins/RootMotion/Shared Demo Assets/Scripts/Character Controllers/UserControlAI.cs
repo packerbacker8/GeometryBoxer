@@ -185,7 +185,5 @@ namespace RootMotion.Demos
         {
             return behaviourPuppet.state == BehaviourPuppet.State.Unpinned;
         }
-
-        
     }
 }
