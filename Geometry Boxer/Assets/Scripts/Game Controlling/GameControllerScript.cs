@@ -8,12 +8,17 @@ public class GameControllerScript : MonoBehaviour
 {
     [Tooltip("What string value of the level to load in the build order.")]
     public string dominationMap = "CitySelectMap";
+    public string deathReloadMap;
     public float loadLevelTimeOut = 20f;
     public GameObject[] playerOptions;
     public GameObject enemyCubeContainer;
     public GameObject enemyOctahedronContainer;
+    [Header("Ally Information")]
     [Tooltip("If set to true, the enemy container that matches the type of the player will be used as a group of allies in the fight.")]
     public bool hasAllies = false;
+    [Tooltip("This integer will divide the number of bots in the other container that will be the allies. The higher the number, the lower the number of allies.")]
+    [Range(1, 100)]
+    public int fractionalAllies = 3;
 
     private string currentMapName;
     private int numEnemiesAlive;
@@ -60,7 +65,7 @@ public class GameControllerScript : MonoBehaviour
             allyContainer.tag = "AllyContainer"; 
             numEnemiesAlive = enemyContainer.transform.childCount;
             enemiesInWorld = new GameObject[numEnemiesAlive];
-            alliesInWorld = new GameObject[allyContainer.transform.childCount];
+            alliesInWorld = new GameObject[allyContainer.transform.childCount / fractionalAllies == 0 ? 1 : allyContainer.transform.childCount / fractionalAllies];
             int iterationAmount = alliesInWorld.Length > numEnemiesAlive ? alliesInWorld.Length : numEnemiesAlive;
 
             for (int i = 0; i < iterationAmount; i++)
@@ -89,8 +94,9 @@ public class GameControllerScript : MonoBehaviour
                     {
                         allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform); //might need to change
                         allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().sightRange = 0f; //set sight range to zero so that allied bots never try to switch targets
+
                     }
-                    else if (allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
+                    else if (allyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
                     {
                         //do nothing?
                     }
@@ -98,6 +104,12 @@ public class GameControllerScript : MonoBehaviour
                     allyContainer.transform.GetChild(i).gameObject.tag = "AllyRoot";
                     alliesInWorld[i] = allyContainer.transform.GetChild(i).gameObject;
                 }
+            }
+            //Turn off the remaining allies.
+            Debug.Log("Length of ally in world " + alliesInWorld.Length);
+            for(int i = alliesInWorld.Length; i < allyContainer.transform.childCount; i++)
+            {
+                allyContainer.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
         else
@@ -121,6 +133,7 @@ public class GameControllerScript : MonoBehaviour
                 if (enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
                 {
                     enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+
                 }
                 else if (enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
                 {
@@ -142,7 +155,6 @@ public class GameControllerScript : MonoBehaviour
         if (numEnemiesAlive <= 0)
         {
             SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
-            this.SendMessage("NewSceneIsLoading", SendMessageOptions.DontRequireReceiver);
             StartCoroutine(changeLevel(dominationMap));
         }
     }
@@ -168,26 +180,31 @@ public class GameControllerScript : MonoBehaviour
             if (tag.Contains("Enemy"))
             {
                 numEnemiesAlive--;
+
+                /*
+                bool[] alliesToChange = new bool[alliesInWorld.Length];
                 for (int i = 0; i < alliesInWorld.Length; i++)
                 {
-                    if (enemiesInWorld[index] != null && alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == enemiesInWorld[index])
+                    if ( alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == enemiesInWorld[index])
                     {
-                        enemiesInWorld[index] = null;
-                        SetNewTarget(i, alliesInWorld[i].tag);
+                        alliesToChange[i] = true;
                     }
-                }
+                }*/
+                enemiesInWorld[index] = null;
+                //SetNewTarget(i, alliesInWorld[i].tag);
             }
             else
             {
+                /*
                 for (int i = 0; i < enemiesInWorld.Length; i++)
                 {
                     if (alliesInWorld[index] != null && enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == alliesInWorld[index])
                     {
-                        alliesInWorld[index] = null;
                         SetNewTarget(i, enemiesInWorld[i].tag);
 
                     }
-                }
+                }*/
+                alliesInWorld[index] = null;
             }
         }
         else
@@ -217,7 +234,7 @@ public class GameControllerScript : MonoBehaviour
     {
         playerAlive = false;
         SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
-        LoadLevel.loader.LoadALevel(dominationMap); //index of the scene the player is currently on
+        LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
     }
 
     public GameObject GetActivePlayer()

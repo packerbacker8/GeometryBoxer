@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Enemy;
 using RootMotion.Demos;
@@ -37,6 +35,8 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     private int characterControllerIndex = 2;
     private int[] attackChances = { 50, 30, 20 };
     private bool attackStatus;
+
+    private System.Random randAttack;
 
     public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
     //protected virtual void SetCurrentAnimTime(CharacterAnimations currentAnim)
@@ -78,6 +78,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     void Start () {
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         attackStatus = false;
+        randAttack = new System.Random();
     }
 
     private void Update()
@@ -108,6 +109,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
             //If puppet is down, does not try to attack player during stand up anim
             if ((!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && !info.IsName(onGround)))
             {
+                int randChoice = randAttack.Next(0,3);
                 //This is for when puppet has melee object in hand
                 if (characterPuppet.propRoot.currentProp != null)
                 {
@@ -116,8 +118,20 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
                 else//No melee object in hand of puppet
                 {
                     //anim.Play(rightSwingAnimation, punchAnimLayer);
-                    ThrowUppercut(Limbs.rightArm);
-                    //anim.Play("UpperRightCut", 1);
+                    if (randChoice == 0)
+                    {
+
+                        ThrowUppercut(Limbs.rightArm);
+                    }
+                    else if (randChoice == 1)
+                    {
+                        ThrowSinglePunch(Limbs.rightArm);
+                    }
+                    else if (randChoice == 2)
+                    {
+                        ThrowHiKick();
+                    }
+                    
                 }
             }
         }
@@ -156,66 +170,68 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
             {
                 //rightFistCollider.enabled = true;
                 currentAnim = action;
-                //if (anim.GetFloat("Forward") < 0.5f)
-                //{
-                //    currentAnim.animLayer = 0;
-                //}
-                //else
-                //{
-                //    currentAnim.animLayer = 1; //forced
-                //}
-                //break;
-                currentAnim.animLayer = 0;
+                if (anim.GetFloat("Forward") < 0.5f)
+                {
+                    currentAnim.animLayer = 0;
+                }
+                else
+                {
+                    currentAnim.animLayer = 1; //forced
+                }
+                break;
+
             }
         }
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);
         anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
         SetCurrentAnimTime(currentAnim);
         anim.SetInteger("ActionIndex", -1);
-        //base.ThrowUppercut(limb);
-        
-        //anim.Play(leftUppercutAnimation, punchAnimLayer);
-       
-        //anim.SetInteger("ActionIndex", currentAnim.actionIndex);
-        //anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
-        ////SetCurrentAnimTime(currentAnim);
-        //anim.SetInteger("ActionIndex", -1);
 
-        //if (limb == Limbs.leftArm)
-        //{
-        //    GameObject walker = leftShoulder;
-        //    GameObject walker2 = rightShoulder; //need both for sake of combo
-        //    while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
-        //    {
-        //        //walker.GetComponent<CollisionReceived>().sendDamage = false;
-        //        //walker2.GetComponent<CollisionReceived>().sendDamage = false;
-        //        //assumes there is only one child
-        //        walker = walker.transform.GetChild(0).gameObject;
-        //        walker2 = walker2.transform.GetChild(0).gameObject;
-        //    }
-        //    if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null)
-        //    {
-        //        walker.GetComponent<CollisionReceived>().sendDamage = false;
-        //        walker2.GetComponent<CollisionReceived>().sendDamage = false;
-        //    }
-        //}
-        //else
-        //{
-        //    GameObject walker = rightShoulder;
-        //    while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
-        //    {
-        //        walker.GetComponent<CollisionReceived>().sendDamage = false;
-        //        //assumes there is only one child
-        //        walker = walker.transform.GetChild(0).gameObject;
-        //    }
-
-        //    if (walker.GetComponent<CollisionReceived>() != null)
-        //    {
-        //        walker.GetComponent<CollisionReceived>().sendDamage = false;
-        //    }
-        //}
+    }
+    public virtual void ThrowHiKick()
+    {
+        CharacterAnimations currentAnim = InitCharacterAnimationStruct();
+        foreach (CharacterAnimations action in enemyAnimations)
+        {
+            if (action.animName == "HiKick")
+            {
+                currentAnim = action;
+                break;
+            }
+        }
+        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        SetCurrentAnimTime(currentAnim);
+        anim.SetInteger("ActionIndex", -1);
     }
 
+    public virtual void ThrowSinglePunch(Limbs limb)
+    {
+        CharacterAnimations currentAnim = InitCharacterAnimationStruct();
+        foreach (CharacterAnimations action in enemyAnimations)
+        {
+            if (limb == Limbs.rightArm && action.animName == "SwingProp")
+            {
+                currentAnim = action;
+                //anim.speed = 5f;
+                if (anim.GetFloat("Forward") < 0.5f)
+                {
+                    currentAnim.animLayer = 0;
+                }
+                else
+                {
+                    currentAnim.animLayer = 1;
+                }
+                break;
+            }
+                
+        }
+        anim.SetInteger("ActionIndex", currentAnim.actionIndex);
+        anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
+        //going to need to determine when animation ends to allow next triggering event
+        SetCurrentAnimTime(currentAnim);
+        anim.SetInteger("ActionIndex", -1);
+    }
     public bool isAttacking()
     {
         return attackStatus;

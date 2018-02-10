@@ -8,10 +8,19 @@ namespace RootMotion.Demos {
 
 		public Prop prop;
 		public LayerMask characterLayers;
+        public AudioClip pickup;
 
-		private CharacterPuppet characterPuppet;
+        private CharacterPuppet characterPuppet;
+        private GameObject light;
+        private AudioSource source;
 
-		void OnTriggerEnter(Collider collider) {
+        void Start()
+        {
+            light = this.transform.parent.GetChild(5).gameObject;
+            source = this.gameObject.AddComponent<AudioSource>();
+        }
+
+        void OnTriggerEnter(Collider collider) {
 			if (prop.isPickedUp) return;
 			if (!LayerMaskExtensions.Contains(characterLayers, collider.gameObject.layer)) return;
 
@@ -24,6 +33,8 @@ namespace RootMotion.Demos {
 			if (characterPuppet.propRoot.currentProp != null) return;
 
 			characterPuppet.propRoot.currentProp = prop;
-		}
+            light.SetActive(false);
+            source.PlayOneShot(pickup, 0.5f);
+        }
 	}
 }

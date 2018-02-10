@@ -104,6 +104,7 @@ namespace Enemy
             playerTarget = false;
             startAngle = transform.eulerAngles.y;
             gameController = GameObject.FindGameObjectWithTag("GameController");
+            //StartCoroutine(checkDistance());
         }
 
         public bool getPlayerTarget()
@@ -126,6 +127,10 @@ namespace Enemy
             else
             {
                 playerTarget = false;
+                if (moveTarget == playerTransform) //allow enemy bots to retarget other bots
+                {
+                    UpdateTarget();
+                }
             }
         }
 
@@ -141,6 +146,7 @@ namespace Enemy
         {
             while (true)
             {
+                /*
                 distance = Vector3.Distance(moveTarget.position, transform.position);
                 if (distance < sightRange)
                 {
@@ -150,8 +156,9 @@ namespace Enemy
                 else
                 {
                     playerTarget = false;
-                }
-                yield return new WaitForSeconds(.1f);
+                }*/
+                Debug.Log("Y velocity for detect bots: " + this.GetComponent<Rigidbody>().velocity.y);
+                yield return new WaitForSeconds(10f);
             }
         }
     }
