@@ -11,8 +11,9 @@ namespace Enemy
         public float rotateSpeed = 1.5f;
         public float bounceAngle = 70f;
         public float sightRange = 20f;
+        public float leeway = 0.1f;
         public bool playerTarget;
-
+        
         private float distance;
         private float stoppingDistance;
         private float stoppingThreshold;
@@ -40,7 +41,7 @@ namespace Enemy
             {
                 return false;
             }
-            return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
+            return (Vector3.Distance(moveTarget.position, transform.position) + leeway > stoppingThreshold * stoppingDistance);
 
         }
 

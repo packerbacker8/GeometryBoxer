@@ -7,6 +7,10 @@ using UnityEngine.AI;
 public class NormalAttackAI : MonoBehaviour, AttackBase {
     //protected float currentAnimLength;
 
+    public GameObject rightShoulder;
+    public GameObject leftShoulder;
+    public GameObject rightThigh;
+    public GameObject leftThigh;
     float stoppingDistance;
     float stoppingThreshold;
     float jumpDistance;
@@ -34,9 +38,13 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     private int animationControllerIndex = 0;
     private int characterControllerIndex = 2;
     private int[] attackChances = { 50, 30, 20 };
+
     private bool attackStatus;
+    private bool updateCollisionCheck;
 
     private System.Random randAttack;
+
+
 
     public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
     
@@ -75,6 +83,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         attackStatus = false;
         randAttack = new System.Random();
+        updateCollisionCheck = false;
     }
 
     private void Update()
@@ -84,6 +93,32 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         {
             currentAnimLength = 0;
             attackStatus = false;
+            updateCollisionCheck = true;
+        }
+        if (updateCollisionCheck)
+        {
+            //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
+            GameObject walker = leftShoulder;
+            GameObject walker2 = rightShoulder; //need both for sake of combo
+            GameObject walker3 = rightThigh;
+            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = true;
+                walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                //assumes there is only one child
+                walker = walker.transform.GetChild(0).gameObject;
+                walker2 = walker2.transform.GetChild(0).gameObject;
+                walker3 = walker3.transform.GetChild(0).gameObject;
+            }
+            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null && walker3.GetComponent<CollisionReceived>() != null)
+            {
+                walker.GetComponent<CollisionReceived>().sendDamage = true;
+                walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                walker3.GetComponent<CollisionReceived>().sendDamage = true;
+            }
+
+            updateCollisionCheck = false;
         }
     }
 
@@ -91,6 +126,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     {
         currentAnimLength = anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.playTime + (anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.transitionTime);
         attackStatus = true;
+
     }
     public void attack()
     {
@@ -182,6 +218,18 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
         SetCurrentAnimTime(currentAnim);
         anim.SetInteger("ActionIndex", -1);
+        GameObject walker = rightShoulder;
+        while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            //assumes there is only one child
+            walker = walker.transform.GetChild(0).gameObject;
+        }
+
+        if (walker.GetComponent<CollisionReceived>() != null)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
 
     }
     public virtual void ThrowHiKick()
@@ -199,6 +247,17 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
         SetCurrentAnimTime(currentAnim);
         anim.SetInteger("ActionIndex", -1);
+        GameObject walker = rightThigh;
+        while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            //assumes there is only one child
+            walker = walker.transform.GetChild(0).gameObject;
+        }
+        if (walker.GetComponent<CollisionReceived>() != null)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
     }
 
     public virtual void ThrowSinglePunch(Limbs limb)
@@ -222,11 +281,24 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
             }
                 
         }
+
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);
         anim.CrossFadeInFixedTime(currentAnim.animName, currentAnim.transitionTime, currentAnim.animLayer, currentAnim.playTime);
         //going to need to determine when animation ends to allow next triggering event
         SetCurrentAnimTime(currentAnim);
         anim.SetInteger("ActionIndex", -1);
+
+        GameObject walker = rightShoulder;
+        while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+            //assumes there is only one child
+            walker = walker.transform.GetChild(0).gameObject;
+        }
+        if (walker.GetComponent<CollisionReceived>() != null)
+        {
+            walker.GetComponent<CollisionReceived>().sendDamage = false;
+        }
     }
     public bool isAttacking()
     {

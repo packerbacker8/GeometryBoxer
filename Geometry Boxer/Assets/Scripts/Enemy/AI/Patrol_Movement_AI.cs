@@ -9,6 +9,7 @@ namespace Enemy
         public bool playerTarget;
         public float bounceAngle;
         public float rotateSpeed;
+        public float leeway = 0.1f;
         public List<GameObject> patrolPositions;
 
         private float stoppingDistance;
@@ -29,7 +30,7 @@ namespace Enemy
 
             if (playerTarget)
             {
-                return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
+                return (Vector3.Distance(moveTarget.position, transform.position) + leeway > stoppingThreshold * stoppingDistance);
             }
             return Vector3.Distance(moveTarget.position, transform.position) > patrolStopDistance;
         }
