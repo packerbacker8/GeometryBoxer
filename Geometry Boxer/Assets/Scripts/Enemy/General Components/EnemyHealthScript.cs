@@ -8,6 +8,9 @@ using RootMotion.Demos;
 public class EnemyHealthScript : MonoBehaviour
 {
     public float EnemyHealth = 1000f;
+    [Tooltip("0.99 means to find health pack at 100% health, 0.01 means to find health pack at 1% health.")]
+    [Range(0.01f, 0.99f)]
+    public float percentToFindHealthPack = 0.5f;
     public float deathDelay = 20f;
     public float damageThreshold = 5f;
     public float heavyDamageOffset = 10f;
@@ -80,7 +83,7 @@ public class EnemyHealthScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!findHealth && EnemyHealth < originalHealth * 0.5f)
+        if(!findHealth && EnemyHealth < originalHealth * percentToFindHealthPack)
         {
             GetHealth();
         }
