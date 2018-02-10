@@ -50,11 +50,13 @@ public class pauseMenu : MonoBehaviour
         }
         else if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
         {
-            Debug.Log("Tutorial pause");
             isCombatScene = true;
             character = control.GetComponent<GameControllerScriptTutorial>().GetActivePlayer();
-            CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
-            punchScript = character.gameObject.GetComponent<PunchScript>();
+            if(character != null)
+            {
+                CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
+                punchScript = character.gameObject.GetComponent<PunchScript>();
+            }
         }
     }
 

@@ -1,8 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Enemy;
+using RootMotion.Demos;
 
-public class GameControllerScriptTutorial : MonoBehaviour {
+
+public class GameControllerScriptTutorial : MonoBehaviour
+{
 
     [Tooltip("What string value of the level to load in the build order.")]
     public string mainMenu = "MainMenu";
@@ -19,7 +23,7 @@ public class GameControllerScriptTutorial : MonoBehaviour {
     void Awake()
     {
         numEnemiesAlive = enemiesInWorld.Count;
-        
+
         for (int i = 0; i < playerOptions.Length; i++)
         {
             if (playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()))
@@ -32,15 +36,19 @@ public class GameControllerScriptTutorial : MonoBehaviour {
                 playerOptions[i].SetActive(false);
             }
         }
-        /*
-        enemyContainer = GameObject.FindGameObjectWithTag("EnemyContainer");
-        numEnemiesAlive = enemyContainer.transform.childCount;
+
+        numEnemiesAlive = enemiesInWorld.Count;
         for (int i = 0; i < numEnemiesAlive; i++)
         {
-            enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
-            enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(activePlayer.transform);
+            enemiesInWorld[i].GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
+            if(activePlayer == null)
+            {
+                Debug.Log("Player is null, problem");
+                return;
+            }
+            enemiesInWorld[i].GetComponentInChildren<UserControlAI>().SetMoveTarget(activePlayer.transform.GetChild(2).gameObject);
         }
-        */
+        
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
@@ -91,5 +99,15 @@ public class GameControllerScriptTutorial : MonoBehaviour {
     public GameObject GetActivePlayer()
     {
         return activePlayer;
+    }
+
+    /// <summary>
+    /// Function to set new target for bots to attack.
+    /// </summary>
+    /// <param name="index">The bot index in their respective array.</param>
+    /// <param name="tag">Tag of their root object</param>
+    public void SetNewTarget(int index, string tag)
+    {
+        enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(activePlayer.transform.GetChild(2).gameObject);
     }
 }
