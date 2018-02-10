@@ -9,6 +9,8 @@ namespace Enemy
 {
     public class NormalMovementAI : MonoBehaviour, MovementBase
     {
+        public float leeway = 0.1f;
+
         private float stoppingDistance;
         private float stoppingThreshold;
         private float jumpDistance;
@@ -23,6 +25,7 @@ namespace Enemy
         {
             gameController = GameObject.FindGameObjectWithTag("GameController");
             moveSpeed = 1.5f;
+            
         }
 
         public bool canMove()
@@ -31,7 +34,7 @@ namespace Enemy
             {
                 return false;
             }
-            return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
+            return (Vector3.Distance(moveTarget.position, transform.position) + leeway > stoppingThreshold * stoppingDistance);
         }
 
         public Vector3 move()

@@ -96,4 +96,9 @@ public class ShootAttackAI : MonoBehaviour, AttackBase
         sfxManager = sfx;
         attackRange = rangeAttack;
     }
+
+    public bool isAttacking()
+    {
+        throw new NotImplementedException();
+    }
 }

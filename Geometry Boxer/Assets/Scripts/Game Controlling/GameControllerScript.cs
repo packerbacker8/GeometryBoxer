@@ -179,6 +179,7 @@ public class GameControllerScript : MonoBehaviour
             if (tag.Contains("Enemy"))
             {
                 numEnemiesAlive--;
+
                 /*
                 bool[] alliesToChange = new bool[alliesInWorld.Length];
                 for (int i = 0; i < alliesInWorld.Length; i++)

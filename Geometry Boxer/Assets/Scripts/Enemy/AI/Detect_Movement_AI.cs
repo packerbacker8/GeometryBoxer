@@ -11,8 +11,9 @@ namespace Enemy
         public float rotateSpeed = 1.5f;
         public float bounceAngle = 70f;
         public float sightRange = 20f;
+        public float leeway = 0.1f;
         public bool playerTarget;
-
+        
         private float distance;
         private float stoppingDistance;
         private float stoppingThreshold;
@@ -40,7 +41,7 @@ namespace Enemy
             {
                 return false;
             }
-            return (Vector3.Distance(moveTarget.position, transform.position) > stoppingThreshold * stoppingDistance);
+            return (Vector3.Distance(moveTarget.position, transform.position) + leeway > stoppingThreshold * stoppingDistance);
 
         }
 
@@ -104,6 +105,7 @@ namespace Enemy
             playerTarget = false;
             startAngle = transform.eulerAngles.y;
             gameController = GameObject.FindGameObjectWithTag("GameController");
+            //StartCoroutine(checkDistance());
         }
 
         public bool getPlayerTarget()
@@ -145,6 +147,7 @@ namespace Enemy
         {
             while (true)
             {
+                /*
                 distance = Vector3.Distance(moveTarget.position, transform.position);
                 if (distance < sightRange)
                 {
@@ -154,8 +157,9 @@ namespace Enemy
                 else
                 {
                     playerTarget = false;
-                }
-                yield return new WaitForSeconds(.1f);
+                }*/
+                Debug.Log("Y velocity for detect bots: " + this.GetComponent<Rigidbody>().velocity.y);
+                yield return new WaitForSeconds(10f);
             }
         }
     }

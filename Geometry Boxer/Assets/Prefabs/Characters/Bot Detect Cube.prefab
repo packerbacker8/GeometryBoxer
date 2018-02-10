@@ -2615,7 +2615,7 @@ Rigidbody:
   m_GameObject: {fileID: 1068587238557984}
   serializedVersion: 2
   m_Mass: 50
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -3380,7 +3380,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453b6d9467d1c534ea3d564979e23546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rightShoulder: {fileID: 1937041078307158}
+  leftShoulder: {fileID: 1800580697331860}
+  rightThigh: {fileID: 1858306330639328}
+  leftThigh: {fileID: 1814313388477612}
   attackRandomAudio: 1000
+  enemyAnimations:
+  - actionIndex: 1
+    animName: RightPunch
+    animLayer: 1
+    transitionTime: 0.2
+    playTime: 0.2
+  - actionIndex: 3
+    animName: RightUpperCut
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 0.4
+  - actionIndex: 5
+    animName: HiKick
+    animLayer: 0
+    transitionTime: 0.1
+    playTime: 0.1
 --- !u!114 &114834132832508312
 MonoBehaviour:
   m_ObjectHideFlags: 1
