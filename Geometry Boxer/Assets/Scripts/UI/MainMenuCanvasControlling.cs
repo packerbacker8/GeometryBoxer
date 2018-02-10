@@ -21,6 +21,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private List<GameObject> loadFileButtons;
 
     private bool controllerMode;
+    private StandaloneInputModule EventSystemInputModule;
 
     // Use this for initialization
     void Start()
@@ -44,6 +45,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 controllerMode = true;
             }
         }
+
+        EventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
 
         if (controllerMode)
         {
@@ -73,6 +76,18 @@ public class MainMenuCanvasControlling : MonoBehaviour
             CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
         }
 
+    }
+
+    void Update()
+    {
+        if (Input.GetAxis("DPadY") != 0)
+        {
+            EventSystemInputModule.verticalAxis = "DPadY";
+        }
+        else
+        {
+            EventSystemInputModule.verticalAxis = "Vertical";
+        }
     }
 
     /// <summary>
