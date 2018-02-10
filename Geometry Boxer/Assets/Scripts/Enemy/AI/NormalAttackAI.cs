@@ -35,6 +35,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     private int punchAnimLayer = 0;
     private int animationControllerIndex = 0;
     private int characterControllerIndex = 2;
+    private int[] attackChances = { 50, 30, 20 };
     private bool attackStatus;
 
     public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
