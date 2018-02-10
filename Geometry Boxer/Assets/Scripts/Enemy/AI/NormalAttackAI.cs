@@ -39,11 +39,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
     private System.Random randAttack;
 
     public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
-    //protected virtual void SetCurrentAnimTime(CharacterAnimations currentAnim)
-    //{
-    //    currentAnimLength = anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.playTime + (anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.transitionTime);
-    //    //isAttacking = true;
-    //}
+    
     /// <summary>
     /// Information relating to a character animation.
     /// </summary>
@@ -109,7 +105,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
             //If puppet is down, does not try to attack player during stand up anim
             if ((!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && !info.IsName(onGround)))
             {
-                int randChoice = randAttack.Next(0,3);
+                int randChoice = randAttack.Next(0,100);
                 //This is for when puppet has melee object in hand
                 if (characterPuppet.propRoot.currentProp != null)
                 {
@@ -118,16 +114,16 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
                 else//No melee object in hand of puppet
                 {
                     //anim.Play(rightSwingAnimation, punchAnimLayer);
-                    if (randChoice == 0)
+                    if (randChoice <= attackChances[0])
                     {
 
-                        ThrowUppercut(Limbs.rightArm);
-                    }
-                    else if (randChoice == 1)
-                    {
                         ThrowSinglePunch(Limbs.rightArm);
                     }
-                    else if (randChoice == 2)
+                    else if (randChoice >= attackChances[0] && randChoice < (attackChances[0] + attackChances[1]))
+                    {
+                        ThrowUppercut(Limbs.rightArm);
+                    }
+                    else if (randChoice >= (attackChances[0] + attackChances[1]))
                     {
                         ThrowHiKick();
                     }
@@ -210,7 +206,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         CharacterAnimations currentAnim = InitCharacterAnimationStruct();
         foreach (CharacterAnimations action in enemyAnimations)
         {
-            if (limb == Limbs.rightArm && action.animName == "SwingProp")
+            if (limb == Limbs.rightArm && action.animName == "RightPunch")
             {
                 currentAnim = action;
                 //anim.speed = 5f;
