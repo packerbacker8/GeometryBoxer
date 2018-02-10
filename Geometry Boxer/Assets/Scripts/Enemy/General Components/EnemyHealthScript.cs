@@ -26,18 +26,20 @@ public class EnemyHealthScript : MonoBehaviour
     private bool dead;
     private bool damageIsFromPlayer;
     private bool damageFromAllies;
-    private Animator anim;
+    private bool findHealth;
     private int characterControllerIndex = 2;
     private int animationControllerIndex = 0;
     private int puppetMasterIndex = 1;
+    private int enemyIndex = 0;
     private string getUpProne = "GetUpProne";
     private string getUpSupine = "GetUpSupine";
     private string damageSource = "Player";
     private GameObject puppetMast;
     private GameObject gameController;
     private GameObject playerUI;
-    private int enemyIndex = 0;
+    private GameObject healthContainer;
     private UserControlAI charController;
+    private Animator anim;
 
     private SwapMaterials ShowDmg;
     private float Val0;
@@ -57,11 +59,13 @@ public class EnemyHealthScript : MonoBehaviour
         sfxManager = FindObjectOfType<SFX_Manager>();
         dead = false;
         damageIsFromPlayer = false;
+        findHealth = false;
         
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        healthContainer = GameObject.FindGameObjectWithTag("HealthContainer");
         charController = GetComponentInChildren<UserControlAI>();
         ShowDmg = this.GetComponent<SwapMaterials>();
         deathObject.SetActive(false);
@@ -76,10 +80,52 @@ public class EnemyHealthScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(!findHealth && EnemyHealth < originalHealth * 0.5f)
+        {
+            GetHealth();
+        }
         if (EnemyHealth <= 0f && !dead)
         {
             KillEnemy();
         }
+    }
+
+    /// <summary>
+    /// Function for the enemy to go find a health pack, in some random way.
+    /// </summary>
+    private void GetHealth()
+    {
+        findHealth = true;
+        System.Random rand = new System.Random();
+        rand.Next();
+        int randIndex;
+        int count = 0;
+        GameObject healthObj = null;
+        while(healthObj == null && count < healthContainer.transform.childCount)
+        {
+            randIndex = rand.Next(healthContainer.transform.childCount);
+            if (healthContainer.transform.GetChild(randIndex).GetComponent<MeshRenderer>().enabled)
+            {
+                healthObj = healthContainer.transform.GetChild(randIndex).gameObject;
+            }
+            count++;
+        }
+        if(healthObj == null)
+        {
+            return;
+        }
+        else
+        {
+            gameController.GetComponent<GameControllerScript>().SetTargetHealthPack(enemyIndex, healthObj, this.gameObject.tag);
+        }
+    }
+
+    /// <summary>
+    /// Function to call to set target to new target for AI
+    /// </summary>
+    public void SetOurTarget()
+    {
+        gameController.GetComponent<GameControllerScript>().SetNewTarget(enemyIndex, this.gameObject.tag);
     }
 
     /// <summary>

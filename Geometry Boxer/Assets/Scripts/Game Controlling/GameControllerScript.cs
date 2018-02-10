@@ -106,7 +106,6 @@ public class GameControllerScript : MonoBehaviour
                 }
             }
             //Turn off the remaining allies.
-            Debug.Log("Length of ally in world " + alliesInWorld.Length);
             for(int i = alliesInWorld.Length; i < allyContainer.transform.childCount; i++)
             {
                 allyContainer.transform.GetChild(i).gameObject.SetActive(false);
@@ -257,28 +256,35 @@ public class GameControllerScript : MonoBehaviour
     /// <param name="tag">Tag of their root object</param>
     public void SetNewTarget(int index, string tag)
     {
-        if(tag.Contains("Enemy"))
+        if(hasAllies)
         {
-            for(int i = 0; i < alliesInWorld.Length; i++)
+            if (tag.Contains("Enemy"))
             {
-                if(alliesInWorld[i] != null)
+                for (int i = 0; i < alliesInWorld.Length; i++)
                 {
-                    enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(alliesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
-                    return;
+                    if (alliesInWorld[i] != null)
+                    {
+                        enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(alliesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
+                        return;
+                    }
+                }
+                enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
+            }
+            else
+            {
+                for (int i = 0; i < enemiesInWorld.Length; i++)
+                {
+                    if (enemiesInWorld[i] != null)
+                    {
+                        alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(enemiesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
+                        return;
+                    }
                 }
             }
-            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
         }
         else
         {
-            for (int i = 0; i < enemiesInWorld.Length; i++)
-            {
-                if (enemiesInWorld[i] != null)
-                {
-                    alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(enemiesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
-                    return;
-                }
-            }
+            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
         }
     }
 
@@ -298,5 +304,24 @@ public class GameControllerScript : MonoBehaviour
     public int NumberOfEnemiesAlive()
     {
         return numEnemiesAlive;
+    }
+
+
+    public void SetTargetHealthPack(int index, GameObject objOfHealth, string tag)
+    {
+        if(tag.Contains("Ally"))
+        {
+            if(alliesInWorld[index] != null)
+            {
+                alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
+            }
+        }
+        else
+        {
+            if(enemiesInWorld[index] != null)
+            {
+                enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
+            }
+        }
     }
 }

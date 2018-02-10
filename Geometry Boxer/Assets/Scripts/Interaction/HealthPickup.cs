@@ -109,6 +109,7 @@ public class HealthPickup : MonoBehaviour
             {
                 healthToAdd = originalHealth - currentHealth > healAmount ? healAmount : originalHealth - currentHealth;
                 colObj.GetComponent<EnemyHealthScript>().AddHealth(healthToAdd);
+                colObj.GetComponent<EnemyHealthScript>().SetOurTarget();
                 destroy = true;
             }
         }
