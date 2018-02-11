@@ -48,8 +48,6 @@ public class SphereAttackScript : PunchScript
         maxVelocity = 25f;
         onCooldown = false;
         isBall = false;
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        playerUI.GetComponent<userInterface>().SetCoolDownTime(ballCooldownTime);
         ballRigid.useGravity = false;
     }
 
@@ -112,7 +110,6 @@ public class SphereAttackScript : PunchScript
             if(cooldownTime > ballCooldownTime)
             {
                 onCooldown = false;
-                playerUI.GetComponent<userInterface>().SetCoolDownTime(ballCooldownTime);
                 cooldownTime = 0;
             }
             UpdatePos(ballForm.transform, charController.transform);
@@ -154,7 +151,6 @@ public class SphereAttackScript : PunchScript
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
         ballShield.gameObject.SetActive(false);
         onCooldown = true;
-        playerUI.GetComponent<userInterface>().UsedSpecialAttack();
         anim.SetInteger("ActionIndex", -1);
         anim.SetBool("IsStrafing", false);
         if(ballRigid.velocity.sqrMagnitude > 0)

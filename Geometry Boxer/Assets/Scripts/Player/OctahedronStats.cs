@@ -5,8 +5,10 @@ using UnityEngine.UI;
 using RootMotion.Dynamics;
 using RootMotion.Demos;
 using System;
+using PlayerUI;
 
-public class OctahedronStats : PlayerStatsBaseClass {
+public class OctahedronStats : PlayerStatsBaseClass
+{
 
     public float Health = 15000f;
 
@@ -21,9 +23,12 @@ public class OctahedronStats : PlayerStatsBaseClass {
 
         HealthModifier = 1.0f;
         health = Health;
+        playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
         originalHealth = health;
+        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(originalHealth);
         healthBarBackground = GameObject.FindGameObjectWithTag("HealthBarBackground").GetComponent<Image>();
         healthBarFill = GameObject.FindGameObjectWithTag("HealthBarBackground").transform.GetChild(0).GetComponent<Image>();
+        playerUI.GetComponent<PlayerUserInterface>().SetPlayerType(2);
     }
 
     // Update is called once per frame
@@ -64,6 +69,7 @@ public class OctahedronStats : PlayerStatsBaseClass {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+                playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
             }
             UpdateHealthUI();
         }
@@ -72,6 +78,7 @@ public class OctahedronStats : PlayerStatsBaseClass {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+                playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
             }
             UpdateHealthUI();
         }

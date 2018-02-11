@@ -9,8 +9,15 @@ namespace PlayerUI
     {
         public Text enemyCounter;
         public Text PlayerSpecialTimer;
-        public float coolDownTime;
-
+        public Text HealthNumber;
+        public Text CooldownPercent;
+        public Transform specialAttackBar;
+        public Transform InnerLoop;
+        public Text percentSign;
+        public Transform specialAttackFullCube;
+        public Transform specialAttackFullOcta;
+        public Sprite glowingBar;
+        public Transform healthBar;
 
 
         [Header("Health images")]
@@ -30,7 +37,17 @@ namespace PlayerUI
         private bool hit;
         private int hitCount;
         private float hitTimer;
-        
+        private float coolDownTime;
+        private float cooldownPercent;
+        private Color Yellow = new Color(255 / 255.0F, 203 / 255.0F, 0, 1);
+        private Color Blue = new Color(115 / 255.0F, 189 / 255.0F, 234 / 255.0F, 1);
+        private Color Red = new Color(255 / 255.0F, 25 / 255.0F, 25 / 255.0F, 1);
+        private Color Green = new Color(0 / 255.0F, 255 / 255.0F, 72 / 255.0F, 1);
+        private bool PlayerIsCube;
+        private bool PlayerIsOcta;
+        private bool usingSpecialAttack;
+        private string SpecialAttackButton = "B";
+
 
         // Use this for initialization
         void Start()
@@ -51,6 +68,21 @@ namespace PlayerUI
             // displays enemy count
             enemyCounter.text = numEnemiesAlive.ToString();
 
+            // display health
+            HealthNumber.text = ((int)PlayersHealth / 100).ToString() + " / " + ((int)fullHealth / 100).ToString();
+            if (PlayersHealth < (fullHealth / 2.5) && PlayersHealth > (fullHealth / 4))
+            {
+                healthBar.GetComponent<Image>().color = Yellow;
+            }
+            else if (PlayersHealth < (fullHealth / 3.5))
+            {
+                healthBar.GetComponent<Image>().color = Red;
+            }
+            else
+            {
+                healthBar.GetComponent<Image>().color = Green;
+            }
+
             // displays cool down
             if (cooldown)
             {
@@ -59,12 +91,62 @@ namespace PlayerUI
             if (coolDownTime <= 0)
             {
                 cooldown = false;
+                usingSpecialAttack = false;
                 coolDownTime = playerCoolDownTimer;
+                cooldownPercent = 0f;
             }
 
-            PlayerSpecialTimer.text = coolDownTime.ToString("n2");
-            Debug.Log("PlayersHealth: " + PlayersHealth.ToString());
-            Debug.Log("maxHealth: " + fullHealth.ToString());
+            // Special Attack loading bar
+            if (cooldownPercent <= .99 && cooldown)
+            {
+                percentSign.gameObject.SetActive(true);
+                specialAttackBar.GetComponent<Image>().color = Yellow;
+                InnerLoop.GetComponent<Image>().color = Yellow;
+
+                cooldownPercent = (playerCoolDownTimer - coolDownTime) * .1f;
+                float percentNumber = cooldownPercent * 100f;
+                CooldownPercent.text = ((int)percentNumber).ToString();
+
+                if (PlayerIsCube)
+                {
+                    specialAttackFullCube.gameObject.SetActive(false);
+                }
+                else if (PlayerIsOcta)
+                {
+                    specialAttackFullOcta.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                percentSign.gameObject.SetActive(false);
+
+                if (usingSpecialAttack)
+                {
+                    CooldownPercent.text = " ";
+                }
+                else
+                {
+                    CooldownPercent.text = SpecialAttackButton;
+                }
+                InnerLoop.GetComponent<Image>().color = Color.white;
+                cooldownPercent = 1;
+                if (PlayerIsCube)
+                {
+                    specialAttackFullCube.gameObject.SetActive(true);
+                    specialAttackBar.GetComponent<Image>().color = Blue;
+                }
+                else if (PlayerIsOcta)
+                {
+                    specialAttackFullOcta.gameObject.SetActive(true);
+                    specialAttackBar.GetComponent<Image>().color = Red;
+                }
+            }
+
+            specialAttackBar.GetComponent<Image>().fillAmount = cooldownPercent;
+
+            //PlayerSpecialTimer.text = coolDownTime.ToString("n2");
+            //Debug.Log("PlayersHealth: " + PlayersHealth.ToString());
+            //Debug.Log("maxHealth: " + fullHealth.ToString());
             //Debug.Log("hitTimer: " + hitTimer.ToString());
 
             // if player is not hit for 1 sec, hit UI will turn off
@@ -72,8 +154,8 @@ namespace PlayerUI
             {
                 hitTimer -= Time.deltaTime;
             }
-            
-            if(hitTimer <= 0)
+
+            if (hitTimer <= 0)
             {
                 hit = false;
                 hitCount = 0;
@@ -91,7 +173,7 @@ namespace PlayerUI
                 GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), healthLow);
             }
 
-            if(hit && hitCount > hitLowNumber && hitCount < hitHighNumber)
+            if (hit && hitCount > hitLowNumber && hitCount < hitHighNumber)
             {
                 GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), hitLow);
             }
@@ -99,7 +181,7 @@ namespace PlayerUI
             {
                 GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), hitHigh);
             }
-            else if(hit && hitCount < hitLowNumber && PlayersHealth < (fullHealth / 4))
+            else if (hit && hitCount < hitLowNumber && PlayersHealth < (fullHealth / 4))
             {
                 GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), healthLow);
             }
@@ -112,9 +194,16 @@ namespace PlayerUI
             numEnemiesAlive--;
         }
 
+        public void UsingSpecialAttack()
+        {
+            usingSpecialAttack = true;
+        }
+
         public void UsedSpecialAttack()
         {
             cooldown = true;
+            cooldownPercent = 0f;
+            usingSpecialAttack = false;
         }
 
         public void SetCoolDownTime(float time)
@@ -142,6 +231,28 @@ namespace PlayerUI
             hitCount += count;
             hit = h;
             hitTimer = 1f;
+        }
+
+        /// <summary>
+        /// set player type, 1 = cube  and 2 = otra
+        /// </summary>
+        /// <param name="type"></param>
+        public void SetPlayerType(int type)
+        {
+            if (type == 1)
+            {
+                PlayerIsCube = true;
+            }
+
+            if (type == 2)
+            {
+                PlayerIsOcta = true;
+            }
+        }
+
+        public void SetSpecialAttackButton(string button)
+        {
+            SpecialAttackButton = button;
         }
     }
 }
