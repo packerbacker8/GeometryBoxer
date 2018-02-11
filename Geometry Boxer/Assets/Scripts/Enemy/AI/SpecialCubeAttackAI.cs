@@ -53,6 +53,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
     private Vector3 specialStartSize;
     private Vector3 specialEndSize;
     private Vector3 deactivePos;
+    private Vector3 launchDir;
     private Rigidbody cubeRigid;
     private System.Random randChance;
 
@@ -62,6 +63,8 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
     private int animationControllerIndex = 0;
     private int characterControllerIndex = 2;
     private int timesLaunched;
+    private int layer;
+    private int layermask;
     private int[] attackChances = { 50, 30, 20 };
 
     private bool attackStatus;
@@ -135,6 +138,8 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
         isGrounded = true;
         cubeForm.GetComponent<BoxCollider>().enabled = false;
         cubeForm.GetComponent<MeshRenderer>().enabled = false;
+        layer = 4;
+        layermask = 1 << layer;
     }
 
     private void Update()
@@ -175,6 +180,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
             if (isGrounded)
             {
                 launched = false;
+                cubeRigid.constraints = RigidbodyConstraints.None;
             }
             if (growingSpecial)
             {
@@ -197,15 +203,17 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
                 {
                     cubeRigid.AddForce(Vector3.up * specialAttackForce); //launch up
                 }
-                else if (hangTime < hangTimeBeforeLaunch)
+                else if (hangTime < hangTimeBeforeLaunch && !isGrounded && !launched)
                 {
                     hangTime += Time.deltaTime;
                     cubeForm.transform.LookAt(moveTarget);
+                    launchDir = moveTarget.position - cubeForm.transform.position;
                 }
                 else if (cubeForm.GetComponent<MeshRenderer>().enabled && !launched)
                 {
                     hangTime = 0;
-                    cubeRigid.AddForce(cubeForm.transform.forward * specialAttackForce);
+                    cubeRigid.constraints = RigidbodyConstraints.FreezeRotation;
+                    cubeRigid.AddForce(launchDir * specialAttackForce);
                     launched = true;
                     timesLaunched++;
                 }
@@ -488,7 +496,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
         Vector3 endPoint = new Vector3(cubeForm.transform.position.x, cubeForm.transform.position.y - cubeForm.GetComponent<BoxCollider>().size.y * 2f, cubeForm.transform.position.z);
         //Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
         //Debug.Log("Size now: " + specialForm.GetComponent<BoxCollider>().size.y);
-        return Physics.Raycast(cubeForm.transform.position, -Vector3.up, cubeForm.GetComponent<BoxCollider>().size.y * cubeForm.transform.localScale.y + 0.1f);
+        return Physics.Raycast(cubeForm.transform.position, -Vector3.up, cubeForm.GetComponent<BoxCollider>().size.y * cubeForm.transform.localScale.y + 0.1f, layermask);
     }
 
     /// <summary>
