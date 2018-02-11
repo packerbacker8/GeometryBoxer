@@ -57,6 +57,7 @@ namespace RootMotion.Demos
         private Rigidbody physicBody;
 
         private bool dead;
+        private bool usingSpecial;
 
         private void Awake()
         {
@@ -87,6 +88,7 @@ namespace RootMotion.Demos
             //movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget);
             //attackStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
             dead = false;
+            usingSpecial = false;
         }
 
         protected override void Update()
@@ -107,7 +109,7 @@ namespace RootMotion.Demos
                         agent.enabled = true;
                     }
                 }
-                else if (!movementStyle.getPlayerTarget() && moveTargetObj.transform.root.tag.Contains("Player"))
+                else if ((!movementStyle.getPlayerTarget() && moveTargetObj.transform.root.tag.Contains("Player")) || usingSpecial)
                 {
                     agent.enabled = false;
                 }
@@ -150,8 +152,6 @@ namespace RootMotion.Demos
                         {
                             state.move = agent.velocity;
                         }
-                        
-                       
                     }
                 }
                 else
@@ -159,7 +159,7 @@ namespace RootMotion.Demos
                     state.move = Vector3.zero;
                 }
 
-                    transform.rotation = movementStyle.rotateStyle();
+                transform.rotation = movementStyle.rotateStyle();
             }
             else
             {
@@ -194,6 +194,16 @@ namespace RootMotion.Demos
         public bool IsKnockedDown()
         {
             return behaviourPuppet.state == BehaviourPuppet.State.Unpinned;
+        }
+
+        /// <summary>
+        /// Allows toggling of if the enemy is using their special attack without needed to check in user 
+        /// control AI every update loop.
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetUsingSpecial(bool state)
+        {
+            usingSpecial = state;
         }
     }
 }

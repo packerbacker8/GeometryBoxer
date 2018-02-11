@@ -36,9 +36,6 @@ public class CubeAttackScript : PunchScript
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
 
-        //THIS NEEDS TO BE FIXED BY MAKING THE PLAYERUI OBJECT A PREFAB
-        //THE PREFAB NEEDS TO AFFECT THE PUNCH SCRIPT SO IT AFFECTS ALL
-        //PLAYERS EQUALLY. SHOUD NOT BE IN ONE PLAYER'S SPECIFIC SCRIPT
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
         if(playerUI)
         {
