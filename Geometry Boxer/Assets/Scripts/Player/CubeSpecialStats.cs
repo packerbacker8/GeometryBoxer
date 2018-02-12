@@ -1,9 +1,10 @@
-using RootMotion.Demos;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using RootMotion.Dynamics;
+using RootMotion.Demos;
+using System;
 using PlayerUI;
 
 public class CubeSpecialStats : PlayerStatsBaseClass
@@ -103,7 +104,23 @@ public class CubeSpecialStats : PlayerStatsBaseClass
 
         }
 
+        if (health <= 0f && !dead)
+        {
+            dead = true;
+            KillPlayer();
+        }
+    }
 
+    /// <summary>
+    /// Function to kill enemy AI unit, plays associated death animation then removes the object.
+    /// </summary>
+    public override void KillPlayer()
+    {
+        anim.Play("Death");
+        puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
+        gameController.GetComponent<GameControllerScript>().playerKilled();
+
+        //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
     }
 
     public void PowerUpActive(bool active)

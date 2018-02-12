@@ -76,7 +76,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     {
         hitByEnemy = CheckIfKnockedDown();
         //Debug.Log(hitByEnemy);
-        Debug.Log("health: " + health.ToString());
+        //Debug.Log("health: " + health.ToString());
     }
 
     /// <summary>
