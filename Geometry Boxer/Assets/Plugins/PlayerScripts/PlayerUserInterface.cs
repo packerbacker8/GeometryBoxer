@@ -59,7 +59,7 @@ namespace PlayerUI
 
             PlayerSpecialTimer.text = playerCoolDownTimer.ToString();
             hitTimer = 0;
-            PlayersHealth = 15000f;
+           // PlayersHealth = 15000f;
         }
 
         // Update is called once per frame

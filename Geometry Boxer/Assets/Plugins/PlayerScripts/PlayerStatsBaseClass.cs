@@ -76,6 +76,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     {
         hitByEnemy = CheckIfKnockedDown();
         //Debug.Log(hitByEnemy);
+        Debug.Log("health: " + health.ToString());
     }
 
     /// <summary>
@@ -96,6 +97,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public virtual void SetPlayerHealth(float val)
     {
         health -= val;
+        playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
     }
 
     /// <summary>

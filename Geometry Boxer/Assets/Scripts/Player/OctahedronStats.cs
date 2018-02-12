@@ -69,7 +69,6 @@ public class OctahedronStats : PlayerStatsBaseClass
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
-                playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
             }
             UpdateHealthUI();
         }
@@ -78,7 +77,6 @@ public class OctahedronStats : PlayerStatsBaseClass
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
-                playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
             }
             UpdateHealthUI();
         }

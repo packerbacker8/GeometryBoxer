@@ -147,7 +147,6 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
-                playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
             }
             UpdateHealthUI();
             playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
@@ -157,7 +156,6 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
-                playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
             }
             UpdateHealthUI();
             playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
