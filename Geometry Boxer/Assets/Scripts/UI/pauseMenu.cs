@@ -22,7 +22,7 @@ public class pauseMenu : MonoBehaviour
     private string saveFileName;
 
     private bool mouseShouldBeLocked = false;
-    private bool isPaused = false;
+    public bool isPaused = false;
     private bool isCombatScene = false;
     private float TimeSinceEsc = 0.0f;
     private List<GameObject> saveFileButtons;
@@ -248,6 +248,11 @@ public class pauseMenu : MonoBehaviour
     public void QuitGame()
     {
         LoadLevel.loader.ExitGame();
+    }
+
+    public GameObject getPauseMenu()
+    {
+        return pauseMenuCanvas;
     }
 
 }
