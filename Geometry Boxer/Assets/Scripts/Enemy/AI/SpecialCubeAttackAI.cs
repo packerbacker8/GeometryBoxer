@@ -138,6 +138,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
         isGrounded = true;
         cubeForm.GetComponent<BoxCollider>().enabled = false;
         cubeForm.GetComponent<MeshRenderer>().enabled = false;
+        cubeRigid.useGravity = false;
         layer = 4;
         layermask = 1 << layer;
     }
@@ -180,7 +181,6 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
             if (isGrounded)
             {
                 launched = false;
-                cubeRigid.constraints = RigidbodyConstraints.None;
             }
             if (growingSpecial)
             {
@@ -193,26 +193,25 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
             else if (cubeForm.GetComponent<MeshRenderer>().enabled)
             {
                 UpdatePos(this.transform, cubeForm.transform);
-                if (timesLaunched >= specialAttackUses)
+                if (timesLaunched >= specialAttackUses && isGrounded)
                 {
                     DeactivateCubeAttack();
                     UpdatePos(this.transform, cubeForm.transform);
                     timesLaunched = 0;
                 }
-                if (isGrounded && cubeForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
+                if (timesLaunched < specialAttackUses && isGrounded && cubeForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
                 {
                     cubeRigid.AddForce(Vector3.up * specialAttackForce); //launch up
                 }
-                else if (hangTime < hangTimeBeforeLaunch && !isGrounded && !launched)
+                else if (timesLaunched < specialAttackUses && hangTime < hangTimeBeforeLaunch && !isGrounded && !launched)
                 {
                     hangTime += Time.deltaTime;
                     cubeForm.transform.LookAt(moveTarget);
                     launchDir = moveTarget.position - cubeForm.transform.position;
                 }
-                else if (cubeForm.GetComponent<MeshRenderer>().enabled && !launched)
+                else if (timesLaunched < specialAttackUses && cubeForm.GetComponent<MeshRenderer>().enabled && !launched)
                 {
                     hangTime = 0;
-                    cubeRigid.constraints = RigidbodyConstraints.FreezeRotation;
                     cubeRigid.AddForce(launchDir * specialAttackForce);
                     launched = true;
                     timesLaunched++;
@@ -481,7 +480,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
         this.transform.GetChild(0).gameObject.SetActive(false);
         cubeForm.GetComponent<BoxCollider>().enabled = true;
         cubeForm.GetComponent<MeshRenderer>().enabled = true;
-
+        cubeRigid.useGravity = true;
         cubeForm.transform.localScale = specialStartSize;
         cubeForm.transform.localRotation = Quaternion.identity;
     }
@@ -530,6 +529,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, AttackBase
             cubeRigid.velocity = Vector3.zero;
             cubeForm.GetComponent<BoxCollider>().enabled = false;
             cubeForm.GetComponent<MeshRenderer>().enabled = false;
+            cubeRigid.useGravity = false;
             botGrowing = false;
         }
         if (CompareLessThanEqualVectors(cubeForm.transform.localScale, specialStartSize))
