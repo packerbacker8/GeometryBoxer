@@ -6,7 +6,7 @@ using Enemy;
 using RootMotion.Demos;
 using UnityEngine.AI;
 
-public class ShootAttackAI : MonoBehaviour, AttackBase
+public class ShootAttackAI : MonoBehaviour, IAttackBase
 {
     float stoppingDistance;
     float stoppingThreshold;
@@ -52,9 +52,9 @@ public class ShootAttackAI : MonoBehaviour, AttackBase
 
     }
 
-    public void attack()
+    public void Attack()
     {
-        if (canAttack())
+        if (CanAttack())
         {
             AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
             if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying)
@@ -77,12 +77,12 @@ public class ShootAttackAI : MonoBehaviour, AttackBase
         }
     }
 
-    public bool canAttack()
+    public bool CanAttack()
     {
         return (Vector3.Distance(moveTarget.position, transform.position) <= attackRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"));
     }
 
-    public void setUp(float stopDist, float stopThresh, float jumpDis,
+    public void SetUp(float stopDist, float stopThresh, float jumpDis,
         GameObject moveObj, CharacterPuppet charPup, AudioSource src,
         SFX_Manager sfx, float rangeAttack)
     {
@@ -97,7 +97,7 @@ public class ShootAttackAI : MonoBehaviour, AttackBase
         attackRange = rangeAttack;
     }
 
-    public bool isAttacking()
+    public bool IsAttacking()
     {
         throw new NotImplementedException();
     }

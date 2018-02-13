@@ -6,7 +6,7 @@ namespace Enemy
 {
 
 
-    public class Detect_Movement_AI : MonoBehaviour, MovementBase
+    public class Detect_Movement_AI : MonoBehaviour, IMovementBase
     {
         public float rotateSpeed = 1.5f;
         public float bounceAngle = 70f;
@@ -35,7 +35,7 @@ namespace Enemy
             playerTransform = player;
         }
 
-        public bool canMove()
+        public bool CanMove()
         {
             if(moveTargetObj == null)
             {
@@ -45,9 +45,9 @@ namespace Enemy
 
         }
 
-        public Vector3 move()
+        public Vector3 Move()
         {
-            if (canMove()) //&& playerTarget)
+            if (CanMove()) //&& playerTarget)
             {
 
                 return moveTarget.position;
@@ -56,7 +56,7 @@ namespace Enemy
             return transform.position;
         }
 
-        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
+        void IMovementBase.SetUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
         {
             stoppingDistance = stopDist;
             stoppingThreshold = stopThresh;
@@ -66,13 +66,13 @@ namespace Enemy
             //StartCoroutine(checkDistance());
         }
 
-        public void playerFound()
+        public void PlayerFound()
         {
             //playerTarget = true;
 
         }
 
-        public void playerLost()
+        public void PlayerLost()
         {
             //if (playerTarget)
             //{
@@ -81,7 +81,7 @@ namespace Enemy
             //playerTarget = false;
         }
 
-        public Quaternion rotateStyle()
+        public Quaternion RotateStyle()
         {
             //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
             if (moveTargetObj != null)  //was playerTarget
@@ -108,7 +108,7 @@ namespace Enemy
             //StartCoroutine(checkDistance());
         }
 
-        public bool getPlayerTarget()
+        public bool GetPlayerTarget()
         {
             return playerTarget;
         }
