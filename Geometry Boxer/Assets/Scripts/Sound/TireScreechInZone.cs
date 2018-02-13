@@ -16,7 +16,6 @@ public class TireScreechInZone : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("SFX Zone name: " + other.transform.root.transform.name);
         if(other.transform.root.transform.name.Contains("JEEP"))
         {
             source.Play();
