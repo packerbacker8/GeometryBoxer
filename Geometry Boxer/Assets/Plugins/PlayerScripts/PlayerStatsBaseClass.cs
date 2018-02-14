@@ -259,6 +259,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public virtual void GiveHealth(int amount)
     {
         health += amount;
+        playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
     }
 
     protected virtual bool CheckIfKnockedDown()

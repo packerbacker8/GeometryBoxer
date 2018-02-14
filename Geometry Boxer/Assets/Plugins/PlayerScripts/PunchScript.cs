@@ -236,8 +236,11 @@ public class PunchScript : MonoBehaviour
         specialEndSize = new Vector3(specialFormSize, specialFormSize, specialFormSize);
 
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        playerUI.GetComponent<PlayerUserInterface>().SetDefultcoolDownTime(specialAttackCooldownTime);
-        playerUI.GetComponent<PlayerUserInterface>().SetSpecialAttackButton(specialAttack.ToString());
+        if(playerUI != null)
+        {
+            playerUI.GetComponent<PlayerUserInterface>().SetDefultcoolDownTime(specialAttackCooldownTime);
+            playerUI.GetComponent<PlayerUserInterface>().SetSpecialAttackButton(specialAttack.ToString());
+        }
     }
     // Update is called once per frame
     protected virtual void Update()
