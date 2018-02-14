@@ -18,6 +18,8 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     public GameObject projectileContainer;
     public float minCooldownTime = 10f;
     public float specialAttackForce = 1000f;
+    [Tooltip("How long the projectile will last in the air.")]
+    public float timeInAir = 2f;
     [Tooltip("Number of projectiles on the screen at once.")]
     public int numberOfProjectiles = 10;
     [Tooltip("Number of projectiles fired before attack stops.")]
@@ -32,6 +34,7 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     private float jumpDistance;
     private float attackRange;
     private float currentAnimLength;
+    private float cooldownTimer;
 
     private Animator anim;
     private GameObject moveTargetObj;
@@ -43,6 +46,7 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     private SFX_Manager sfxManager;
     private System.Random rand = new System.Random();
     private System.Random randAttack;
+    private System.Random randChance;
     private List<GameObject> projectiles;
 
     private string leftSwingAnimation = "SwingProp";
@@ -57,11 +61,14 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     private int punchAnimLayer = 0;
     private int animationControllerIndex = 0;
     private int characterControllerIndex = 2;
+    private int projectilesLaunched;
+    private int totalProjectilesLaunched;
     private int[] attackChances = { 50, 30, 20 };
 
     private bool attackStatus;
     private bool updateCollisionCheck;
-
+    private bool onCooldown;
+    private bool specialLaunched;
 
     /// <summary>
     /// Information relating to a character animation.
@@ -99,9 +106,15 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         attackStatus = false;
         randAttack = new System.Random();
+        randChance = new System.Random();
+        randChance.Next();
         updateCollisionCheck = false;
+        onCooldown = false;
+        specialLaunched = false;
         projectiles = new List<GameObject>(numberOfProjectiles);
-        for(int i = 0; i < numberOfProjectiles; i++)
+        projectilesLaunched = 0;
+        totalProjectilesLaunched = 0;
+        for (int i = 0; i < numberOfProjectiles; i++)
         {
             projectiles[i] = Instantiate(projectilePrefab, this.transform.position + Vector3.forward, Quaternion.identity, projectileContainer.transform);
             projectiles[i].SetActive(false);
@@ -142,6 +155,62 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
 
             updateCollisionCheck = false;
         }
+
+        if(specialLaunched)
+        {
+            if(totalProjectilesLaunched >= numberShotsFired)
+            {
+                specialLaunched = false;
+                attackStatus = false;
+                onCooldown = true;                
+            }
+            else
+            {
+                if (projectilesLaunched < numberOfProjectiles)
+                {
+                    RotateTheBot();
+                    FireProjectile();
+                }
+            }
+        }
+        else if(!onCooldown && randChance.Next(outOf) < chances)
+        {
+            specialLaunched = true;
+            attackStatus = true;
+            this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+            RotateTheBot();
+            FireProjectile();
+        }
+        if (onCooldown)
+        {
+            cooldownTimer += Time.deltaTime;
+            if (cooldownTimer >= minCooldownTime)
+            {
+                onCooldown = false;
+                cooldownTimer = 0f;
+                totalProjectilesLaunched = 0;
+                projectilesLaunched = 0;
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// Cause the bot to spin as if shooting at projectiles from the spin.
+    /// </summary>
+    private void RotateTheBot()
+    {
+        this.transform.Rotate(Vector3.up * 10);
+    }
+
+    /// <summary>
+    /// Fire a single projectile prefab out from the bot.
+    /// </summary>
+    private void FireProjectile()
+    {
+        projectilesLaunched++;
+        totalProjectilesLaunched++;
     }
 
     protected virtual void SetCurrentAnimTime(CharacterAnimations currentAnim)
