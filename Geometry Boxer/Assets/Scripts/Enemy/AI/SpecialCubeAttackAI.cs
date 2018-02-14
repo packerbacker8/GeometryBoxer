@@ -176,66 +176,66 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
             }
 
             updateCollisionCheck = false;
+        }
 
-            isGrounded = checkIfGrounded();
-            if (isGrounded)
+        isGrounded = checkIfGrounded();
+        if (isGrounded)
+        {
+            launched = false;
+        }
+        if (growingSpecial)
+        {
+            GrowCube();
+        }
+        else if (botGrowing)
+        {
+            GrowBot();
+        }
+        else if (cubeForm.GetComponent<MeshRenderer>().enabled)
+        {
+            UpdatePos(this.transform, cubeForm.transform);
+            if (timesLaunched >= specialAttackUses && isGrounded)
             {
-                launched = false;
-            }
-            if (growingSpecial)
-            {
-                GrowCube();
-            }
-            else if (botGrowing)
-            {
-                GrowBot();
-            }
-            else if (cubeForm.GetComponent<MeshRenderer>().enabled)
-            {
+                DeactivateCubeAttack();
                 UpdatePos(this.transform, cubeForm.transform);
-                if (timesLaunched >= specialAttackUses && isGrounded)
-                {
-                    DeactivateCubeAttack();
-                    UpdatePos(this.transform, cubeForm.transform);
-                    timesLaunched = 0;
-                }
-                if (timesLaunched < specialAttackUses && isGrounded && cubeForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
-                {
-                    cubeRigid.AddForce(Vector3.up * specialAttackForce); //launch up
-                }
-                else if (timesLaunched < specialAttackUses && hangTime < hangTimeBeforeLaunch && !isGrounded && !launched)
-                {
-                    hangTime += Time.deltaTime;
-                    cubeForm.transform.LookAt(moveTarget);
-                    launchDir = moveTarget.position - cubeForm.transform.position;
-                }
-                else if (timesLaunched < specialAttackUses && cubeForm.GetComponent<MeshRenderer>().enabled && !launched)
-                {
-                    hangTime = 0;
-                    cubeRigid.AddForce(launchDir * specialAttackForce);
-                    launched = true;
-                    timesLaunched++;
-                }
+                timesLaunched = 0;
             }
-            else
+            if (timesLaunched < specialAttackUses && isGrounded && cubeForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
             {
-                //some random chance to turn into a cube, sometimes doesn't
-                if (randChance.Next(outOf) < chances && !cubeForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
-                {
-                    growingSpecial = true;
-                    ActivateCubeAttack();
-                    UpdatePos(cubeForm.transform, this.transform);
-                }
+                cubeRigid.AddForce(Vector3.up * specialAttackForce); //launch up
             }
+            else if (timesLaunched < specialAttackUses && hangTime < hangTimeBeforeLaunch && !isGrounded && !launched)
+            {
+                hangTime += Time.deltaTime;
+                cubeForm.transform.LookAt(moveTarget);
+                launchDir = moveTarget.position - cubeForm.transform.position;
+            }
+            else if (timesLaunched < specialAttackUses && cubeForm.GetComponent<MeshRenderer>().enabled && !launched)
+            {
+                hangTime = 0;
+                cubeRigid.AddForce(launchDir * specialAttackForce);
+                launched = true;
+                timesLaunched++;
+            }
+        }
+        else
+        {
+            //some random chance to turn into a cube, sometimes doesn't
+            if (randChance.Next(outOf) < chances && !cubeForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+            {
+                growingSpecial = true;
+                ActivateCubeAttack();
+                UpdatePos(cubeForm.transform, this.transform);
+            }
+        }
 
-            if (onCooldown)
+        if (onCooldown)
+        {
+            cooldownTimer += Time.deltaTime;
+            if (cooldownTimer >= minCooldownTime)
             {
-                cooldownTimer += Time.deltaTime;
-                if (cooldownTimer >= minCooldownTime)
-                {
-                    onCooldown = false;
-                    cooldownTimer = 0f;
-                }
+                onCooldown = false;
+                cooldownTimer = 0f;
             }
         }
     }

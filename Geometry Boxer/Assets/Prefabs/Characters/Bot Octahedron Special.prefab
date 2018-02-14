@@ -362,8 +362,8 @@ GameObject:
   - component: {fileID: 136528869306716738}
   - component: {fileID: 195440494513185794}
   - component: {fileID: 114236633788826906}
-  - component: {fileID: 114013039084521430}
   - component: {fileID: 114291766925110384}
+  - component: {fileID: 114257613783395814}
   m_Layer: 8
   m_Name: Character Controller
   m_TagString: Enemy
@@ -382,7 +382,7 @@ GameObject:
   - component: {fileID: 114733709997711186}
   - component: {fileID: 114954052603498802}
   m_Layer: 0
-  m_Name: Bot Octahedron
+  m_Name: Bot Octahedron Special
   m_TagString: EnemyRoot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -762,6 +762,21 @@ GameObject:
   m_Layer: 8
   m_Name: LeftLowLeg
   m_TagString: Enemy
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1725007237424690
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4718432503932224}
+  m_Layer: 0
+  m_Name: ProjectileContainer
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1335,6 +1350,7 @@ Transform:
   - {fileID: 4942303206376612}
   - {fileID: 4882195669690116}
   - {fileID: 4845537010294194}
+  - {fileID: 4718432503932224}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1663,6 +1679,19 @@ Transform:
   - {fileID: 4587555979499464}
   m_Father: {fileID: 4964974702819344}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4718432503932224
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1725007237424690}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4366420628652078}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4738580905962504
 Transform:
@@ -2798,38 +2827,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114013039084521430
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1393648088365764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 453b6d9467d1c534ea3d564979e23546, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rightShoulder: {fileID: 1978581818186364}
-  leftShoulder: {fileID: 1773664331246258}
-  rightThigh: {fileID: 1381376707319966}
-  leftThigh: {fileID: 1494567599632326}
-  attackRandomAudio: 1000
-  enemyAnimations:
-  - actionIndex: 1
-    animName: RightPunch
-    animLayer: 1
-    transitionTime: 0.2
-    playTime: 0.2
-  - actionIndex: 3
-    animName: RightUpperCut
-    animLayer: 0
-    transitionTime: 0.2
-    playTime: 0.4
-  - actionIndex: 5
-    animName: HiKick
-    animLayer: 0
-    transitionTime: 0.1
-    playTime: 0.1
 --- !u!114 &114102178716952906
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2928,6 +2925,46 @@ MonoBehaviour:
   moveTargetObj: {fileID: 0}
   moveTarget: {fileID: 0}
   drop: 0
+--- !u!114 &114257613783395814
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1393648088365764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff106ce85d53d9541b8e2a482c83692a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightShoulder: {fileID: 1978581818186364}
+  leftShoulder: {fileID: 1773664331246258}
+  rightThigh: {fileID: 1381376707319966}
+  leftThigh: {fileID: 1494567599632326}
+  enemyAnimations:
+  - actionIndex: 1
+    animName: RightPunch
+    animLayer: 1
+    transitionTime: 0.2
+    playTime: 0.2
+  - actionIndex: 3
+    animName: RightUpperCut
+    animLayer: 0
+    transitionTime: 0.2
+    playTime: 0.4
+  - actionIndex: 5
+    animName: HiKick
+    animLayer: 0
+    transitionTime: 0.1
+    playTime: 0.1
+  projectilePrefab: {fileID: 1209617729906950, guid: 3b67ad79260cd4048bea8e1ec6e6e653,
+    type: 2}
+  projectileContainer: {fileID: 1725007237424690}
+  minCooldownTime: 10
+  specialAttackForce: 1000
+  numberOfProjectiles: 10
+  numberShotsFired: 30
+  chances: 10
+  outOf: 1000
 --- !u!114 &114291766925110384
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2939,6 +2976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cbdc13ec2246684389937aad74e516f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leeway: 0.1
 --- !u!114 &114299974074766618
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3336,6 +3374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyHealth: 3000
+  percentToFindHealthPack: 0.5
   deathDelay: 20
   damageThreshold: 25
   heavyDamageOffset: 15
