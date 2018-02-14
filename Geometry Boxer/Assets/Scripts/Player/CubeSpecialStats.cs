@@ -70,6 +70,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             KillPlayer();
         }
         //HealthScript.setCubeHealthModifier(HealthModifier);
+        /*
         if (PowerUp == true)
         {
             attackForce = 100;
@@ -103,6 +104,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             HealthModifier = 1.0f;
 
         }
+        */
     }
 
     public void PowerUpActive(bool active)
