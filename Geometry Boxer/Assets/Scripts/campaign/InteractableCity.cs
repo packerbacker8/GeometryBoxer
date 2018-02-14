@@ -57,6 +57,7 @@ public class InteractableCity : Interactable
     void OnTriggerEnter(Collider col)
     {
         exitedTrigger = false;
+        Debug.Log(col.transform.root.name);
         if (col.transform.root.tag == "Player" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "owned" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "conquered" && !exitedTrigger)
         {
             worldInit.freeze = true;
