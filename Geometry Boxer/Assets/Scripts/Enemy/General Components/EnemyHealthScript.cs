@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Dynamics;
 using RootMotion.Demos;
+using PlayerUI;
 
 public class EnemyHealthScript : MonoBehaviour
 {
@@ -238,6 +239,7 @@ public class EnemyHealthScript : MonoBehaviour
             else
             {
                 gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex, this.gameObject.tag);
+                playerUI.GetComponent<PlayerUserInterface>().enemyIsKilled();
             }
 
             dead = true;

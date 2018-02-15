@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Demos;
 using RootMotion;
+using PlayerUI;
 
 public class OctahedronSpecials : PunchScript
 {
@@ -37,7 +38,6 @@ public class OctahedronSpecials : PunchScript
     private OctahedronStats stats;
 
     private MeshCollider specialFormCollider;
-    private GameObject playerUI;
 
 
     // Use this for initialization
@@ -71,19 +71,13 @@ public class OctahedronSpecials : PunchScript
         isFloating = 0;
         specialRigid.maxAngularVelocity = Mathf.Infinity;
         specialRigid.angularDrag = angularDragAmount;
-
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        if (playerUI)
-        {
-            playerUI.GetComponent<userInterface>().SetCoolDownTime(specialAttackCooldownTime);
-        }
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-        if(updateCollisionCheck)
+        if (updateCollisionCheck)
         {
             //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
             GameObject walker = leftShoulder;
@@ -105,7 +99,7 @@ public class OctahedronSpecials : PunchScript
                 walker2.GetComponent<CollisionReceived>().sendDamage = true;
                 walker3.GetComponent<CollisionReceived>().sendDamage = true;
             }
-            
+
             updateCollisionCheck = false;
         }
 
@@ -113,7 +107,7 @@ public class OctahedronSpecials : PunchScript
         {
             GrowSpecial();
         }
-        else if(playerGrowing)
+        else if (playerGrowing)
         {
             GrowPlayer();
         }
@@ -124,18 +118,18 @@ public class OctahedronSpecials : PunchScript
 
             isFloating = checkIfFloating();
             //too high
-            if (isFloating > 0) 
+            if (isFloating > 0)
             {
-                if(specialRigid.velocity.y > 0f)
+                if (specialRigid.velocity.y > 0f)
                 {
                     floatCapped = false;
                 }
-                if(!floatCapped) specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
+                if (!floatCapped) specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
                 floatCapped = true;
                 specialRigid.useGravity = true;
             }
             //too low
-            else if(isFloating < 0)
+            else if (isFloating < 0)
             {
                 specialRigid.useGravity = false;
                 specialRigid.AddForce(Vector3.up * specialAttackForce);
@@ -154,6 +148,7 @@ public class OctahedronSpecials : PunchScript
             }
             if ((Input.GetKeyDown(specialAttack)) || Input.GetButtonDown(specialAttackButton))
             {
+                Debug.Log("Special!");
                 DeactivateSpecialAttack();
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
@@ -170,7 +165,7 @@ public class OctahedronSpecials : PunchScript
                 launched = true;
                 specialRigid.AddForce(Vector3.up * specialAttackForce * 2f);
             }
-            else if(launched)
+            else if (launched)
             {
                 moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
                 moveDir = cam.transform.TransformDirection(moveDir);
@@ -187,7 +182,7 @@ public class OctahedronSpecials : PunchScript
                     launchTime = 0;
                 }
             }
-            
+
         }
         else
         {
@@ -285,7 +280,7 @@ public class OctahedronSpecials : PunchScript
         }*/
     }
 
-    
+
     protected override bool checkIfGrounded()
     {
         return Physics.Raycast(specialForm.transform.position, -Vector3.up, specialFormCollider.bounds.size.y + 0.1f);
@@ -300,28 +295,28 @@ public class OctahedronSpecials : PunchScript
     private int checkIfFloating()
     {
         int result = 0;
-        Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialFormCollider.bounds.size.y * floatHeight , specialForm.transform.position.z);
+        Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialFormCollider.bounds.size.y * floatHeight, specialForm.transform.position.z);
         bool lower = Physics.Raycast(specialForm.transform.position, -Vector3.up, specialFormCollider.bounds.size.y * floatHeight);
         bool upper = Physics.Raycast(specialForm.transform.position, -Vector3.up, specialFormCollider.bounds.size.y * (floatHeight + floatOffset));
         if (lower && upper) //within cast range of both raycasts
         {
             result = -1;
-            if(debugMode) Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 2f);
+            if (debugMode) Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 2f);
         }
-        else if(!lower && !upper) //outside both
+        else if (!lower && !upper) //outside both
         {
             result = 1;
-            if(debugMode) Debug.DrawLine(specialForm.transform.position, endPoint, Color.yellow, 2f);
+            if (debugMode) Debug.DrawLine(specialForm.transform.position, endPoint, Color.yellow, 2f);
         }
-        else if(debugMode)
+        else if (debugMode)
         {
             Debug.DrawLine(specialForm.transform.position, endPoint, Color.green, 2f);
-            Debug.DrawLine(specialForm.transform.position, new Vector3(endPoint.x, endPoint.y + floatOffset , endPoint.z), Color.blue, 2f);
+            Debug.DrawLine(specialForm.transform.position, new Vector3(endPoint.x, endPoint.y + floatOffset, endPoint.z), Color.blue, 2f);
         }
         return result;
     }
 
-    
+
     /// <summary>
     /// Method that grows the player and shrinks the special form at the same time.
     /// This allows the feeling of changing form.
@@ -351,7 +346,6 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     protected override void DeactivateSpecialAttack()
     {
-        specialActivated = false;
         playerGrowing = true;
         specialRigid.angularDrag = 100f;
         specialRigid.angularVelocity = Vector3.zero;
@@ -384,6 +378,7 @@ public class OctahedronSpecials : PunchScript
         charController.GetComponent<CapsuleCollider>().enabled = true;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
         onCooldown = true;
+        playerUI.GetComponent<PlayerUserInterface>().UsedSpecialAttack();
         anim.SetInteger("ActionIndex", -1);
         anim.SetBool("IsStrafing", false);
         if (specialRigid.velocity.sqrMagnitude > 0)
@@ -403,7 +398,6 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     protected override void ActivateSpecialAttack()
     {
-        specialActivated = true;
         specialRigid.useGravity = true;
         specialRigid.angularDrag = angularDragAmount;
         leftFistCollider.radius = leftFistStartSize.radius;
@@ -412,6 +406,7 @@ public class OctahedronSpecials : PunchScript
         rightFistCollider.height = rightFistStartSize.height;
         UpdatePos(specialForm.transform, charController.transform);
         isAttacking = true;
+        playerUI.GetComponent<PlayerUserInterface>().UsingSpecialAttack();
         //play animation of morphing into ball
         for (int i = 0; i < this.transform.childCount; i++)
         {
