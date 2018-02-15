@@ -111,12 +111,12 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
         updateCollisionCheck = false;
         onCooldown = false;
         specialLaunched = false;
-        projectiles = new List<GameObject>(numberOfProjectiles);
+        projectiles = new List<GameObject>();
         projectilesLaunched = 0;
         totalProjectilesLaunched = 0;
         for (int i = 0; i < numberOfProjectiles; i++)
         {
-            projectiles[i] = Instantiate(projectilePrefab, this.transform.position + Vector3.forward, Quaternion.identity, projectileContainer.transform);
+            projectiles.Add(Instantiate(projectilePrefab, this.transform.position + Vector3.forward, Quaternion.identity, projectileContainer.transform));
             projectiles[i].SetActive(false);
         }
     }
@@ -209,8 +209,22 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     /// </summary>
     private void FireProjectile()
     {
-        projectilesLaunched++;
-        totalProjectilesLaunched++;
+        if(projectilesLaunched < numberOfProjectiles)
+        {
+            int currentProjectile = projectilesLaunched;
+            projectilesLaunched++;
+            totalProjectilesLaunched++;
+            projectiles[currentProjectile].SetActive(true);
+            projectiles[currentProjectile].GetComponent<LaunchAndReset>().Launch(specialAttackForce, timeInAir);
+        }
+    }
+
+    /// <summary>
+    /// Gets called when the projectile was reset from being launched.
+    /// </summary>
+    public void ProjectileWasReset()
+    {
+        projectilesLaunched--;
     }
 
     protected virtual void SetCurrentAnimTime(CharacterAnimations currentAnim)
