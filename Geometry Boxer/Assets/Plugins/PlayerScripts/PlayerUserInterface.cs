@@ -53,8 +53,17 @@ namespace PlayerUI
         {
             enemies = GameObject.FindGameObjectWithTag("EnemyContainer");
             player = GameObject.FindGameObjectWithTag("Player");
-            numEnemiesAlive = enemies.transform.childCount;
-            enemyCounter.text = numEnemiesAlive.ToString();
+
+            if(!UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+            {
+                numEnemiesAlive = enemies.transform.childCount;
+                enemyCounter.text = numEnemiesAlive.ToString();
+            }
+            else
+            {
+                numEnemiesAlive = 5;
+                enemyCounter.text = "Tutorial";
+            }
             
             hitTimer = 0;
            // PlayersHealth = 15000f;

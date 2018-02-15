@@ -69,7 +69,13 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     protected override void LateUpdate()
     {
         base.LateUpdate();
+        if (health <= 0f && !dead)
+        {
+            dead = true;
+            KillPlayer();
+        }
         //HealthScript.setCubeHealthModifier(HealthModifier);
+        /*
         if (PowerUp == true)
         {
             attackForce = 100;
@@ -103,14 +109,9 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             HealthModifier = 1.0f;
 
         }
-
-        if (health <= 0f && !dead)
-        {
-            dead = true;
-            KillPlayer();
-        }
+        */
     }
-
+    
     /// <summary>
     /// Function to kill enemy AI unit, plays associated death animation then removes the object.
     /// </summary>
@@ -121,6 +122,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         gameController.GetComponent<GameControllerScript>().playerKilled();
 
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+        
     }
 
     public void PowerUpActive(bool active)

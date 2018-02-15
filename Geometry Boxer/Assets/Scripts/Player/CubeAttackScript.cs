@@ -17,7 +17,7 @@ public class CubeAttackScript : PunchScript
 
     private bool isGrounded;
     private GameObject gameController;
-    private GameObject playerUI;
+    private GameObject playerUIChild;
     private float coolDownTime;
     private float coolDownTimer;
 

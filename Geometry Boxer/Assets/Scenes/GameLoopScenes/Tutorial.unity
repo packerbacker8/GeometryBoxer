@@ -5445,20 +5445,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -6249,6 +6235,7 @@ MonoBehaviour:
   - {fileID: 2002536763}
   - {fileID: 143518104}
   - {fileID: 702516031}
+  ui: {fileID: 2043321247}
 --- !u!65 &994643985
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8875,6 +8862,10 @@ Prefab:
       propertyPath: m_Name
       value: Prop_Wrench (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4845818557669544, guid: 10c9e157e55f63247914704ae42b00aa, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -0.0004600016
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 10c9e157e55f63247914704ae42b00aa, type: 2}
   m_IsPrefabParent: 0
@@ -10838,6 +10829,14 @@ Prefab:
       propertyPath: m_LocalPosition.z
       value: 0.00025004067
       objectReference: {fileID: 0}
+    - target: {fileID: 4845818557669544, guid: 10c9e157e55f63247914704ae42b00aa, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -0.0004600016
+      objectReference: {fileID: 0}
+    - target: {fileID: 4845818557669544, guid: 10c9e157e55f63247914704ae42b00aa, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.00792
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 10c9e157e55f63247914704ae42b00aa, type: 2}
   m_IsPrefabParent: 0
@@ -11009,20 +11008,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -12349,7 +12334,6 @@ GameObject:
   - component: {fileID: 2043321249}
   - component: {fileID: 2043321248}
   - component: {fileID: 2043321247}
-  - component: {fileID: 2043321246}
   m_Layer: 0
   m_Name: playerUI
   m_TagString: playerUI
@@ -12357,18 +12341,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2043321246
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114649466077777110, guid: 16a41d4e20b0175429cb04700f9d6511,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2043321245}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2043321247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12382,7 +12354,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyCounter: {fileID: 1387522062}
-  PlayerSpecialTimer: {fileID: 0}
   HealthNumber: {fileID: 1124032068}
   CooldownPercent: {fileID: 124752750}
   specialAttackBar: {fileID: 218323987}

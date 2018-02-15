@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 
 public class InteractableCity : Interactable
 {
+
+    public Text cityTitleText;
+    public Text descriptionText;
     public Light statusLight;
     public GUIStyle style;
     public GameObject Player;
@@ -16,6 +19,8 @@ public class InteractableCity : Interactable
     public Sprite citySprite;
     public SpriteRenderer AttackIconSpriteRenderer;
     public string sceneName;
+    public string CityTitle;
+    public string description;
 
     private WorldInteraction worldInit;
     private RTSCam cam;
@@ -52,6 +57,7 @@ public class InteractableCity : Interactable
     void OnTriggerEnter(Collider col)
     {
         exitedTrigger = false;
+        Debug.Log(col.transform.root.name);
         if (col.transform.root.tag == "Player" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "owned" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "conquered" && !exitedTrigger)
         {
             worldInit.freeze = true;
@@ -59,7 +65,8 @@ public class InteractableCity : Interactable
             Canvas.SetActive(true);
             citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
             cityImageLink.sprite = citySprite;
-
+            cityTitleText.text = CityTitle;
+            descriptionText.text = description;
             //for controller
             EventSystem.current.SetSelectedGameObject(Canvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
         }
@@ -82,28 +89,6 @@ public class InteractableCity : Interactable
             Canvas.SetActive(true);
             citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
             cityImageLink.sprite = citySprite;
-            
-            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //Vector3 clickedPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //RaycastHit hit;
-            //if (Physics.Raycast(ray, out hit, 100))
-            //{
-            //if(hit.transform.tag == "Interactable")
-            //{
-
-            //}
-            //}
         }
-        
-    }
-    void Update()
-    {
-        //Make enemy city lights pulsate red
-        /*
-        if (statusLight.color == Color.red)
-        {
-            statusLight.intensity = pulseMin + Mathf.PingPong(Time.time * pulseSpeed, pulseRange - pulseMin);
-        }
-        */
     }
 }
