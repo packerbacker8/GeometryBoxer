@@ -8,7 +8,6 @@ namespace PlayerUI
     public class PlayerUserInterface : MonoBehaviour
     {
         public Text enemyCounter;
-        public Text PlayerSpecialTimer;
         public Text HealthNumber;
         public Text CooldownPercent;
         public Transform specialAttackBar;
@@ -56,8 +55,7 @@ namespace PlayerUI
             player = GameObject.FindGameObjectWithTag("Player");
             numEnemiesAlive = enemies.transform.childCount;
             enemyCounter.text = numEnemiesAlive.ToString();
-
-            PlayerSpecialTimer.text = playerCoolDownTimer.ToString();
+            
             hitTimer = 0;
            // PlayersHealth = 15000f;
         }
