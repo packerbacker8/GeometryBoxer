@@ -7,6 +7,7 @@ public class HealthPickup : MonoBehaviour
 {
     public int healAmount = 100;
     public float RespawnDelay = 10f;
+    public float RemoveHealthEffect = 3f;
     public GameObject healthGainedEffectPrefab;
     public AudioClip healthPickup;
 
@@ -96,8 +97,10 @@ public class HealthPickup : MonoBehaviour
                     destroy = true;
                 }
             }
-            healthThingy = Instantiate(healthGainedEffectPrefab, colObj.GetComponentInChildren<UserControlMelee>().transform.position, colObj.GetComponentInChildren<UserControlMelee>().transform.rotation, colObj.GetComponentInChildren<UserControlMelee>().transform);
-
+            if(destroy)
+            {
+                healthThingy = Instantiate(healthGainedEffectPrefab, colObj.GetComponentInChildren<UserControlMelee>().transform.position, colObj.GetComponentInChildren<UserControlMelee>().transform.rotation, colObj.GetComponentInChildren<UserControlMelee>().transform);
+            }
         }
         else if(col.gameObject.transform.root.tag.Contains("Enemy"))
         {
@@ -128,7 +131,7 @@ public class HealthPickup : MonoBehaviour
             light.SetActive(false);
             if(healthThingy != null)
             {
-                Destroy(healthThingy, 2f);
+                Destroy(healthThingy, RemoveHealthEffect);
             }
         }
     }
