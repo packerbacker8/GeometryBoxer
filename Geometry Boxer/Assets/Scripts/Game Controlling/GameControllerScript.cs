@@ -142,7 +142,7 @@ public class GameControllerScript : MonoBehaviour
                 enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
         }
-        numEnemiesAlive = 1;
+        
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
