@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Dynamics;
 using System;
-
+using PlayerUI;
 
 public class PlayerStatsBaseClass : MonoBehaviour
 {
@@ -26,17 +26,18 @@ public class PlayerStatsBaseClass : MonoBehaviour
     protected GameObject gameController;
     protected GameObject charController;
     protected BehaviourPuppet behavePuppet;
-    
+
     protected float health;
     protected float stability;
     protected float speed;
     protected float attackForce;
     protected float fallDamageMultiplier;
+    protected GameObject playerUI;
 
     public PlayerStatsBaseClass()
     {
         health = 1000f;
-        //stability = 1.0f;
+        stability = 1.0f;
         speed = 1.0f;
         attackForce = 1.0f;
         fallDamageMultiplier = 1.0f;
@@ -56,7 +57,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     protected virtual void Start()
     {
         health = 1000f;
-        //stability = 1.0f;
+        stability = 1.0f;
         speed = 1.0f;
         attackForce = 1.0f;
         fallDamageMultiplier = 1.0f;
@@ -67,12 +68,15 @@ public class PlayerStatsBaseClass : MonoBehaviour
         gameController = GameObject.FindGameObjectWithTag("GameController");
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         behavePuppet = this.transform.GetComponentInChildren<BehaviourPuppet>();
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(health);
     }
 
     protected virtual void LateUpdate()
     {
         hitByEnemy = CheckIfKnockedDown();
         //Debug.Log(hitByEnemy);
+        //Debug.Log("health: " + health.ToString());
     }
 
     /// <summary>
@@ -93,6 +97,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public virtual void SetPlayerHealth(float val)
     {
         health -= val;
+        playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
     }
 
     /// <summary>
@@ -225,13 +230,15 @@ public class PlayerStatsBaseClass : MonoBehaviour
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude));
             }
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
         }
-        else if(hitByEnemy)
+        else if (hitByEnemy)
         {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude));
             }
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
         }
 
     }
@@ -252,12 +259,13 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public virtual void GiveHealth(int amount)
     {
         health += amount;
+        playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
     }
 
     protected virtual bool CheckIfKnockedDown()
     {
         AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if(behavePuppet.state == BehaviourPuppet.State.Unpinned || info.IsName(fall))
+        if (behavePuppet.state == BehaviourPuppet.State.Unpinned || info.IsName(fall))
         {
             return hitByEnemy;
         }

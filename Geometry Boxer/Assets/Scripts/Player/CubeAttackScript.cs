@@ -12,14 +12,15 @@ public class CubeAttackScript : PunchScript
     private Rigidbody playerRigidBody;
     private float TimePowerUp;
     private Behaviour halo;
-    
+
     private CubeSpecialStats stats;
 
     private bool isGrounded;
     private GameObject gameController;
-    private GameObject playerUI;
+    private GameObject playerUIChild;
+    private float coolDownTime;
     private float coolDownTimer;
-    
+
 
     // This is puppetMasters user controler, it controls the players movements
     protected UserControlThirdPerson userControl; // user input
@@ -35,13 +36,13 @@ public class CubeAttackScript : PunchScript
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
-
+        /*
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
         if(playerUI)
         {
             playerUI.GetComponent<userInterface>().SetCoolDownTime(specialAttackCooldownTime);
-        }
-
+        }*/
+        coolDownTime = 2000f;
 
         playerRigidBody = stats.pelvisJoint.GetComponent<Rigidbody>();
         PowerUp = false;
@@ -86,7 +87,7 @@ public class CubeAttackScript : PunchScript
         }
 
         isGrounded = checkIfGrounded();
-        if(isGrounded)
+        if (isGrounded)
         {
             launched = false;
         }
@@ -94,7 +95,7 @@ public class CubeAttackScript : PunchScript
         {
             GrowSpecial();
         }
-        else if(playerGrowing)
+        else if (playerGrowing)
         {
             GrowPlayer();
         }
@@ -259,8 +260,6 @@ public class CubeAttackScript : PunchScript
     /// Allows character to grow larger when attack key is pressed. Shrinks back down after a certain
     /// amount of time.
     /// </summary>
-    /// 
-    /*
     private void GrowBigPower()
     {
         if ((!PowerUp && Input.GetKeyDown(useAttack)) || (!PowerUp && Input.GetButtonDown("AButton")))
@@ -271,7 +270,7 @@ public class CubeAttackScript : PunchScript
 
             puppetMastObject.transform.localScale += new Vector3(2F, 2F, 2F);
             charController.transform.localScale += new Vector3(2F, 2F, 2F);
-            
+
         }
         else
         {
@@ -280,7 +279,6 @@ public class CubeAttackScript : PunchScript
             {
                 onCooldown = false;
                 coolDownTimer = 0;
-                playerUI.GetComponent<userInterface>().SetCoolDownTime(coolDownTime);
             }
         }
 
@@ -296,11 +294,10 @@ public class CubeAttackScript : PunchScript
                 charController.transform.localScale -= new Vector3(2F, 2F, 2F);
                 TimePowerUp = specialAttackActiveTime;
                 SendMessage("PowerUpDeactivated", false);
-                playerUI.GetComponent<userInterface>().UsedSpecialAttack();
                 onCooldown = true;
             }
         }
-    }*/
+    }
 
 }
 

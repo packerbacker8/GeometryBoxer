@@ -34,6 +34,7 @@ public class PunchingBagTrigger : MonoBehaviour {
     private CubeAttackScript punchScript;
     private Vector3 wallTargetLocation;
     private AudioSource pinger;
+    private GameObject panel;
 
     private bool jabbed = false;
     private bool hooked = false;
@@ -53,7 +54,8 @@ public class PunchingBagTrigger : MonoBehaviour {
         damageTaken = 0f;
         prevDamage = 0f;
         wallSpeed = 3f;
-        text = canvas.transform.GetChild(0).GetComponent<Text>();
+        panel = canvas.transform.GetChild(0).gameObject;
+        text = canvas.transform.GetChild(1).GetComponent<Text>();
         punchScript = GameObject.FindGameObjectWithTag("Player").transform.root.gameObject.GetComponent<CubeAttackScript>();
         pinger = gameObject.AddComponent<AudioSource>();
 
@@ -73,6 +75,7 @@ public class PunchingBagTrigger : MonoBehaviour {
     }
     public void setJabText()
     {
+        panel.SetActive(true);
         text.text = "Hit the punching bag with " + (punchScript.getUseController() ? controllerJab : jab.ToString());
         pinger.PlayOneShot(ping, 0.5f);
     }

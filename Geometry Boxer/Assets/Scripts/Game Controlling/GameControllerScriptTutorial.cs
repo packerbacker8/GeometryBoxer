@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Enemy;
 using RootMotion.Demos;
-
+using PlayerUI;
 
 public class GameControllerScriptTutorial : MonoBehaviour
 {
@@ -13,7 +13,8 @@ public class GameControllerScriptTutorial : MonoBehaviour
     public float loadLevelTimeOut = 20f;
     public GameObject[] playerOptions;
     public List<GameObject> enemiesInWorld;
-
+    public PlayerUserInterface ui;
+    
     private string currentMapName;
     private GameObject activePlayer;
     private int numEnemiesAlive;
@@ -71,6 +72,8 @@ public class GameControllerScriptTutorial : MonoBehaviour
     /// <param name="index"></param>
     public void isKilled(int index)
     {
+        Debug.Log("Enemy killed in GameControllerTutorial");
+        ui.enemyIsKilled();
         numEnemiesAlive--;
     }
 
