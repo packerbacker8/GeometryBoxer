@@ -15,6 +15,7 @@ public class DisplayTextInTrigger : MonoBehaviour {
     private Text textComponent;
     private bool pingPlayed;
     private AudioSource pinger;
+    private GameObject panel;
 
     // Use this for initialization
 	void Start ()
@@ -24,7 +25,9 @@ public class DisplayTextInTrigger : MonoBehaviour {
         pinger.clip = ping;
 		if(canvas != null)
         {
-            textComponent = canvas.transform.GetChild(0).GetComponent<Text>();
+            panel = canvas.transform.GetChild(0).gameObject;
+            textComponent = canvas.transform.GetChild(1).GetComponent<Text>();
+            panel.SetActive(false);
         }
         if(Input.GetJoystickNames().Length > 0)
         {
@@ -41,6 +44,7 @@ public class DisplayTextInTrigger : MonoBehaviour {
         {
             pinger.PlayOneShot(ping, 0.5f);
             pingPlayed = true;
+            panel.SetActive(true);
         }
     }
     void OnTriggerStay(Collider col)
@@ -48,6 +52,7 @@ public class DisplayTextInTrigger : MonoBehaviour {
         if(col.transform.root.tag == "Player")
         {
             textComponent.text = text;
+            panel.SetActive(true);
         }
         
     }
@@ -55,6 +60,7 @@ public class DisplayTextInTrigger : MonoBehaviour {
     {
         if (col.transform.root.tag == "Player")
         {
+            panel.SetActive(false);
             textComponent.text = "";
         }
     }
