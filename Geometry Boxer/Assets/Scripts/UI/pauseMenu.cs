@@ -28,6 +28,7 @@ public class pauseMenu : MonoBehaviour
     private List<GameObject> saveFileButtons;
 
     private bool controllerMode = false;
+    public bool notInDeathOrWinScreen = true;
 
     // Use this for initialization
     void Start()
@@ -65,7 +66,7 @@ public class pauseMenu : MonoBehaviour
     {
         TimeSinceEsc = TimeSinceEsc += Time.deltaTime;
 
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && !isPaused)
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && !isPaused && notInDeathOrWinScreen)
         {
             if (Input.GetButtonDown("StartButton"))
             {

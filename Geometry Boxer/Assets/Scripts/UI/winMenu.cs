@@ -34,7 +34,11 @@ public class winMenu : MonoBehaviour
         LoadLevel.loader.LoadALevel(gameController.dominationMap);
     }
 
-
+    public void setMouse()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
 
 
 
