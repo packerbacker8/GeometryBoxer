@@ -27,6 +27,7 @@ public class pauseMenu : MonoBehaviour
     private float TimeSinceEsc = 0.0f;
     private List<GameObject> saveFileButtons;
 
+    private StandaloneInputModule gameEventSystemInputModule;
     private bool controllerMode = false;
     public bool notInDeathOrWinScreen = true;
 
@@ -39,6 +40,7 @@ public class pauseMenu : MonoBehaviour
         saveInputField = saveCanvas.GetComponentInChildren<InputField>();
         saveCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(false);
+        gameEventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
         saveFileName = "";
         saveFileButtons = new List<GameObject>();
         //if game controller found is game controller for combat levels, grab player info
@@ -72,12 +74,35 @@ public class pauseMenu : MonoBehaviour
             {
                 controllerMode = true;
             }
+            else
+            {
+                controllerMode = false;
+            }
             pauseGameHelper();
         }
         else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && isPaused)
         {
             resumeGameHelper();
         }
+
+
+        if (controllerMode && isPaused)
+        {
+                if (Input.GetAxis("DPadY") != 0)
+                {
+                    gameEventSystemInputModule.verticalAxis = "DPadY";
+                }
+                else
+                {
+                    gameEventSystemInputModule.verticalAxis = "Vertical";
+                }
+
+                if (saveCanvas.activeSelf == true  && EventSystem.current.currentSelectedGameObject.name == "InputField")
+                {
+                    EventSystem.current.SetSelectedGameObject(saveCanvas.transform.Find("SaveFileButton").gameObject);
+                }         
+        }
+
 
     }
 
@@ -151,7 +176,7 @@ public class pauseMenu : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
             EventSystem.current.SetSelectedGameObject(obj);
-            controllerMode = false;
+            //controllerMode = false;
         }
         
         isPaused = true;
@@ -188,6 +213,11 @@ public class pauseMenu : MonoBehaviour
         saveCanvas.SetActive(true);
         FillInSaveFileInfo();
         pauseMenuCanvas.SetActive(false);
+
+        if (saveFileButtons.Count > 0 && controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(saveFileButtons[saveFileButtons.Count - 1]);
+        }
     }
 
     /// <summary>
@@ -216,6 +246,12 @@ public class pauseMenu : MonoBehaviour
         saveFileButtons.Clear();
         saveCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(true);
+
+        if (controllerMode)
+        {
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            EventSystem.current.SetSelectedGameObject(obj);
+        }
     }
 
     public string GetSaveFileName()
