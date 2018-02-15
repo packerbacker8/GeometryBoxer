@@ -28,9 +28,6 @@ public class CitySelectScreenCharacterImageUpdate : MonoBehaviour {
                 activePlayer = playerOptions[i];
             }
         }
-
-
-
         image = playerImage.GetComponent<Image>();
 
         if(activePlayer.name.Contains(cubeName))

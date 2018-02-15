@@ -11,6 +11,7 @@ public class CubeActivateSfx : MonoBehaviour {
     void Start()
     {
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 0.8f;
     }
 
     void CubeActivatedSfx()
