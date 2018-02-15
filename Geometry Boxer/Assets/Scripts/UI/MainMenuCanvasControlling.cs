@@ -88,6 +88,11 @@ public class MainMenuCanvasControlling : MonoBehaviour
         {
             EventSystemInputModule.verticalAxis = "Vertical";
         }
+
+        if (loadFileCanvas.activeSelf == true && controllerMode && EventSystem.current.currentSelectedGameObject.name == "LoadInputField")
+        {
+            EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find("LoadFileButton").gameObject);
+        }
     }
 
     /// <summary>
@@ -135,6 +140,11 @@ public class MainMenuCanvasControlling : MonoBehaviour
         FillInSaveFileInfo();
         hasSaveGameCanvas.SetActive(false);
         noSaveGameCanvas.SetActive(false);
+
+        if (loadFileButtons.Count > 0 && controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(loadFileButtons[loadFileButtons.Count - 1]);
+        }
     }
 
     /// <summary>
@@ -165,6 +175,19 @@ public class MainMenuCanvasControlling : MonoBehaviour
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame);
         noSaveGameCanvas.SetActive(!hasSavedGame);
+
+        if (controllerMode)
+        {
+            if (hasSaveGameCanvas.activeSelf)
+            {
+                //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+                EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+            else if (noSaveGameCanvas.activeSelf)
+            {
+                EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+        }
     }
     /// <summary>
     /// Function to set string that represents file we want to load.
