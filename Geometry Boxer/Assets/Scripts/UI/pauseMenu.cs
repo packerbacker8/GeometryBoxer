@@ -30,6 +30,7 @@ public class pauseMenu : MonoBehaviour
     private StandaloneInputModule gameEventSystemInputModule;
     private bool controllerMode = false;
     public bool notInDeathOrWinScreen = true;
+    public bool saveCanvasTextInputMode = false;
 
     // Use this for initialization
     void Start()
@@ -97,9 +98,25 @@ public class pauseMenu : MonoBehaviour
                     gameEventSystemInputModule.verticalAxis = "Vertical";
                 }
 
-                if (saveCanvas.activeSelf == true  && EventSystem.current.currentSelectedGameObject.name == "InputField")
-                {
-                    EventSystem.current.SetSelectedGameObject(saveCanvas.transform.Find("SaveFileButton").gameObject);
+
+
+                if (saveCanvas.activeSelf == true)
+                {                      
+                    if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject.name == "InputField")
+                    {
+                        //Debug.Log("Text mode");
+                        saveCanvasTextInputMode = true;
+                    }
+                    else if (EventSystem.current.currentSelectedGameObject.name == "InputField" && !saveCanvasTextInputMode)
+                    {
+                        EventSystem.current.SetSelectedGameObject(saveCanvas.transform.Find("SaveFileButton").gameObject);
+                    }
+
+                    if (saveCanvasTextInputMode && (Input.GetAxis("HorizontalLeft") != 0 || Input.GetAxis("VerticalLeft") != 0))
+                    {
+                        saveCanvasTextInputMode = false;
+                    }
+
                 }         
         }
 
@@ -216,6 +233,8 @@ public class pauseMenu : MonoBehaviour
 
         if (saveFileButtons.Count > 0 && controllerMode)
         {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             EventSystem.current.SetSelectedGameObject(saveFileButtons[saveFileButtons.Count - 1]);
         }
     }
@@ -249,6 +268,7 @@ public class pauseMenu : MonoBehaviour
 
         if (controllerMode)
         {
+            Cursor.lockState = CursorLockMode.Locked;
             GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
             EventSystem.current.SetSelectedGameObject(obj);
         }
