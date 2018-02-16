@@ -191,8 +191,9 @@ public class pauseMenu : MonoBehaviour
         if (controllerMode)
         {
             Cursor.lockState = CursorLockMode.Locked;
-            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;  
             EventSystem.current.SetSelectedGameObject(obj);
+            obj.GetComponent<UnityEngine.UI.Button>().OnSelect(null);
             //controllerMode = false;
         }
         
@@ -219,6 +220,14 @@ public class pauseMenu : MonoBehaviour
 
         mouseShouldBeLocked = true;
         pauseMenuCanvas.SetActive(true);
+        if (controllerMode)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            EventSystem.current.SetSelectedGameObject(obj);
+            obj.GetComponent<UnityEngine.UI.Button>().OnSelect(null);
+            //controllerMode = false;
+        }
         isPaused = true;
     }
 
@@ -231,6 +240,15 @@ public class pauseMenu : MonoBehaviour
         FillInSaveFileInfo();
         pauseMenuCanvas.SetActive(false);
 
+        for (int i = 0; i < saveFileButtons.Count; i++)
+        {
+            UnityEngine.UI.Button button = saveFileButtons[i].GetComponent<UnityEngine.UI.Button>();
+            //change color of all buttons when highlighted to some shade of red
+            ColorBlock colorsOfButton = button.colors;
+            Color highlightColor = colorsOfButton.highlightedColor;
+            colorsOfButton.highlightedColor = new Color(highlightColor.r + 50, highlightColor.g, highlightColor.b, highlightColor.a);
+            button.colors = colorsOfButton;
+        }
         if (saveFileButtons.Count > 0 && controllerMode)
         {
             Cursor.visible = true;
@@ -253,6 +271,7 @@ public class pauseMenu : MonoBehaviour
             button.transform.SetParent(scrollViewContent.transform, false);
             button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, ((scrollView.GetComponent<RectTransform>().rect.size.y * 0.85f) * 0.5f - 10f) - (30f * i));
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetSaveFileName(button.GetComponentInChildren<Text>().text); });
+
             saveFileButtons.Add(button);
         }
     }

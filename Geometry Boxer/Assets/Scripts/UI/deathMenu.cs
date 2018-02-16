@@ -7,18 +7,28 @@ using UnityEngine.EventSystems;
 public class deathMenu : MonoBehaviour {
 
     private string reloadLevelString;
-
-	// Use this for initialization
-	void Start () {
-
-
-        
-
-	}
+    private bool shouldAllowDPad = false;
+    private StandaloneInputModule gameEventSystemInputModule;
+    // Use this for initialization
+    void Start () {
+        gameEventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
 		
+        if (shouldAllowDPad)
+        {
+            if (Input.GetAxis("DPadY") != 0)
+            {
+                gameEventSystemInputModule.verticalAxis = "DPadY";
+            }
+            else
+            {
+                gameEventSystemInputModule.verticalAxis = "Vertical";
+            }
+        }
+
 
 	}
 
@@ -36,6 +46,7 @@ public class deathMenu : MonoBehaviour {
     {
         //for controller
         EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        shouldAllowDPad = true;
     }
 
     public void setMouse()
