@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Enemy
 {
-    public class Patrol_Movement_AI : MonoBehaviour, MovementBase
+    public class Patrol_Movement_AI : MonoBehaviour, IMovementBase
     {
         public bool playerTarget;
         public float bounceAngle;
@@ -25,7 +25,7 @@ namespace Enemy
         private bool inZone;
 
 
-        public bool canMove()
+        public bool CanMove()
         {
 
             if (playerTarget)
@@ -35,9 +35,9 @@ namespace Enemy
             return Vector3.Distance(moveTarget.position, transform.position) > patrolStopDistance;
         }
 
-        public Vector3 move()
+        public Vector3 Move()
         {
-            if (canMove())
+            if (CanMove())
             {
                 return moveTarget.position;
             }
@@ -53,7 +53,7 @@ namespace Enemy
             return transform.position;
         }
 
-        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
+        void IMovementBase.SetUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
         {
             stoppingDistance = stopDist;
             stoppingThreshold = stopThresh;
@@ -64,14 +64,14 @@ namespace Enemy
             playerTransform = playerObj.transform;
         }
 
-        public void playerFound()
+        public void PlayerFound()
         {
             playerTarget = true;
             moveTarget = playerTransform;
 
         }
 
-        public void playerLost()
+        public void PlayerLost()
         {
             if (playerTarget)
             {
@@ -80,7 +80,7 @@ namespace Enemy
             playerTarget = false;
         }
 
-        public Quaternion rotateStyle()
+        public Quaternion RotateStyle()
         {
             //float moveSpeed = walkByDefault ? 1.0f : 1.5f;
             //if (playerTarget)
@@ -108,7 +108,7 @@ namespace Enemy
             gameController = GameObject.FindGameObjectWithTag("GameController");
         }
 
-        public bool getPlayerTarget()
+        public bool GetPlayerTarget()
         {
             //return playerTarget;
             return true;

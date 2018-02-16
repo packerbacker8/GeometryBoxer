@@ -4,51 +4,73 @@ using Enemy;
 using RootMotion.Demos;
 using UnityEngine.AI;
 
-public class NormalAttackAI : MonoBehaviour, IAttackBase {
-    //protected float currentAnimLength;
+public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
+{
 
     public GameObject rightShoulder;
     public GameObject leftShoulder;
     public GameObject rightThigh;
     public GameObject leftThigh;
+    public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
+    [Header("Special Attack Properties")]
+    [Tooltip("The prefab that the spawned projectile will be based on.")]
+    public GameObject projectilePrefab;
+    public GameObject projectileContainer;
+    public float minCooldownTime = 10f;
+    public float specialAttackForce = 1000f;
+    [Tooltip("How long the projectile will last in the air.")]
+    public float timeInAir = 2f;
+    [Tooltip("Number of projectiles on the screen at once.")]
+    public int numberOfProjectiles = 10;
+    [Tooltip("Number of projectiles fired before attack stops.")]
+    public int numberShotsFired = 30;
+    [Tooltip("The chances it is picked each update loop if not on cooldown.")]
+    public int chances = 10;
+    [Tooltip("Divides chances by this number to get the odds of picking the special attack each update call if not on cooldown.")]
+    public int outOf = 1000;
 
-    float stoppingDistance;
-    float stoppingThreshold;
-    float jumpDistance;
-    Animator anim;
-    GameObject moveTargetObj;
-    Transform moveTarget;
-    float attackRange;
-    UserControlThirdPerson.State state;
-    NavMeshAgent agent;
-    CharacterPuppet characterPuppet;
+    private float stoppingDistance;
+    private float stoppingThreshold;
+    private float jumpDistance;
+    private float attackRange;
+    private float currentAnimLength;
+    private float cooldownTimer;
+
+    private Animator anim;
+    private GameObject moveTargetObj;
+    private Transform moveTarget;
+    private UserControlThirdPerson.State state;
+    private NavMeshAgent agent;
+    private CharacterPuppet characterPuppet;
     private AudioSource source;
     private SFX_Manager sfxManager;
     private System.Random rand = new System.Random();
+    private System.Random randAttack;
+    private System.Random randChance;
+    private List<GameObject> projectiles;
+    private Vector3 startProjectileSize;
+
     private string leftSwingAnimation = "SwingProp";
     private string rightSwingAnimation = "SwingProp";
     private string getUpProne = "GetUpProne";
     private string getUpSupine = "GetUpSupine";
     private string fall = "Fall";
     private string onGround = "OnGround";
-    private float currentAnimLength;
 
     private int attackRandomAudio = 20;
     private int swingAnimLayer = 1;
     private int punchAnimLayer = 0;
     private int animationControllerIndex = 0;
     private int characterControllerIndex = 2;
+    private int projectilesLaunched;
+    private int totalProjectilesLaunched;
     private int[] attackChances = { 50, 30, 20 };
 
     private bool attackStatus;
     private bool updateCollisionCheck;
+    private bool onCooldown;
+    private bool specialLaunched;
 
-    private System.Random randAttack;
-
-
-
-    public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
-    
     /// <summary>
     /// Information relating to a character animation.
     /// </summary>
@@ -80,11 +102,31 @@ public class NormalAttackAI : MonoBehaviour, IAttackBase {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         attackStatus = false;
         randAttack = new System.Random();
+        randChance = new System.Random();
+        randChance.Next();
         updateCollisionCheck = false;
+        onCooldown = false;
+        specialLaunched = false;
+        projectiles = new List<GameObject>();
+        projectilesLaunched = 0;
+        totalProjectilesLaunched = 0;
+        startProjectileSize = projectilePrefab.transform.localScale;
+        for (int i = 0; i < numberOfProjectiles; i++)
+        {
+            //parented to the bot object as a whole rather than the container or character controller
+            projectiles.Add(Instantiate(projectilePrefab, Vector3.forward, Quaternion.identity, this.transform.parent)); //this.transform.position +  might need to be used for positioning
+            if(this.tag.Contains("Ally"))
+            {
+                projectiles[i].tag = "Ally";
+            }
+            projectiles[i].SetActive(false);
+        }
+
     }
 
     private void Update()
@@ -121,20 +163,104 @@ public class NormalAttackAI : MonoBehaviour, IAttackBase {
 
             updateCollisionCheck = false;
         }
+
+        if(specialLaunched)
+        {
+            if(totalProjectilesLaunched >= numberShotsFired)
+            {
+                specialLaunched = false;
+                attackStatus = false;
+                onCooldown = true;                
+            }
+            else
+            {
+                if (projectilesLaunched < numberOfProjectiles)
+                {
+                    //RotateTheBot();
+                    RotateLaunchPoint();
+                    FireProjectile();
+                }
+            }
+        }
+        else if(!onCooldown && randChance.Next(outOf) < chances)
+        {
+            specialLaunched = true;
+            attackStatus = true;
+            //this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            //this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+            //RotateTheBot();
+            RotateLaunchPoint();
+            FireProjectile();
+        }
+        if (onCooldown)
+        {
+            cooldownTimer += Time.deltaTime;
+            if (cooldownTimer >= minCooldownTime)
+            {
+                onCooldown = false;
+                cooldownTimer = 0f;
+                totalProjectilesLaunched = 0;
+                projectilesLaunched = 0;
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// Cause the launch point of the projectile to rotate.
+    /// </summary>
+    private void RotateLaunchPoint()
+    {
+        projectileContainer.transform.Rotate(Vector3.up, 360f / projectilesLaunched);
+    }
+
+    /// <summary>
+    /// Cause the bot to spin as if shooting at projectiles from the spin.
+    /// </summary>
+    private void RotateTheBot()
+    {
+        this.transform.Rotate(Vector3.up * 10);
+    }
+
+    /// <summary>
+    /// Fire a single projectile prefab out from the bot.
+    /// </summary>
+    private void FireProjectile()
+    {
+        if(projectilesLaunched < numberOfProjectiles)
+        {
+            int currentProjectile = totalProjectilesLaunched % numberOfProjectiles;
+            projectilesLaunched++;
+            totalProjectilesLaunched++;
+            projectiles[currentProjectile].SetActive(true);
+            projectiles[currentProjectile].transform.localScale = startProjectileSize;
+            float angle = projectileContainer.transform.localRotation.eulerAngles.y * (Mathf.PI/180);
+            projectiles[currentProjectile].transform.position = new Vector3(projectileContainer.transform.position.x + Mathf.Cos(angle), projectileContainer.transform.position.y, projectileContainer.transform.position.z + Mathf.Sin(angle)); // might be slightly less
+            Vector3 launchDir = projectiles[currentProjectile].transform.position - projectileContainer.transform.position;
+            projectiles[currentProjectile].GetComponent<LaunchAndReset>().Launch(specialAttackForce, timeInAir, launchDir);
+        }
+    }
+
+    /// <summary>
+    /// Gets called when the projectile was reset from being launched.
+    /// </summary>
+    public void ProjectileWasReset()
+    {
+        projectilesLaunched--;
     }
 
     protected virtual void SetCurrentAnimTime(CharacterAnimations currentAnim)
     {
         currentAnimLength = anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.playTime + (anim.GetCurrentAnimatorStateInfo(currentAnim.animLayer).length * currentAnim.transitionTime);
         attackStatus = true;
-
     }
+
     public void Attack()
     {
         if (CanAttack())
         {
             AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-            if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying && rand.Next(0,attackRandomAudio + 1) == attackRandomAudio)
+            if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying && rand.Next(0, attackRandomAudio + 1) == attackRandomAudio)
             {
                 source.PlayOneShot(sfxManager.maleAttack[rand.Next(0, sfxManager.maleAttack.Count)]);
             }
@@ -142,7 +268,7 @@ public class NormalAttackAI : MonoBehaviour, IAttackBase {
             //If puppet is down, does not try to attack player during stand up anim
             if ((!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && !info.IsName(onGround)))
             {
-                int randChoice = randAttack.Next(0,100);
+                int randChoice = randAttack.Next(0, 100);
                 //This is for when puppet has melee object in hand
                 if (characterPuppet.propRoot.currentProp != null)
                 {
@@ -164,7 +290,7 @@ public class NormalAttackAI : MonoBehaviour, IAttackBase {
                     {
                         ThrowHiKick();
                     }
-                    
+
                 }
             }
         }
@@ -172,15 +298,15 @@ public class NormalAttackAI : MonoBehaviour, IAttackBase {
 
     public bool CanAttack()
     {
-        if(moveTargetObj == null || attackStatus)
+        if (moveTargetObj == null || attackStatus)
         {
             return false;
         }
-        return (Vector3.Distance(moveTarget.position, transform.position) <= attackRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Hit")) ;
+        return (Vector3.Distance(moveTarget.position, transform.position) <= attackRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"));
     }
 
-    public void SetUp(float stopDist, float stopThresh, float jumpDis, 
-        GameObject moveObj, CharacterPuppet charPup,  AudioSource src, 
+    public void SetUp(float stopDist, float stopThresh, float jumpDis,
+        GameObject moveObj, CharacterPuppet charPup, AudioSource src,
         SFX_Manager sfx, float rangeAttack)
     {
         stoppingDistance = stopDist;
@@ -280,7 +406,7 @@ public class NormalAttackAI : MonoBehaviour, IAttackBase {
                 }
                 break;
             }
-                
+
         }
 
         anim.SetInteger("ActionIndex", currentAnim.actionIndex);

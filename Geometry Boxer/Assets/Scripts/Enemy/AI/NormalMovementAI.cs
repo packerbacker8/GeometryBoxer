@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 namespace Enemy
 {
-    public class NormalMovementAI : MonoBehaviour, MovementBase
+    public class NormalMovementAI : MonoBehaviour, IMovementBase
     {
         public float leeway = 0.1f;
 
@@ -30,7 +30,7 @@ namespace Enemy
             tutorialScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Tutorial";
         }
 
-        public bool canMove()
+        public bool CanMove()
         {
             if (moveTargetObj == null)
             {
@@ -39,16 +39,16 @@ namespace Enemy
             return (Vector3.Distance(moveTarget.position, transform.position) + leeway > stoppingThreshold * stoppingDistance);
         }
 
-        public Vector3 move()
+        public Vector3 Move()
         {
-            if (canMove())
+            if (CanMove())
             {
                 return moveTarget.position;
             }
             return transform.position;
         }
 
-        void MovementBase.setUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
+        void IMovementBase.SetUp(float stopDist, float stopThresh, float jumpDis, GameObject moveObj)
         {
             stoppingDistance = stopDist;
             stoppingThreshold = stopThresh;
@@ -59,12 +59,12 @@ namespace Enemy
 
         }
 
-        void MovementBase.playerFound()
+        void IMovementBase.PlayerFound()
         {
             throw new NotImplementedException();
         }
 
-        void MovementBase.playerLost()
+        void IMovementBase.PlayerLost()
         {
             throw new NotImplementedException();
         }
@@ -85,7 +85,7 @@ namespace Enemy
             }
         }
 
-        public Quaternion rotateStyle()
+        public Quaternion RotateStyle()
         {
             if(moveTargetObj == null)
             {
@@ -96,7 +96,7 @@ namespace Enemy
             return Quaternion.LookRotation(newDir);
         }
 
-        public bool getPlayerTarget()
+        public bool GetPlayerTarget()
         {
             return true;
         }
