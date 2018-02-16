@@ -1,10 +1,11 @@
-using RootMotion.Demos;
-using RootMotion.Dynamics;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using RootMotion.Dynamics;
+using RootMotion.Demos;
+using System;
+using PlayerUI;
 
 public class CubeSpecialStats : PlayerStatsBaseClass
 {
@@ -14,6 +15,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     public float AttackForce;
     public float FallDamageMultiplier;
     public float PowerUpTimeLimit = 10f;
+    public float specialCooldownTime = 10f;
 
     private float HealthModifier;
     private float TimePowerUp;
@@ -58,18 +60,22 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         healthBarFill = GameObject.FindGameObjectWithTag("HealthBarBackground").transform.GetChild(0).GetComponent<Image>();
         originalHealth = Health;
         //HealthScript.PlayerHealth = GetPlayerHealth();
+        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(health);
+        playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
+        playerUI.GetComponent<PlayerUserInterface>().SetPlayerType(1);
     }
 
     // Update is called once per frame
     protected override void LateUpdate()
     {
         base.LateUpdate();
-        if (GetPlayerHealth() <= 0f && !dead)
+        if (health <= 0f && !dead)
         {
             dead = true;
             KillPlayer();
         }
         //HealthScript.setCubeHealthModifier(HealthModifier);
+        /*
         if (PowerUp == true)
         {
             attackForce = 100;
@@ -83,7 +89,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
             attackForce += 1;
             stability += 1;
             FallDamageMultiplier -= 1f;
-            if(FallDamageMultiplier <= 0)
+            if (FallDamageMultiplier <= 0)
             {
                 FallDamageMultiplier = 0f;
             }
@@ -92,17 +98,31 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         else
         {
             attackForce = 1;
-            stability = Stability;
+            stability = 1f;
             ApplyStabilityStat();
             userControl.state.move *= 1f;
             FallDamageMultiplier += 1f;
-            if(FallDamageMultiplier >= 1000f)
+            if (FallDamageMultiplier >= 1000f)
             {
                 FallDamageMultiplier = 1000f;
             }
             HealthModifier = 1.0f;
 
         }
+        */
+    }
+    
+    /// <summary>
+    /// Function to kill enemy AI unit, plays associated death animation then removes the object.
+    /// </summary>
+    public override void KillPlayer()
+    {
+        anim.Play("Death");
+        puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
+        gameController.GetComponent<GameControllerScript>().playerKilled();
+
+        //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
+        
     }
 
     public void PowerUpActive(bool active)
@@ -116,14 +136,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         PowerUp = deActivate;
         SendMessage("CubeDeactivatedSfx");
     }
-    public override void KillPlayer()
-    {
-        anim.Play("Death");
-        puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-        gameController.GetComponent<GameControllerScript>().playerKilled();
 
-        //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
-    }
     /// <summary>
     /// Function receives impulse received by colliders on the enemy characters.
     /// </summary>
@@ -155,6 +168,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
             }
             UpdateHealthUI();
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
         }
         else if (hitByEnemy)
         {
@@ -163,6 +177,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
             }
             UpdateHealthUI();
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
         }
     }
 
@@ -173,9 +188,9 @@ public class CubeSpecialStats : PlayerStatsBaseClass
 
     public void UpdateHealthUI()
     {
-        if(healthBarFill != null)
+        if (healthBarFill != null)
         {
-           healthBarFill.fillAmount = GetPlayerHealth() / originalHealth;
+            healthBarFill.fillAmount = GetPlayerHealth() / originalHealth;
         }
     }
     public float GetOriginalHealth()

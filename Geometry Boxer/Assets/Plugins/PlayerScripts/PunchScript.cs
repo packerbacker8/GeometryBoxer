@@ -4,6 +4,7 @@ using UnityEngine;
 using RootMotion;
 using RootMotion.Dynamics;
 using RootMotion.Demos;
+using PlayerUI;
 
 public class PunchScript : MonoBehaviour
 {
@@ -50,7 +51,7 @@ public class PunchScript : MonoBehaviour
     public KeyCode useAttack = KeyCode.Space;
     public float specialAttackForce = 1000f;
     public float specialAttackActiveTime = 10f;
-    public float specialAttackCooldownTime = 2f;
+    public float specialAttackCooldownTime = 10f;
 
     [Header("Player Combat Animations")]
     [Tooltip("Array of fighting animations the player character can use.")]
@@ -117,7 +118,6 @@ public class PunchScript : MonoBehaviour
     protected bool onCooldown;
     protected bool growingSpecial;
     protected bool updateCollisionCheck;
-    protected bool specialActivated;
 
     protected float leftArmXAxis;
     protected float leftArmYAxis;
@@ -170,6 +170,7 @@ public class PunchScript : MonoBehaviour
     protected Vector3 specialEndSize;
     protected PlayerStatsBaseClass baseStats;
     protected Vector3 moveDir;
+    protected GameObject playerUI;
 
     public enum Limbs
     {
@@ -233,6 +234,13 @@ public class PunchScript : MonoBehaviour
         playerFinalSize = new Vector3(1.53119f, 1.53119f, 1.53119f);
         specialStartSize = new Vector3(0.1f, 0.1f, 0.1f);
         specialEndSize = new Vector3(specialFormSize, specialFormSize, specialFormSize);
+
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        if(playerUI != null)
+        {
+            playerUI.GetComponent<PlayerUserInterface>().SetDefultcoolDownTime(specialAttackCooldownTime);
+            playerUI.GetComponent<PlayerUserInterface>().SetSpecialAttackButton(specialAttack.ToString());
+        }
     }
     // Update is called once per frame
     protected virtual void Update()
@@ -259,33 +267,33 @@ public class PunchScript : MonoBehaviour
         }
         if (isAttacking)
         {
-            if(leftArmAttack)
+            if (leftArmAttack)
             {
                 leftFistCollider.radius = leftFistStartSize.radius * fistGrowMultiplier;
                 leftFistCollider.height = leftFistStartSize.height * fistGrowMultiplier;
             }
-            if(rightArmAttack)
+            if (rightArmAttack)
             {
                 rightFistCollider.radius = rightFistStartSize.radius * fistGrowMultiplier;
                 rightFistCollider.height = rightFistStartSize.height * fistGrowMultiplier;
             }
-            if(leftFootAttack)
+            if (leftFootAttack)
             {
-				leftFootCollider.size = leftFootStartSize.size * footGrowMultiplier;
+                leftFootCollider.size = leftFootStartSize.size * footGrowMultiplier;
             }
-            if(rightFootAttack)
+            if (rightFootAttack)
             {
-				rightFootCollider.size = rightFootStartSize.size * footGrowMultiplier;
+                rightFootCollider.size = rightFootStartSize.size * footGrowMultiplier;
             }
             currentAnimLength -= Time.deltaTime;
             if (currentAnimLength <= 0f)
             {
                 isAttacking = false;
                 updateCollisionCheck = true;
-				leftArmAttack = false;
-				rightArmAttack = false;
-				leftFootAttack = false;
-				rightFootAttack = false;
+                leftArmAttack = false;
+                rightArmAttack = false;
+                leftFootAttack = false;
+                rightFootAttack = false;
 
                 leftFistCollider.radius = leftFistStartSize.radius;
                 leftFistCollider.height = leftFistStartSize.height;
@@ -316,31 +324,38 @@ public class PunchScript : MonoBehaviour
                     //Left arm punching
                     if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
                     {
+                        Debug.Log("LeftJab");
                         leftArmAttack = true;
                         if (Input.GetButton(upperCutButton))
                         {
+                            Debug.Log("LeftUpper");
                             ThrowUppercut(Limbs.leftArm);
                         }
                         else
                         {
+                            Debug.Log("LeftJab");
                             ThrowSinglePunch(Limbs.leftArm);
                         }
                     }
                     if (Input.GetButtonDown(rightJabControllerButton))
                     {
+                        Debug.Log("rightBump");
                         rightArmAttack = true;
                         if (Input.GetButton(upperCutButton))
                         {
+                            Debug.Log("RightUpper");
                             ThrowUppercut(Limbs.rightArm);
 
                         }
                         else
                         {
+                            Debug.Log("RightJab");
                             ThrowSinglePunch(Limbs.rightArm);
                         }
                     }
                     if (Input.GetButtonDown(hiKickButton))
                     {
+                        Debug.Log("HighKick");
                         ThrowHiKick();
                     }
 
@@ -349,6 +364,7 @@ public class PunchScript : MonoBehaviour
                 {
                     if (Input.GetKeyDown(leftJabKey))
                     {
+                        Debug.Log("LeftJab");
                         //currently a combo attack
                         leftArmAttack = true;
                         rightArmAttack = true;
@@ -636,20 +652,20 @@ public class PunchScript : MonoBehaviour
     /// </summary>
     protected virtual void DeactivateSpecialAttack()
     {
-        specialActivated = false;
         playerGrowing = true;
         charController.transform.localScale = playerStartSize;
         charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
         specialRigid.useGravity = false;
         launched = false;
         UpdatePos(charController.transform, specialForm.transform);
+        //play animation of morphing into ball
         isAttacking = false;
         updateCollisionCheck = true;
         for (int i = 0; i < this.transform.childCount; i++) //move camera back to player here
         {
             if (this.transform.GetChild(i).gameObject != specialForm)
             {
-                if (this.transform.GetChild(i).gameObject.tag == "MainCamera") //move camera to follow char here
+                if (this.transform.GetChild(i).gameObject.tag == "MainCamera") //move camera to follow ball here
                 {
                     this.transform.GetChild(i).gameObject.GetComponent<CameraController>().target = baseStats.pelvisJoint.transform;
                 }
@@ -664,6 +680,7 @@ public class PunchScript : MonoBehaviour
         charController.GetComponent<CapsuleCollider>().enabled = true;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = true;
         onCooldown = true;
+        playerUI.GetComponent<PlayerUserInterface>().UsedSpecialAttack();
         anim.SetInteger("ActionIndex", -1);
         anim.SetBool("IsStrafing", false);
         if (specialRigid.velocity.sqrMagnitude > 0)
@@ -683,7 +700,6 @@ public class PunchScript : MonoBehaviour
     /// </summary>
     protected virtual void ActivateSpecialAttack()
     {
-        specialActivated = true;
         specialRigid.useGravity = true;
         leftFistCollider.radius = leftFistStartSize.radius;
         leftFistCollider.height = leftFistStartSize.height;
@@ -691,6 +707,7 @@ public class PunchScript : MonoBehaviour
         rightFistCollider.height = rightFistStartSize.height;
         UpdatePos(specialForm.transform, charController.transform);
         isAttacking = true;
+        playerUI.GetComponent<PlayerUserInterface>().UsingSpecialAttack();
         //play animation of morphing into ball
         for (int i = 0; i < this.transform.childCount; i++)
         {
@@ -800,13 +817,5 @@ public class PunchScript : MonoBehaviour
     public bool getUseController()
     {
         return useController;
-    }
-    public bool GetOnCooldown()
-    {
-        return onCooldown;
-    }
-    public bool GetSpecialActivated()
-    {
-        return specialActivated;
     }
 }

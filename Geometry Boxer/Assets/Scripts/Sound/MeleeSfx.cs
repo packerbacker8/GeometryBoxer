@@ -15,6 +15,7 @@ public class MeleeSfx : MonoBehaviour {
     void Start ()
     {
         source = gameObject.AddComponent<AudioSource>();
+        source.spatialBlend = 0.8f;
         sfxManager = FindObjectOfType<SFX_Manager>();
         meleeIndex = rand.Next(0, sfxManager.meleeMetal.Count);
     }

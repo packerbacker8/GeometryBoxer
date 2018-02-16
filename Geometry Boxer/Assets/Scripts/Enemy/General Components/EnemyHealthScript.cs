@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RootMotion.Dynamics;
 using RootMotion.Demos;
+using PlayerUI;
 
 public class EnemyHealthScript : MonoBehaviour
 {
@@ -56,11 +57,10 @@ public class EnemyHealthScript : MonoBehaviour
     void Start()
     {
         source = gameObject.AddComponent<AudioSource>();
-        source.spatialBlend = 0.75f;
+        source.spatialBlend = 0.9f;
         impactSource = gameObject.AddComponent<AudioSource>();
-        impactSource.spatialBlend = 0.75f;
-        source.spatialize = true;
-        source.volume = 0.6f;
+        impactSource.spatialBlend = 0.9f;
+        source.volume = 1f;
         sfxManager = FindObjectOfType<SFX_Manager>();
         dead = false;
         damageIsFromPlayer = false;
@@ -239,6 +239,7 @@ public class EnemyHealthScript : MonoBehaviour
             else
             {
                 gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex, this.gameObject.tag);
+                playerUI.GetComponent<PlayerUserInterface>().enemyIsKilled();
             }
 
             dead = true;
