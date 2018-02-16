@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.AI;
 using Enemy;
 using RootMotion.Dynamics;
+using System.Collections;
 
 namespace RootMotion.Demos
 {
@@ -14,6 +15,8 @@ namespace RootMotion.Demos
     public class UserControlAI : UserControlThirdPerson
     {
         public int attackRandomAudio = 30;
+
+        public GameObject safeSpot;
 
         public float stoppingDistance = 0.5f;
         public float stoppingThreshold = 1.5f;
@@ -57,6 +60,7 @@ namespace RootMotion.Demos
         private Rigidbody physicBody;
 
         private bool dead;
+        private bool canFind;
 
         private void Awake()
         {
@@ -73,7 +77,7 @@ namespace RootMotion.Demos
             behaviourPuppet = transform.parent.gameObject.GetComponentInChildren<BehaviourPuppet>();
             physicBody = GetComponent<Rigidbody>();
             anim = transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
-
+            
         }
 
         void Start()
@@ -87,6 +91,7 @@ namespace RootMotion.Demos
             //movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget);
             //attackStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
             dead = false;
+            canFind = true;
         }
 
         protected override void Update()
@@ -136,23 +141,46 @@ namespace RootMotion.Demos
                 }
 
                 attackStyle.attack();
+                
                 if (agent.enabled && agent.isOnNavMesh && !((info.IsName(getUpProne) || info.IsName(getUpSupine) || info.IsName(fall)) && anim.GetBool(onGround)))
                 {
-                    agent.destination = movementStyle.move();
-                    if (agent.pathStatus == NavMeshPathStatus.PathComplete)
+                    Vector3 moveResult = movementStyle.move();
+                    //Check if can move and whether is moving or not
+                    //
+                    if(movementStyle.canMove() && moveResult == transform.position)
                     {
-                        if (agent.destination == transform.position)
+
+                        StartCoroutine(Respawn());
+
+                    }
+                    if (moveResult != transform.position)
+                    {
+                        agent.destination = moveResult;
+                        if (agent.pathStatus == NavMeshPathStatus.PathComplete)
                         {
-                            physicBody.velocity = Vector3.zero;
-                            state.move = Vector3.zero;
+                                state.move = agent.velocity;
                         }
                         else
                         {
-                            state.move = agent.velocity;
+                            //if (safeSpot != null)
+                            //{
+                            //    transform.position = safeSpot.transform.position;
+                            //}
+                            //else
+                            //{
+                            //    DestroyObject(gameObject);
+                            //}
+                            canFind = false;
+                            Debug.Log("Path Missing Trigger");
                         }
-                        
-                       
                     }
+                    
+                    else
+                    {
+                        physicBody.velocity = Vector3.zero;
+                        state.move = Vector3.zero;
+                    }
+
                 }
                 else
                 {
@@ -165,6 +193,7 @@ namespace RootMotion.Demos
             {
                 state.move = Vector3.zero;
             }
+           
         }
 
         /// <summary>
@@ -194,6 +223,35 @@ namespace RootMotion.Demos
         public bool IsKnockedDown()
         {
             return behaviourPuppet.state == BehaviourPuppet.State.Unpinned;
+        }
+
+        private IEnumerator Respawn()
+        {
+            float timer = 5f;
+            yield return new WaitForSeconds(1f);
+            while (!canFind)
+            {
+                timer -= Time.deltaTime;
+                yield return new WaitForSeconds(1f);
+                if(timer <= 0)
+                {
+                    //if (safeSpot != null)
+                    //{
+                    //    transform.position = safeSpot.transform.position;
+                    //}
+                    //else
+                    //{
+                    //    DestroyObject(gameObject);
+                    //}
+                    Debug.Log("Triggered Respawn");
+                    yield break;
+                }
+                agent.destination = movementStyle.move(); 
+                canFind = agent.pathStatus == NavMeshPathStatus.PathComplete;
+
+            }
+            timer = 5f;
+            
         }
     }
 }
