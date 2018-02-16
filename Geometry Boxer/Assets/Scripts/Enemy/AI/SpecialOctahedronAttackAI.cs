@@ -48,6 +48,7 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     private System.Random randAttack;
     private System.Random randChance;
     private List<GameObject> projectiles;
+    private Vector3 startProjectileSize;
 
     private string leftSwingAnimation = "SwingProp";
     private string rightSwingAnimation = "SwingProp";
@@ -114,11 +115,18 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
         projectiles = new List<GameObject>();
         projectilesLaunched = 0;
         totalProjectilesLaunched = 0;
+        startProjectileSize = projectilePrefab.transform.localScale;
         for (int i = 0; i < numberOfProjectiles; i++)
         {
-            projectiles.Add(Instantiate(projectilePrefab, this.transform.position + Vector3.forward, Quaternion.identity, projectileContainer.transform));
+            //parented to the bot object as a whole rather than the container or character controller
+            projectiles.Add(Instantiate(projectilePrefab, Vector3.forward, Quaternion.identity, this.transform.parent)); //this.transform.position +  might need to be used for positioning
+            if(this.tag.Contains("Ally"))
+            {
+                projectiles[i].tag = "Ally";
+            }
             projectiles[i].SetActive(false);
         }
+
     }
 
     private void Update()
@@ -168,7 +176,8 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
             {
                 if (projectilesLaunched < numberOfProjectiles)
                 {
-                    RotateTheBot();
+                    //RotateTheBot();
+                    RotateLaunchPoint();
                     FireProjectile();
                 }
             }
@@ -177,9 +186,10 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
         {
             specialLaunched = true;
             attackStatus = true;
-            this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-            this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
-            RotateTheBot();
+            //this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            //this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
+            //RotateTheBot();
+            RotateLaunchPoint();
             FireProjectile();
         }
         if (onCooldown)
@@ -197,6 +207,14 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     }
 
     /// <summary>
+    /// Cause the launch point of the projectile to rotate.
+    /// </summary>
+    private void RotateLaunchPoint()
+    {
+        projectileContainer.transform.Rotate(Vector3.up, 360f / projectilesLaunched);
+    }
+
+    /// <summary>
     /// Cause the bot to spin as if shooting at projectiles from the spin.
     /// </summary>
     private void RotateTheBot()
@@ -211,11 +229,15 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     {
         if(projectilesLaunched < numberOfProjectiles)
         {
-            int currentProjectile = projectilesLaunched;
+            int currentProjectile = totalProjectilesLaunched % numberOfProjectiles;
             projectilesLaunched++;
             totalProjectilesLaunched++;
             projectiles[currentProjectile].SetActive(true);
-            projectiles[currentProjectile].GetComponent<LaunchAndReset>().Launch(specialAttackForce, timeInAir);
+            projectiles[currentProjectile].transform.localScale = startProjectileSize;
+            float angle = projectileContainer.transform.localRotation.eulerAngles.y * (Mathf.PI/180);
+            projectiles[currentProjectile].transform.position = new Vector3(projectileContainer.transform.position.x + Mathf.Cos(angle), projectileContainer.transform.position.y, projectileContainer.transform.position.z + Mathf.Sin(angle)); // might be slightly less
+            Vector3 launchDir = projectiles[currentProjectile].transform.position - projectileContainer.transform.position;
+            projectiles[currentProjectile].GetComponent<LaunchAndReset>().Launch(specialAttackForce, timeInAir, launchDir);
         }
     }
 

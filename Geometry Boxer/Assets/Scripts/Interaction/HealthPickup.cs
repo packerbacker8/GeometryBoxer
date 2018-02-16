@@ -24,7 +24,7 @@ public class HealthPickup : MonoBehaviour
     {
         startingPos = this.transform.position;
         travelAmount = 0.5f;
-        moveAmount = 0.05f;
+        moveAmount = 0.5f;
         waiting = false;
         source = gameObject.AddComponent<AudioSource>();
         source.spatialBlend = 0.75f;
@@ -36,11 +36,11 @@ public class HealthPickup : MonoBehaviour
     {
         if(this.transform.position.y >= startingPos.y + travelAmount)
         {
-            moveAmount = -0.05f;
+            moveAmount = -0.5f * Time.deltaTime;
         }
         else if(this.transform.position.y <= startingPos.y - travelAmount)
         {
-            moveAmount = 0.05f;
+            moveAmount = 0.5f * Time.deltaTime;
         }
         this.transform.position += new Vector3(0, moveAmount,0);
         if(waiting)
