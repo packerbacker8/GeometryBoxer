@@ -244,13 +244,18 @@ namespace RootMotion.Demos
                     //    DestroyObject(gameObject);
                     //}
                     Debug.Log("Triggered Respawn");
+                    canFind = true;
+                    timer = 5f;
+                    DestroyObject(gameObject);
                     yield break;
+                    
                 }
                 agent.destination = movementStyle.move(); 
                 canFind = agent.pathStatus == NavMeshPathStatus.PathComplete;
 
             }
             timer = 5f;
+          
             
         }
     }
