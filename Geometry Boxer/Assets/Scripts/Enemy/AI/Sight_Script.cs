@@ -7,13 +7,13 @@ public class Sight_Script : MonoBehaviour
 
     private bool inZone;
     private bool playerFound;
-    private MovementBase movement;
+    private IMovementBase movement;
     // Use this for initialization
     void Start()
     {
         inZone = false;
         playerFound = false;
-        movement = GetComponentInParent<MovementBase>();
+        movement = GetComponentInParent<IMovementBase>();
     }
 
     // Update is called once per frame
@@ -54,7 +54,7 @@ public class Sight_Script : MonoBehaviour
         {
             //SendMessageUpwards("playerFound", SendMessageOptions.DontRequireReceiver);
             inZone = true;
-            movement.playerFound();
+            movement.PlayerFound();
             //playerFound = true;
         }
     }
@@ -65,7 +65,7 @@ public class Sight_Script : MonoBehaviour
         {
             //this.SendMessageUpwards("playerLost", SendMessageOptions.DontRequireReceiver);
             inZone = false;
-            movement.playerLost();
+            movement.PlayerLost();
             //playerFound = false;
         }
     }

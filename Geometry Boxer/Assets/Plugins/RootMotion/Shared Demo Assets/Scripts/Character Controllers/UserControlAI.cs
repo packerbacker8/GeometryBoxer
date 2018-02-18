@@ -24,8 +24,8 @@ namespace RootMotion.Demos
         public float jumpDistance = 10f;
         //public int behaviorIndex = 1;
 
-        public MovementBase movementStyle;
-        public AttackBase attackStyle;
+        public IMovementBase movementStyle;
+        public IAttackBase attackStyle;
         public Animator anim;
         public Transform goal;
         public GameObject moveTargetObj;
@@ -61,11 +61,12 @@ namespace RootMotion.Demos
 
         private bool dead;
         private bool canFind;
+        private bool usingSpecial;
 
         private void Awake()
         {
-            movementStyle = GetComponent<MovementBase>();
-            attackStyle = GetComponent<AttackBase>();
+            movementStyle = GetComponent<IMovementBase>();
+            attackStyle = GetComponent<IAttackBase>();
             characterPuppet = GetComponent<CharacterPuppet>();
             playerOptions = new GameObject[3];
             rand.Next(0, 1);
@@ -77,7 +78,7 @@ namespace RootMotion.Demos
             behaviourPuppet = transform.parent.gameObject.GetComponentInChildren<BehaviourPuppet>();
             physicBody = GetComponent<Rigidbody>();
             anim = transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
-            
+
         }
 
         void Start()
@@ -92,6 +93,7 @@ namespace RootMotion.Demos
             //attackStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTarget, characterPuppet, source, sfxManager, attackRange);
             dead = false;
             canFind = true;
+            usingSpecial = false;
         }
 
         protected override void Update()
@@ -103,16 +105,16 @@ namespace RootMotion.Demos
                 //Vector3 newDir = Vector3.RotateTowards(transform.forward, targetDir, Time.deltaTime * moveSpeed, 0.0f);
                 AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
 
-                if (moveTargetObj == null)   
+                if (moveTargetObj == null)
                 {
                     agent.enabled = false;
                     movementStyle.UpdateTarget();
-                    if(moveTargetObj != null)
+                    if (moveTargetObj != null)
                     {
                         agent.enabled = true;
                     }
                 }
-                else if (!movementStyle.getPlayerTarget() && moveTargetObj.transform.root.tag.Contains("Player"))
+                else if ((!movementStyle.GetPlayerTarget() && moveTargetObj.transform.root.tag.Contains("Player")) || usingSpecial)
                 {
                     agent.enabled = false;
                 }
@@ -140,14 +142,14 @@ namespace RootMotion.Demos
                     agent.nextPosition = transform.position;
                 }
 
-                attackStyle.attack();
-                
+                attackStyle.Attack();
+
                 if (agent.enabled && agent.isOnNavMesh && !((info.IsName(getUpProne) || info.IsName(getUpSupine) || info.IsName(fall)) && anim.GetBool(onGround)))
                 {
-                    Vector3 moveResult = movementStyle.move();
+                    Vector3 moveResult = movementStyle.Move();
                     //Check if can move and whether is moving or not
                     //
-                    if(movementStyle.canMove() && moveResult == transform.position)
+                    if (movementStyle.CanMove() && moveResult == transform.position)
                     {
 
                         StartCoroutine(Respawn());
@@ -158,7 +160,7 @@ namespace RootMotion.Demos
                         agent.destination = moveResult;
                         if (agent.pathStatus == NavMeshPathStatus.PathComplete)
                         {
-                                state.move = agent.velocity;
+                            state.move = agent.velocity;
                         }
                         else
                         {
@@ -174,7 +176,7 @@ namespace RootMotion.Demos
                             Debug.Log("Path Missing Trigger");
                         }
                     }
-                    
+
                     else
                     {
                         physicBody.velocity = Vector3.zero;
@@ -187,13 +189,13 @@ namespace RootMotion.Demos
                     state.move = Vector3.zero;
                 }
 
-                    transform.rotation = movementStyle.rotateStyle();
+                transform.rotation = movementStyle.RotateStyle();
             }
             else
             {
                 state.move = Vector3.zero;
             }
-           
+
         }
 
         /// <summary>
@@ -205,8 +207,8 @@ namespace RootMotion.Demos
         {
             moveTargetObj = moveObj;
             moveTarget = moveTargetObj.transform;
-            movementStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTargetObj);
-            attackStyle.setUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTargetObj, characterPuppet, source, sfxManager, attackRange);
+            movementStyle.SetUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTargetObj);
+            attackStyle.SetUp(stoppingDistance, stoppingThreshold, jumpDistance, moveTargetObj, characterPuppet, source, sfxManager, attackRange);
         }
 
         public void deathUpdate()
@@ -225,6 +227,7 @@ namespace RootMotion.Demos
             return behaviourPuppet.state == BehaviourPuppet.State.Unpinned;
         }
 
+
         private IEnumerator Respawn()
         {
             float timer = 5f;
@@ -233,7 +236,7 @@ namespace RootMotion.Demos
             {
                 timer -= Time.deltaTime;
                 yield return new WaitForSeconds(1f);
-                if(timer <= 0)
+                if (timer <= 0)
                 {
                     //if (safeSpot != null)
                     //{
@@ -248,15 +251,24 @@ namespace RootMotion.Demos
                     timer = 5f;
                     DestroyObject(gameObject);
                     yield break;
-                    
+
                 }
-                agent.destination = movementStyle.move(); 
+                agent.destination = movementStyle.Move();
                 canFind = agent.pathStatus == NavMeshPathStatus.PathComplete;
 
             }
             timer = 5f;
-          
-            
+        }
+
+            /// <summary>
+            /// Allows toggling of if the enemy is using their special attack without needed to check in user 
+            /// control AI every update loop.
+            /// </summary>
+            /// <param name="state"></param>
+            public void SetUsingSpecial(bool state)
+            {
+                usingSpecial = state;
+
+            }
         }
     }
-}

@@ -58,12 +58,12 @@ public class CharacterSelectController : MonoBehaviour
     {
         if (controllerMode)
         {
-            //Debug.Log(Input.GetAxis("HorizontalLeft"));
-            if (Input.GetAxis("HorizontalLeft") < -0.5f)
+            //Debug.Log(Input.GetAxis("DPadY"));
+            if (Input.GetAxis("HorizontalLeft") < -0.5f || Input.GetAxis("DPadY") < -0.5f || Input.GetAxis("DPadX") < -0.5f)
             {
                 CharacterSelected("Cube");
             }
-            else if (Input.GetAxis("HorizontalLeft") > 0.5f)
+            else if (Input.GetAxis("HorizontalLeft") > 0.5f || Input.GetAxis("DPadY") > 0.5f || Input.GetAxis("DPadX") > 0.5f)
             {
                 CharacterSelected("Octahedron");
             }

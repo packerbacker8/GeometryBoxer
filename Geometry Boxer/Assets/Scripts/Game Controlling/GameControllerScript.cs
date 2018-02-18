@@ -33,6 +33,7 @@ public class GameControllerScript : MonoBehaviour
     private Queue<GameObject> allyTargetQueue;
     private bool playerAlive;
 
+    private bool levelWon = false;
     // Use this for initialization
     void Awake()
     {
@@ -147,7 +148,7 @@ public class GameControllerScript : MonoBehaviour
                 enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
         }
-
+        
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
@@ -157,10 +158,29 @@ public class GameControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (numEnemiesAlive <= 0)
         {
             SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
-            StartCoroutine(changeLevel(dominationMap));
+
+            if (!levelWon && playerAlive)
+            {
+
+                //disable any pause menu at this point
+                GameObject.FindGameObjectWithTag("PauseMenu").gameObject.SetActive(false);
+
+
+                //display win menu
+                GameObject winMenu = GameObject.FindGameObjectWithTag("WinMenu").gameObject;
+                winMenu.transform.GetChild(0).gameObject.SetActive(true);
+                winMenu.GetComponent<winMenu>().setButtonActive();
+                winMenu.GetComponent<winMenu>().setMouse();
+
+                levelWon = true;
+            }
+
+
+            //StartCoroutine(changeLevel(dominationMap));
         }
     }
 
@@ -219,7 +239,19 @@ public class GameControllerScript : MonoBehaviour
     {
         playerAlive = false;
         SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
-        LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
+
+        //disable any pause menu at this point
+        GameObject.FindGameObjectWithTag("PauseMenu").gameObject.SetActive(false);
+
+
+        //display death menu
+        GameObject deathMenu = GameObject.FindGameObjectWithTag("DeathMenu").gameObject;
+        deathMenu.GetComponent<deathMenu>().SetReloadString(deathReloadMap);
+        deathMenu.transform.GetChild(0).gameObject.SetActive(true);
+        deathMenu.GetComponent<deathMenu>().setButtonActive();
+        deathMenu.GetComponent<deathMenu>().setMouse();
+
+        //LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
     }
 
     public GameObject GetActivePlayer()

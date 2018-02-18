@@ -7,22 +7,22 @@ using RootMotion.Demos;
 using UnityEngine.AI;
 namespace Enemy
 {
-    public interface MovementBase
+    public interface IMovementBase
     {
-        Vector3 move();
+        Vector3 Move();
 
-        bool canMove();
+        bool CanMove();
 
-        void setUp(float stopDist, float stopThresh, float jumpDis,
+        void SetUp(float stopDist, float stopThresh, float jumpDis,
             GameObject move);
 
-        void playerFound();
+        void PlayerFound();
 
-        void playerLost();
+        void PlayerLost();
 
-        Quaternion rotateStyle();
+        Quaternion RotateStyle();
 
-        bool getPlayerTarget();
+        bool GetPlayerTarget();
 
         void UpdateTarget();
     }

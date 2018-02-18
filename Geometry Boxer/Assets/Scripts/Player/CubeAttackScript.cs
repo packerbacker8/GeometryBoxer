@@ -36,6 +36,12 @@ public class CubeAttackScript : PunchScript
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         halo = (Behaviour)charController.GetComponent("Halo");
         userControl = charController.GetComponent<UserControlThirdPerson>();
+        /*
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        if(playerUI)
+        {
+            playerUI.GetComponent<userInterface>().SetCoolDownTime(specialAttackCooldownTime);
+        }*/
         coolDownTime = 2000f;
 
         playerRigidBody = stats.pelvisJoint.GetComponent<Rigidbody>();
