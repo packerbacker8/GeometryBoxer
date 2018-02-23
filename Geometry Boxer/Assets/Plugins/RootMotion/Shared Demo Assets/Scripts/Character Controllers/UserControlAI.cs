@@ -31,6 +31,7 @@ namespace RootMotion.Demos
         public GameObject moveTargetObj;
         public Transform moveTarget;
         public bool drop;
+        public bool testingPath;
 
         private GameObject activePlayer;
         private GameObject[] playerOptions;
@@ -49,6 +50,8 @@ namespace RootMotion.Demos
         private int animationControllerIndex = 0;
         private int characterControllerIndex = 2;
 
+        private GameObject characterController;
+
         private float jumpThreshold = 1.0f;
 
         private string leftSwingAnimation = "SwingProp";
@@ -62,6 +65,7 @@ namespace RootMotion.Demos
         private bool dead;
         private bool canFind;
         private bool usingSpecial;
+        private bool checkingRespawn;
 
         private void Awake()
         {
@@ -78,7 +82,7 @@ namespace RootMotion.Demos
             behaviourPuppet = transform.parent.gameObject.GetComponentInChildren<BehaviourPuppet>();
             physicBody = GetComponent<Rigidbody>();
             anim = transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
-
+            //characterController = GetComponent<CharacterController>().gameObject;
         }
 
         void Start()
@@ -94,6 +98,7 @@ namespace RootMotion.Demos
             dead = false;
             canFind = true;
             usingSpecial = false;
+            checkingRespawn = false;
         }
 
         protected override void Update()
@@ -149,10 +154,12 @@ namespace RootMotion.Demos
                     Vector3 moveResult = movementStyle.Move();
                     //Check if can move and whether is moving or not
                     //
-                    if (movementStyle.CanMove() && moveResult == transform.position)
+                    if (movementStyle.CanMove() && moveResult == transform.position && !checkingRespawn)
                     {
-
+                        canFind = false;
+                        checkingRespawn = true;
                         StartCoroutine(Respawn());
+                        
 
                     }
                     if (moveResult != transform.position)
@@ -172,8 +179,20 @@ namespace RootMotion.Demos
                             //{
                             //    DestroyObject(gameObject);
                             //}
-                            canFind = false;
-                            Debug.Log("Path Missing Trigger");
+                            if (testingPath)
+                            {
+
+                                
+                                if (!checkingRespawn)
+                                {
+                                    Debug.Log("Path Missing Trigger");
+                                    canFind = false;
+                                    checkingRespawn = true;
+                                    StartCoroutine(Respawn());
+                                    
+                                 
+                                }
+                                }
                         }
                     }
 
@@ -230,10 +249,11 @@ namespace RootMotion.Demos
 
         private IEnumerator Respawn()
         {
-            float timer = 5f;
-            yield return new WaitForSeconds(1f);
+            float timer = 0.5f;
+            //yield return new WaitForSeconds(1f);
             while (!canFind)
             {
+                //Debug.Log(timer);
                 timer -= Time.deltaTime;
                 yield return new WaitForSeconds(1f);
                 if (timer <= 0)
@@ -247,17 +267,36 @@ namespace RootMotion.Demos
                     //    DestroyObject(gameObject);
                     //}
                     Debug.Log("Triggered Respawn");
+
                     canFind = true;
                     timer = 5f;
-                    DestroyObject(gameObject);
+                    agent.enabled = false;
+                    transform.position = safeSpot.transform.position;
+                    agent.enabled = true;
+                    agent.nextPosition = safeSpot.transform.position;
+                    //DestroyObject(gameObject);
                     yield break;
 
                 }
-                agent.destination = movementStyle.Move();
-                canFind = agent.pathStatus == NavMeshPathStatus.PathComplete;
+                else if (agent.enabled && agent.isOnNavMesh)
+                {
+                    agent.destination = movementStyle.Move();
+                    if(agent.pathStatus == NavMeshPathStatus.PathComplete)
+                    {
+                        canFind = true;
+                    }
+                }
+
+                if (!movementStyle.CanMove())
+                {
+                    canFind = true;
+                }
 
             }
-            timer = 5f;
+            //timer = 5f;
+            checkingRespawn = false;
+            
+            yield break;
         }
 
             /// <summary>

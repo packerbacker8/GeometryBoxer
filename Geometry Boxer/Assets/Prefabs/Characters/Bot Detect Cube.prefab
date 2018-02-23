@@ -2974,6 +2974,7 @@ MonoBehaviour:
   rotateSpeed: 1.5
   bounceAngle: 70
   sightRange: 20
+  leeway: 0.1
   playerTarget: 0
 --- !u!114 &114196622715694110
 MonoBehaviour:
@@ -3384,7 +3385,6 @@ MonoBehaviour:
   leftShoulder: {fileID: 1800580697331860}
   rightThigh: {fileID: 1858306330639328}
   leftThigh: {fileID: 1814313388477612}
-  attackRandomAudio: 1000
   enemyAnimations:
   - actionIndex: 1
     animName: RightPunch
@@ -3784,6 +3784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyHealth: 3000
+  percentToFindHealthPack: 0.5
   deathDelay: 20
   damageThreshold: 30
   heavyDamageOffset: 50
@@ -3845,6 +3846,7 @@ MonoBehaviour:
   canCrouch: 0
   canJump: 0
   attackRandomAudio: 250
+  safeSpot: {fileID: 0}
   stoppingDistance: 1
   stoppingThreshold: 1
   attackRange: 1
