@@ -14,6 +14,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public GameObject loadFileCanvas;
     public GameObject fileButtonPrefab;
     public GameObject scrollView;
+    public GameObject playerUI;
 
     private bool hasSavedGame;
     private InputField loadFileInput;
@@ -74,6 +75,11 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
             //disable UserControlMelee on CubeMan
             CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
+        }
+
+        for(int i = 0; i < playerUI.transform.childCount; i++)
+        {
+            playerUI.transform.GetChild(i).gameObject.SetActive(false);
         }
 
     }
