@@ -119,10 +119,14 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     {
         anim.Play("Death");
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-        gameController.GetComponent<GameControllerScript>().playerKilled();
-
-        //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
-        
+        if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+        {
+            gameController.GetComponent<GameControllerScriptTutorial>().PlayerKilled();
+        }
+        else
+        {
+            gameController.GetComponent<GameControllerScript>().PlayerKilled();
+        }
     }
 
     public void PowerUpActive(bool active)

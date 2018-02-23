@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class winMenu : MonoBehaviour
+public class WinMenu : MonoBehaviour
 {
     GameControllerScript gameController;
     private StandaloneInputModule gameEventSystemInputModule;
     private bool shouldAllowDPad = false;
+    private bool tutorialScene;
     // Use this for initialization
     void Start()
     {
-        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
+        if(!UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+        {
+            gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
+        }
+
         gameEventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
     }
 

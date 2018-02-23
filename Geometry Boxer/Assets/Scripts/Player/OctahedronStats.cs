@@ -49,7 +49,7 @@ public class OctahedronStats : PlayerStatsBaseClass
     {
         anim.Play("Death");
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-        gameController.GetComponent<GameControllerScript>().playerKilled();
+        gameController.GetComponent<GameControllerScript>().PlayerKilled();
 
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
     }

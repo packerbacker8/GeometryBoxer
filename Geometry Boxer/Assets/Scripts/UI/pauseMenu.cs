@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class pauseMenu : MonoBehaviour
+public class PauseMenu : MonoBehaviour
 {
     public GameObject scrollView;
     public GameObject scrollViewContent;
     public GameObject fileButtonPrefab;
+    public GameObject pauseMenuCanvas { get; private set; }
 
     private GameObject character;
     private GameObject control;
-    private GameObject pauseMenuCanvas;
     private GameObject saveCanvas;
     private InputField saveInputField;
 
@@ -325,10 +325,4 @@ public class pauseMenu : MonoBehaviour
     {
         LoadLevel.loader.ExitGame();
     }
-
-    public GameObject getPauseMenu()
-    {
-        return pauseMenuCanvas;
-    }
-
 }

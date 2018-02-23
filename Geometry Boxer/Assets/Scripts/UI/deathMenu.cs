@@ -4,19 +4,23 @@ using UnityEngine;
 
 using UnityEngine.EventSystems;
 
-public class deathMenu : MonoBehaviour {
+public class DeathMenu : MonoBehaviour
+{
 
     private string reloadLevelString;
     private bool shouldAllowDPad = false;
+    private GameObject canvasPart;
     private StandaloneInputModule gameEventSystemInputModule;
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         gameEventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+    // Update is called once per frame
+    void Update()
+    {
+
         if (shouldAllowDPad)
         {
             if (Input.GetAxis("DPadY") != 0)
@@ -30,14 +34,14 @@ public class deathMenu : MonoBehaviour {
         }
 
 
-	}
+    }
 
-    public void retryButton ()
+    public void retryButton()
     {
         LoadLevel.loader.LoadALevel(reloadLevelString);
     }
 
-    public void SetReloadString (string s)
+    public void SetReloadString(string s)
     {
         reloadLevelString = s;
     }
