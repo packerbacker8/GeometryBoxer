@@ -38,7 +38,7 @@ public class DeathMenu : MonoBehaviour
 
     public void retryButton()
     {
-        LoadLevel.loader.LoadALevel(reloadLevelString);
+        LoadLevel.loader.ReloadScene();
     }
 
     public void SetReloadString(string s)

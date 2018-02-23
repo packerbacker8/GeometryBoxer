@@ -11,7 +11,7 @@ public class WinMenu : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if(!UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+        if (!UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
         {
             gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
         }
@@ -44,7 +44,7 @@ public class WinMenu : MonoBehaviour
 
     public void retryButton()
     {
-        LoadLevel.loader.LoadALevel(gameController.deathReloadMap);
+        LoadLevel.loader.ReloadScene();
     }
 
 

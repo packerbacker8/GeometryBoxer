@@ -52,11 +52,11 @@ public class PauseMenu : MonoBehaviour
             CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
             punchScript = character.gameObject.GetComponent<PunchScript>();
         }
-        else if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+        else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
         {
             isCombatScene = true;
             character = control.GetComponent<GameControllerScriptTutorial>().GetActivePlayer();
-            if(character != null)
+            if (character != null)
             {
                 CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
                 punchScript = character.gameObject.GetComponent<PunchScript>();
@@ -89,35 +89,35 @@ public class PauseMenu : MonoBehaviour
 
         if (controllerMode && isPaused)
         {
-                if (Input.GetAxis("DPadY") != 0)
+            if (Input.GetAxis("DPadY") != 0)
+            {
+                gameEventSystemInputModule.verticalAxis = "DPadY";
+            }
+            else
+            {
+                gameEventSystemInputModule.verticalAxis = "Vertical";
+            }
+
+
+
+            if (saveCanvas.activeSelf == true)
+            {
+                if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject.name == "InputField")
                 {
-                    gameEventSystemInputModule.verticalAxis = "DPadY";
+                    //Debug.Log("Text mode");
+                    saveCanvasTextInputMode = true;
                 }
-                else
+                else if (EventSystem.current.currentSelectedGameObject.name == "InputField" && !saveCanvasTextInputMode)
                 {
-                    gameEventSystemInputModule.verticalAxis = "Vertical";
+                    EventSystem.current.SetSelectedGameObject(saveCanvas.transform.Find("SaveFileButton").gameObject);
                 }
 
+                if (saveCanvasTextInputMode && (Input.GetAxis("HorizontalLeft") != 0 || Input.GetAxis("VerticalLeft") != 0))
+                {
+                    saveCanvasTextInputMode = false;
+                }
 
-
-                if (saveCanvas.activeSelf == true)
-                {                      
-                    if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject.name == "InputField")
-                    {
-                        //Debug.Log("Text mode");
-                        saveCanvasTextInputMode = true;
-                    }
-                    else if (EventSystem.current.currentSelectedGameObject.name == "InputField" && !saveCanvasTextInputMode)
-                    {
-                        EventSystem.current.SetSelectedGameObject(saveCanvas.transform.Find("SaveFileButton").gameObject);
-                    }
-
-                    if (saveCanvasTextInputMode && (Input.GetAxis("HorizontalLeft") != 0 || Input.GetAxis("VerticalLeft") != 0))
-                    {
-                        saveCanvasTextInputMode = false;
-                    }
-
-                }         
+            }
         }
 
 
@@ -191,12 +191,12 @@ public class PauseMenu : MonoBehaviour
         if (controllerMode)
         {
             Cursor.lockState = CursorLockMode.Locked;
-            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;  
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
             EventSystem.current.SetSelectedGameObject(obj);
             obj.GetComponent<UnityEngine.UI.Button>().OnSelect(null);
             //controllerMode = false;
         }
-        
+
         isPaused = true;
     }
 

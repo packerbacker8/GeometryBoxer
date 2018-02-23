@@ -300,7 +300,7 @@ GameObject:
   - component: {fileID: 223996200795885630}
   - component: {fileID: 114626583629422558}
   - component: {fileID: 114268580046651496}
-  - component: {fileID: 114745079898730516}
+  - component: {fileID: 114185494727172004}
   m_Layer: 5
   m_Name: DeathMenuCanvas
   m_TagString: Untagged
@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 223600542497883694}
   - component: {fileID: 114435166864475768}
   - component: {fileID: 114486768776604858}
-  - component: {fileID: 114498355857186282}
+  - component: {fileID: 114110228681536574}
   m_Layer: 5
   m_Name: WinMenuCanvas
   m_TagString: Untagged
@@ -597,7 +597,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4585867694933794}
-  - component: {fileID: 114300198533922954}
+  - component: {fileID: 114382932818027550}
   m_Layer: 0
   m_Name: PauseMenu
   m_TagString: PauseMenu
@@ -902,7 +902,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114185494727172004}
         m_MethodName: retryButton
         m_Mode: 1
         m_Arguments:
@@ -1047,7 +1047,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: resumeGameHelper
         m_Mode: 1
         m_Arguments:
@@ -1099,7 +1099,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -1332,7 +1332,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 0}
         m_MethodName: SetSaveFileName
         m_Mode: 1
         m_Arguments:
@@ -1348,7 +1348,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 0}
         m_MethodName: SetSaveFileName
         m_Mode: 1
         m_Arguments:
@@ -1401,6 +1401,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Main Menu
+--- !u!114 &114110228681536574
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1515420973420632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f039d06b8eeae54ea27a571cffa5711, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114114527192880102
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1678,7 +1689,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
@@ -1713,6 +1724,17 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
+--- !u!114 &114185494727172004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1397069832685290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02655399383c1f24b80f0ff477666a5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114211246207517556
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1752,7 +1774,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
@@ -1804,7 +1826,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -1872,23 +1894,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &114300198533922954
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1637839513468846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8eae128a93806a5498684618b669b989, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scrollView: {fileID: 0}
-  scrollViewContent: {fileID: 0}
-  fileButtonPrefab: {fileID: 0}
-  isPaused: 0
-  notInDeathOrWinScreen: 1
-  saveCanvasTextInputMode: 0
 --- !u!114 &114313567773425680
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1982,7 +1987,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -2034,7 +2039,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: OpenSaveCanvas
         m_Mode: 1
         m_Arguments:
@@ -2047,6 +2052,24 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114382932818027550
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1637839513468846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0940203b1d687104ca4af94ece1a7a39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollView: {fileID: 1297920751626304}
+  scrollViewContent: {fileID: 1358459691306556}
+  fileButtonPrefab: {fileID: 1499145403491324, guid: 915a1aa98c13290439930a07cf5ec30f,
+    type: 2}
+  isPaused: 0
+  notInDeathOrWinScreen: 1
+  saveCanvasTextInputMode: 0
 --- !u!114 &114387816778877824
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2252,7 +2275,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: GoToMainMenu
         m_Mode: 1
         m_Arguments:
@@ -2353,7 +2376,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: CloseSaveCanvas
         m_Mode: 1
         m_Arguments:
@@ -2496,17 +2519,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114498355857186282
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1515420973420632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2629ab4011676894aa623903f2404fd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114498988785173350
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2600,7 +2612,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114110228681536574}
         m_MethodName: retryButton
         m_Mode: 1
         m_Arguments:
@@ -2814,7 +2826,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114110228681536574}
         m_MethodName: continueButton
         m_Mode: 1
         m_Arguments:
@@ -2887,17 +2899,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Retry Level
---- !u!114 &114745079898730516
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1397069832685290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2301a69bc21909488fc91c81def34f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114772594795347890
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3018,7 +3019,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114300198533922954}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: SaveTheGame
         m_Mode: 1
         m_Arguments:
