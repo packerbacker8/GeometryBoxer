@@ -21,6 +21,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private List<GameObject> loadFileButtons;
 
     private bool controllerMode;
+    private bool ps4Mode = false;
+    private bool mouseMode = true;
     private StandaloneInputModule EventSystemInputModule;
 
     // Use this for initialization
@@ -43,6 +45,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
             if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
             {
                 controllerMode = true;
+                if (inputNames[i].Length == 19)
+                    ps4Mode = true;
             }
         }
 
@@ -50,44 +54,102 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
         if (controllerMode)
         {
-            if (hasSaveGameCanvas.activeSelf)
-            {
-                //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
-                EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-            }
-            else if(noSaveGameCanvas.activeSelf)
-            {
-                EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-            }
-
-
-            GameObject CharacterController = null;
-            GameObject[] listOfPlayerObjects = GameObject.FindGameObjectsWithTag("Player");
-            for (int i = 0; i < listOfPlayerObjects.Length; i++)
-            {
-                if (listOfPlayerObjects[i].name == "Character Controller")
-                { 
-                    CharacterController = listOfPlayerObjects[i];
-                    break;
-                }
-            }
-
-            //disable UserControlMelee on CubeMan
-            CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
+            disablePlayerForController();     
         }
 
     }
 
+    void disablePlayerForController()
+    {
+        if (hasSaveGameCanvas.activeSelf)
+        {
+            //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+            EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        }
+        else if (noSaveGameCanvas.activeSelf)
+        {
+            EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        }
+
+
+        GameObject CharacterController = null;
+        GameObject[] listOfPlayerObjects = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < listOfPlayerObjects.Length; i++)
+        {
+            if (listOfPlayerObjects[i].name == "Character Controller")
+            {
+                CharacterController = listOfPlayerObjects[i];
+                break;
+            }
+        }
+
+        //disable UserControlMelee on CubeMan
+        CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
+        mouseMode = false;
+    }
+
+    void enablePlayerForMouse()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+
+        GameObject CharacterController = null;
+        GameObject[] listOfPlayerObjects = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < listOfPlayerObjects.Length; i++)
+        {
+            if (listOfPlayerObjects[i].name == "Character Controller")
+            {
+                CharacterController = listOfPlayerObjects[i];
+                break;
+            }
+        }
+
+        //enable UserControlMelee on CubeMan
+        CharacterController.GetComponentInChildren<UserControlMelee>().enabled = true;
+        EventSystem.current.SetSelectedGameObject(null);
+        mouseMode = true;
+    }
+
+
     void Update()
     {
-        if (Input.GetAxis("DPadY") != 0)
+        string[] inputNames = Input.GetJoystickNames();
+        for (int i = 0; i < inputNames.Length; i++)
+        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
+            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+            {
+                if (mouseMode)
+                {
+                    disablePlayerForController();
+                }
+                controllerMode = true;
+                if (inputNames[i].Length == 19)
+                    ps4Mode = true;
+            }
+            else
+            {
+                controllerMode = false;
+            }
+        }
+
+
+
+        if (controllerMode)
         {
-            EventSystemInputModule.verticalAxis = "DPadY";
+            if (Input.GetAxis("DPadY") != 0)
+            {
+                EventSystemInputModule.verticalAxis = "DPadY";
+            }
+            else
+            {
+                EventSystemInputModule.verticalAxis = "Vertical";
+            }
         }
         else
         {
-            EventSystemInputModule.verticalAxis = "Vertical";
+            enablePlayerForMouse();
         }
+        
 
         if (loadFileCanvas.activeSelf == true && controllerMode && EventSystem.current.currentSelectedGameObject.name == "LoadInputField")
         {
