@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RootMotion.Demos;
 
 public class HealthPickup : MonoBehaviour
 {
     public int healAmount = 100;
     public float RespawnDelay = 10f;
+    public float RemoveHealthEffect = 3f;
+    public GameObject healthGainedEffectPrefab;
     public AudioClip healthPickup;
 
     private bool waiting;
@@ -21,7 +24,7 @@ public class HealthPickup : MonoBehaviour
     {
         startingPos = this.transform.position;
         travelAmount = 0.5f;
-        moveAmount = 0.05f;
+        moveAmount = 0.5f;
         waiting = false;
         source = gameObject.AddComponent<AudioSource>();
         source.spatialBlend = 0.75f;
@@ -33,11 +36,11 @@ public class HealthPickup : MonoBehaviour
     {
         if(this.transform.position.y >= startingPos.y + travelAmount)
         {
-            moveAmount = -0.05f;
+            moveAmount = -0.5f * Time.deltaTime;
         }
         else if(this.transform.position.y <= startingPos.y - travelAmount)
         {
-            moveAmount = 0.05f;
+            moveAmount = 0.5f * Time.deltaTime;
         }
         this.transform.position += new Vector3(0, moveAmount,0);
         if(waiting)
@@ -57,7 +60,7 @@ public class HealthPickup : MonoBehaviour
     {
         GameObject colObj = col.transform.root.gameObject;
         bool destroy = false;
-
+        GameObject healthThingy = null;
         if (col.gameObject.transform.root.tag == "Player")
         {
             float currentHealth = colObj.GetComponent<PlayerStatsBaseClass>().GetPlayerHealth();
@@ -94,7 +97,10 @@ public class HealthPickup : MonoBehaviour
                     destroy = true;
                 }
             }
-            
+            if(destroy)
+            {
+                healthThingy = Instantiate(healthGainedEffectPrefab, colObj.GetComponentInChildren<UserControlMelee>().transform.position, colObj.GetComponentInChildren<UserControlMelee>().transform.rotation, colObj.GetComponentInChildren<UserControlMelee>().transform);
+            }
         }
         else if(col.gameObject.transform.root.tag.Contains("Enemy"))
         {
@@ -111,6 +117,7 @@ public class HealthPickup : MonoBehaviour
                 healthToAdd = originalHealth - currentHealth > healAmount ? healAmount : originalHealth - currentHealth;
                 colObj.GetComponent<EnemyHealthScript>().AddHealth(healthToAdd);
                 colObj.GetComponent<EnemyHealthScript>().SetOurTarget();
+                healthThingy = Instantiate(healthGainedEffectPrefab, colObj.GetComponentInChildren<UserControlAI>().transform.position, colObj.GetComponentInChildren<UserControlAI>().transform.rotation, colObj.GetComponentInChildren<UserControlAI>().transform);
                 destroy = true;
             }
         }
@@ -122,6 +129,10 @@ public class HealthPickup : MonoBehaviour
             this.gameObject.GetComponent<SphereCollider>().enabled = false;
             source.PlayOneShot(healthPickup, 1f);
             light.SetActive(false);
+            if(healthThingy != null)
+            {
+                Destroy(healthThingy, RemoveHealthEffect);
+            }
         }
     }
 }

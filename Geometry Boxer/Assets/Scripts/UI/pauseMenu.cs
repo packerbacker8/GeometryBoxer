@@ -22,12 +22,15 @@ public class pauseMenu : MonoBehaviour
     private string saveFileName;
 
     private bool mouseShouldBeLocked = false;
-    private bool isPaused = false;
+    public bool isPaused = false;
     private bool isCombatScene = false;
     private float TimeSinceEsc = 0.0f;
     private List<GameObject> saveFileButtons;
 
+    private StandaloneInputModule gameEventSystemInputModule;
     private bool controllerMode = false;
+    public bool notInDeathOrWinScreen = true;
+    public bool saveCanvasTextInputMode = false;
 
     // Use this for initialization
     void Start()
@@ -38,6 +41,7 @@ public class pauseMenu : MonoBehaviour
         saveInputField = saveCanvas.GetComponentInChildren<InputField>();
         saveCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(false);
+        gameEventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
         saveFileName = "";
         saveFileButtons = new List<GameObject>();
         //if game controller found is game controller for combat levels, grab player info
@@ -65,11 +69,15 @@ public class pauseMenu : MonoBehaviour
     {
         TimeSinceEsc = TimeSinceEsc += Time.deltaTime;
 
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && !isPaused)
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && !isPaused && notInDeathOrWinScreen)
         {
             if (Input.GetButtonDown("StartButton"))
             {
                 controllerMode = true;
+            }
+            else
+            {
+                controllerMode = false;
             }
             pauseGameHelper();
         }
@@ -77,6 +85,41 @@ public class pauseMenu : MonoBehaviour
         {
             resumeGameHelper();
         }
+
+
+        if (controllerMode && isPaused)
+        {
+                if (Input.GetAxis("DPadY") != 0)
+                {
+                    gameEventSystemInputModule.verticalAxis = "DPadY";
+                }
+                else
+                {
+                    gameEventSystemInputModule.verticalAxis = "Vertical";
+                }
+
+
+
+                if (saveCanvas.activeSelf == true)
+                {                      
+                    if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject.name == "InputField")
+                    {
+                        //Debug.Log("Text mode");
+                        saveCanvasTextInputMode = true;
+                    }
+                    else if (EventSystem.current.currentSelectedGameObject.name == "InputField" && !saveCanvasTextInputMode)
+                    {
+                        EventSystem.current.SetSelectedGameObject(saveCanvas.transform.Find("SaveFileButton").gameObject);
+                    }
+
+                    if (saveCanvasTextInputMode && (Input.GetAxis("HorizontalLeft") != 0 || Input.GetAxis("VerticalLeft") != 0))
+                    {
+                        saveCanvasTextInputMode = false;
+                    }
+
+                }         
+        }
+
 
     }
 
@@ -148,9 +191,10 @@ public class pauseMenu : MonoBehaviour
         if (controllerMode)
         {
             Cursor.lockState = CursorLockMode.Locked;
-            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;  
             EventSystem.current.SetSelectedGameObject(obj);
-            controllerMode = false;
+            obj.GetComponent<UnityEngine.UI.Button>().OnSelect(null);
+            //controllerMode = false;
         }
         
         isPaused = true;
@@ -176,6 +220,14 @@ public class pauseMenu : MonoBehaviour
 
         mouseShouldBeLocked = true;
         pauseMenuCanvas.SetActive(true);
+        if (controllerMode)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            EventSystem.current.SetSelectedGameObject(obj);
+            obj.GetComponent<UnityEngine.UI.Button>().OnSelect(null);
+            //controllerMode = false;
+        }
         isPaused = true;
     }
 
@@ -187,6 +239,22 @@ public class pauseMenu : MonoBehaviour
         saveCanvas.SetActive(true);
         FillInSaveFileInfo();
         pauseMenuCanvas.SetActive(false);
+
+        for (int i = 0; i < saveFileButtons.Count; i++)
+        {
+            UnityEngine.UI.Button button = saveFileButtons[i].GetComponent<UnityEngine.UI.Button>();
+            //change color of all buttons when highlighted to some shade of red
+            ColorBlock colorsOfButton = button.colors;
+            Color highlightColor = colorsOfButton.highlightedColor;
+            colorsOfButton.highlightedColor = new Color(highlightColor.r + 50, highlightColor.g, highlightColor.b, highlightColor.a);
+            button.colors = colorsOfButton;
+        }
+        if (saveFileButtons.Count > 0 && controllerMode)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            EventSystem.current.SetSelectedGameObject(saveFileButtons[saveFileButtons.Count - 1]);
+        }
     }
 
     /// <summary>
@@ -203,6 +271,7 @@ public class pauseMenu : MonoBehaviour
             button.transform.SetParent(scrollViewContent.transform, false);
             button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, ((scrollView.GetComponent<RectTransform>().rect.size.y * 0.85f) * 0.5f - 10f) - (30f * i));
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetSaveFileName(button.GetComponentInChildren<Text>().text); });
+
             saveFileButtons.Add(button);
         }
     }
@@ -215,6 +284,13 @@ public class pauseMenu : MonoBehaviour
         saveFileButtons.Clear();
         saveCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(true);
+
+        if (controllerMode)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            EventSystem.current.SetSelectedGameObject(obj);
+        }
     }
 
     public string GetSaveFileName()
@@ -248,6 +324,11 @@ public class pauseMenu : MonoBehaviour
     public void QuitGame()
     {
         LoadLevel.loader.ExitGame();
+    }
+
+    public GameObject getPauseMenu()
+    {
+        return pauseMenuCanvas;
     }
 
 }

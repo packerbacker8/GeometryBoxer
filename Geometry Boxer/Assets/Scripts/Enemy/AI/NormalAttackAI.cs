@@ -4,7 +4,7 @@ using Enemy;
 using RootMotion.Demos;
 using UnityEngine.AI;
 
-public class NormalAttackAI : MonoBehaviour, AttackBase {
+public class NormalAttackAI : MonoBehaviour, IAttackBase {
     //protected float currentAnimLength;
 
     public GameObject rightShoulder;
@@ -129,9 +129,9 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         attackStatus = true;
 
     }
-    public void attack()
+    public void Attack()
     {
-        if (canAttack())
+        if (CanAttack())
         {
             AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
             if (rand.Next(0, attackRandomAudio) == 1 && sfxManager.maleAttack.Count > 0 && !source.isPlaying && rand.Next(0,attackRandomAudio + 1) == attackRandomAudio)
@@ -170,7 +170,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         }
     }
 
-    public bool canAttack()
+    public bool CanAttack()
     {
         if(moveTargetObj == null || attackStatus)
         {
@@ -179,7 +179,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
         return (Vector3.Distance(moveTarget.position, transform.position) <= attackRange && !anim.GetCurrentAnimatorStateInfo(0).IsName("Hit")) ;
     }
 
-    public void setUp(float stopDist, float stopThresh, float jumpDis, 
+    public void SetUp(float stopDist, float stopThresh, float jumpDis, 
         GameObject moveObj, CharacterPuppet charPup,  AudioSource src, 
         SFX_Manager sfx, float rangeAttack)
     {
@@ -301,7 +301,7 @@ public class NormalAttackAI : MonoBehaviour, AttackBase {
             walker.GetComponent<CollisionReceived>().sendDamage = false;
         }
     }
-    public bool isAttacking()
+    public bool IsAttacking()
     {
         return attackStatus;
         //throw new NotImplementedException();

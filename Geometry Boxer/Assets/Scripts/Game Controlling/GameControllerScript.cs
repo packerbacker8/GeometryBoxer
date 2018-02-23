@@ -29,8 +29,11 @@ public class GameControllerScript : MonoBehaviour
     private GameObject allyContainer;
     private GameObject[] alliesInWorld;
     private GameObject playerCharController;
+    private Queue<GameObject> enemyTargetQueue;
+    private Queue<GameObject> allyTargetQueue;
     private bool playerAlive;
 
+    private bool levelWon = false;
     // Use this for initialization
     void Awake()
     {
@@ -66,6 +69,8 @@ public class GameControllerScript : MonoBehaviour
             numEnemiesAlive = enemyContainer.transform.childCount;
             enemiesInWorld = new GameObject[numEnemiesAlive];
             alliesInWorld = new GameObject[allyContainer.transform.childCount / fractionalAllies == 0 ? 1 : allyContainer.transform.childCount / fractionalAllies];
+            enemyTargetQueue = new Queue<GameObject>();
+            allyTargetQueue = new Queue<GameObject>();
             int iterationAmount = alliesInWorld.Length > numEnemiesAlive ? alliesInWorld.Length : numEnemiesAlive;
 
             for (int i = 0; i < iterationAmount; i++)
@@ -84,6 +89,7 @@ public class GameControllerScript : MonoBehaviour
                         enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
                     }
                     enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
+                    allyTargetQueue.Enqueue(enemiesInWorld[i]);
                 }
                 if(i < alliesInWorld.Length)
                 {
@@ -103,6 +109,7 @@ public class GameControllerScript : MonoBehaviour
                     ChangeAllTags(allyContainer.transform.GetChild(i).gameObject, "Ally");
                     allyContainer.transform.GetChild(i).gameObject.tag = "AllyRoot";
                     alliesInWorld[i] = allyContainer.transform.GetChild(i).gameObject;
+                    enemyTargetQueue.Enqueue(alliesInWorld[i]);
                 }
             }
             //Turn off the remaining allies.
@@ -141,7 +148,7 @@ public class GameControllerScript : MonoBehaviour
                 enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
         }
-
+        
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
@@ -151,10 +158,29 @@ public class GameControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (numEnemiesAlive <= 0)
         {
             SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
-            StartCoroutine(changeLevel(dominationMap));
+
+            if (!levelWon && playerAlive)
+            {
+
+                //disable any pause menu at this point
+                GameObject.FindGameObjectWithTag("PauseMenu").gameObject.SetActive(false);
+
+
+                //display win menu
+                GameObject winMenu = GameObject.FindGameObjectWithTag("WinMenu").gameObject;
+                winMenu.transform.GetChild(0).gameObject.SetActive(true);
+                winMenu.GetComponent<winMenu>().setButtonActive();
+                winMenu.GetComponent<winMenu>().setMouse();
+
+                levelWon = true;
+            }
+
+
+            //StartCoroutine(changeLevel(dominationMap));
         }
     }
 
@@ -179,30 +205,10 @@ public class GameControllerScript : MonoBehaviour
             if (tag.Contains("Enemy"))
             {
                 numEnemiesAlive--;
-
-                /*
-                bool[] alliesToChange = new bool[alliesInWorld.Length];
-                for (int i = 0; i < alliesInWorld.Length; i++)
-                {
-                    if ( alliesInWorld[i] != null && alliesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == enemiesInWorld[index])
-                    {
-                        alliesToChange[i] = true;
-                    }
-                }*/
                 enemiesInWorld[index] = null;
-                //SetNewTarget(i, alliesInWorld[i].tag);
             }
             else
             {
-                /*
-                for (int i = 0; i < enemiesInWorld.Length; i++)
-                {
-                    if (alliesInWorld[index] != null && enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<UserControlAI>().moveTargetObj.transform.parent.gameObject == alliesInWorld[index])
-                    {
-                        SetNewTarget(i, enemiesInWorld[i].tag);
-
-                    }
-                }*/
                 alliesInWorld[index] = null;
             }
         }
@@ -233,7 +239,19 @@ public class GameControllerScript : MonoBehaviour
     {
         playerAlive = false;
         SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
-        LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
+
+        //disable any pause menu at this point
+        GameObject.FindGameObjectWithTag("PauseMenu").gameObject.SetActive(false);
+
+
+        //display death menu
+        GameObject deathMenu = GameObject.FindGameObjectWithTag("DeathMenu").gameObject;
+        deathMenu.GetComponent<deathMenu>().SetReloadString(deathReloadMap);
+        deathMenu.transform.GetChild(0).gameObject.SetActive(true);
+        deathMenu.GetComponent<deathMenu>().setButtonActive();
+        deathMenu.GetComponent<deathMenu>().setMouse();
+
+        //LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
     }
 
     public GameObject GetActivePlayer()
@@ -261,6 +279,7 @@ public class GameControllerScript : MonoBehaviour
         {
             if (tag.Contains("Enemy"))
             {
+                /*
                 for (int i = 0; i < alliesInWorld.Length; i++)
                 {
                     if (alliesInWorld[i] != null)
@@ -268,16 +287,37 @@ public class GameControllerScript : MonoBehaviour
                         enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(alliesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
                         return;
                     }
+                }*/
+                while(enemyTargetQueue.Count != 0)
+                {
+                    GameObject target = enemyTargetQueue.Dequeue();
+                    if(target != null)
+                    {
+                        enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(target.transform.GetChild(charControllerIndex).gameObject);
+                        enemyTargetQueue.Enqueue(target);
+                        return;
+                    }
                 }
                 enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
             }
             else
             {
+                /*
                 for (int i = 0; i < enemiesInWorld.Length; i++)
                 {
                     if (enemiesInWorld[i] != null)
                     {
                         alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(enemiesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
+                        return;
+                    }
+                }*/
+                while (allyTargetQueue.Count != 0)
+                {
+                    GameObject target = allyTargetQueue.Dequeue();
+                    if (target != null)
+                    {
+                        alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(target.transform.GetChild(charControllerIndex).gameObject);
+                        allyTargetQueue.Enqueue(target);
                         return;
                     }
                 }

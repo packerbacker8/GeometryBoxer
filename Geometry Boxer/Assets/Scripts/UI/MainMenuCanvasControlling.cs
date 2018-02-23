@@ -21,6 +21,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private List<GameObject> loadFileButtons;
 
     private bool controllerMode;
+    private StandaloneInputModule EventSystemInputModule;
 
     // Use this for initialization
     void Start()
@@ -44,6 +45,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 controllerMode = true;
             }
         }
+
+        EventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
 
         if (controllerMode)
         {
@@ -73,6 +76,23 @@ public class MainMenuCanvasControlling : MonoBehaviour
             CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
         }
 
+    }
+
+    void Update()
+    {
+        if (Input.GetAxis("DPadY") != 0)
+        {
+            EventSystemInputModule.verticalAxis = "DPadY";
+        }
+        else
+        {
+            EventSystemInputModule.verticalAxis = "Vertical";
+        }
+
+        if (loadFileCanvas.activeSelf == true && controllerMode && EventSystem.current.currentSelectedGameObject.name == "LoadInputField")
+        {
+            EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find("LoadFileButton").gameObject);
+        }
     }
 
     /// <summary>
@@ -120,6 +140,21 @@ public class MainMenuCanvasControlling : MonoBehaviour
         FillInSaveFileInfo();
         hasSaveGameCanvas.SetActive(false);
         noSaveGameCanvas.SetActive(false);
+
+        for (int i = 0; i < loadFileButtons.Count; i++)
+        {
+            UnityEngine.UI.Button button = loadFileButtons[i].GetComponent<UnityEngine.UI.Button>();
+            //change color of all buttons when highlighted to some shade of red
+            ColorBlock colorsOfButton = button.colors;
+            Color highlightColor = colorsOfButton.highlightedColor;
+            colorsOfButton.highlightedColor = new Color(highlightColor.r + 50, highlightColor.g, highlightColor.b, highlightColor.a);
+            button.colors = colorsOfButton;
+        }
+
+        if (loadFileButtons.Count > 0 && controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(loadFileButtons[loadFileButtons.Count - 1]);
+        }
     }
 
     /// <summary>
@@ -150,6 +185,19 @@ public class MainMenuCanvasControlling : MonoBehaviour
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame);
         noSaveGameCanvas.SetActive(!hasSavedGame);
+
+        if (controllerMode)
+        {
+            if (hasSaveGameCanvas.activeSelf)
+            {
+                //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+                EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+            else if (noSaveGameCanvas.activeSelf)
+            {
+                EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+        }
     }
     /// <summary>
     /// Function to set string that represents file we want to load.

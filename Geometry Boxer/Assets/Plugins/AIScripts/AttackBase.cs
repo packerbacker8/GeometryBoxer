@@ -6,16 +6,16 @@ using UnityEngine.AI;
 
 namespace Enemy
 {
-    public interface AttackBase
+    public interface IAttackBase
     {
-        bool canAttack();
+        bool CanAttack();
 
-        void attack();
-        void setUp(float stopDist, float stopThresh, float jumpDis, 
+        void Attack();
+        void SetUp(float stopDist, float stopThresh, float jumpDis, 
         GameObject moveObj, CharacterPuppet charPup, AudioSource src,
         SFX_Manager sfx, float rangeAttack);
 
-        bool isAttacking();
+        bool IsAttacking();
 
     }
 }
