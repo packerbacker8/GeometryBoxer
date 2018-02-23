@@ -54,15 +54,20 @@ namespace PlayerUI
             enemies = GameObject.FindGameObjectWithTag("EnemyContainer");
             player = GameObject.FindGameObjectWithTag("Player");
 
-            if(!UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
-            {
-                numEnemiesAlive = enemies.transform.childCount;
-                enemyCounter.text = numEnemiesAlive.ToString();
-            }
-            else
+            if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
             {
                 numEnemiesAlive = 5;
                 enemyCounter.text = "Tutorial";
+            }
+            else if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("MainMenu"))
+            {
+                numEnemiesAlive = 1;
+                enemyCounter.text = "";
+            }
+            else
+            {
+                numEnemiesAlive = enemies.transform.childCount;
+                enemyCounter.text = numEnemiesAlive.ToString();
             }
             
             hitTimer = 0;
