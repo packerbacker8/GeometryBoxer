@@ -175,7 +175,7 @@ public class GameControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(numEnemiesAlive < oldExpansionNumEnemies * sightLineExpansionThreshold)
+        if(numEnemiesAlive <= oldExpansionNumEnemies * sightLineExpansionThreshold)
         {
             oldExpansionNumEnemies = numEnemiesAlive;
             StartCoroutine(IncreaseEnemySight(sightExpansionAmount));

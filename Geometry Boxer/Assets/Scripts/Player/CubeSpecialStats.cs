@@ -157,6 +157,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
                 if (dmgAmount > maxDamageAmount)
                 {
                     dmgAmount = maxDamageAmount;
+                    Debug.Log("Damage capped.");
                 }
                 SetPlayerHealth(dmgAmount);
             }
@@ -171,6 +172,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
                 if (dmgAmount > maxDamageAmount)
                 {
                     dmgAmount = maxDamageAmount;
+                    Debug.Log("Damage capped.");
                 }
                 SetPlayerHealth(dmgAmount);
             }
