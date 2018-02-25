@@ -22,12 +22,13 @@ GameObject:
   - component: {fileID: 33099340849493264}
   - component: {fileID: 23020584045926660}
   - component: {fileID: 64045455648071354}
+  - component: {fileID: 54120581794879970}
   m_Layer: 4
   m_Name: polySurface3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!1 &1883755571392736
 GameObject:
@@ -63,8 +64,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1883755571392736}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -93.111, y: 0.526, z: -129.93}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 53.170006, y: -1.1120071, z: 15.32}
   m_LocalScale: {x: 0.07344774, y: 0.07344775, z: 0.07344775}
   m_Children:
   - {fileID: 4600033082232262}
@@ -84,7 +85,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: cd4058315dc5e1f4a975566ed225eb4d, type: 2}
+  - {fileID: 2100000, guid: 30873df4022090b4db8f3b418f6fad48, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,6 +111,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1803749766181534}
   m_Mesh: {fileID: 4300000, guid: 9f3daec3d6b5a3f42bfd297e27261ff2, type: 3}
+--- !u!54 &54120581794879970
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1803749766181534}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!64 &64045455648071354
 MeshCollider:
   m_ObjectHideFlags: 1
@@ -120,7 +136,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
+  m_Convex: 1
   m_InflateMesh: 0
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 9f3daec3d6b5a3f42bfd297e27261ff2, type: 3}
