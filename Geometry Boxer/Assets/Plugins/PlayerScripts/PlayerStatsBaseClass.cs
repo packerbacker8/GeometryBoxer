@@ -56,6 +56,17 @@ public class PlayerStatsBaseClass : MonoBehaviour
         fallDamageMultiplier = newMult;
     }
 
+    protected virtual void Awake()
+    {
+        anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+        puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
+        gameController = GameObject.FindGameObjectWithTag("GameController");
+        charController = this.transform.GetChild(characterControllerIndex).gameObject;
+        behavePuppet = this.transform.GetComponentInChildren<BehaviourPuppet>();
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(health);
+    }
+
     protected virtual void Start()
     {
         health = 1000f;
@@ -65,13 +76,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
         fallDamageMultiplier = 1.0f;
         hitByEnemy = false;
         dead = false;
-        anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
-        puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
-        gameController = GameObject.FindGameObjectWithTag("GameController");
-        charController = this.transform.GetChild(characterControllerIndex).gameObject;
-        behavePuppet = this.transform.GetComponentInChildren<BehaviourPuppet>();
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(health);
+        
     }
 
     protected virtual void LateUpdate()
@@ -99,7 +104,8 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public virtual void SetPlayerHealth(float val)
     {
         health -= val;
-        playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
+        if(playerUI != null)
+            playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
     }
 
     /// <summary>

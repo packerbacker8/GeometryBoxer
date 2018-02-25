@@ -311,6 +311,25 @@ public class PauseMenu : MonoBehaviour
 
     public void SaveTheGame()
     {
+        if(isCombatScene)
+        {
+            GameControllerScript gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
+            HashSet<int> allyI = gameController.hasAllies ? gameController.AllyAliveIndicies() : new HashSet<int>();
+            SaveAndLoadGame.saver.SetFightSceneSaveValues(gameController.EnemyAliveIndicies(), gameController.hasAllies, allyI);
+            if(SaveAndLoadGame.saver.GetCharacterType().Contains("Cube"))
+            {
+                SaveAndLoadGame.saver.SetPlayerCurrentHealth(gameController.GetActivePlayer().GetComponent<CubeSpecialStats>().GetPlayerHealth());
+            }
+            else
+            {
+                SaveAndLoadGame.saver.SetPlayerCurrentHealth(gameController.GetActivePlayer().GetComponent<OctahedronStats>().GetPlayerHealth());
+            }
+        }
+        else
+        {
+            SaveAndLoadGame.saver.SetFightSceneSaveValues(new HashSet<int>(), false, new HashSet<int>());
+        }
+        SaveAndLoadGame.saver.SetCurrentScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         SaveAndLoadGame.saver.SaveGame(saveFileName);
         saveInputField.text = "";
         CloseSaveCanvas();

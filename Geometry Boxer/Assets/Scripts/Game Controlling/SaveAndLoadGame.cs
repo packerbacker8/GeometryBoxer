@@ -112,6 +112,9 @@ public class SaveAndLoadGame : MonoBehaviour
         return GetAllSaveFiles().Length > 0;
     }
 
+    /// <summary>
+    /// Function to quickly save the player's game.
+    /// </summary>
     public void QuickSave()
     {
         SaveGame(currentSavePath);
@@ -140,6 +143,7 @@ public class SaveAndLoadGame : MonoBehaviour
         {
             name = "unnamedSave_" + DateTime.Today.Second;
         }
+        currentSavePath = name;
         BinaryFormatter binaryForm = new BinaryFormatter();
         FileStream file = File.Open(Application.persistentDataPath + "/" + name + ".dat", FileMode.OpenOrCreate);
 
@@ -196,7 +200,7 @@ public class SaveAndLoadGame : MonoBehaviour
     public void ContinueGame()
     {
         LoadGame();
-        LoadLevel.loader.LoadALevel("CitySelectMap");
+        LoadLevel.loader.LoadALevel(saveData.sceneCurrentlyOn);
     }
 
 
@@ -219,13 +223,6 @@ public class SaveAndLoadGame : MonoBehaviour
     public void SetCharType(string type)
     {
         saveData.characterType = type;
-        for (int i = 0; i < cityNames.Length; i++)
-        {
-            if(cityNames[i].Contains(type))
-            {
-                SetCityStatus(cityNames[i], "owned");
-            }
-        }
     }
 
     /// <summary>
@@ -387,6 +384,104 @@ public class SaveAndLoadGame : MonoBehaviour
         saveData.gameStatus = status;
     }
 
+    /// <summary>
+    /// Function to set values in save data of fighting information.
+    /// Should be called before each save. On non fighting scenes these values can be
+    /// defaulted to empty new list, false, and empty new list respectively.
+    /// </summary>
+    /// <param name="eIndicies">Indicies of enemies still alive. Destroy others.</param>
+    /// <param name="allies">Does the scene have allies? Yes if bool is true.</param>
+    /// <param name="aIndicies">Indicies of allies still alive, others destroyed.</param>
+    public void SetFightSceneSaveValues(HashSet<int> eIndicies, bool allies, HashSet<int> aIndicies)
+    {
+        saveData.enemyIndicies = eIndicies;
+        saveData.currentSceneHasAllies = allies;
+        saveData.allyIndicies = aIndicies;
+    }
+
+    /// <summary>
+    /// Function to grab current living enemies in scene.
+    /// </summary>
+    /// <returns>Returns the index of enemies in current scene, which should be living and which should not.</returns>
+    public HashSet<int> GetFightSceneEnemyIndicies()
+    {
+        return saveData.enemyIndicies;
+    }
+
+    /// <summary>
+    /// Function to grab current living allies in scene.
+    /// </summary>
+    /// <returns>Returns the index of allies in current scene, which should be living and which should not.</returns>
+    public HashSet<int> GetFightSceneAllyIndicies()
+    {
+        return saveData.allyIndicies;
+    }
+
+    /// <summary>
+    /// Function to find out if scene has allies or not.
+    /// </summary>
+    /// <returns>True if allies present, false otherwise.</returns>
+    public bool GetFightSceneHasAllies()
+    {
+        return saveData.currentSceneHasAllies;
+    }
+
+    /// <summary>
+    /// Function to save which scene the player is on.
+    /// </summary>
+    /// <param name="scene">String name needs to be scene in build order to work.</param>
+    public void SetCurrentScene(string scene)
+    {
+        saveData.sceneCurrentlyOn = scene;
+    }
+
+    /// <summary>
+    /// Function to get which scene was saved to this save data.
+    /// </summary>
+    /// <returns>Returns string name saved as the current scene.</returns>
+    public string GetSceneNameCurrentlyOn()
+    {
+        return saveData.sceneCurrentlyOn;
+    }
+
+    /// <summary>
+    /// Set whether or not this save data is loading into a fight scene.
+    /// Important only if checking the game controller to destroy enemies or not.
+    /// </summary>
+    /// <param name="loaded">If true, the game controller will check which enemies to destroy on load.</param>
+    public void SetLoadedFightScene(bool loaded)
+    {
+        saveData.loadedThisFightScene = loaded;
+    }
+
+    /// <summary>
+    /// Function to return if this scene was loaded into by a save file
+    /// or if it was gotten to by the normal game flow.
+    /// </summary>
+    /// <returns>If true, this game came from a loaded file.</returns>
+    public bool GetLoadedFightScene()
+    {
+        return saveData.loadedThisFightScene;
+    }
+
+    /// <summary>
+    /// Set what the player's health will be when loaded back in.
+    /// </summary>
+    /// <param name="amount">Set the players health to this amount.</param>
+    public void SetPlayerCurrentHealth(float amount)
+    {
+        saveData.playerCurrentHealth = amount;
+    }
+
+    /// <summary>
+    /// Get what the player's health was at the time of saving.
+    /// </summary>
+    /// <returns>Returns what player's health was.</returns>
+    public float GetPlayerCurrentHealth()
+    {
+        return saveData.playerCurrentHealth;
+    }
+
     [Serializable]
     private class InitializeData
     {
@@ -402,10 +497,18 @@ public class SaveAndLoadGame : MonoBehaviour
     private class GameData
     {
         public string gameStatus = "Character Select";
+        public string sceneCurrentlyOn = "MainMenu";
         public string characterType = "Octahedron";
+        public float playerCurrentHealth = 15000f;
         public List<string> cityNames = new List<string>();
         public List<string> cityStatuses = new List<string>();
         public bool wonGame = false;
+        public HashSet<int> enemyIndicies = new HashSet<int>();
+        public bool currentSceneHasAllies = false;
+        public HashSet<int> allyIndicies = new HashSet<int>();
+        public bool loadedThisFightScene = false;
+        //public int enemiesLeftInScene = -1; can calculate this number based on number of indicies passed
+        //public int alliesLeftInScene = -1;
     }
 }
 

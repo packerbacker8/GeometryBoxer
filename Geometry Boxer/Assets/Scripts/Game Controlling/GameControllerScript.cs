@@ -172,6 +172,41 @@ public class GameControllerScript : MonoBehaviour
         Cursor.visible = false;
     }
 
+    private void Start()
+    {
+        //Here is where when loading in a game file the data is updated to destroy the enemies that were already killed.
+        if(SaveAndLoadGame.saver.GetLoadedFightScene())
+        {
+            if(SaveAndLoadGame.saver.GetCharacterType().Contains("Cube"))
+            {
+                activePlayer.GetComponent<CubeSpecialStats>().SetPlayerHealth(activePlayer.GetComponent<CubeSpecialStats>().GetOriginalHealth() - SaveAndLoadGame.saver.GetPlayerCurrentHealth());
+            }
+            else
+            {
+                activePlayer.GetComponent<OctahedronStats>().SetPlayerHealth(activePlayer.GetComponent<OctahedronStats>().GetOriginalHealth() - SaveAndLoadGame.saver.GetPlayerCurrentHealth());
+            }
+            HashSet<int> enemyI = SaveAndLoadGame.saver.GetFightSceneEnemyIndicies();
+            for(int i = 0; i < enemiesInWorld.Length; i++)
+            {
+                if(!enemyI.Contains(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex()))
+                {
+                    enemiesInWorld[i].GetComponent<EnemyHealthScript>().KillEnemy();
+                }
+            }
+            if(hasAllies && SaveAndLoadGame.saver.GetFightSceneHasAllies())
+            {
+                HashSet<int> allyI = SaveAndLoadGame.saver.GetFightSceneAllyIndicies();
+                for (int i = 0; i < alliesInWorld.Length; i++)
+                {
+                    if (!allyI.Contains(alliesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex()))
+                    {
+                        alliesInWorld[i].GetComponent<EnemyHealthScript>().KillEnemy();
+                    }
+                }
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -236,7 +271,6 @@ public class GameControllerScript : MonoBehaviour
             numEnemiesAlive--;
             enemiesInWorld[index] = null;
         }
-        
     }
 
     /// <summary>
@@ -401,5 +435,39 @@ public class GameControllerScript : MonoBehaviour
             }
         }
         yield return null;
+    }
+
+    /// <summary>
+    /// Function to give enemies alive indicies.
+    /// </summary>
+    /// <returns>Returns enemies that are being tracked as alive in enemiesInWorld container.</returns>
+    public HashSet<int> EnemyAliveIndicies()
+    {
+        HashSet<int> enemiesAlive = new HashSet<int>();
+        for (int i = 0; i < enemiesInWorld.Length; i++)
+        {
+            if(enemiesInWorld[i] != null)
+            {
+                enemiesAlive.Add(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex());
+            }
+        }
+        return enemiesAlive;
+    }
+
+    /// <summary>
+    /// Function to give allies alive indicies.
+    /// </summary>
+    /// <returns>Returns allies that are being tracked as alive in alliesInWorld container.</returns>
+    public HashSet<int> AllyAliveIndicies()
+    {
+        HashSet<int> alliesAlive = new HashSet<int>();
+        for (int i = 0; i < alliesInWorld.Length; i++)
+        {
+            if (alliesInWorld[i] != null)
+            {
+                alliesAlive.Add(alliesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex());
+            }
+        }
+        return alliesAlive;
     }
 }

@@ -77,6 +77,10 @@ namespace PlayerUI
         // Update is called once per frame
         void Update()
         {
+            if (!UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("MainMenu") && !UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+            {
+                numEnemiesAlive = enemies.transform.childCount;
+            }
             // displays enemy count
             enemyCounter.text = numEnemiesAlive.ToString();
 
@@ -203,7 +207,7 @@ namespace PlayerUI
         // functions called from other classes
         public void enemyIsKilled()
         {
-            numEnemiesAlive--;
+           numEnemiesAlive--;
         }
 
         public void UsingSpecialAttack()

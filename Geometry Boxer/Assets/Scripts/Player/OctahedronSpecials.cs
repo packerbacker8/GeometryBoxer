@@ -147,39 +147,42 @@ public class OctahedronSpecials : PunchScript
                 coolDownTimer = 0f;
             }
             if ((Input.GetKeyDown(specialAttack)) || Input.GetButtonDown(specialAttackButton))
-
-                DeactivateSpecialAttack();
-            UpdatePos(charController.transform, specialForm.transform);
-            coolDownTimer = 0f;
-        }
-        if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
-        {
-            moveDir = Vector3.forward;
-            moveDir = cam.transform.TransformDirection(moveDir);
-            moveDir.y = 0;
-            moveDir = Vector3.Normalize(moveDir);
-            moveDir.x = moveDir.x * specialAttackForce * 100f;
-            moveDir.z = moveDir.z * specialAttackForce * 100f;
-            specialRigid.AddForce(moveDir);
-            launched = true;
-            specialRigid.AddForce(Vector3.up * specialAttackForce * 2f);
-        }
-        else if (launched)
-        {
-            moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-            moveDir = cam.transform.TransformDirection(moveDir);
-            moveDir.y = 0;
-            moveDir = Vector3.Normalize(moveDir);
-            moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
-            moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
-            //specialRigid.AddForce(moveDir);
-            specialRigid.AddTorque(Vector3.up * specialAttackForce * spinForceMult);
-            launchTime += Time.deltaTime;
-            if (launchTime >= launchLength)
             {
-                launched = false;
-                launchTime = 0;
+                Debug.Log("Special!");
+                DeactivateSpecialAttack();
+                UpdatePos(charController.transform, specialForm.transform);
+                coolDownTimer = 0f;
             }
+            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
+            {
+                moveDir = Vector3.forward;
+                moveDir = cam.transform.TransformDirection(moveDir);
+                moveDir.y = 0;
+                moveDir = Vector3.Normalize(moveDir);
+                moveDir.x = moveDir.x * specialAttackForce * 100f;
+                moveDir.z = moveDir.z * specialAttackForce * 100f;
+                specialRigid.AddForce(moveDir);
+                launched = true;
+                specialRigid.AddForce(Vector3.up * specialAttackForce * 2f);
+            }
+            else if (launched)
+            {
+                moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+                moveDir = cam.transform.TransformDirection(moveDir);
+                moveDir.y = 0;
+                moveDir = Vector3.Normalize(moveDir);
+                moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
+                moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
+                //specialRigid.AddForce(moveDir);
+                specialRigid.AddTorque(Vector3.up * specialAttackForce * spinForceMult);
+                launchTime += Time.deltaTime;
+                if (launchTime >= launchLength)
+                {
+                    launched = false;
+                    launchTime = 0;
+                }
+            }
+
         }
         else
         {
@@ -199,7 +202,8 @@ public class OctahedronSpecials : PunchScript
                 onCooldown = false;
                 coolDownTimer = 0f;
             }
-        }      
+        }
+
     }
 
 

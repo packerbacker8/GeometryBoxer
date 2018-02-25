@@ -229,8 +229,9 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public void LoadThisFile()
     {
         SaveAndLoadGame.saver.LoadGame(fileToLoad);
+        SaveAndLoadGame.saver.SetLoadedFightScene(true);
         loadFileInput.text = "";
-        LoadLevel.loader.LoadALevel("CitySelectMap");
+        LoadLevel.loader.LoadALevel(SaveAndLoadGame.saver.GetSceneNameCurrentlyOn());
     }
 
     /// <summary>
