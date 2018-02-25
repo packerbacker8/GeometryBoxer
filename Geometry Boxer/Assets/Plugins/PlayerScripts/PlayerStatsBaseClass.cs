@@ -11,6 +11,8 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public float deathDelay = 20f;
     [Header("How much force is required for the player to take damage.")]
     public float damageThreshold = 100f;
+    [Tooltip("Maximum force of damage that can be applied to the player.")]
+    public float maxDamageAmount = 150f;
 
     protected bool dead;
     protected bool hitByEnemy;

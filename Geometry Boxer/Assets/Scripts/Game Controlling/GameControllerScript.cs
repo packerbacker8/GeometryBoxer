@@ -19,9 +19,15 @@ public class GameControllerScript : MonoBehaviour
     [Tooltip("This integer will divide the number of bots in the other container that will be the allies. The higher the number, the lower the number of allies.")]
     [Range(1, 100)]
     public int fractionalAllies = 3;
-
+    [Tooltip("Percentage of number of enemies left to make the sight line increase by.")]
+    [Range(0, 0.99f)]
+    public float sightLineExpansionThreshold = 0.5f;
+    [Tooltip("How much to expand sight bubble's radius by.")]
+    public float sightExpansionAmount = 2f;
+    
     private string currentMapName;
     private int numEnemiesAlive;
+    private int oldExpansionNumEnemies;
     private int charControllerIndex;
     private GameObject activePlayer;
     private GameObject enemyContainer;
@@ -70,6 +76,7 @@ public class GameControllerScript : MonoBehaviour
             }
             allyContainer.tag = "AllyContainer"; 
             numEnemiesAlive = enemyContainer.transform.childCount;
+            oldExpansionNumEnemies = numEnemiesAlive;
             enemiesInWorld = new GameObject[numEnemiesAlive];
             alliesInWorld = new GameObject[allyContainer.transform.childCount / fractionalAllies == 0 ? 1 : allyContainer.transform.childCount / fractionalAllies];
             enemyTargetQueue = new Queue<GameObject>();
@@ -133,6 +140,7 @@ public class GameControllerScript : MonoBehaviour
             }
 
             numEnemiesAlive = enemyContainer.transform.childCount;
+            oldExpansionNumEnemies = numEnemiesAlive;
             enemiesInWorld = new GameObject[numEnemiesAlive];
             for (int i = 0; i < numEnemiesAlive; i++)
             {
@@ -167,7 +175,11 @@ public class GameControllerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(numEnemiesAlive < oldExpansionNumEnemies * sightLineExpansionThreshold)
+        {
+            oldExpansionNumEnemies = numEnemiesAlive;
+            StartCoroutine(IncreaseEnemySight(sightExpansionAmount));
+        }
         if (numEnemiesAlive <= 0)
         {
             if (!levelWon && playerAlive)
@@ -371,5 +383,23 @@ public class GameControllerScript : MonoBehaviour
                 enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
             }
         }
+    }
+
+    /// <summary>
+    /// Coroutine to expand enemies' (currently alive in map) sight radius to be larger by the given amount.
+    /// </summary>
+    /// <returns>Nothing is returned.</returns>
+    /// <param name="amount">This amount will be multiplied to the enemies current sight radius.</param>
+    private IEnumerator IncreaseEnemySight(float amount)
+    {
+        yield return null;
+        foreach(GameObject enemy in enemiesInWorld)
+        {
+            if(enemy != null && enemy.GetComponentInChildren<Detect_Movement_AI>() != null)
+            {
+                enemy.GetComponentInChildren<Detect_Movement_AI>().IncreaseSight(amount);
+            }
+        }
+        yield return null;
     }
 }

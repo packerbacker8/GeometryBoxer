@@ -68,7 +68,12 @@ public class OctahedronStats : PlayerStatsBaseClass
             hitByEnemy = true;
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+                float dmgAmount = Math.Abs(collision.impulse.magnitude) / HealthModifier;
+                if (dmgAmount > maxDamageAmount)
+                {
+                    dmgAmount = maxDamageAmount;
+                }
+                SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
         }
@@ -76,7 +81,12 @@ public class OctahedronStats : PlayerStatsBaseClass
         {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+                float dmgAmount = Math.Abs(collision.impulse.magnitude) / HealthModifier;
+                if (dmgAmount > maxDamageAmount)
+                {
+                    dmgAmount = maxDamageAmount;
+                }
+                SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
         }

@@ -9,7 +9,6 @@ public class CameraSlerpToPlayer : MonoBehaviour {
     void Start()
     {
         target = GameObject.FindGameObjectWithTag("GameController").GetComponent<CitySelectSceneController>().GetActivePlayer().transform.GetChild(2).gameObject;
-        Debug.Log(target.name);
     }
     // Update is called once per frame
     void Update()
