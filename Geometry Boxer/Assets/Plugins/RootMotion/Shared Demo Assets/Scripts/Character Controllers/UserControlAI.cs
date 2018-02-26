@@ -154,13 +154,11 @@ namespace RootMotion.Demos
                     Vector3 moveResult = movementStyle.Move();
                     //Check if can move and whether is moving or not
                     //
-                    if (movementStyle.CanMove() && moveResult == transform.position && !checkingRespawn)
+                    if (movementStyle.CanMove() && moveResult == transform.position && canFind)
                     {
+                        Debug.Log("Cannot Move Trigger");
                         canFind = false;
-                        checkingRespawn = true;
                         StartCoroutine(Respawn());
-                        
-
                     }
                     if (moveResult != transform.position)
                     {
@@ -171,28 +169,14 @@ namespace RootMotion.Demos
                         }
                         else
                         {
-                            //if (safeSpot != null)
-                            //{
-                            //    transform.position = safeSpot.transform.position;
-                            //}
-                            //else
-                            //{
-                            //    DestroyObject(gameObject);
-                            //}
-                            if (testingPath)
-                            {
 
-                                
-                                if (!checkingRespawn)
-                                {
-                                    Debug.Log("Path Missing Trigger");
-                                    canFind = false;
-                                    checkingRespawn = true;
-                                    StartCoroutine(Respawn());
-                                    
-                                 
-                                }
-                                }
+                            if (testingPath && canFind)
+                            {
+                                Debug.Log("Path Missing Trigger");
+                                canFind = false;
+                               
+                                StartCoroutine(Respawn());
+                            }
                         }
                     }
 
@@ -274,40 +258,47 @@ namespace RootMotion.Demos
                     transform.position = safeSpot.transform.position;
                     agent.enabled = true;
                     agent.nextPosition = safeSpot.transform.position;
+                    
                     //DestroyObject(gameObject);
                     yield break;
 
                 }
                 else if (agent.enabled && agent.isOnNavMesh)
                 {
+                    NavMeshPath pathResult = new NavMeshPath();
+
                     agent.destination = movementStyle.Move();
-                    if(agent.pathStatus == NavMeshPathStatus.PathComplete)
+                    agent.CalculatePath(movementStyle.Move(), pathResult);
+                    //if (agent.pathStatus == NavMeshPathStatus.PathComplete && agent.destination != transform.position)
+                    if (pathResult.status == NavMeshPathStatus.PathComplete && agent.destination != transform.position)
                     {
+                        Debug.Log("Path Found reset");
                         canFind = true;
                     }
                 }
 
                 if (!movementStyle.CanMove())
                 {
+                    Debug.Log("Cannot Move reset");
                     canFind = true;
                 }
 
             }
             //timer = 5f;
-            checkingRespawn = false;
             
+
             yield break;
         }
 
-            /// <summary>
-            /// Allows toggling of if the enemy is using their special attack without needed to check in user 
-            /// control AI every update loop.
-            /// </summary>
-            /// <param name="state"></param>
-            public void SetUsingSpecial(bool state)
-            {
-                usingSpecial = state;
+        /// <summary>
+        /// Allows toggling of if the enemy is using their special attack without needed to check in user 
+        /// control AI every update loop.
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetUsingSpecial(bool state)
+        {
+            usingSpecial = state;
 
-            }
         }
     }
+}
