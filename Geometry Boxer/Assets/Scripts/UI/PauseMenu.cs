@@ -269,7 +269,6 @@ public class PauseMenu : MonoBehaviour
             GameObject button = Instantiate(fileButtonPrefab) as GameObject;
             button.GetComponentInChildren<Text>().text = files[i];
             button.transform.SetParent(scrollViewContent.transform, false);
-            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, ((scrollView.GetComponent<RectTransform>().rect.size.y * 0.85f) * 0.5f - 10f) - (30f * i));
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetSaveFileName(button.GetComponentInChildren<Text>().text); });
 
             saveFileButtons.Add(button);
