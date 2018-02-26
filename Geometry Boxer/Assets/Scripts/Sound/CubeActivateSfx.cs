@@ -6,12 +6,13 @@ public class CubeActivateSfx : MonoBehaviour {
 
     public AudioClip activate;
     public AudioClip deactivate;
+    public AudioClip stomp;
+    public AudioClip jump;
     private AudioSource source;
     // Use this for initialization
     void Start()
     {
         source = gameObject.AddComponent<AudioSource>();
-        source.spatialBlend = 0.8f;
     }
 
     void CubeActivatedSfx()
@@ -21,5 +22,13 @@ public class CubeActivateSfx : MonoBehaviour {
     void CubeDeactivatedSfx()
     {
         source.PlayOneShot(deactivate, 1f);
+    }
+    void CubeJumpSfx()
+    {
+        source.PlayOneShot(jump, 1f);
+    }
+    void CubeStompSfx()
+    {
+        source.PlayOneShot(stomp, 0.5f);
     }
 }
