@@ -200,6 +200,7 @@ public class SaveAndLoadGame : MonoBehaviour
     public void ContinueGame()
     {
         LoadGame();
+        SetLoadedFightScene(true);
         LoadLevel.loader.LoadALevel(saveData.sceneCurrentlyOn);
     }
 

@@ -8,6 +8,7 @@ using PlayerUI;
 public class PlayerStatsBaseClass : MonoBehaviour
 {
     public GameObject pelvisJoint;
+    public float Health = 15000f;
     public float deathDelay = 20f;
     [Header("How much force is required for the player to take damage.")]
     public float damageThreshold = 100f;
@@ -64,7 +65,10 @@ public class PlayerStatsBaseClass : MonoBehaviour
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         behavePuppet = this.transform.GetComponentInChildren<BehaviourPuppet>();
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(health);
+        if (playerUI != null)
+        {
+            playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(Health);
+        }
     }
 
     protected virtual void Start()

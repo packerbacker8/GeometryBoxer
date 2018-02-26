@@ -80,9 +80,8 @@ public class GameControllerScriptTutorial : MonoBehaviour
     /// <param name="index"></param>
     public void isKilled(int index)
     {
-        Debug.Log("Enemy killed in GameControllerTutorial");
-        ui.enemyIsKilled();
         numEnemiesAlive--;
+        ui.EnemiesLeft(numEnemiesAlive);
     }
 
     /// <summary>

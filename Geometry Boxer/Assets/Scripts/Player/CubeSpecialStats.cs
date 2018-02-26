@@ -9,7 +9,6 @@ using PlayerUI;
 
 public class CubeSpecialStats : PlayerStatsBaseClass
 {
-    public float Health = 15000f;
     public float Speed = .7f;
     public float Stability;
     public float AttackForce;
@@ -50,7 +49,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
 
         HealthModifier = 1.0f;
 
-        health = Health;
+        health = SaveAndLoadGame.saver.GetLoadedFightScene() ? SaveAndLoadGame.saver.GetPlayerCurrentHealth() : Health;
         stability = Stability;
         speed = Speed;
         attackForce = AttackForce;
@@ -60,8 +59,9 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         healthBarFill = GameObject.FindGameObjectWithTag("HealthBarBackground").transform.GetChild(0).GetComponent<Image>();
         originalHealth = Health;
         //HealthScript.PlayerHealth = GetPlayerHealth();
-        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(health);
+        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(originalHealth);
         playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
+        UpdateHealthUI();
         playerUI.GetComponent<PlayerUserInterface>().SetPlayerType(1);
     }
 

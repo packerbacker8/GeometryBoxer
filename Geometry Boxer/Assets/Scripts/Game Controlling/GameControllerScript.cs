@@ -40,6 +40,7 @@ public class GameControllerScript : MonoBehaviour
     private GameObject pauseMenu;
     private GameObject deathMenuObj;
     private GameObject winMenuObj;
+    private GameObject playerUI;
     private bool playerAlive;
     private bool levelWon;
 
@@ -165,6 +166,7 @@ public class GameControllerScript : MonoBehaviour
         deathMenuObj.SetActive(false);
         winMenuObj = pauseMenu.GetComponentInChildren<WinMenu>().gameObject;
         winMenuObj.SetActive(false);
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
 
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
@@ -177,14 +179,6 @@ public class GameControllerScript : MonoBehaviour
         //Here is where when loading in a game file the data is updated to destroy the enemies that were already killed.
         if(SaveAndLoadGame.saver.GetLoadedFightScene())
         {
-            if(SaveAndLoadGame.saver.GetCharacterType().Contains("Cube"))
-            {
-                activePlayer.GetComponent<CubeSpecialStats>().SetPlayerHealth(activePlayer.GetComponent<CubeSpecialStats>().GetOriginalHealth() - SaveAndLoadGame.saver.GetPlayerCurrentHealth());
-            }
-            else
-            {
-                activePlayer.GetComponent<OctahedronStats>().SetPlayerHealth(activePlayer.GetComponent<OctahedronStats>().GetOriginalHealth() - SaveAndLoadGame.saver.GetPlayerCurrentHealth());
-            }
             HashSet<int> enemyI = SaveAndLoadGame.saver.GetFightSceneEnemyIndicies();
             for(int i = 0; i < enemiesInWorld.Length; i++)
             {
@@ -271,6 +265,7 @@ public class GameControllerScript : MonoBehaviour
             numEnemiesAlive--;
             enemiesInWorld[index] = null;
         }
+        playerUI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
     }
 
     /// <summary>

@@ -245,7 +245,6 @@ public class EnemyHealthScript : MonoBehaviour
             else
             {
                 gameController.GetComponent<GameControllerScript>().IsKilled(enemyIndex, this.gameObject.tag);
-                playerUI.GetComponent<PlayerUserInterface>().enemyIsKilled();
             }
 
             dead = true;
