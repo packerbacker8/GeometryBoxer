@@ -36,13 +36,14 @@ GameObject:
   - component: {fileID: 4192246821267370}
   - component: {fileID: 33231334891128974}
   - component: {fileID: 23516071036752384}
-  - component: {fileID: 64315516822129110}
+  - component: {fileID: 54868225638792634}
+  - component: {fileID: 65286366327382600}
   m_Layer: 4
   m_Name: pCube3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &4192246821267370
 Transform:
@@ -63,8 +64,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1270104118856712}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -90.37, y: 1.07, z: -130.86}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 49.97001, y: -0.6420069, z: 19.6}
   m_LocalScale: {x: 0.06251716, y: 0.062517144, z: 0.062517144}
   m_Children:
   - {fileID: 4192246821267370}
@@ -84,7 +85,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 997806fc36451d14297fa2582a254ab7, type: 2}
+  - {fileID: 2100000, guid: c61a37572bc002645a0e25351534c7b9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,8 +111,23 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1925209758852452}
   m_Mesh: {fileID: 4300000, guid: 6fc4a48c4876cdf4fbd911dd1e881cdd, type: 3}
---- !u!64 &64315516822129110
-MeshCollider:
+--- !u!54 &54868225638792634
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1925209758852452}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &65286366327382600
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -120,7 +136,5 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 6fc4a48c4876cdf4fbd911dd1e881cdd, type: 3}
+  m_Size: {x: 31.98307, y: 13.8, z: 29.883535}
+  m_Center: {x: 0.000030517578, y: 2.5, z: 0.000030517578}

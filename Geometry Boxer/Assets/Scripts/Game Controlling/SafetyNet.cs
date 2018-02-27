@@ -59,12 +59,21 @@ public class SafetyNet : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.transform.root.tag.Contains("Player"))
+
+        if (other.transform.root.tag.Contains("Player"))
         {
             HandleSafteyNetCatch(other.transform.root.gameObject);
         }
+        else if (other.gameObject.name.Contains("Projectile"))
+        {
+            return;
+        }
         else if(other.transform.root.tag.Contains("Enemy"))
         {
+            if(other.gameObject.name.Contains("Projectile"))
+            {
+                return; //do not want to destroy enemy from projectiles flying out of the world
+            }
             GameObject findingRoot = other.gameObject;
             while (findingRoot.tag != "EnemyRoot")
             {

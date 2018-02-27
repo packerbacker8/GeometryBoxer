@@ -7,7 +7,9 @@ using UnityEngine.AI;
 public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
 {
     //protected float currentAnimLength;
-
+    public AudioClip cubeStompActivate;
+    public AudioClip cubeStompUse;
+    public AudioClip cubeStompDeactivate;
     public GameObject rightShoulder;
     public GameObject leftShoulder;
     public GameObject rightThigh;
@@ -77,8 +79,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
     private bool isGrounded;
 
     private System.Random randAttack;
-
-
+    
 
     public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
 
@@ -119,6 +120,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
         attackStatus = false;
         randAttack = new System.Random();
         updateCollisionCheck = false;
+        source.spatialBlend = 0.2f;
 
         cooldownTimer = 0;
         hangTime = 0;
@@ -216,6 +218,10 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
                 cubeRigid.AddForce(launchDir * specialAttackForce);
                 launched = true;
                 timesLaunched++;
+                if(cubeStompUse != null)
+                {
+                    source.PlayOneShot(cubeStompUse,1f);
+                }
             }
         }
         else
@@ -458,6 +464,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
             anim.SetFloat("Forward", 0);
         }
         anim.Play("Grounded Directional");
+        source.PlayOneShot(cubeStompDeactivate, 1f);
     }
 
     /// <summary>
@@ -483,6 +490,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
         cubeRigid.useGravity = true;
         cubeForm.transform.localScale = specialStartSize;
         cubeForm.transform.localRotation = Quaternion.identity;
+        source.PlayOneShot(cubeStompActivate, 1f);
     }
 
 

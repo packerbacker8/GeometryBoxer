@@ -6,14 +6,13 @@ public class ImpactSound : MonoBehaviour {
 
     [Header("Impact sounds that are used for when the enemy comes into contact with the player.")]
     public List<AudioClip> clips = new List<AudioClip>();
-    public int index;
     public float punchSoundForceThreshold;
 
     private AudioSource source;
     private System.Random rand = new System.Random();
-
-	// Use this for initialization
-	void Start ()
+    private int index;
+    // Use this for initialization
+    void Start ()
     {
         source = gameObject.AddComponent<AudioSource>();
         source.spatialBlend = 0.8f;
