@@ -120,7 +120,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
         attackStatus = false;
         randAttack = new System.Random();
         updateCollisionCheck = false;
-        source.spatialBlend = 0.75f;
+        source.spatialBlend = 0.5f;
 
         cooldownTimer = 0;
         hangTime = 0;

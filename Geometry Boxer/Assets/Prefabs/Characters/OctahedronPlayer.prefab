@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 81592494172785470}
   - component: {fileID: 114882542034466312}
   - component: {fileID: 114219252719772320}
+  - component: {fileID: 114479671393907164}
   m_Layer: 9
   m_Name: Character Camera
   m_TagString: MainCamera
@@ -841,6 +842,7 @@ GameObject:
   - component: {fileID: 114937082839511408}
   - component: {fileID: 114212219238223128}
   - component: {fileID: 114723051886380942}
+  - component: {fileID: 114166318713039372}
   m_Layer: 0
   m_Name: OctahedronPlayer
   m_TagString: Player
@@ -2499,6 +2501,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 538f5e6e0f3b5814e98e8a075958093b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114166318713039372
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1901142967609700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c4dc28fe4eabc248904736e0d765c69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activate: {fileID: 8300000, guid: e97fca5dbb8c29b4ea210910f29bb7ee, type: 3}
+  deactivate: {fileID: 8300000, guid: c7965de26f0715b44996683e6c2fbeda, type: 3}
+  spin: {fileID: 8300000, guid: c4d432fc1bdb8b3458fa8620720fdacb, type: 3}
 --- !u!114 &114212219238223128
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2761,6 +2777,18 @@ MonoBehaviour:
   ignoreCollisionWithRagdoll:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &114479671393907164
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1428343374671882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: afdb80027a11a6e45bd741c3f853adda, type: 2}
 --- !u!114 &114492754999907148
 MonoBehaviour:
   m_ObjectHideFlags: 1
