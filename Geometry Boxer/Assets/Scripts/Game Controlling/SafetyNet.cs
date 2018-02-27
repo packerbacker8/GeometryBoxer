@@ -65,6 +65,10 @@ public class SafetyNet : MonoBehaviour
         }
         else if(other.transform.root.tag.Contains("Enemy"))
         {
+            if(other.gameObject.name.Contains("Projectile"))
+            {
+                return; //do not want to destroy enemy from projectiles flying out of the world
+            }
             GameObject findingRoot = other.gameObject;
             while (findingRoot.tag != "EnemyRoot")
             {
