@@ -269,7 +269,6 @@ public class PauseMenu : MonoBehaviour
             GameObject button = Instantiate(fileButtonPrefab) as GameObject;
             button.GetComponentInChildren<Text>().text = files[i];
             button.transform.SetParent(scrollViewContent.transform, false);
-            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, ((scrollView.GetComponent<RectTransform>().rect.size.y * 0.85f) * 0.5f - 10f) - (30f * i));
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetSaveFileName(button.GetComponentInChildren<Text>().text); });
 
             saveFileButtons.Add(button);
@@ -311,6 +310,25 @@ public class PauseMenu : MonoBehaviour
 
     public void SaveTheGame()
     {
+        if(isCombatScene)
+        {
+            GameControllerScript gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
+            HashSet<int> allyI = gameController.hasAllies ? gameController.AllyAliveIndicies() : new HashSet<int>();
+            SaveAndLoadGame.saver.SetFightSceneSaveValues(gameController.EnemyAliveIndicies(), gameController.hasAllies, allyI);
+            if(SaveAndLoadGame.saver.GetCharacterType().Contains("Cube"))
+            {
+                SaveAndLoadGame.saver.SetPlayerCurrentHealth(gameController.GetActivePlayer().GetComponent<CubeSpecialStats>().GetPlayerHealth());
+            }
+            else
+            {
+                SaveAndLoadGame.saver.SetPlayerCurrentHealth(gameController.GetActivePlayer().GetComponent<OctahedronStats>().GetPlayerHealth());
+            }
+        }
+        else
+        {
+            SaveAndLoadGame.saver.SetFightSceneSaveValues(new HashSet<int>(), false, new HashSet<int>());
+        }
+        SaveAndLoadGame.saver.SetCurrentScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         SaveAndLoadGame.saver.SaveGame(saveFileName);
         saveInputField.text = "";
         CloseSaveCanvas();

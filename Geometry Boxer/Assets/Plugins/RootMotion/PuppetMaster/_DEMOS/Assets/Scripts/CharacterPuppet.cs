@@ -22,7 +22,7 @@ namespace RootMotion.Demos {
 
 		public override void Move(Vector3 deltaPosition, Quaternion deltaRotation) {
 			// Disable movement while the puppet is not balanced or getting up.
-			if (puppet.state != BehaviourPuppet.State.Puppet || !canMove) return;
+			if (puppet == null || puppet.state != BehaviourPuppet.State.Puppet || !canMove) return;
 
 			base.Move(deltaPosition, deltaRotation);
 		}

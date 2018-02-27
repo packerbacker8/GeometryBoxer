@@ -15,7 +15,7 @@ namespace RootMotion.Demos
 
         public float dropThreshold = 10f;
 
-        void Start()
+        void Awake()
         {
             characterPuppet = this.transform.GetComponent<CharacterPuppet>();
             anim = this.gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();

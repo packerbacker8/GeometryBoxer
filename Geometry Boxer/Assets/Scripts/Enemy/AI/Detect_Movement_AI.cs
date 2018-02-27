@@ -162,5 +162,14 @@ namespace Enemy
                 yield return new WaitForSeconds(10f);
             }
         }
+
+        /// <summary>
+        /// Function to increase sight radius of detect AI. Multiplies sight radius by amount.
+        /// </summary>
+        /// <param name="amount">A less than 1.0 amount will decrease sight radius, greater will increase, and 1.0 will keep the same.</param>
+        public void IncreaseSight(float amount)
+        {
+            sightRange *= amount;
+        }
     }
 }
