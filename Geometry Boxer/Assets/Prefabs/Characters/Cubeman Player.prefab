@@ -716,6 +716,7 @@ GameObject:
   - component: {fileID: 92751135059977346}
   - component: {fileID: 81413471825462346}
   - component: {fileID: 114686875328062856}
+  - component: {fileID: 114635371803566698}
   m_Layer: 9
   m_Name: Character Camera
   m_TagString: MainCamera
@@ -2055,6 +2056,7 @@ MonoBehaviour:
   AttackForce: 0
   FallDamageMultiplier: 0
   PowerUpTimeLimit: 10
+  specialCooldownTime: 10
 --- !u!114 &114210151158017132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2596,7 +2598,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4b7857bff8866654c96f83f1ff8eeb83, type: 3}
   - {fileID: 8300000, guid: 9c2d5457f83a4624ca411103f7ef43de, type: 3}
   - {fileID: 8300000, guid: ef2c3b5da07cd3847b7e7e14943411bc, type: 3}
-  index: 0
   punchSoundForceThreshold: 30
 --- !u!114 &114562820181057952
 MonoBehaviour:
@@ -2635,6 +2636,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activate: {fileID: 8300000, guid: e97fca5dbb8c29b4ea210910f29bb7ee, type: 3}
   deactivate: {fileID: 8300000, guid: c7965de26f0715b44996683e6c2fbeda, type: 3}
+  stomp: {fileID: 8300000, guid: c67afcc7d60e2cb4996b988bb6c8ee12, type: 3}
+  jump: {fileID: 8300000, guid: 5dfb252cfce02dc44b776ffe0ea857ac, type: 3}
 --- !u!114 &114593277777294936
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2661,6 +2664,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 538f5e6e0f3b5814e98e8a075958093b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114635371803566698
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1856839902915630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: afdb80027a11a6e45bd741c3f853adda, type: 2}
 --- !u!114 &114652204192966252
 MonoBehaviour:
   m_ObjectHideFlags: 1

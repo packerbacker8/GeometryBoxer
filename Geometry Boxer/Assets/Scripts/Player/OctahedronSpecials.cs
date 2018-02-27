@@ -113,6 +113,11 @@ public class OctahedronSpecials : PunchScript
         }
         else if (specialForm.GetComponent<MeshRenderer>().enabled)
         {
+            if(Mathf.Abs(specialRigid.angularVelocity.y) < 5f)
+            {
+                SendMessage("OctaSpinStopSfx", true, SendMessageOptions.DontRequireReceiver);
+            }
+
             UpdatePos(charController.transform, specialForm.transform);
             coolDownTimer += Time.deltaTime;
 
@@ -164,6 +169,7 @@ public class OctahedronSpecials : PunchScript
                 specialRigid.AddForce(moveDir);
                 launched = true;
                 specialRigid.AddForce(Vector3.up * specialAttackForce * 2f);
+                SendMessage("OctaSpinSfx", true, SendMessageOptions.DontRequireReceiver);
             }
             else if (launched)
             {
@@ -181,6 +187,7 @@ public class OctahedronSpecials : PunchScript
                     launched = false;
                     launchTime = 0;
                 }
+                SendMessage("OctaSpinSfx", true, SendMessageOptions.DontRequireReceiver);
             }
 
         }
@@ -272,6 +279,7 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     protected override void DeactivateSpecialAttack()
     {
+        SendMessage("OctaDeactivateSfx", true, SendMessageOptions.DontRequireReceiver);
         playerGrowing = true;
         specialRigid.angularDrag = 100f;
         specialRigid.angularVelocity = Vector3.zero;
@@ -324,6 +332,7 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     protected override void ActivateSpecialAttack()
     {
+        SendMessage("OctaActivateSfx", true, SendMessageOptions.DontRequireReceiver);
         specialRigid.useGravity = true;
         specialRigid.angularDrag = angularDragAmount;
         leftFistCollider.radius = leftFistStartSize.radius;
