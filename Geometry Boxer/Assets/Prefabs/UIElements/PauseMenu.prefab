@@ -264,6 +264,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224682025858499134}
+  - component: {fileID: 114192381518018692}
   m_Layer: 0
   m_Name: SaveContent
   m_TagString: Untagged
@@ -1332,7 +1333,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: SetSaveFileName
         m_Mode: 1
         m_Arguments:
@@ -1348,7 +1349,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114382932818027550}
         m_MethodName: SetSaveFileName
         m_Mode: 1
         m_Arguments:
@@ -1735,6 +1736,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02655399383c1f24b80f0ff477666a5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114192381518018692
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1358459691306556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
 --- !u!114 &114211246207517556
 MonoBehaviour:
   m_ObjectHideFlags: 1

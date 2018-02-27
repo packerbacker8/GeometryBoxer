@@ -8,8 +8,6 @@ using RootMotion.Demos;
 
 public class SphereSpecialStats : PlayerStatsBaseClass
 {
-
-    public float Health;
     
     private Image healthBarBackground;
     private Image healthBarFill;
