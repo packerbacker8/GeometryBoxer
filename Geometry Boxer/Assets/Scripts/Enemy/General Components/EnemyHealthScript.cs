@@ -53,26 +53,32 @@ public class EnemyHealthScript : MonoBehaviour
     private float Val4;
     private float originalHealth;
 
-    // Use this for initialization
-    void Start()
+    private void Awake()
     {
-        source = gameObject.AddComponent<AudioSource>();
-        source.spatialBlend = 0.9f;
-        impactSource = gameObject.AddComponent<AudioSource>();
-        impactSource.spatialBlend = 0.9f;
-        source.volume = 1f;
-        sfxManager = FindObjectOfType<SFX_Manager>();
-        dead = false;
-        damageIsFromPlayer = false;
-        findHealth = false;
-        
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
         gameController = GameObject.FindGameObjectWithTag("GameController");
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
         healthContainer = GameObject.FindGameObjectWithTag("HealthContainer");
         charController = GetComponentInChildren<UserControlAI>();
+
+        source = gameObject.AddComponent<AudioSource>();
+        impactSource = gameObject.AddComponent<AudioSource>();
+        sfxManager = FindObjectOfType<SFX_Manager>();
         ShowDmg = this.GetComponent<SwapMaterials>();
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+        source.spatialBlend = 0.9f;
+        impactSource.spatialBlend = 0.9f;
+        source.volume = 1f;
+        dead = false;
+        damageIsFromPlayer = false;
+        findHealth = false;
+        
+
         deathObject.SetActive(false);
         Val4 = 0;
         Val0 = 4 * (EnemyHealth / 5);
@@ -227,7 +233,7 @@ public class EnemyHealthScript : MonoBehaviour
         {
             //anim.Play("Death");
 
-            if (sfxManager.maleDeath.Count > 0)
+            if (sfxManager != null && sfxManager.maleDeath.Count > 0)
             {
                 source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
             }
@@ -238,8 +244,7 @@ public class EnemyHealthScript : MonoBehaviour
             }
             else
             {
-                gameController.GetComponent<GameControllerScript>().isKilled(enemyIndex, this.gameObject.tag);
-                playerUI.GetComponent<PlayerUserInterface>().enemyIsKilled();
+                gameController.GetComponent<GameControllerScript>().IsKilled(enemyIndex, this.gameObject.tag);
             }
 
             dead = true;
@@ -256,8 +261,6 @@ public class EnemyHealthScript : MonoBehaviour
     /// </summary>
     public void ResetEnemy()
     {
-        Debug.Log("y velocity of bot: " + this.transform.GetChild(2).gameObject.GetComponent<Rigidbody>().velocity.y);
-
         this.GetComponentInChildren<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         KillEnemy();
     }

@@ -49,24 +49,29 @@ namespace PlayerUI
 
 
         // Use this for initialization
-        void Start()
+        void Awake()
         {
             enemies = GameObject.FindGameObjectWithTag("EnemyContainer");
             player = GameObject.FindGameObjectWithTag("Player");
 
-            if(!UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
-            {
-                numEnemiesAlive = enemies.transform.childCount;
-                enemyCounter.text = numEnemiesAlive.ToString();
-            }
-            else
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
             {
                 numEnemiesAlive = 5;
                 enemyCounter.text = "Tutorial";
             }
-            
+            else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("MainMenu"))
+            {
+                numEnemiesAlive = 1;
+                enemyCounter.text = "";
+            }
+            else
+            {
+                numEnemiesAlive = enemies.transform.childCount;
+                enemyCounter.text = numEnemiesAlive.ToString();
+            }
+
             hitTimer = 0;
-           // PlayersHealth = 15000f;
+            // PlayersHealth = 15000f;
         }
 
         // Update is called once per frame
@@ -196,9 +201,9 @@ namespace PlayerUI
         }
 
         // functions called from other classes
-        public void enemyIsKilled()
+        public void EnemiesLeft(int amount)
         {
-            numEnemiesAlive--;
+            numEnemiesAlive = amount;
         }
 
         public void UsingSpecialAttack()
@@ -249,11 +254,13 @@ namespace PlayerUI
             if (type == 1)
             {
                 PlayerIsCube = true;
+                PlayerIsOcta = false;
             }
 
             if (type == 2)
             {
                 PlayerIsOcta = true;
+                PlayerIsCube = false;
             }
         }
 

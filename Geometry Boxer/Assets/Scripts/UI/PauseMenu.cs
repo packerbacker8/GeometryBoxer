@@ -1,0 +1,346 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+public class PauseMenu : MonoBehaviour
+{
+    public GameObject scrollView;
+    public GameObject scrollViewContent;
+    public GameObject fileButtonPrefab;
+    public GameObject pauseMenuCanvas { get; private set; }
+
+    private GameObject character;
+    private GameObject control;
+    private GameObject saveCanvas;
+    private InputField saveInputField;
+
+    RootMotion.Demos.UserControlMelee UserControlMeleeScript;
+    RootMotion.CameraController CameraControllerScript;
+    PunchScript punchScript;
+    private string saveFileName;
+
+    private bool mouseShouldBeLocked = false;
+    public bool isPaused = false;
+    private bool isCombatScene = false;
+    private float TimeSinceEsc = 0.0f;
+    private List<GameObject> saveFileButtons;
+
+    private StandaloneInputModule gameEventSystemInputModule;
+    private bool controllerMode = false;
+    public bool notInDeathOrWinScreen = true;
+    public bool saveCanvasTextInputMode = false;
+
+    // Use this for initialization
+    void Start()
+    {
+        control = GameObject.FindGameObjectWithTag("GameController");
+        pauseMenuCanvas = this.transform.GetChild(0).gameObject;
+        saveCanvas = this.transform.GetChild(1).gameObject;
+        saveInputField = saveCanvas.GetComponentInChildren<InputField>();
+        saveCanvas.SetActive(false);
+        pauseMenuCanvas.SetActive(false);
+        gameEventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
+        saveFileName = "";
+        saveFileButtons = new List<GameObject>();
+        //if game controller found is game controller for combat levels, grab player info
+        isCombatScene = control.name.Equals("GameController");
+        if (isCombatScene)
+        {
+            character = control.GetComponent<GameControllerScript>().GetActivePlayer();
+            CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
+            punchScript = character.gameObject.GetComponent<PunchScript>();
+        }
+        else if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
+        {
+            isCombatScene = true;
+            character = control.GetComponent<GameControllerScriptTutorial>().GetActivePlayer();
+            if (character != null)
+            {
+                CameraControllerScript = character.GetComponentInChildren<RootMotion.CameraController>();
+                punchScript = character.gameObject.GetComponent<PunchScript>();
+            }
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        TimeSinceEsc = TimeSinceEsc += Time.deltaTime;
+
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && !isPaused && notInDeathOrWinScreen)
+        {
+            if (Input.GetButtonDown("StartButton"))
+            {
+                controllerMode = true;
+            }
+            else
+            {
+                controllerMode = false;
+            }
+            pauseGameHelper();
+        }
+        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && isPaused)
+        {
+            resumeGameHelper();
+        }
+
+
+        if (controllerMode && isPaused)
+        {
+            if (Input.GetAxis("DPadY") != 0)
+            {
+                gameEventSystemInputModule.verticalAxis = "DPadY";
+            }
+            else
+            {
+                gameEventSystemInputModule.verticalAxis = "Vertical";
+            }
+
+
+
+            if (saveCanvas.activeSelf == true)
+            {
+                if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject.name == "InputField")
+                {
+                    //Debug.Log("Text mode");
+                    saveCanvasTextInputMode = true;
+                }
+                else if (EventSystem.current.currentSelectedGameObject.name == "InputField" && !saveCanvasTextInputMode)
+                {
+                    EventSystem.current.SetSelectedGameObject(saveCanvas.transform.Find("SaveFileButton").gameObject);
+                }
+
+                if (saveCanvasTextInputMode && (Input.GetAxis("HorizontalLeft") != 0 || Input.GetAxis("VerticalLeft") != 0))
+                {
+                    saveCanvasTextInputMode = false;
+                }
+
+            }
+        }
+
+
+    }
+
+    /// <summary>
+    /// Function to pick which pause to use.
+    /// </summary>
+    public void pauseGameHelper()
+    {
+        if (isCombatScene)
+        {
+            pauseGame();
+        }
+        else
+        {
+            pauseGameNonCombat();
+        }
+    }
+
+    /// <summary>
+    /// Function to pick which resume to use.
+    /// </summary>
+    public void resumeGameHelper()
+    {
+        if (isCombatScene)
+        {
+            resumeGame();
+        }
+        else
+        {
+            resumeGameNonCombat();
+        }
+    }
+
+    /// <summary>
+    /// Function to resume gameplay when playing in combat scenes.
+    /// </summary>
+    public void resumeGame()
+    {
+        Time.timeScale = 1.0f;
+        //UserControlMeleeScript.inPause = false;
+        punchScript.enabled = true;
+        CameraControllerScript.enabled = true;
+
+
+        Cursor.lockState = CursorLockMode.Locked;
+
+        Cursor.visible = false;
+
+        pauseMenuCanvas.SetActive(false);
+        isPaused = false;
+    }
+
+    /// <summary>
+    /// Function to pause gameplay when in combat scenes.
+    /// </summary>
+    public void pauseGame()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0.0f;
+
+        mouseShouldBeLocked = true;
+
+        //UserControlMeleeScript.inPause = true;
+        punchScript.enabled = false;
+        CameraControllerScript.enabled = false;
+
+        pauseMenuCanvas.SetActive(true);
+        if (controllerMode)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            EventSystem.current.SetSelectedGameObject(obj);
+            obj.GetComponent<UnityEngine.UI.Button>().OnSelect(null);
+            //controllerMode = false;
+        }
+
+        isPaused = true;
+    }
+
+    /// <summary>
+    /// Function to resume gameplay when playing in other scenes.
+    /// </summary>
+    public void resumeGameNonCombat()
+    {
+        Time.timeScale = 1.0f;
+
+        pauseMenuCanvas.SetActive(false);
+        isPaused = false;
+    }
+
+    /// <summary>
+    /// Function to pause gameplay when in other scenes.
+    /// </summary>
+    public void pauseGameNonCombat()
+    {
+        Time.timeScale = 0.0f;
+
+        mouseShouldBeLocked = true;
+        pauseMenuCanvas.SetActive(true);
+        if (controllerMode)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            EventSystem.current.SetSelectedGameObject(obj);
+            obj.GetComponent<UnityEngine.UI.Button>().OnSelect(null);
+            //controllerMode = false;
+        }
+        isPaused = true;
+    }
+
+    /// <summary>
+    /// Function to open the save canvas.
+    /// </summary>
+    public void OpenSaveCanvas()
+    {
+        saveCanvas.SetActive(true);
+        FillInSaveFileInfo();
+        pauseMenuCanvas.SetActive(false);
+
+        for (int i = 0; i < saveFileButtons.Count; i++)
+        {
+            UnityEngine.UI.Button button = saveFileButtons[i].GetComponent<UnityEngine.UI.Button>();
+            //change color of all buttons when highlighted to some shade of red
+            ColorBlock colorsOfButton = button.colors;
+            Color highlightColor = colorsOfButton.highlightedColor;
+            colorsOfButton.highlightedColor = new Color(highlightColor.r + 50, highlightColor.g, highlightColor.b, highlightColor.a);
+            button.colors = colorsOfButton;
+        }
+        if (saveFileButtons.Count > 0 && controllerMode)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            EventSystem.current.SetSelectedGameObject(saveFileButtons[saveFileButtons.Count - 1]);
+        }
+    }
+
+    /// <summary>
+    /// Function to fill in buttons of scrollview of the found saved game files.
+    /// </summary>
+    private void FillInSaveFileInfo()
+    {
+        string[] files = SaveAndLoadGame.saver.GetAllSaveFiles();
+        for (int i = 0; i < files.Length; i++)
+        {
+            files[i] = files[i].Substring(Application.persistentDataPath.Length + 1, files[i].Length - Application.persistentDataPath.Length - 5);
+            GameObject button = Instantiate(fileButtonPrefab) as GameObject;
+            button.GetComponentInChildren<Text>().text = files[i];
+            button.transform.SetParent(scrollViewContent.transform, false);
+            button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetSaveFileName(button.GetComponentInChildren<Text>().text); });
+
+            saveFileButtons.Add(button);
+        }
+    }
+
+    /// <summary>
+    /// Function to close the save canvas.
+    /// </summary>
+    public void CloseSaveCanvas()
+    {
+        saveFileButtons.Clear();
+        saveCanvas.SetActive(false);
+        pauseMenuCanvas.SetActive(true);
+
+        if (controllerMode)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            GameObject obj = pauseMenuCanvas.transform.GetChild(0).gameObject;
+            EventSystem.current.SetSelectedGameObject(obj);
+        }
+    }
+
+    public string GetSaveFileName()
+    {
+        return saveFileName;
+    }
+
+    public void SetSaveFileName()
+    {
+        saveFileName = saveInputField.text;
+    }
+
+    public void SetSaveFileName(string buttonText)
+    {
+        saveInputField.text = buttonText;
+        SetSaveFileName();
+    }
+
+    public void SaveTheGame()
+    {
+        if(isCombatScene)
+        {
+            GameControllerScript gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
+            HashSet<int> allyI = gameController.hasAllies ? gameController.AllyAliveIndicies() : new HashSet<int>();
+            SaveAndLoadGame.saver.SetFightSceneSaveValues(gameController.EnemyAliveIndicies(), gameController.hasAllies, allyI);
+            if(SaveAndLoadGame.saver.GetCharacterType().Contains("Cube"))
+            {
+                SaveAndLoadGame.saver.SetPlayerCurrentHealth(gameController.GetActivePlayer().GetComponent<CubeSpecialStats>().GetPlayerHealth());
+            }
+            else
+            {
+                SaveAndLoadGame.saver.SetPlayerCurrentHealth(gameController.GetActivePlayer().GetComponent<OctahedronStats>().GetPlayerHealth());
+            }
+        }
+        else
+        {
+            SaveAndLoadGame.saver.SetFightSceneSaveValues(new HashSet<int>(), false, new HashSet<int>());
+        }
+        SaveAndLoadGame.saver.SetCurrentScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        SaveAndLoadGame.saver.SaveGame(saveFileName);
+        saveInputField.text = "";
+        CloseSaveCanvas();
+    }
+
+    public void GoToMainMenu()
+    {
+        LoadLevel.loader.LoadMainMenu();
+    }
+
+    public void QuitGame()
+    {
+        LoadLevel.loader.ExitGame();
+    }
+}

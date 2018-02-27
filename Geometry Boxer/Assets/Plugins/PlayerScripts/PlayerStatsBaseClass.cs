@@ -8,9 +8,12 @@ using PlayerUI;
 public class PlayerStatsBaseClass : MonoBehaviour
 {
     public GameObject pelvisJoint;
+    public float Health = 15000f;
     public float deathDelay = 20f;
     [Header("How much force is required for the player to take damage.")]
     public float damageThreshold = 100f;
+    [Tooltip("Maximum force of damage that can be applied to the player.")]
+    public float maxDamageAmount = 150f;
 
     protected bool dead;
     protected bool hitByEnemy;
@@ -54,6 +57,20 @@ public class PlayerStatsBaseClass : MonoBehaviour
         fallDamageMultiplier = newMult;
     }
 
+    protected virtual void Awake()
+    {
+        anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
+        puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
+        gameController = GameObject.FindGameObjectWithTag("GameController");
+        charController = this.transform.GetChild(characterControllerIndex).gameObject;
+        behavePuppet = this.transform.GetComponentInChildren<BehaviourPuppet>();
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        if (playerUI != null)
+        {
+            playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(Health);
+        }
+    }
+
     protected virtual void Start()
     {
         health = 1000f;
@@ -63,13 +80,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
         fallDamageMultiplier = 1.0f;
         hitByEnemy = false;
         dead = false;
-        anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
-        puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
-        gameController = GameObject.FindGameObjectWithTag("GameController");
-        charController = this.transform.GetChild(characterControllerIndex).gameObject;
-        behavePuppet = this.transform.GetComponentInChildren<BehaviourPuppet>();
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(health);
+        
     }
 
     protected virtual void LateUpdate()
@@ -97,7 +108,8 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public virtual void SetPlayerHealth(float val)
     {
         health -= val;
-        playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
+        if(playerUI != null)
+            playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
     }
 
     /// <summary>

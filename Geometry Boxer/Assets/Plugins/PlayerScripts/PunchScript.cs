@@ -324,38 +324,31 @@ public class PunchScript : MonoBehaviour
                     //Left arm punching
                     if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
                     {
-                        Debug.Log("LeftJab");
                         leftArmAttack = true;
                         if (Input.GetButton(upperCutButton))
                         {
-                            Debug.Log("LeftUpper");
                             ThrowUppercut(Limbs.leftArm);
                         }
                         else
                         {
-                            Debug.Log("LeftJab");
                             ThrowSinglePunch(Limbs.leftArm);
                         }
                     }
                     if (Input.GetButtonDown(rightJabControllerButton))
                     {
-                        Debug.Log("rightBump");
                         rightArmAttack = true;
                         if (Input.GetButton(upperCutButton))
                         {
-                            Debug.Log("RightUpper");
                             ThrowUppercut(Limbs.rightArm);
 
                         }
                         else
                         {
-                            Debug.Log("RightJab");
                             ThrowSinglePunch(Limbs.rightArm);
                         }
                     }
                     if (Input.GetButtonDown(hiKickButton))
                     {
-                        Debug.Log("HighKick");
                         ThrowHiKick();
                     }
 
@@ -364,7 +357,6 @@ public class PunchScript : MonoBehaviour
                 {
                     if (Input.GetKeyDown(leftJabKey))
                     {
-                        Debug.Log("LeftJab");
                         //currently a combo attack
                         leftArmAttack = true;
                         rightArmAttack = true;
