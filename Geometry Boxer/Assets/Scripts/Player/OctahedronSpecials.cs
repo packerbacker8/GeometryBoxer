@@ -113,6 +113,11 @@ public class OctahedronSpecials : PunchScript
         }
         else if (specialForm.GetComponent<MeshRenderer>().enabled)
         {
+            if(Mathf.Abs(specialRigid.angularVelocity.y) < 5f)
+            {
+                SendMessage("OctaSpinStopSfx", true, SendMessageOptions.DontRequireReceiver);
+            }
+
             UpdatePos(charController.transform, specialForm.transform);
             coolDownTimer += Time.deltaTime;
 

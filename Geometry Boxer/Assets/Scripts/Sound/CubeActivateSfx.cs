@@ -29,6 +29,6 @@ public class CubeActivateSfx : MonoBehaviour {
     }
     void CubeStompSfx()
     {
-        source.PlayOneShot(stomp, 0.5f);
+        source.PlayOneShot(stomp, 1f);
     }
 }
