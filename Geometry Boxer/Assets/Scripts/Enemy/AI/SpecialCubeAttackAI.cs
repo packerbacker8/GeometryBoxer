@@ -30,6 +30,8 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
     private float jumpDistance;
     private float cooldownTimer;
     private float hangTime;
+    private float stuckInCubeTime;
+
     private Animator anim;
     private GameObject moveTargetObj;
     private Transform moveTarget;
@@ -120,6 +122,8 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
         randAttack = new System.Random();
         updateCollisionCheck = false;
 
+        stuckInCubeTime = 0f;
+
         cooldownTimer = 0;
         hangTime = 0;
         timesLaunched = 0;
@@ -193,12 +197,14 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
         }
         else if (cubeForm.GetComponent<MeshRenderer>().enabled)
         {
+            stuckInCubeTime += Time.deltaTime;
             UpdatePos(this.transform, cubeForm.transform);
-            if (timesLaunched >= specialAttackUses && isGrounded)
+            if ((timesLaunched >= specialAttackUses && isGrounded) || stuckInCubeTime > (specialAttackUses * 3))
             {
                 DeactivateCubeAttack();
                 UpdatePos(this.transform, cubeForm.transform);
                 timesLaunched = 0;
+                stuckInCubeTime = 0;
             }
             if (timesLaunched < specialAttackUses && isGrounded && cubeForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
             {
