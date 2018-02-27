@@ -17,6 +17,9 @@ public class GameControllerScriptTutorial : MonoBehaviour
     
     private string currentMapName;
     private GameObject activePlayer;
+    private GameObject pauseMenu;
+    private GameObject deathMenuObj;
+    private GameObject winMenuObj;
     private int numEnemiesAlive;
     private bool playerAlive;
 
@@ -49,7 +52,12 @@ public class GameControllerScriptTutorial : MonoBehaviour
             }
             enemiesInWorld[i].GetComponentInChildren<UserControlAI>().SetMoveTarget(activePlayer.transform.GetChild(2).gameObject);
         }
-        
+        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+        deathMenuObj = pauseMenu.GetComponentInChildren<DeathMenu>().gameObject;
+        deathMenuObj.SetActive(false);
+        winMenuObj = pauseMenu.GetComponentInChildren<WinMenu>().gameObject;
+        winMenuObj.SetActive(false);
+
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
@@ -72,9 +80,8 @@ public class GameControllerScriptTutorial : MonoBehaviour
     /// <param name="index"></param>
     public void isKilled(int index)
     {
-        Debug.Log("Enemy killed in GameControllerTutorial");
-        ui.enemyIsKilled();
         numEnemiesAlive--;
+        ui.EnemiesLeft(numEnemiesAlive);
     }
 
     /// <summary>
@@ -92,7 +99,7 @@ public class GameControllerScriptTutorial : MonoBehaviour
     /// <summary>
     /// Tells the game controller the player died.
     /// </summary>
-    public void playerKilled()
+    public void PlayerKilled()
     {
         playerAlive = false;
         //SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");

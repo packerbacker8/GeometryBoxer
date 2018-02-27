@@ -9,9 +9,6 @@ using PlayerUI;
 
 public class OctahedronStats : PlayerStatsBaseClass
 {
-
-    public float Health = 15000f;
-
     private float originalHealth;
     private float HealthModifier;
     private Image healthBarBackground;
@@ -22,13 +19,14 @@ public class OctahedronStats : PlayerStatsBaseClass
         base.Start();
 
         HealthModifier = 1.0f;
-        health = Health;
+        health = SaveAndLoadGame.saver.GetLoadedFightScene() ? SaveAndLoadGame.saver.GetPlayerCurrentHealth() : Health;
         playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
-        originalHealth = health;
+        originalHealth = Health;
         playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(originalHealth);
         healthBarBackground = GameObject.FindGameObjectWithTag("HealthBarBackground").GetComponent<Image>();
         healthBarFill = GameObject.FindGameObjectWithTag("HealthBarBackground").transform.GetChild(0).GetComponent<Image>();
         playerUI.GetComponent<PlayerUserInterface>().SetPlayerType(2);
+        UpdateHealthUI();
     }
 
     // Update is called once per frame
@@ -49,7 +47,7 @@ public class OctahedronStats : PlayerStatsBaseClass
     {
         anim.Play("Death");
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-        gameController.GetComponent<GameControllerScript>().playerKilled();
+        gameController.GetComponent<GameControllerScript>().PlayerKilled();
 
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
     }
@@ -68,7 +66,13 @@ public class OctahedronStats : PlayerStatsBaseClass
             hitByEnemy = true;
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+                float dmgAmount = Math.Abs(collision.impulse.magnitude) / HealthModifier;
+                if (dmgAmount > maxDamageAmount)
+                {
+                    dmgAmount = maxDamageAmount;
+                    Debug.Log("Damage capped.");
+                }
+                SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
         }
@@ -76,14 +80,23 @@ public class OctahedronStats : PlayerStatsBaseClass
         {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+                float dmgAmount = Math.Abs(collision.impulse.magnitude) / HealthModifier;
+                if (dmgAmount > maxDamageAmount)
+                {
+                    dmgAmount = maxDamageAmount;
+                    Debug.Log("Damage capped.");
+                }
+                SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
         }
     }
     public void UpdateHealthUI()
     {
-        healthBarFill.fillAmount = GetPlayerHealth() / originalHealth;
+        if(healthBarFill != null)
+        {
+            healthBarFill.fillAmount = GetPlayerHealth() / originalHealth;
+        }
     }
     public float GetOriginalHealth()
     {

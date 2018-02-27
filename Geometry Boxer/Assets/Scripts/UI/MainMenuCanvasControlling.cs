@@ -14,6 +14,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public GameObject loadFileCanvas;
     public GameObject fileButtonPrefab;
     public GameObject scrollView;
+    public GameObject scrollViewContent;
+    public GameObject playerUI;
 
     private bool hasSavedGame;
     private InputField loadFileInput;
@@ -21,6 +23,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private List<GameObject> loadFileButtons;
 
     private bool controllerMode;
+    private StandaloneInputModule EventSystemInputModule;
 
     // Use this for initialization
     void Start()
@@ -44,6 +47,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 controllerMode = true;
             }
         }
+
+        EventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
 
         if (controllerMode)
         {
@@ -73,6 +78,28 @@ public class MainMenuCanvasControlling : MonoBehaviour
             CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
         }
 
+        for(int i = 0; i < playerUI.transform.childCount; i++)
+        {
+            playerUI.transform.GetChild(i).gameObject.SetActive(false);
+        }
+
+    }
+
+    void Update()
+    {
+        if (Input.GetAxis("DPadY") != 0)
+        {
+            EventSystemInputModule.verticalAxis = "DPadY";
+        }
+        else
+        {
+            EventSystemInputModule.verticalAxis = "Vertical";
+        }
+
+        if (loadFileCanvas.activeSelf == true && controllerMode && EventSystem.current.currentSelectedGameObject.name == "LoadInputField")
+        {
+            EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find("LoadFileButton").gameObject);
+        }
     }
 
     /// <summary>
@@ -120,6 +147,21 @@ public class MainMenuCanvasControlling : MonoBehaviour
         FillInSaveFileInfo();
         hasSaveGameCanvas.SetActive(false);
         noSaveGameCanvas.SetActive(false);
+
+        for (int i = 0; i < loadFileButtons.Count; i++)
+        {
+            UnityEngine.UI.Button button = loadFileButtons[i].GetComponent<UnityEngine.UI.Button>();
+            //change color of all buttons when highlighted to some shade of red
+            ColorBlock colorsOfButton = button.colors;
+            Color highlightColor = colorsOfButton.highlightedColor;
+            colorsOfButton.highlightedColor = new Color(highlightColor.r + 50, highlightColor.g, highlightColor.b, highlightColor.a);
+            button.colors = colorsOfButton;
+        }
+
+        if (loadFileButtons.Count > 0 && controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(loadFileButtons[loadFileButtons.Count - 1]);
+        }
     }
 
     /// <summary>
@@ -133,8 +175,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
             files[i] = files[i].Substring(Application.persistentDataPath.Length+1, files[i].Length - Application.persistentDataPath.Length - 5);
             GameObject button = Instantiate(fileButtonPrefab) as GameObject;
             button.GetComponentInChildren<Text>().text = files[i];
-            button.transform.SetParent(scrollView.transform,false);
-            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, ((loadFileCanvas.GetComponent<RectTransform>().rect.size.y * 0.65f) * 0.5f - 10f) - (30f * i));
+            button.transform.SetParent(scrollViewContent.transform,false);
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetFileToLoadString(button.GetComponentInChildren<Text>().text); });
             loadFileButtons.Add(button);
         }
@@ -146,10 +187,28 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public void HideLoadCanvas()
     {
         loadFileButtons.Clear();
+        int buttonsCount = scrollViewContent.transform.childCount;
+        for (int i = 0; i < buttonsCount; i++)
+        {
+            DestroyImmediate(scrollViewContent.transform.GetChild(0).gameObject);
+        }
         loadFileCanvas.SetActive(false);
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame);
         noSaveGameCanvas.SetActive(!hasSavedGame);
+
+        if (controllerMode)
+        {
+            if (hasSaveGameCanvas.activeSelf)
+            {
+                //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+                EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+            else if (noSaveGameCanvas.activeSelf)
+            {
+                EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+        }
     }
     /// <summary>
     /// Function to set string that represents file we want to load.
@@ -175,8 +234,9 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public void LoadThisFile()
     {
         SaveAndLoadGame.saver.LoadGame(fileToLoad);
+        SaveAndLoadGame.saver.SetLoadedFightScene(true);
         loadFileInput.text = "";
-        LoadLevel.loader.LoadALevel("CitySelectMap");
+        LoadLevel.loader.LoadALevel(SaveAndLoadGame.saver.GetSceneNameCurrentlyOn());
     }
 
     /// <summary>

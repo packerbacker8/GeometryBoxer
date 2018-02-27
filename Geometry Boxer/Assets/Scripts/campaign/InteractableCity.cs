@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 
 public class InteractableCity : Interactable
 {
-
     public Text cityTitleText;
     public Text descriptionText;
     public Light statusLight;
@@ -20,12 +19,16 @@ public class InteractableCity : Interactable
     public SpriteRenderer AttackIconSpriteRenderer;
     public string sceneName;
     public string CityTitle;
+
+    [TextArea]
     public string description;
 
     private WorldInteraction worldInit;
     private RTSCam cam;
     private GameObject citySelectController;
+    private SphereCollider sphere;
     private bool exitedTrigger = false;
+    private float sphereOriginalRad;
 
     private const float pulseRange = 10.0f;
     private const float pulseSpeed = 10.0f;
@@ -51,13 +54,14 @@ public class InteractableCity : Interactable
             AttackIconSpriteRenderer.enabled = true;
             statusLight.color = Color.red;
         }
+        sphere = this.GetComponent<SphereCollider>();
+        sphereOriginalRad = sphere.radius;
     }
 
     //Bring up the canvas for the city if player enters the trigger zone
     void OnTriggerEnter(Collider col)
     {
         exitedTrigger = false;
-        Debug.Log(col.transform.root.name);
         if (col.transform.root.tag == "Player" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "owned" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "conquered" && !exitedTrigger)
         {
             worldInit.freeze = true;
@@ -69,7 +73,9 @@ public class InteractableCity : Interactable
             descriptionText.text = description;
             //for controller
             EventSystem.current.SetSelectedGameObject(Canvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            sphere.radius = sphere.radius * 1.05f;
         }
+        
     }
     void OnTriggerExit(Collider col)
     {
@@ -77,6 +83,7 @@ public class InteractableCity : Interactable
         worldInit.freeze = false;
         cam.freeze = false;
         Canvas.SetActive(false);
+        sphere.radius = sphereOriginalRad;
     }
 
     //Bring up the canvas for the city if clicked on

@@ -19,9 +19,15 @@ public class GameControllerScript : MonoBehaviour
     [Tooltip("This integer will divide the number of bots in the other container that will be the allies. The higher the number, the lower the number of allies.")]
     [Range(1, 100)]
     public int fractionalAllies = 3;
-
+    [Tooltip("Percentage of number of enemies left to make the sight line increase by.")]
+    [Range(0, 0.99f)]
+    public float sightLineExpansionThreshold = 0.5f;
+    [Tooltip("How much to expand sight bubble's radius by.")]
+    public float sightExpansionAmount = 2f;
+    
     private string currentMapName;
     private int numEnemiesAlive;
+    private int oldExpansionNumEnemies;
     private int charControllerIndex;
     private GameObject activePlayer;
     private GameObject enemyContainer;
@@ -31,7 +37,12 @@ public class GameControllerScript : MonoBehaviour
     private GameObject playerCharController;
     private Queue<GameObject> enemyTargetQueue;
     private Queue<GameObject> allyTargetQueue;
+    private GameObject pauseMenu;
+    private GameObject deathMenuObj;
+    private GameObject winMenuObj;
+    private GameObject playerUI;
     private bool playerAlive;
+    private bool levelWon;
 
     // Use this for initialization
     void Awake()
@@ -66,6 +77,7 @@ public class GameControllerScript : MonoBehaviour
             }
             allyContainer.tag = "AllyContainer"; 
             numEnemiesAlive = enemyContainer.transform.childCount;
+            oldExpansionNumEnemies = numEnemiesAlive;
             enemiesInWorld = new GameObject[numEnemiesAlive];
             alliesInWorld = new GameObject[allyContainer.transform.childCount / fractionalAllies == 0 ? 1 : allyContainer.transform.childCount / fractionalAllies];
             enemyTargetQueue = new Queue<GameObject>();
@@ -129,6 +141,7 @@ public class GameControllerScript : MonoBehaviour
             }
 
             numEnemiesAlive = enemyContainer.transform.childCount;
+            oldExpansionNumEnemies = numEnemiesAlive;
             enemiesInWorld = new GameObject[numEnemiesAlive];
             for (int i = 0; i < numEnemiesAlive; i++)
             {
@@ -147,6 +160,13 @@ public class GameControllerScript : MonoBehaviour
                 enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
         }
+        levelWon = false;
+        pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+        deathMenuObj = pauseMenu.GetComponentInChildren<DeathMenu>().gameObject;
+        deathMenuObj.SetActive(false);
+        winMenuObj = pauseMenu.GetComponentInChildren<WinMenu>().gameObject;
+        winMenuObj.SetActive(false);
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
 
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
@@ -154,13 +174,61 @@ public class GameControllerScript : MonoBehaviour
         Cursor.visible = false;
     }
 
+    private void Start()
+    {
+        //Here is where when loading in a game file the data is updated to destroy the enemies that were already killed.
+        if(SaveAndLoadGame.saver.GetLoadedFightScene())
+        {
+            HashSet<int> enemyI = SaveAndLoadGame.saver.GetFightSceneEnemyIndicies();
+            for(int i = 0; i < enemiesInWorld.Length; i++)
+            {
+                if(!enemyI.Contains(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex()))
+                {
+                    enemiesInWorld[i].GetComponent<EnemyHealthScript>().KillEnemy();
+                }
+            }
+            if(hasAllies && SaveAndLoadGame.saver.GetFightSceneHasAllies())
+            {
+                HashSet<int> allyI = SaveAndLoadGame.saver.GetFightSceneAllyIndicies();
+                for (int i = 0; i < alliesInWorld.Length; i++)
+                {
+                    if (!allyI.Contains(alliesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex()))
+                    {
+                        alliesInWorld[i].GetComponent<EnemyHealthScript>().KillEnemy();
+                    }
+                }
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if(numEnemiesAlive <= oldExpansionNumEnemies * sightLineExpansionThreshold)
+        {
+            oldExpansionNumEnemies = numEnemiesAlive;
+            StartCoroutine(IncreaseEnemySight(sightExpansionAmount));
+        }
         if (numEnemiesAlive <= 0)
         {
-            SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
-            StartCoroutine(changeLevel(dominationMap));
+            if (!levelWon && playerAlive)
+            {
+                SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
+
+                //disable any pause menu at this point
+                pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);
+
+                //display win menu
+                winMenuObj.SetActive(true);
+                WinMenu winMenu = winMenuObj.GetComponent<WinMenu>(); 
+                winMenu.setButtonActive();
+                winMenu.setMouse();
+
+                levelWon = true;
+            }
+
+
+            //StartCoroutine(changeLevel(dominationMap));
         }
     }
 
@@ -178,7 +246,7 @@ public class GameControllerScript : MonoBehaviour
     /// </summary>
     /// <param name="index">Index in the respective array.</param>
     /// <param name="tag">Tag of the object sent.</param>
-    public void isKilled(int index, string tag)
+    public void IsKilled(int index, string tag)
     {
         if(hasAllies)
         {
@@ -197,7 +265,7 @@ public class GameControllerScript : MonoBehaviour
             numEnemiesAlive--;
             enemiesInWorld[index] = null;
         }
-        
+        playerUI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
     }
 
     /// <summary>
@@ -205,7 +273,7 @@ public class GameControllerScript : MonoBehaviour
     /// to black.
     /// </summary>
     /// <returns></returns>
-    IEnumerator changeLevel(string levelToLoad)
+    private IEnumerator ChangeLevel(string levelToLoad)
     {
         float fadeTime = GetComponent<Fade>().BeginFade(1);
         yield return new WaitForSeconds(fadeTime);
@@ -215,11 +283,23 @@ public class GameControllerScript : MonoBehaviour
     /// <summary>
     /// Tells the game controller the player died.
     /// </summary>
-    public void playerKilled()
+    public void PlayerKilled()
     {
         playerAlive = false;
         SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
-        LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
+
+        //disable any pause menu at this point
+        pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);
+
+
+        //display death menu
+        deathMenuObj.SetActive(true);
+        DeathMenu deathMenu = deathMenuObj.GetComponent<DeathMenu>();
+        deathMenu.SetReloadString(deathReloadMap);
+        deathMenu.setButtonActive();
+        deathMenu.setMouse();
+
+        //LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
     }
 
     public GameObject GetActivePlayer()
@@ -332,5 +412,57 @@ public class GameControllerScript : MonoBehaviour
                 enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
             }
         }
+    }
+
+    /// <summary>
+    /// Coroutine to expand enemies' (currently alive in map) sight radius to be larger by the given amount.
+    /// </summary>
+    /// <returns>Nothing is returned.</returns>
+    /// <param name="amount">This amount will be multiplied to the enemies current sight radius.</param>
+    private IEnumerator IncreaseEnemySight(float amount)
+    {
+        yield return null;
+        foreach(GameObject enemy in enemiesInWorld)
+        {
+            if(enemy != null && enemy.GetComponentInChildren<Detect_Movement_AI>() != null)
+            {
+                enemy.GetComponentInChildren<Detect_Movement_AI>().IncreaseSight(amount);
+            }
+        }
+        yield return null;
+    }
+
+    /// <summary>
+    /// Function to give enemies alive indicies.
+    /// </summary>
+    /// <returns>Returns enemies that are being tracked as alive in enemiesInWorld container.</returns>
+    public HashSet<int> EnemyAliveIndicies()
+    {
+        HashSet<int> enemiesAlive = new HashSet<int>();
+        for (int i = 0; i < enemiesInWorld.Length; i++)
+        {
+            if(enemiesInWorld[i] != null)
+            {
+                enemiesAlive.Add(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex());
+            }
+        }
+        return enemiesAlive;
+    }
+
+    /// <summary>
+    /// Function to give allies alive indicies.
+    /// </summary>
+    /// <returns>Returns allies that are being tracked as alive in alliesInWorld container.</returns>
+    public HashSet<int> AllyAliveIndicies()
+    {
+        HashSet<int> alliesAlive = new HashSet<int>();
+        for (int i = 0; i < alliesInWorld.Length; i++)
+        {
+            if (alliesInWorld[i] != null)
+            {
+                alliesAlive.Add(alliesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex());
+            }
+        }
+        return alliesAlive;
     }
 }

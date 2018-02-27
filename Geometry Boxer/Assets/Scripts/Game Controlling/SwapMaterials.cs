@@ -13,7 +13,7 @@ public class SwapMaterials : MonoBehaviour
 
     private Renderer Character;
 
-    private void Start()
+    private void Awake()
     {
         Character = this.GetComponentInChildren<Renderer>();
     }
