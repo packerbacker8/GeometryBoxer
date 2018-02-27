@@ -9,7 +9,6 @@ using PlayerUI;
 
 public class CubeSpecialStats : PlayerStatsBaseClass
 {
-    public float Health = 15000f;
     public float Speed = .7f;
     public float Stability;
     public float AttackForce;
@@ -50,7 +49,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
 
         HealthModifier = 1.0f;
 
-        health = Health;
+        health = SaveAndLoadGame.saver.GetLoadedFightScene() ? SaveAndLoadGame.saver.GetPlayerCurrentHealth() : Health;
         stability = Stability;
         speed = Speed;
         attackForce = AttackForce;
@@ -60,8 +59,9 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         healthBarFill = GameObject.FindGameObjectWithTag("HealthBarBackground").transform.GetChild(0).GetComponent<Image>();
         originalHealth = Health;
         //HealthScript.PlayerHealth = GetPlayerHealth();
-        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(health);
+        playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(originalHealth);
         playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
+        UpdateHealthUI();
         playerUI.GetComponent<PlayerUserInterface>().SetPlayerType(1);
     }
 
@@ -147,29 +147,19 @@ public class CubeSpecialStats : PlayerStatsBaseClass
     /// <param name="impulseVal"></param>
     public override void ImpactReceived(Collision collision)
     {
-
-        // AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        // if (collision.gameObject.tag == "EnemyCollision" || (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
-        // {
-        //     if (PowerUp == true)
-        //     {
-        //         //HealthScript.setCubeHealthModifier(500); // when we change the health script you will need to fix this
-        // 
-        //     }
-        //     else
-        //     {
-        //         //HealthScript.setCubeHealthModifier(HealthModifier);
-        //     }
-        // 
-        // }
-
         //AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (collision.gameObject.tag == "EnemyCollision")  //|| (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
+        if (collision.gameObject.tag.Contains("Enemy"))  //|| (!info.IsName(getUpProne) && !info.IsName(getUpSupine)))
         {
             hitByEnemy = true;
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+                float dmgAmount = Math.Abs(collision.impulse.magnitude) / HealthModifier;
+                if (dmgAmount > maxDamageAmount)
+                {
+                    dmgAmount = maxDamageAmount;
+                    Debug.Log("Damage capped.");
+                }
+                SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
             playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
@@ -178,15 +168,26 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         {
             if (!dead && collision.impulse.magnitude > damageThreshold)
             {
-                SetPlayerHealth(Math.Abs(collision.impulse.magnitude) / HealthModifier);
+                float dmgAmount = Math.Abs(collision.impulse.magnitude) / HealthModifier;
+                if (dmgAmount > maxDamageAmount)
+                {
+                    dmgAmount = maxDamageAmount;
+                    Debug.Log("Damage capped.");
+                }
+                SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
             playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
         }
     }
 
+    /// <summary>
+    /// Function to reset player after they have died or flown out of the map.
+    /// </summary>
+    /// <param name="resetLocation">Location to set the player to.</param>
     public override void PlayerBeingReset(Transform resetLocation)
     {
+        //currently just reloading the game
         LoadLevel.loader.ReloadScene();
     }
 

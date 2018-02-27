@@ -19,6 +19,7 @@ public class attackButtonClick : MonoBehaviour {
     void TaskOnClick()
     {
         sceneName = citySelectController.GetComponent<CitySelectSceneController>().GetCurrentCityBuildName();
+        SaveAndLoadGame.saver.SetLoadedFightScene(false);
         LoadingScreenManager.LoadScene(sceneName);
     }
 }

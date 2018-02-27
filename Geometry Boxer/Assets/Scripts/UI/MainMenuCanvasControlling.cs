@@ -14,6 +14,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public GameObject loadFileCanvas;
     public GameObject fileButtonPrefab;
     public GameObject scrollView;
+    public GameObject scrollViewContent;
     public GameObject playerUI;
 
     private bool hasSavedGame;
@@ -174,8 +175,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
             files[i] = files[i].Substring(Application.persistentDataPath.Length+1, files[i].Length - Application.persistentDataPath.Length - 5);
             GameObject button = Instantiate(fileButtonPrefab) as GameObject;
             button.GetComponentInChildren<Text>().text = files[i];
-            button.transform.SetParent(scrollView.transform,false);
-            button.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, ((loadFileCanvas.GetComponent<RectTransform>().rect.size.y * 0.65f) * 0.5f - 10f) - (30f * i));
+            button.transform.SetParent(scrollViewContent.transform,false);
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetFileToLoadString(button.GetComponentInChildren<Text>().text); });
             loadFileButtons.Add(button);
         }
@@ -187,6 +187,11 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public void HideLoadCanvas()
     {
         loadFileButtons.Clear();
+        int buttonsCount = scrollViewContent.transform.childCount;
+        for (int i = 0; i < buttonsCount; i++)
+        {
+            DestroyImmediate(scrollViewContent.transform.GetChild(0).gameObject);
+        }
         loadFileCanvas.SetActive(false);
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame);
@@ -229,8 +234,9 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public void LoadThisFile()
     {
         SaveAndLoadGame.saver.LoadGame(fileToLoad);
+        SaveAndLoadGame.saver.SetLoadedFightScene(true);
         loadFileInput.text = "";
-        LoadLevel.loader.LoadALevel("CitySelectMap");
+        LoadLevel.loader.LoadALevel(SaveAndLoadGame.saver.GetSceneNameCurrentlyOn());
     }
 
     /// <summary>

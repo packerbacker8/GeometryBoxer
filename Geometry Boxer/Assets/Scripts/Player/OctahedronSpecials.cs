@@ -113,6 +113,11 @@ public class OctahedronSpecials : PunchScript
         }
         else if (specialForm.GetComponent<MeshRenderer>().enabled)
         {
+            if(Mathf.Abs(specialRigid.angularVelocity.y) < 5f)
+            {
+                SendMessage("OctaSpinStopSfx", true, SendMessageOptions.DontRequireReceiver);
+            }
+
             UpdatePos(charController.transform, specialForm.transform);
             coolDownTimer += Time.deltaTime;
 
@@ -164,6 +169,7 @@ public class OctahedronSpecials : PunchScript
                 specialRigid.AddForce(moveDir);
                 launched = true;
                 specialRigid.AddForce(Vector3.up * specialAttackForce * 2f);
+                SendMessage("OctaSpinSfx", true, SendMessageOptions.DontRequireReceiver);
             }
             else if (launched)
             {
@@ -181,6 +187,7 @@ public class OctahedronSpecials : PunchScript
                     launched = false;
                     launchTime = 0;
                 }
+                SendMessage("OctaSpinSfx", true, SendMessageOptions.DontRequireReceiver);
             }
 
         }
@@ -204,80 +211,6 @@ public class OctahedronSpecials : PunchScript
             }
         }
 
-        /***************************************************************************************************/
-        /*
-        if (tornadoMode)
-        {
-            Vector3 vec = userControlThirdPersonRef.state.move;
-            if (vec.x == 0)
-            {
-                vec.x = charMeleeDemoRef.transform.forward.x;
-            }
-            if (vec.y == 0)
-            {
-                vec.y = charMeleeDemoRef.transform.forward.y;
-            }
-            if (vec.z == 0)
-            {
-                vec.z = charMeleeDemoRef.transform.forward.z;
-            }
-            userControlThirdPersonRef.state.move = vec;
-        }
-
-
-        //vec.x = userControlThirdPersonRef.state.move.x;
-        // vec.y = userControlThirdPersonRef.state.move.y;
-        //userControlThirdPersonRef.state.move = vec;
-        //charMeleeDemoRef.transform.Translate(transform.forward * 0.01f);
-
-        //rb = charMeleeDemoRef.GetComponent<Rigidbody>();
-        //rb.velocity = transform.forward * 5f;
-
-        if (executingSpecial)
-        {
-            currentTime += Time.deltaTime;
-            if (currentTime >= SpecialTime)
-            {
-                currentTime = 0.0f;
-                executingSpecial = false;
-                tornadoMode = false;
-                if (specialIsSpeed)
-                {
-                    anim.SetFloat("variableAnimSpeed", 1.0f);
-                }
-            }
-        }
-
-        if (Input.GetKey(KeyCode.V) && !executingSpecial)
-        {
-            anim.SetFloat("variableAnimSpeed", 2.0f);
-            executingSpecial = true;
-            SpecialTime = 3.0f;
-            specialIsSpeed = true;
-        }
-        if (Input.GetKey(KeyCode.B) && !executingSpecial)
-        {
-            anim.SetFloat("variableAnimSpeed", 6.0f);
-            executingSpecial = true;
-            SpecialTime = 0.2f;
-            specialIsSpeed = true;
-        }
-        //if (Input.GetKey(KeyCode.Space) && !executingSpecial) {
-        //	//rb.AddForce (-transform.forward * 50000);
-        //	rb.velocity = new Vector3(0.0f, 0.0f, 100f);
-        //	//executingSpecial = true;
-        //}
-
-        if (Input.GetKey(KeyCode.G) && !executingSpecial)
-        {
-            //anim.SetFloat("Forward", 1.0f);
-            //userControlThirdPersonRef.state.move = transform.forward;
-            tornadoMode = true;
-
-            executingSpecial = true;
-            SpecialTime = 3.0f;
-            specialIsSpeed = true;
-        }*/
     }
 
 
@@ -346,6 +279,7 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     protected override void DeactivateSpecialAttack()
     {
+        SendMessage("OctaDeactivateSfx", true, SendMessageOptions.DontRequireReceiver);
         playerGrowing = true;
         specialRigid.angularDrag = 100f;
         specialRigid.angularVelocity = Vector3.zero;
@@ -398,6 +332,7 @@ public class OctahedronSpecials : PunchScript
     /// </summary>
     protected override void ActivateSpecialAttack()
     {
+        SendMessage("OctaActivateSfx", true, SendMessageOptions.DontRequireReceiver);
         specialRigid.useGravity = true;
         specialRigid.angularDrag = angularDragAmount;
         leftFistCollider.radius = leftFistStartSize.radius;

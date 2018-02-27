@@ -18,6 +18,7 @@ namespace RootMotion.Demos {
         {
             light = this.transform.parent.GetChild(5).gameObject;
             source = this.gameObject.AddComponent<AudioSource>();
+            source.spatialBlend = 0.6f;
         }
 
         void OnTriggerEnter(Collider collider) {

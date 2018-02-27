@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
 {
-
+    public AudioClip specialAttackThrow;
     public GameObject rightShoulder;
     public GameObject leftShoulder;
     public GameObject rightThigh;
@@ -104,6 +104,7 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     // Use this for initialization
     void Start()
     {
+        source.spatialBlend = 0.3f;
         anim = gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         attackStatus = false;
         randAttack = new System.Random();
@@ -229,6 +230,10 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     {
         if(projectilesLaunched < numberOfProjectiles)
         {
+            if(!source.isPlaying)
+            {
+                source.PlayOneShot(specialAttackThrow, 1f);
+            }
             int currentProjectile = totalProjectilesLaunched % numberOfProjectiles;
             projectilesLaunched++;
             totalProjectilesLaunched++;
