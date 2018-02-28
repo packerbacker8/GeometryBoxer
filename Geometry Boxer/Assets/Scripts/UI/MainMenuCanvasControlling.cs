@@ -24,7 +24,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
     private bool controllerMode;
     private bool ps4Mode = false;
-    private bool mouseMode = true;
+    //private bool mouseMode = true;
+    private bool menuActive = false;
     private StandaloneInputModule EventSystemInputModule;
 
     // Use this for initialization
@@ -53,11 +54,12 @@ public class MainMenuCanvasControlling : MonoBehaviour
         }
 
         EventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
-
-        if (controllerMode)
-        {
-            disablePlayerForController();     
-        }
+        
+        //if (controllerMode)
+        //{
+            //disablePlayerForController();     
+            //EventSystemInputModule.verticalAxis = "DPadY";
+        //}
 
         for (int i = 0; i < playerUI.transform.childCount; i++)
         {
@@ -91,7 +93,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
         //disable UserControlMelee on CubeMan
         CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
-        mouseMode = false;
+        //mouseMode = false;
     }
 
     void enablePlayerForMouse()
@@ -113,24 +115,32 @@ public class MainMenuCanvasControlling : MonoBehaviour
         //enable UserControlMelee on CubeMan
         CharacterController.GetComponentInChildren<UserControlMelee>().enabled = true;
         EventSystem.current.SetSelectedGameObject(null);
-        mouseMode = true;
+        //mouseMode = true;
     }
 
 
     void Update()
     {
+        //check this frame if a controller is plugged in or not, and change modes accordingly.
         string[] inputNames = Input.GetJoystickNames();
         for (int i = 0; i < inputNames.Length; i++)
         {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
             if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
             {
-                if (mouseMode)
-                {
-                    disablePlayerForController();
-                }
+                //if (mouseMode)
+               // {
+                    //disablePlayerForController();
+                //    mouseMode = false;
+                //}
                 controllerMode = true;
                 if (inputNames[i].Length == 19)
+                {
                     ps4Mode = true;
+                }
+                else
+                {
+                    ps4Mode = false;
+                }
             }
             else
             {
@@ -138,22 +148,52 @@ public class MainMenuCanvasControlling : MonoBehaviour
             }
         }
 
-
+        //Debug.Log(menuActive);
 
         if (controllerMode)
         {
-            if (Input.GetAxis("DPadY") != 0)
-            {
-                EventSystemInputModule.verticalAxis = "DPadY";
-            }
-            else
-            {
-                EventSystemInputModule.verticalAxis = "Vertical";
-            }
+
+                if (Input.GetAxis("DPadY") != 0 || Input.GetAxis("DPadYPS4") != 0)
+                {
+                    if (ps4Mode)
+                    {
+                        EventSystemInputModule.verticalAxis = "DPadYPS4";
+                    }
+                    else
+                    {
+                        EventSystemInputModule.verticalAxis = "DPadY";
+                    }
+
+                    //set canvas active for input manager if not active
+                    if (!menuActive)
+                    {
+                        if (hasSaveGameCanvas.activeSelf)
+                        {
+                            //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+                            EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                        }
+                        else if (noSaveGameCanvas.activeSelf)
+                        {
+                            EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                        }
+
+                        menuActive = true;
+                        disablePlayerForController();
+                    }
+
+                }
+                else if (Input.GetAxis("VerticalLeft") != 0)
+                {
+                    EventSystemInputModule.verticalAxis = "Vertical";
+                    menuActive = false;
+                    enablePlayerForMouse();
+                }
+            //EventSystemInputModule.verticalAxis = "DPadY";
         }
         else
         {
             enablePlayerForMouse();
+            EventSystemInputModule.verticalAxis = "Vertical";
         }
         
 
