@@ -2973,7 +2973,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotateSpeed: 1.5
   bounceAngle: 70
-  sightRange: 20
+  sightRange: 100
+  leeway: 0.1
   playerTarget: 0
 --- !u!114 &114196622715694110
 MonoBehaviour:
@@ -3384,7 +3385,6 @@ MonoBehaviour:
   leftShoulder: {fileID: 1800580697331860}
   rightThigh: {fileID: 1858306330639328}
   leftThigh: {fileID: 1814313388477612}
-  attackRandomAudio: 1000
   enemyAnimations:
   - actionIndex: 1
     animName: RightPunch
@@ -3784,6 +3784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyHealth: 3000
+  percentToFindHealthPack: 0.5
   deathDelay: 20
   damageThreshold: 30
   heavyDamageOffset: 50
@@ -5455,7 +5456,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: -751151157
+  randomSeed: -1914920062
   InitialModule:
     serializedVersion: 3
     enabled: 1
