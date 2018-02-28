@@ -242,7 +242,7 @@ namespace PlayerUI
         {
             hitCount += count;
             hit = h;
-            hitTimer = 1f;
+            hitTimer = 0.1f;
         }
 
         /// <summary>

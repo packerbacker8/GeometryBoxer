@@ -13,6 +13,7 @@ public class GameControllerScript : MonoBehaviour
     public GameObject[] playerOptions;
     public GameObject enemyCubeContainer;
     public GameObject enemyOctahedronContainer;
+    public GameObject SafeSpot;
     [Header("Ally Information")]
     [Tooltip("If set to true, the enemy container that matches the type of the player will be used as a group of allies in the fight.")]
     public bool hasAllies = false;
@@ -91,6 +92,7 @@ public class GameControllerScript : MonoBehaviour
                     enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
                     enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
                     enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(allyContainer.transform.GetChild(i % alliesInWorld.Length).GetChild(charControllerIndex).gameObject);
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
                     if(enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
                     {
                         enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
@@ -147,6 +149,7 @@ public class GameControllerScript : MonoBehaviour
             {
                 enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
                 enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
+                enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
                 enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
                 if (enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
                 {
