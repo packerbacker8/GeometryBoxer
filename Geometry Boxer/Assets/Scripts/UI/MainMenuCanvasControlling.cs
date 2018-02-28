@@ -152,6 +152,15 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
         if (controllerMode)
         {
+                if(ps4Mode)
+                {
+                    EventSystemInputModule.submitButton = "SubmitPS4";
+                }
+                else
+                {
+                    EventSystemInputModule.submitButton = "Submit";
+                }   
+
 
                 if (Input.GetAxis("DPadY") != 0 || Input.GetAxis("DPadYPS4") != 0)
                 {
