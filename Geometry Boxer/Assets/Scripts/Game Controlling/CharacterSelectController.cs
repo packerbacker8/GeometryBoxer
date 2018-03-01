@@ -159,7 +159,7 @@ public class CharacterSelectController : MonoBehaviour
         else
         {
             //Replace this with the octahedrons cutscene level
-            LoadLevel.loader.LoadALevel(yourCity);
+            LoadLevel.loader.LoadALevel("DefendNightclub");
         }
         
     }
