@@ -150,6 +150,17 @@ public class CharacterSelectController : MonoBehaviour
         {
             Debug.Log("problem, city not found");
         }
-        LoadLevel.loader.LoadALevel(yourCity);
+        //This was the original line
+        //LoadLevel.loader.LoadALevel(yourCity);
+        if (cubeSelected)
+        {
+            LoadLevel.loader.LoadALevel("DefendShippingYard");
+        }
+        else
+        {
+            //Replace this with the octahedrons cutscene level
+            LoadLevel.loader.LoadALevel(yourCity);
+        }
+        
     }
 }
