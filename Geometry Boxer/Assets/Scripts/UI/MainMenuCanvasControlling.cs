@@ -26,6 +26,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private bool ps4Mode = false;
     //private bool mouseMode = true;
     private bool menuActive = false;
+    private bool allowNavigation = false;
+    private float timeSinceDPAD = 0.0f;
     private StandaloneInputModule EventSystemInputModule;
 
     // Use this for initialization
@@ -159,8 +161,18 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 else
                 {
                     EventSystemInputModule.submitButton = "Submit";
-                }   
+                }
 
+                //Debug.Log(timeSinceDPAD);
+                if (menuActive && timeSinceDPAD < 0.1f)
+                {
+                    timeSinceDPAD += Time.deltaTime;
+                }
+                if(!allowNavigation && timeSinceDPAD >= 0.1f)
+                {
+                    EventSystem.current.sendNavigationEvents = true;
+                    allowNavigation = true;
+                }
 
                 if (Input.GetAxis("DPadY") != 0 || Input.GetAxis("DPadYPS4") != 0)
                 {
@@ -176,6 +188,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
                     //set canvas active for input manager if not active
                     if (!menuActive)
                     {
+                        
                         if (hasSaveGameCanvas.activeSelf)
                         {
                             //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
@@ -183,10 +196,13 @@ public class MainMenuCanvasControlling : MonoBehaviour
                         }
                         else if (noSaveGameCanvas.activeSelf)
                         {
-                            EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                            EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);  
                         }
-
+                        
                         menuActive = true;
+                        allowNavigation = false;
+                        timeSinceDPAD = 0.0f;
+                        EventSystem.current.sendNavigationEvents = false;
                         disablePlayerForController();
                     }
 

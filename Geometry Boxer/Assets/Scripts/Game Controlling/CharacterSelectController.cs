@@ -25,6 +25,8 @@ public class CharacterSelectController : MonoBehaviour
     private bool octaSelected = false;
 
     private bool controllerMode = false;
+    private bool ps4Mode = false;
+    private StandaloneInputModule gameEventSystemInputModule;
     // Use this for initialization
     void Start()
     {
@@ -52,18 +54,45 @@ public class CharacterSelectController : MonoBehaviour
                 controllerMode = true;
             }
         }
+        gameEventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
     }
 
     void Update()
     {
         if (controllerMode)
         {
+            string[] inputNames = Input.GetJoystickNames();
+            for (int i = 0; i < inputNames.Length; i++)
+            {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
+                if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+                {
+                    if (inputNames[i].Length == 19)
+                    {
+                        ps4Mode = true;
+                    }
+                    else
+                    {
+                        ps4Mode = false;
+                    }
+                }
+            }
+
+            if (ps4Mode)
+            {
+                gameEventSystemInputModule.submitButton = "SubmitPS4";
+            }
+            else
+            {
+                gameEventSystemInputModule.submitButton = "Submit";
+            }
+
+
             //Debug.Log(Input.GetAxis("DPadY"));
-            if (Input.GetAxis("HorizontalLeft") < -0.5f || Input.GetAxis("DPadY") < -0.5f || Input.GetAxis("DPadX") < -0.5f)
+            if (Input.GetAxis("HorizontalLeft") < -0.5f || (!ps4Mode && Input.GetAxis("DPadY") < -0.5f) || Input.GetAxis("DPadX") < -0.5f || Input.GetAxis("DPadYPS4") < -0.5f)
             {
                 CharacterSelected("Cube");
             }
-            else if (Input.GetAxis("HorizontalLeft") > 0.5f || Input.GetAxis("DPadY") > 0.5f || Input.GetAxis("DPadX") > 0.5f)
+            else if (Input.GetAxis("HorizontalLeft") > 0.5f || (!ps4Mode && Input.GetAxis("DPadY") > 0.5f) || Input.GetAxis("DPadX") > 0.5f || Input.GetAxis("DPadYPS4") > 0.5f)
             {
                 CharacterSelected("Octahedron");
             }

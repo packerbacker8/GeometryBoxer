@@ -51,13 +51,13 @@ public class WinMenu : MonoBehaviour
             }
 
 
-            if (Input.GetAxis("DPadY") != 0)
+            if (ps4Mode && Input.GetAxis("DPadYPS4") != 0)
+            {  
+                gameEventSystemInputModule.verticalAxis = "DPadYPS4";
+            }
+            else if (Input.GetAxis("DPadY") != 0)
             {
                 gameEventSystemInputModule.verticalAxis = "DPadY";
-            }
-            else if (Input.GetAxis("DPadYPS4") != 0)
-            {
-                gameEventSystemInputModule.verticalAxis = "DPadYPS4";
             }
             else
             {
