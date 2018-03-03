@@ -330,15 +330,6 @@ public class GameControllerScript : MonoBehaviour
         {
             if (tag.Contains("Enemy"))
             {
-                /*
-                for (int i = 0; i < alliesInWorld.Length; i++)
-                {
-                    if (alliesInWorld[i] != null)
-                    {
-                        enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(alliesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
-                        return;
-                    }
-                }*/
                 while(enemyTargetQueue.Count != 0)
                 {
                     GameObject target = enemyTargetQueue.Dequeue();
@@ -353,15 +344,6 @@ public class GameControllerScript : MonoBehaviour
             }
             else
             {
-                /*
-                for (int i = 0; i < enemiesInWorld.Length; i++)
-                {
-                    if (enemiesInWorld[i] != null)
-                    {
-                        alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(enemiesInWorld[i].transform.GetChild(charControllerIndex).gameObject);
-                        return;
-                    }
-                }*/
                 while (allyTargetQueue.Count != 0)
                 {
                     GameObject target = allyTargetQueue.Dequeue();
