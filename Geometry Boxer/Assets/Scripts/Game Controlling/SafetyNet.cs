@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Timers;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 public class SafetyNet : MonoBehaviour
 {
@@ -93,6 +94,19 @@ public class SafetyNet : MonoBehaviour
     {
         if(heWhoLeftTheWorld.tag.Contains("Player"))
         {
+            SaveAndLoadGame.saver.SetLoadedFightScene(true);
+            GameControllerScript gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
+            HashSet<int> allyI = gameController.hasAllies ? gameController.AllyAliveIndicies() : new HashSet<int>();
+            SaveAndLoadGame.saver.SetFightSceneSaveValues(gameController.EnemyAliveIndicies(), gameController.hasAllies, allyI);
+            if (heWhoLeftTheWorld.name.Contains("Cube"))
+            {
+                SaveAndLoadGame.saver.SetPlayerCurrentHealth(heWhoLeftTheWorld.GetComponent<CubeSpecialStats>().GetPlayerHealth());
+            }
+            else
+            {
+                SaveAndLoadGame.saver.SetPlayerCurrentHealth(heWhoLeftTheWorld.GetComponent<OctahedronStats>().GetPlayerHealth());
+            }
+            SaveAndLoadGame.saver.SetCurrentScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             heWhoLeftTheWorld.SendMessage("PlayerBeingReset", resetLocation.transform, SendMessageOptions.DontRequireReceiver);
         }
         else
