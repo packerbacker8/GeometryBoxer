@@ -29,6 +29,7 @@ public class PauseMenu : MonoBehaviour
 
     private StandaloneInputModule gameEventSystemInputModule;
     private bool controllerMode = false;
+    private bool ps4Mode = false;
     public bool notInDeathOrWinScreen = true;
     public bool saveCanvasTextInputMode = false;
 
@@ -89,7 +90,37 @@ public class PauseMenu : MonoBehaviour
 
         if (controllerMode && isPaused)
         {
-            if (Input.GetAxis("DPadY") != 0)
+            string[] inputNames = Input.GetJoystickNames();
+            for (int i = 0; i < inputNames.Length; i++)
+            {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
+                if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+                {
+                    if (inputNames[i].Length == 19)
+                    {
+                        ps4Mode = true;
+                    }
+                    else
+                    {
+                        ps4Mode = false;
+                    }
+                }
+            }
+
+            if (ps4Mode)
+            {
+                gameEventSystemInputModule.submitButton = "SubmitPS4";
+            }
+            else
+            {
+                gameEventSystemInputModule.submitButton = "Submit";
+            }
+
+
+            if (ps4Mode && Input.GetAxis("DPadYPS4") != 0)
+            {
+                gameEventSystemInputModule.verticalAxis = "DPadYPS4";
+            }
+            else if (Input.GetAxis("DPadY") != 0)
             {
                 gameEventSystemInputModule.verticalAxis = "DPadY";
             }
