@@ -25,15 +25,27 @@ namespace RootMotion.Demos {
 
 		protected Transform cam;                    // A reference to the main camera in the scenes transform
 
+        private string jumpButton = "jump";
 		void Start () {
 			// get the transform of the main camera
 			cam = Camera.main.transform;
 		}
 
 		protected virtual void Update () {
-			// read inputs
-			state.crouch = canCrouch && Input.GetKey(KeyCode.C);
-			state.jump = canJump && Input.GetButton("Jump");
+
+            if (Input.GetJoystickNames()[0].Length == 19)
+            {
+                Debug.Log(Input.GetJoystickNames()[0]);
+                changeToPSControl();
+            }
+            else
+            {
+                changeToXBoxControl();
+            }
+
+            // read inputs
+            state.crouch = canCrouch && Input.GetKey(KeyCode.C);
+			state.jump = canJump && Input.GetButton(jumpButton);
 
 			float h = Input.GetAxisRaw("Horizontal");
 			float v = Input.GetAxisRaw("Vertical");
@@ -58,6 +70,16 @@ namespace RootMotion.Demos {
 			// calculate the head look target position
 			state.lookPos = transform.position + cam.forward * 100f;
 		}
+
+        private void changeToPSControl()
+        {
+            jumpButton = "BButton";
+        }
+
+        private void changeToXBoxControl()
+        {
+            jumpButton = "jump";
+        }
 
 
 	}

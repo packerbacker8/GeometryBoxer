@@ -245,6 +245,16 @@ public class PunchScript : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
+        if (Input.GetJoystickNames()[0].Length == 19)
+        {
+            Debug.Log(Input.GetJoystickNames()[0]);
+            changeToPSControl();
+        }
+        else
+        {
+            changeToXBoxControl();
+        }
+
         useController = controllerInfo.Length > 0;
 
         if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw("DPadY") == -1))
@@ -579,6 +589,24 @@ public class PunchScript : MonoBehaviour
             anim.SetFloat("Jump", 0f);
         }
         yield return null;
+    }
+
+    private void changeToPSControl()
+    {
+        leftJabControllerButton = "LeftBumper";
+        rightJabControllerButton = "RightBumper";
+        upperCutButton = "AButton";
+        hiKickButton = "YButton";
+        specialAttackButton = "XButton";
+    }
+
+    private void changeToXBoxControl()
+    {
+        leftJabControllerButton = "LeftBumper";
+        rightJabControllerButton = "RightBumper";
+        upperCutButton = "XButton";
+        hiKickButton = "YButton";
+        specialAttackButton = "BButton";
     }
 
     /// <summary>
