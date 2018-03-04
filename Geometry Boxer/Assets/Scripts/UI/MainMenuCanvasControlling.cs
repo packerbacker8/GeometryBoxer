@@ -209,9 +209,30 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 }
                 else if (Input.GetAxis("VerticalLeft") != 0)
                 {
+
                     EventSystemInputModule.verticalAxis = "Vertical";
-                    menuActive = false;
-                    enablePlayerForMouse();
+                    if (menuActive)
+                    {
+                        menuActive = false;
+                        //if player is in a submenu, exit that submenu.
+
+                        //exit any options menu
+                        optionsMenu.SetActive(false);
+
+                        //exit any save menu
+                        loadFileButtons.Clear();
+                        int buttonsCount = scrollViewContent.transform.childCount;
+                        for (int i = 0; i < buttonsCount; i++)
+                        {
+                            DestroyImmediate(scrollViewContent.transform.GetChild(0).gameObject);
+                        }
+                        loadFileCanvas.SetActive(false);
+                        hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
+                        hasSaveGameCanvas.SetActive(hasSavedGame);
+                        noSaveGameCanvas.SetActive(!hasSavedGame);
+
+                        enablePlayerForMouse();
+                    }
                 }
             //EventSystemInputModule.verticalAxis = "DPadY";
         }
