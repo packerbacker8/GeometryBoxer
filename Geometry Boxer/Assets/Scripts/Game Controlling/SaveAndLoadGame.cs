@@ -214,7 +214,7 @@ public class SaveAndLoadGame : MonoBehaviour
         //start save game information here
         saveData = new GameData();
         SetCityNamesAndStatus();
-        LoadLevel.loader.LoadALevel("CharacterSelect");
+        LoadLevel.loader.LoadALevel("Intro");
     }
 
     /// <summary>
