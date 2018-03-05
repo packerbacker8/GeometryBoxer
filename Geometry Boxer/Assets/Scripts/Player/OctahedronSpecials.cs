@@ -158,7 +158,7 @@ public class OctahedronSpecials : PunchScript
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
+            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
             {
                 moveDir = Vector3.forward;
                 moveDir = cam.transform.TransformDirection(moveDir);

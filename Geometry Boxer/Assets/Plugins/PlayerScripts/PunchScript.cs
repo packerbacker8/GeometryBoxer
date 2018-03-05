@@ -42,6 +42,7 @@ public class PunchScript : MonoBehaviour
     public string upperCutButton = "XButton";
     public string hiKickButton = "YButton";
     public string specialAttackButton = "BButton";
+    public string activateSpecialAttackButton = "AButton";
 
     [Header("Special Attack Information")]
     public GameObject specialForm;
@@ -236,7 +237,7 @@ public class PunchScript : MonoBehaviour
         specialEndSize = new Vector3(specialFormSize, specialFormSize, specialFormSize);
 
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        if(playerUI != null)
+        if (playerUI != null)
         {
             playerUI.GetComponent<PlayerUserInterface>().SetDefultcoolDownTime(specialAttackCooldownTime);
             playerUI.GetComponent<PlayerUserInterface>().SetSpecialAttackButton(specialAttack.ToString());
@@ -246,6 +247,14 @@ public class PunchScript : MonoBehaviour
     protected virtual void Update()
     {
         useController = controllerInfo.Length > 0;
+        if (useController && controllerInfo[0].Length == 19)
+        {
+            changeToPSControl();
+        }
+        else //might want else if here.
+        {
+            changeToXBoxControl();
+        }
 
         if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw("DPadY") == -1))
         {
@@ -334,20 +343,17 @@ public class PunchScript : MonoBehaviour
                             ThrowSinglePunch(Limbs.leftArm);
                         }
                     }
-                    if (Input.GetButtonDown(rightJabControllerButton))
+                    else if (Input.GetButtonDown(rightJabControllerButton))
                     {
                         rightArmAttack = true;
-                        if (Input.GetButton(upperCutButton))
-                        {
-                            ThrowUppercut(Limbs.rightArm);
-
-                        }
-                        else
-                        {
-                            ThrowSinglePunch(Limbs.rightArm);
-                        }
+                        ThrowSinglePunch(Limbs.rightArm);
                     }
-                    if (Input.GetButtonDown(hiKickButton))
+                    else if (Input.GetButton(upperCutButton))
+                    {
+                        rightArmAttack = true;
+                        ThrowUppercut(Limbs.rightArm);
+                    }
+                    else if (Input.GetButtonDown(hiKickButton))
                     {
                         ThrowHiKick();
                     }
@@ -580,6 +586,27 @@ public class PunchScript : MonoBehaviour
         }
         yield return null;
     }
+
+    private void changeToPSControl()
+    {
+        leftJabControllerButton = "LeftBumper";
+        rightJabControllerButton = "RightBumper";
+        //These are using xbox buttons as they apply to the ps4 controller
+        upperCutButton = "AButton";
+        hiKickButton = "YButton";
+        specialAttackButton = "XButton";
+        activateSpecialAttackButton = "BButton";
+    }
+
+    private void changeToXBoxControl()
+    {
+        leftJabControllerButton = "LeftBumper";
+        rightJabControllerButton = "RightBumper";
+        upperCutButton = "XButton";
+        hiKickButton = "YButton";
+        specialAttackButton = "BButton";
+        activateSpecialAttackButton = "AButton";
+}
 
     /// <summary>
     /// Make arms of player go limp.
