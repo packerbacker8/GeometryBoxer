@@ -115,7 +115,7 @@ namespace RootMotion
             bool useControl = Input.GetJoystickNames().Length > 0;
             if (useControl && rotate)
             {
-                float horizontal = Input.GetJoystickNames()[0].Length == 19 ? Input.GetAxis("HorizontalRightPS4") * rotationSensitivity : Input.GetAxis("HorizontalRight");
+                float horizontal = Input.GetJoystickNames()[0].Length == 19 ? Input.GetAxis("HorizontalRightPS4") : Input.GetAxis("HorizontalRight");
                 float vert = Input.GetJoystickNames()[0].Length == 19 ? Input.GetAxis("VerticalRightPS4") : Input.GetAxis("VerticalRight");
                 x +=  horizontal * rotationSensitivity;
                 y = ClampAngle(y + vert * rotationSensitivity, yMinLimit, yMaxLimit);
