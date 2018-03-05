@@ -242,11 +242,26 @@ public class PunchScript : MonoBehaviour
             playerUI.GetComponent<PlayerUserInterface>().SetSpecialAttackButton(specialAttack.ToString());
         }
     }
+
+    public bool checkControllerMode()
+    {
+        string[] inputNames = Input.GetJoystickNames();
+        for (int i = 0; i < inputNames.Length; i++)
+        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
+            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     // Update is called once per frame
     protected virtual void Update()
     {
-        useController = controllerInfo.Length > 0;
-
+        useController = checkControllerMode();
+        //useController = controllerInfo.Length > 0;
+        //Debug.Log(Input.GetJoystickNames().Length + " SF SE S");
         if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw("DPadY") == -1))
         {
             charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
