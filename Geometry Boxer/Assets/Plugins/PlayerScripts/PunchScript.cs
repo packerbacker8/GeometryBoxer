@@ -42,6 +42,7 @@ public class PunchScript : MonoBehaviour
     public string upperCutButton = "XButton";
     public string hiKickButton = "YButton";
     public string specialAttackButton = "BButton";
+    public string activateSpecialAttackButton = "AButton";
 
     [Header("Special Attack Information")]
     public GameObject specialForm;
@@ -201,7 +202,6 @@ public class PunchScript : MonoBehaviour
         growingSpecial = false;
         updateCollisionCheck = false;
         controllerInfo = Input.GetJoystickNames();
-        useController = controllerInfo.Length > 0;
 
         leftArmXAxis = 0f;
         leftArmYAxis = 0f;
@@ -236,32 +236,42 @@ public class PunchScript : MonoBehaviour
         specialEndSize = new Vector3(specialFormSize, specialFormSize, specialFormSize);
 
         playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        if(playerUI != null)
+        if (playerUI != null)
         {
             playerUI.GetComponent<PlayerUserInterface>().SetDefultcoolDownTime(specialAttackCooldownTime);
             playerUI.GetComponent<PlayerUserInterface>().SetSpecialAttackButton(specialAttack.ToString());
         }
     }
 
-    public bool checkControllerMode()
+    /// <summary>
+    /// Is there a controller plugged in?
+    /// </summary>
+    /// <returns>True if there is a controller, false if not.</returns>
+    public bool CheckControllerMode()
     {
-        string[] inputNames = Input.GetJoystickNames();
-        for (int i = 0; i < inputNames.Length; i++)
+        for (int i = 0; i < controllerInfo.Length; i++)
         {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+            if (controllerInfo[i].Length == 33 || controllerInfo[i].Length == 19)
             {
                 return true;
             }
         }
-
         return false;
     }
+
     // Update is called once per frame
     protected virtual void Update()
     {
-        useController = checkControllerMode();
-        //useController = controllerInfo.Length > 0;
-        //Debug.Log(Input.GetJoystickNames().Length + " SF SE S");
+        useController = CheckControllerMode();
+        if (useController && controllerInfo[0].Length == 19)
+        {
+            changeToPSControl();
+        }
+        else //might want else if here.
+        {
+            changeToXBoxControl();
+        }
+
         if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw("DPadY") == -1))
         {
             charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
@@ -349,20 +359,17 @@ public class PunchScript : MonoBehaviour
                             ThrowSinglePunch(Limbs.leftArm);
                         }
                     }
-                    if (Input.GetButtonDown(rightJabControllerButton))
+                    else if (Input.GetButtonDown(rightJabControllerButton))
                     {
                         rightArmAttack = true;
-                        if (Input.GetButton(upperCutButton))
-                        {
-                            ThrowUppercut(Limbs.rightArm);
-
-                        }
-                        else
-                        {
-                            ThrowSinglePunch(Limbs.rightArm);
-                        }
+                        ThrowSinglePunch(Limbs.rightArm);
                     }
-                    if (Input.GetButtonDown(hiKickButton))
+                    else if (Input.GetButton(upperCutButton))
+                    {
+                        rightArmAttack = true;
+                        ThrowUppercut(Limbs.rightArm);
+                    }
+                    else if (Input.GetButtonDown(hiKickButton))
                     {
                         ThrowHiKick();
                     }
@@ -595,6 +602,27 @@ public class PunchScript : MonoBehaviour
         }
         yield return null;
     }
+
+    private void changeToPSControl()
+    {
+        leftJabControllerButton = "LeftBumper";
+        rightJabControllerButton = "RightBumper";
+        //These are using xbox buttons as they apply to the ps4 controller
+        upperCutButton = "AButton";
+        hiKickButton = "YButton";
+        specialAttackButton = "XButton";
+        activateSpecialAttackButton = "BButton";
+    }
+
+    private void changeToXBoxControl()
+    {
+        leftJabControllerButton = "LeftBumper";
+        rightJabControllerButton = "RightBumper";
+        upperCutButton = "XButton";
+        hiKickButton = "YButton";
+        specialAttackButton = "BButton";
+        activateSpecialAttackButton = "AButton";
+}
 
     /// <summary>
     /// Make arms of player go limp.
