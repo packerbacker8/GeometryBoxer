@@ -245,11 +245,11 @@ public class PunchScript : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (Input.GetJoystickNames()[0].Length == 19)
+        if (Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Length == 19)
         {
             changeToPSControl();
         }
-        else
+        else //might want else if here.
         {
             changeToXBoxControl();
         }

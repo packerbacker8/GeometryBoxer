@@ -25,7 +25,7 @@ namespace RootMotion.Demos {
 
 		protected Transform cam;                    // A reference to the main camera in the scenes transform
 
-        private string jumpButton = "jump";
+        private string jumpButton = "Jump";
 		void Start () {
 			// get the transform of the main camera
 			cam = Camera.main.transform;
@@ -33,7 +33,7 @@ namespace RootMotion.Demos {
 
 		protected virtual void Update () {
 
-            if (Input.GetJoystickNames()[0].Length == 19)
+            if (Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Length == 19)
             {
                 changeToPSControl();
             }
@@ -77,7 +77,7 @@ namespace RootMotion.Demos {
 
         private void changeToXBoxControl()
         {
-            jumpButton = "jump";
+            jumpButton = "Jump";
         }
 
 
