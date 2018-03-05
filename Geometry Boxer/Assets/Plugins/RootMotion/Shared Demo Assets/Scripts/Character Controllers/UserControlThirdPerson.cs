@@ -35,7 +35,6 @@ namespace RootMotion.Demos {
 
             if (Input.GetJoystickNames()[0].Length == 19)
             {
-                Debug.Log(Input.GetJoystickNames()[0]);
                 changeToPSControl();
             }
             else

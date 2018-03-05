@@ -247,7 +247,6 @@ public class PunchScript : MonoBehaviour
     {
         if (Input.GetJoystickNames()[0].Length == 19)
         {
-            Debug.Log(Input.GetJoystickNames()[0]);
             changeToPSControl();
         }
         else
