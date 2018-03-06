@@ -202,7 +202,6 @@ public class PunchScript : MonoBehaviour
         growingSpecial = false;
         updateCollisionCheck = false;
         controllerInfo = Input.GetJoystickNames();
-        useController = controllerInfo.Length > 0;
 
         leftArmXAxis = 0f;
         leftArmYAxis = 0f;
@@ -243,10 +242,27 @@ public class PunchScript : MonoBehaviour
             playerUI.GetComponent<PlayerUserInterface>().SetSpecialAttackButton(specialAttack.ToString());
         }
     }
+
+    /// <summary>
+    /// Is there a controller plugged in?
+    /// </summary>
+    /// <returns>True if there is a controller, false if not.</returns>
+    public bool CheckControllerMode()
+    {
+        for (int i = 0; i < controllerInfo.Length; i++)
+        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
+            if (controllerInfo[i].Length == 33 || controllerInfo[i].Length == 19)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Update is called once per frame
     protected virtual void Update()
     {
-        useController = controllerInfo.Length > 0;
+        useController = CheckControllerMode();
         if (useController && controllerInfo[0].Length == 19)
         {
             changeToPSControl();
