@@ -90,8 +90,12 @@ public class PauseMenu : MonoBehaviour
             }
             pauseGameHelper();
         }
-        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && isPaused)
+        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton") || Input.GetButtonDown("RightStickButton")) && isPaused)
         {
+            if (Input.GetButtonDown("RightStickButton") && !ps4Mode)
+            {
+                return;
+            }
             resumeGameHelper();
         }
 

@@ -155,7 +155,10 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 controllerMode = false;
             }
         }
-
+        if(EventSystem.current.currentSelectedGameObject == null && controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(GameObject.Find(tutorialButtonName));
+        }
         //Debug.Log(menuActive);
 
         if (controllerMode)
