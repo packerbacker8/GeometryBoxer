@@ -115,12 +115,12 @@ public class CubeAttackScript : PunchScript
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
+            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
             {
                 specialRigid.AddForce(Vector3.up * specialAttackForce * 100f);
                 SendMessage("CubeJumpSfx",true,SendMessageOptions.DontRequireReceiver);
             }
-            else if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown("AButton")) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
+            else if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
             {
                 specialRigid.AddForce(-Vector3.up * specialAttackForce * 300f);
                 launched = true;

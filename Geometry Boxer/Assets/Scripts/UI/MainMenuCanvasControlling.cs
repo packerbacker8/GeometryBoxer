@@ -23,6 +23,11 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private List<GameObject> loadFileButtons;
 
     private bool controllerMode;
+    private bool ps4Mode = false;
+    //private bool mouseMode = true;
+    private bool menuActive = false;
+    private bool allowNavigation = false;
+    private float timeSinceDPAD = 0.0f;
     private StandaloneInputModule EventSystemInputModule;
 
     // Use this for initialization
@@ -45,56 +50,177 @@ public class MainMenuCanvasControlling : MonoBehaviour
             if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
             {
                 controllerMode = true;
+                if (inputNames[i].Length == 19)
+                    ps4Mode = true;
             }
         }
 
         EventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
+        
+        //if (controllerMode)
+        //{
+            //disablePlayerForController();     
+            //EventSystemInputModule.verticalAxis = "DPadY";
+        //}
 
-        if (controllerMode)
-        {
-            if (hasSaveGameCanvas.activeSelf)
-            {
-                //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
-                EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-            }
-            else if(noSaveGameCanvas.activeSelf)
-            {
-                EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-            }
-
-
-            GameObject CharacterController = null;
-            GameObject[] listOfPlayerObjects = GameObject.FindGameObjectsWithTag("Player");
-            for (int i = 0; i < listOfPlayerObjects.Length; i++)
-            {
-                if (listOfPlayerObjects[i].name == "Character Controller")
-                { 
-                    CharacterController = listOfPlayerObjects[i];
-                    break;
-                }
-            }
-
-            //disable UserControlMelee on CubeMan
-            CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
-        }
-
-        for(int i = 0; i < playerUI.transform.childCount; i++)
+        for (int i = 0; i < playerUI.transform.childCount; i++)
         {
             playerUI.transform.GetChild(i).gameObject.SetActive(false);
         }
-
     }
+
+    void disablePlayerForController()
+    {
+        if (hasSaveGameCanvas.activeSelf)
+        {
+            //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+            EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        }
+        else if (noSaveGameCanvas.activeSelf)
+        {
+            EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        }
+
+
+        GameObject CharacterController = null;
+        GameObject[] listOfPlayerObjects = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < listOfPlayerObjects.Length; i++)
+        {
+            if (listOfPlayerObjects[i].name == "Character Controller")
+            {
+                CharacterController = listOfPlayerObjects[i];
+                break;
+            }
+        }
+
+        //disable UserControlMelee on CubeMan
+        CharacterController.GetComponentInChildren<UserControlMelee>().enabled = false;
+        //mouseMode = false;
+    }
+
+    void enablePlayerForMouse()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+
+        GameObject CharacterController = null;
+        GameObject[] listOfPlayerObjects = GameObject.FindGameObjectsWithTag("Player");
+        for (int i = 0; i < listOfPlayerObjects.Length; i++)
+        {
+            if (listOfPlayerObjects[i].name == "Character Controller")
+            {
+                CharacterController = listOfPlayerObjects[i];
+                break;
+            }
+        }
+
+        //enable UserControlMelee on CubeMan
+        CharacterController.GetComponentInChildren<UserControlMelee>().enabled = true;
+        EventSystem.current.SetSelectedGameObject(null);
+        //mouseMode = true;
+    }
+
 
     void Update()
     {
-        if (Input.GetAxis("DPadY") != 0)
+        //check this frame if a controller is plugged in or not, and change modes accordingly.
+        string[] inputNames = Input.GetJoystickNames();
+        for (int i = 0; i < inputNames.Length; i++)
+        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
+            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+            {
+                //if (mouseMode)
+               // {
+                    //disablePlayerForController();
+                //    mouseMode = false;
+                //}
+                controllerMode = true;
+                if (inputNames[i].Length == 19)
+                {
+                    ps4Mode = true;
+                }
+                else
+                {
+                    ps4Mode = false;
+                }
+            }
+            else
+            {
+                controllerMode = false;
+            }
+        }
+
+        //Debug.Log(menuActive);
+
+        if (controllerMode)
         {
-            EventSystemInputModule.verticalAxis = "DPadY";
+                if(ps4Mode)
+                {
+                    EventSystemInputModule.submitButton = "SubmitPS4";
+                }
+                else
+                {
+                    EventSystemInputModule.submitButton = "Submit";
+                }
+
+                //Debug.Log(timeSinceDPAD);
+                if (menuActive && timeSinceDPAD < 0.1f)
+                {
+                    timeSinceDPAD += Time.deltaTime;
+                }
+                if(!allowNavigation && timeSinceDPAD >= 0.1f)
+                {
+                    EventSystem.current.sendNavigationEvents = true;
+                    allowNavigation = true;
+                }
+
+                if (Input.GetAxis("DPadY") != 0 || Input.GetAxis("DPadYPS4") != 0)
+                {
+                    if (ps4Mode)
+                    {
+                        EventSystemInputModule.verticalAxis = "DPadYPS4";
+                    }
+                    else
+                    {
+                        EventSystemInputModule.verticalAxis = "DPadY";
+                    }
+
+                    //set canvas active for input manager if not active
+                    if (!menuActive)
+                    {
+                        
+                        if (hasSaveGameCanvas.activeSelf)
+                        {
+                            //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+                            EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                        }
+                        else if (noSaveGameCanvas.activeSelf)
+                        {
+                            EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);  
+                        }
+                        
+                        menuActive = true;
+                        allowNavigation = false;
+                        timeSinceDPAD = 0.0f;
+                        EventSystem.current.sendNavigationEvents = false;
+                        disablePlayerForController();
+                    }
+
+                }
+                else if (Input.GetAxis("VerticalLeft") != 0)
+                {
+                    EventSystemInputModule.verticalAxis = "Vertical";
+                    menuActive = false;
+                    enablePlayerForMouse();
+                }
+            //EventSystemInputModule.verticalAxis = "DPadY";
         }
         else
         {
+            enablePlayerForMouse();
             EventSystemInputModule.verticalAxis = "Vertical";
         }
+        
 
         if (loadFileCanvas.activeSelf == true && controllerMode && EventSystem.current.currentSelectedGameObject.name == "LoadInputField")
         {
