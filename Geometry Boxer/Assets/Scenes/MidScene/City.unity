@@ -27,7 +27,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: aeda7ac675715a848bb1d07b7fbaa714, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 7b621f3d20f81af4785f8576da7910e2, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.46882445, g: 0.5035759, b: 0.5503029, a: 1}
+  m_IndirectSpecularColor: {r: 0.17609401, g: 0.29808566, b: 0.5343638, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -11423,6 +11423,46 @@ Prefab:
         type: 2}
       propertyPath: m_Shadows.m_Type
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: skyMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 7b621f3d20f81af4785f8576da7910e2, type: 2}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: groundColor.r
+      value: 0.2700584
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: groundColor.g
+      value: 0.33088237
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: groundColor.b
+      value: 0.3182981
+      objectReference: {fileID: 0}
+    - target: {fileID: 108000011153186928, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: m_Intensity
+      value: 0.9259257
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: m_SkyTint.r
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: m_SkyTint.g
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: m_SkyTint.b
+      value: 0.5019608
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4aab7a1543bedcc46b9b59c6404e5f00, type: 2}
