@@ -483,6 +483,24 @@ public class SaveAndLoadGame : MonoBehaviour
         return saveData.playerCurrentHealth;
     }
 
+    /// <summary>
+    /// Set the save game current session as having splitscreen or not.
+    /// </summary>
+    /// <param name="split">If true, two player characters will be present.</param>
+    public void SetSplitscreen(bool split)
+    {
+        saveData.splitscreen = split;
+    }
+
+    /// <summary>
+    /// Is the current save session splitscreen?
+    /// </summary>
+    /// <returns>True if yes, false otherwise.</returns>
+    public bool GetSplitscreen()
+    {
+        return saveData.splitscreen;
+    }
+
     [Serializable]
     private class InitializeData
     {
@@ -503,6 +521,7 @@ public class SaveAndLoadGame : MonoBehaviour
         public float playerCurrentHealth = 15000f;
         public List<string> cityNames = new List<string>();
         public List<string> cityStatuses = new List<string>();
+        public bool splitscreen = true;
         public bool wonGame = false;
         public HashSet<int> enemyIndicies = new HashSet<int>();
         public bool currentSceneHasAllies = false;

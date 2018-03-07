@@ -15,6 +15,8 @@ public class GameControllerScript : MonoBehaviour
     public GameObject enemyOctahedronContainer;
     public GameObject SafeSpot;
     [Header("Ally Information")]
+    [Tooltip("If set to true, two of the player characters will be active with the camera being half and half.")]
+    public bool IsSplitScreen = false;
     [Tooltip("If set to true, the enemy container that matches the type of the player will be used as a group of allies in the fight.")]
     public bool hasAllies = false;
     [Tooltip("This integer will divide the number of bots in the other container that will be the allies. The higher the number, the lower the number of allies.")]
@@ -31,6 +33,7 @@ public class GameControllerScript : MonoBehaviour
     private int oldExpansionNumEnemies;
     private int charControllerIndex;
     private GameObject activePlayer;
+    private GameObject player2;
     private GameObject enemyContainer;
     private GameObject[] enemiesInWorld;
     private GameObject allyContainer;
@@ -60,6 +63,16 @@ public class GameControllerScript : MonoBehaviour
                 playerOptions[i].SetActive(false);
             }
         }
+
+        this.GetComponent<SplitscreenOrientation>().player1Cam = activePlayer.GetComponentInChildren<Camera>();
+        IsSplitScreen = SaveAndLoadGame.saver.GetSplitscreen();
+        if (IsSplitScreen)
+        {
+            player2 = Instantiate(activePlayer);
+            player2.transform.position = new Vector3(player2.transform.position.x + 5f, player2.transform.position.y, player2.transform.position.z);
+            this.GetComponent<SplitscreenOrientation>().player2Cam = player2.GetComponentInChildren<Camera>();
+        }
+
         charControllerIndex = 2;
         playerCharController = activePlayer.transform.GetChild(charControllerIndex).gameObject;
         enemyContainer = activePlayer.name.Contains("Cube") ? enemyOctahedronContainer : enemyCubeContainer;
