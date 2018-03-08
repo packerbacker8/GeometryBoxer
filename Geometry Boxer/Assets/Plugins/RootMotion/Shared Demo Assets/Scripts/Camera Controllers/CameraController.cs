@@ -106,8 +106,9 @@ namespace RootMotion
         {
             if (controllerInfo.Length > 0)
             {
-                controllerHorizon = controllerInfo[0].Length == 19 ? "HorizontalRightPS4" : "HorizontalRight";
-                controllerVertical = controllerInfo[0].Length == 19 ? "VerticalRightPS4" : "VerticalRight";
+                int controlIndex = isPlayer2 && controllerInfo.Length > 1 ? 1 : 0;
+                controllerHorizon = controllerInfo[controlIndex].Length == 19 ? "HorizontalRightPS4" : "HorizontalRight";
+                controllerVertical = controllerInfo[controlIndex].Length == 19 ? "VerticalRightPS4" : "VerticalRight";
                 if (isPlayer2)
                 {
                     controllerHorizon += "_2";
@@ -134,8 +135,8 @@ namespace RootMotion
             bool useControl = Input.GetJoystickNames().Length > 0;
             if (useControl && rotate)
             {
-                float horizontal = Input.GetJoystickNames()[0].Length == 19 ? Input.GetAxis("HorizontalRightPS4") : Input.GetAxis("HorizontalRight");
-                float vert = Input.GetJoystickNames()[0].Length == 19 ? Input.GetAxis("VerticalRightPS4") : Input.GetAxis("VerticalRight");
+                float horizontal = Input.GetAxis(controllerHorizon);
+                float vert = Input.GetAxis(controllerVertical);
                 x +=  horizontal * rotationSensitivity;
                 y = ClampAngle(y + vert * rotationSensitivity, yMinLimit, yMaxLimit);
             }

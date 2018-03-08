@@ -29,17 +29,17 @@ namespace RootMotion.Demos
         protected Transform cam;                    // A reference to the main camera in the scenes transform
 
         private string jumpButton = "Jump";
-        private bool isPlayer2;
+        private bool isPlayer2 = false;
         void Start()
         {
             // get the transform of the main camera
-            cam = Camera.main.transform;
+            cam = this.transform.root.GetComponentInChildren<Camera>().transform;
         }
 
         protected virtual void Update()
         {
-
-            if (Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Length == 19)
+            int controlIdx = isPlayer2 && Input.GetJoystickNames().Length > 1 ? 1 : 0;
+            if (Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[controlIdx].Length == 19)
             {
                 changeToPSControl();
             }
@@ -56,6 +56,7 @@ namespace RootMotion.Demos
             float v = Input.GetAxisRaw("Vertical");
             float h2 = Input.GetAxisRaw("Horizontal_2");
             float v2 = Input.GetAxisRaw("Vertical_2");
+
 
             // calculate move direction
             Vector3 move = isPlayer2 ? cam.rotation * new Vector3(h2, 0f, v2).normalized : cam.rotation * new Vector3(h, 0f, v).normalized;

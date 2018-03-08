@@ -77,6 +77,7 @@ public class GameControllerScript : MonoBehaviour
             player2.GetComponentInChildren<RootMotion.CameraController>().SetIsPlayer2();
             player2.GetComponentInChildren<UserControlThirdPerson>().SetIsPlayer2();
             player2CharController = player2.transform.GetChild(charControllerIndex).gameObject;
+            activePlayer.GetComponent<PunchScript>().Player2Present = true;
         }
 
         charControllerIndex = 2;

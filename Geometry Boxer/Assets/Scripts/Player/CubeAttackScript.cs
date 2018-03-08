@@ -128,7 +128,7 @@ public class CubeAttackScript : PunchScript
             }
             if (!isGrounded)
             {
-                moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+                moveDir = new Vector3(Input.GetAxisRaw(horizontalStick), 0, Input.GetAxisRaw(verticalStick));
                 moveDir = cam.transform.TransformDirection(moveDir);
                 moveDir.y = 0;
                 moveDir = Vector3.Normalize(moveDir);
@@ -309,6 +309,8 @@ public class CubeAttackScript : PunchScript
         hiKickButton = hiKickButton + "_2";
         specialAttackButton = specialAttackButton + "_2";
         activateSpecialAttackButton = activateSpecialAttackButton + "_2";
+        horizontalStick += "_2";
+        verticalStick += "_2";
     }
 }
 

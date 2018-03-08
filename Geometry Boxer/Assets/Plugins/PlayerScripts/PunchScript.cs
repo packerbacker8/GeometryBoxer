@@ -28,6 +28,7 @@ public class PunchScript : MonoBehaviour
 
     [Header("Player 2?")]
     public bool IsPlayer2 = false;
+    public bool Player2Present = false;
 
     [Header("PC punch buttons.")]
     public KeyCode leftJabKey = KeyCode.Q;
@@ -46,6 +47,8 @@ public class PunchScript : MonoBehaviour
     public string hiKickButton = "YButton";
     public string specialAttackButton = "BButton";
     public string activateSpecialAttackButton = "AButton";
+    public string horizontalStick = "Horizontal";
+    public string verticalStick = "Vertical";
 
     [Header("Special Attack Information")]
     public GameObject specialForm;
@@ -254,6 +257,10 @@ public class PunchScript : MonoBehaviour
     {
         if(controllerInfo.Length > 0 && !IsPlayer2)
         {
+            if(Player2Present && controllerInfo.Length == 1)
+            {
+                return false;
+            }
             if (controllerInfo[0].Length == 33 || controllerInfo[0].Length == 19)
             {
                 return true;
@@ -261,9 +268,19 @@ public class PunchScript : MonoBehaviour
         }
         else if(controllerInfo.Length > 0 && IsPlayer2)
         {
-            if (controllerInfo[1].Length == 33 || controllerInfo[1].Length == 19)
+            if(controllerInfo.Length == 1)
             {
-                return true;
+                if (controllerInfo[0].Length == 33 || controllerInfo[0].Length == 19)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if (controllerInfo[1].Length == 33 || controllerInfo[1].Length == 19)
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -273,7 +290,7 @@ public class PunchScript : MonoBehaviour
     protected virtual void Update()
     {
         useController = CheckControllerMode();
-        int controlIndex = IsPlayer2 ? 1 : 0;
+        int controlIndex = IsPlayer2 && controllerInfo.Length > 1 ? 1 : 0;
         if (useController && controllerInfo[controlIndex].Length == 19)
         {
             changeToPSControl();
@@ -377,6 +394,7 @@ public class PunchScript : MonoBehaviour
                     }
                     else if (Input.GetButton(upperCutButton))
                     {
+                        
                         rightArmAttack = true;
                         ThrowUppercut(Limbs.rightArm);
                     }
@@ -889,5 +907,6 @@ public class PunchScript : MonoBehaviour
     public virtual void SetAsPlayer2()
     {
         IsPlayer2 = true;
+        Player2Present = true;
     }
 }

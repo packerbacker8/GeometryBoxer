@@ -212,10 +212,21 @@ public class PauseMenu : MonoBehaviour
         }
         else if(inputNames.Length > 0 && isPlayer2)
         {
-            if (inputNames[1].Length == 19)
+            if(inputNames.Length > 1)
             {
-                ps4True = true;
+                if (inputNames[1].Length == 19)
+                {
+                    ps4True = true;
+                }
             }
+            else
+            {
+                if (inputNames[0].Length == 19)
+                {
+                    ps4True = true;
+                }
+            }
+
         }
         else
         {
