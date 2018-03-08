@@ -22,6 +22,7 @@ namespace Enemy
         private GameObject moveTargetObj;
         private Transform moveTarget;
         private Transform playerTransform;
+        private Transform player2Transform;
         private GameObject gameController;
         private bool inZone;
 
@@ -30,9 +31,10 @@ namespace Enemy
         /// AI can detect if it is close enough to the player yet or not.
         /// </summary>
         /// <param name="player">The transform of the player that the AI is continually 'looking' for.</param>
-        public void SetPlayerTransform(Transform player)
+        public void SetPlayersTransform(Transform player, Transform player2)
         {
             playerTransform = player;
+            player2Transform = player2;
         }
 
         public bool CanMove()
@@ -120,10 +122,15 @@ namespace Enemy
                 UpdateTarget();
             }
             distance = Vector3.Distance(playerTransform.position, transform.position);
-            if (distance < sightRange)
+            if (distance < sightRange && !moveTarget.Equals(player2Transform))
             {
                 playerTarget = true;
-                this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget();
+                this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget(false);
+            }
+            else if(player2Transform != null && (distance = Vector3.Distance(player2Transform.position, transform.position)) < sightRange)
+            {
+                playerTarget = true;
+                this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget(true);
             }
             else
             {
