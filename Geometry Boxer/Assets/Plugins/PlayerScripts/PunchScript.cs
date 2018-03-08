@@ -26,6 +26,9 @@ public class PunchScript : MonoBehaviour
     public GameObject rightThigh;
     public GameObject leftThigh;
 
+    [Header("Player 2?")]
+    public bool IsPlayer2 = false;
+
     [Header("PC punch buttons.")]
     public KeyCode leftJabKey = KeyCode.Q;
     public KeyCode rightJabKey = KeyCode.E;
@@ -249,9 +252,16 @@ public class PunchScript : MonoBehaviour
     /// <returns>True if there is a controller, false if not.</returns>
     public bool CheckControllerMode()
     {
-        for (int i = 0; i < controllerInfo.Length; i++)
-        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-            if (controllerInfo[i].Length == 33 || controllerInfo[i].Length == 19)
+        if(controllerInfo.Length > 0 && !IsPlayer2)
+        {
+            if (controllerInfo[0].Length == 33 || controllerInfo[0].Length == 19)
+            {
+                return true;
+            }
+        }
+        else if(controllerInfo.Length > 0 && IsPlayer2)
+        {
+            if (controllerInfo[1].Length == 33 || controllerInfo[1].Length == 19)
             {
                 return true;
             }
@@ -263,7 +273,8 @@ public class PunchScript : MonoBehaviour
     protected virtual void Update()
     {
         useController = CheckControllerMode();
-        if (useController && controllerInfo[0].Length == 19)
+        int controlIndex = IsPlayer2 ? 1 : 0;
+        if (useController && controllerInfo[controlIndex].Length == 19)
         {
             changeToPSControl();
         }
@@ -271,8 +282,8 @@ public class PunchScript : MonoBehaviour
         {
             changeToXBoxControl();
         }
-
-        if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw("DPadY") == -1))
+        string dpady = IsPlayer2 ? "DPadY_2" : "DPadY";
+        if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw(dpady) == -1))
         {
             charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
         }
@@ -377,33 +388,36 @@ public class PunchScript : MonoBehaviour
                 }
                 else  // keyboard controls
                 {
-                    if (Input.GetKeyDown(leftJabKey))
+                    if (!IsPlayer2)
                     {
-                        //currently a combo attack
-                        leftArmAttack = true;
-                        rightArmAttack = true;
-                        ThrowSinglePunch(Limbs.leftArm);
-                    }
-                    else if (Input.GetKeyDown(leftUppercutKey))
-                    {
-                        leftArmAttack = true;
-                        ThrowUppercut(Limbs.leftArm);
-                    }
+                        if (Input.GetKeyDown(leftJabKey))
+                        {
+                            //currently a combo attack
+                            leftArmAttack = true;
+                            rightArmAttack = true;
+                            ThrowSinglePunch(Limbs.leftArm);
+                        }
+                        else if (Input.GetKeyDown(leftUppercutKey))
+                        {
+                            leftArmAttack = true;
+                            ThrowUppercut(Limbs.leftArm);
+                        }
 
-                    if (Input.GetKeyDown(rightJabKey))
-                    {
-                        rightArmAttack = true;
-                        ThrowSinglePunch(Limbs.rightArm);
-                    }
-                    else if (Input.GetKeyDown(rightUppercutKey))
-                    {
-                        rightArmAttack = true;
-                        ThrowUppercut(Limbs.rightArm);
-                    }
-                    else if (Input.GetKeyDown(hiKickKey))
-                    {
-                        rightFootAttack = true;
-                        ThrowHiKick();
+                        if (Input.GetKeyDown(rightJabKey))
+                        {
+                            rightArmAttack = true;
+                            ThrowSinglePunch(Limbs.rightArm);
+                        }
+                        else if (Input.GetKeyDown(rightUppercutKey))
+                        {
+                            rightArmAttack = true;
+                            ThrowUppercut(Limbs.rightArm);
+                        }
+                        else if (Input.GetKeyDown(hiKickKey))
+                        {
+                            rightFootAttack = true;
+                            ThrowHiKick();
+                        }
                     }
                 }
             }
@@ -612,6 +626,15 @@ public class PunchScript : MonoBehaviour
         hiKickButton = "YButton";
         specialAttackButton = "XButton";
         activateSpecialAttackButton = "BButton";
+        if(IsPlayer2)
+        {
+            leftJabControllerButton = "LeftBumper_2";
+            rightJabControllerButton = "RightBumper_2";
+            upperCutButton = "AButton_2";
+            hiKickButton = "YButton_2";
+            specialAttackButton = "XButton_2";
+            activateSpecialAttackButton = "BButton_2";
+        }
     }
 
     private void changeToXBoxControl()
@@ -622,6 +645,15 @@ public class PunchScript : MonoBehaviour
         hiKickButton = "YButton";
         specialAttackButton = "BButton";
         activateSpecialAttackButton = "AButton";
+        if(IsPlayer2)
+        {
+            leftJabControllerButton = "LeftBumper_2";
+            rightJabControllerButton = "RightBumper_2";
+            upperCutButton = "XButton_2";
+            hiKickButton = "YButton_2";
+            specialAttackButton = "BButton_2";
+            activateSpecialAttackButton = "AButton_2";
+        }
 }
 
     /// <summary>
@@ -852,5 +884,10 @@ public class PunchScript : MonoBehaviour
     public bool getUseController()
     {
         return useController;
+    }
+
+    public virtual void SetAsPlayer2()
+    {
+        IsPlayer2 = true;
     }
 }

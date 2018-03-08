@@ -71,6 +71,9 @@ public class GameControllerScript : MonoBehaviour
             player2 = Instantiate(activePlayer);
             player2.transform.position = new Vector3(player2.transform.position.x + 5f, player2.transform.position.y, player2.transform.position.z);
             this.GetComponent<SplitscreenOrientation>().player2Cam = player2.GetComponentInChildren<Camera>();
+            player2.GetComponent<PunchScript>().SetAsPlayer2();
+            player2.GetComponentInChildren<RootMotion.CameraController>().SetIsPlayer2();
+            player2.GetComponentInChildren<UserControlThirdPerson>().SetIsPlayer2();
         }
 
         charControllerIndex = 2;

@@ -17,6 +17,10 @@ public class SplitscreenOrientation : MonoBehaviour
         SetupCameraRect();
     }
 
+    /// <summary>
+    /// Call from options menu to set split screen as either horizontal or vertical.
+    /// </summary>
+    /// <param name="horizon">True means horizontal splitscreen, false is vertical.</param>
     public void ChangeOrientation(bool horizon)
     {
         Horizontal = horizon;
