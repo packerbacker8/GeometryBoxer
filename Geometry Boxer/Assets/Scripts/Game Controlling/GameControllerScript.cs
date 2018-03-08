@@ -39,6 +39,7 @@ public class GameControllerScript : MonoBehaviour
     private GameObject allyContainer;
     private GameObject[] alliesInWorld;
     private GameObject playerCharController;
+    private GameObject player2CharController;
     private Queue<GameObject> enemyTargetQueue;
     private Queue<GameObject> allyTargetQueue;
     private GameObject pauseMenu;
@@ -47,6 +48,7 @@ public class GameControllerScript : MonoBehaviour
     private GameObject playerUI;
     private bool playerAlive;
     private bool levelWon;
+    private bool switchPlayers;
 
     // Use this for initialization
     void Awake()
@@ -74,6 +76,7 @@ public class GameControllerScript : MonoBehaviour
             player2.GetComponent<PunchScript>().SetAsPlayer2();
             player2.GetComponentInChildren<RootMotion.CameraController>().SetIsPlayer2();
             player2.GetComponentInChildren<UserControlThirdPerson>().SetIsPlayer2();
+            player2CharController = player2.transform.GetChild(charControllerIndex).gameObject;
         }
 
         charControllerIndex = 2;
