@@ -499,7 +499,7 @@ public class SaveAndLoadGame : MonoBehaviour
     {
         public string gameStatus = "Character Select";
         public string sceneCurrentlyOn = "MainMenu";
-        public string characterType = "Octa";
+        public string characterType = "Cube";
         public float playerCurrentHealth = 15000f;
         public List<string> cityNames = new List<string>();
         public List<string> cityStatuses = new List<string>();
