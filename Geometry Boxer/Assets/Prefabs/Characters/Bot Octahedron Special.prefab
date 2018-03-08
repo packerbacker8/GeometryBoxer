@@ -2916,6 +2916,7 @@ MonoBehaviour:
   canCrouch: 1
   canJump: 0
   attackRandomAudio: 500
+  safeSpot: {fileID: 0}
   stoppingDistance: 1
   stoppingThreshold: 1.2
   attackRange: 1.2
@@ -2925,6 +2926,7 @@ MonoBehaviour:
   moveTargetObj: {fileID: 0}
   moveTarget: {fileID: 0}
   drop: 0
+  testingPath: 0
 --- !u!114 &114257613783395814
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3375,7 +3377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e7eec7e577cfc43b8b0dccfa08b43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyHealth: 3000
+  EnemyHealth: 2000
   percentToFindHealthPack: 0.5
   deathDelay: 20
   damageThreshold: 25
