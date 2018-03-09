@@ -132,19 +132,19 @@ namespace RootMotion.Dynamics {
 			muscle.connectedBody = null;
 			muscle.targetRotation = Quaternion.identity;
 			
-			// JointDrive j = new JointDrive();
-			// j.positionSpring = 0f;
-			// #if UNITY_5_2
-			// j.mode = JointDriveMode.None;
-			// #endif
-			// muscle.slerpDrive = j;
+			JointDrive j = new JointDrive();
+			j.positionSpring = 0f;
+			#if UNITY_5_2
+			j.mode = JointDriveMode.None;
+			#endif
+			muscle.slerpDrive = j;
 			
-			// muscle.xMotion = ConfigurableJointMotion.Free;
-			// muscle.yMotion = ConfigurableJointMotion.Free;
-			// muscle.zMotion = ConfigurableJointMotion.Free;
-			// muscle.angularXMotion = ConfigurableJointMotion.Free;
-			// muscle.angularYMotion = ConfigurableJointMotion.Free;
-			// muscle.angularZMotion = ConfigurableJointMotion.Free;
+			muscle.xMotion = ConfigurableJointMotion.Free;
+			muscle.yMotion = ConfigurableJointMotion.Free;
+			muscle.zMotion = ConfigurableJointMotion.Free;
+			muscle.angularXMotion = ConfigurableJointMotion.Free;
+			muscle.angularYMotion = ConfigurableJointMotion.Free;
+			muscle.angularZMotion = ConfigurableJointMotion.Free;
 		}
 
 		// Just making sure this GameObject's position and rotation matches with the muscle's in the Editor.
