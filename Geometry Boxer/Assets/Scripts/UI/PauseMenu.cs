@@ -69,10 +69,18 @@ public class PauseMenu : MonoBehaviour
     void Update()
     {
         TimeSinceEsc = TimeSinceEsc += Time.deltaTime;
-
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && !isPaused && notInDeathOrWinScreen)
+        isPaused = pauseMenuCanvas.activeInHierarchy;
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton") || Input.GetButtonDown("RightStickButton")) && !isPaused && notInDeathOrWinScreen)
         {
-            if (Input.GetButtonDown("StartButton"))
+            //RightStickButton axis is the same as start button for the PS4 controller.
+            ps4Mode = checkPS4Mode();
+            if(Input.GetButtonDown("RightStickButton") && !ps4Mode)
+            {
+                return;
+            }
+
+
+            if (Input.GetButtonDown("StartButton") || Input.GetButtonDown("RightStickButton"))
             {
                 controllerMode = true;
             }
@@ -82,29 +90,21 @@ public class PauseMenu : MonoBehaviour
             }
             pauseGameHelper();
         }
-        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton")) && isPaused)
+        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton") || Input.GetButtonDown("RightStickButton")) && isPaused)
         {
+            if (Input.GetButtonDown("RightStickButton") && !ps4Mode)
+            {
+                return;
+            }
             resumeGameHelper();
         }
 
 
         if (controllerMode && isPaused)
         {
-            string[] inputNames = Input.GetJoystickNames();
-            for (int i = 0; i < inputNames.Length; i++)
-            {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-                if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
-                {
-                    if (inputNames[i].Length == 19)
-                    {
-                        ps4Mode = true;
-                    }
-                    else
-                    {
-                        ps4Mode = false;
-                    }
-                }
-            }
+
+            ps4Mode = checkPS4Mode();
+
 
             if (ps4Mode)
             {
@@ -131,7 +131,7 @@ public class PauseMenu : MonoBehaviour
 
 
 
-            if (saveCanvas.activeSelf == true)
+            if (saveCanvas.activeInHierarchy)
             {
                 if (Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject.name == "InputField")
                 {
@@ -154,19 +154,50 @@ public class PauseMenu : MonoBehaviour
 
     }
 
+    public bool checkPS4Mode()
+    {
+        bool ps4True = false;
+        string[] inputNames = Input.GetJoystickNames();
+        for (int i = 0; i < inputNames.Length; i++)
+        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
+            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+            {
+                if (inputNames[i].Length == 19)
+                {
+                    ps4True = true;
+                }
+                else
+                {
+                    ps4True = false;
+                }
+            }
+        }
+
+        return ps4True;
+    }
+
+
     /// <summary>
     /// Function to pick which pause to use.
     /// </summary>
     public void pauseGameHelper()
     {
-        if (isCombatScene)
+        if (saveCanvas.activeInHierarchy)
         {
-            pauseGame();
+            CloseSaveCanvas();
         }
         else
         {
-            pauseGameNonCombat();
+            if (isCombatScene)
+            {
+                pauseGame();
+            }
+            else
+            {
+                pauseGameNonCombat();
+            }
         }
+
     }
 
     /// <summary>
@@ -311,6 +342,11 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void CloseSaveCanvas()
     {
+        foreach(GameObject butt in saveFileButtons)
+        {
+            butt.transform.parent = null;
+            Destroy(butt);
+        }
         saveFileButtons.Clear();
         saveCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(true);

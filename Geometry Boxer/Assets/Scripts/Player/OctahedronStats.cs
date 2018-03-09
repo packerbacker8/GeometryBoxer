@@ -70,7 +70,6 @@ public class OctahedronStats : PlayerStatsBaseClass
                 if (dmgAmount > maxDamageAmount)
                 {
                     dmgAmount = maxDamageAmount;
-                    Debug.Log("Damage capped.");
                 }
                 SetPlayerHealth(dmgAmount);
             }
@@ -84,7 +83,6 @@ public class OctahedronStats : PlayerStatsBaseClass
                 if (dmgAmount > maxDamageAmount)
                 {
                     dmgAmount = maxDamageAmount;
-                    Debug.Log("Damage capped.");
                 }
                 SetPlayerHealth(dmgAmount);
             }

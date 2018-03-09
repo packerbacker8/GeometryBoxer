@@ -16,6 +16,10 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public GameObject scrollView;
     public GameObject scrollViewContent;
     public GameObject playerUI;
+    [Header("Names of UI elements that need to be found.")]
+    public string tutorialButtonName = "TextButtonTutorial";
+    public string loadFileButtonName = "LoadFileButton";
+    public string loadInputFieldName = "LoadInputField";
 
     private bool hasSavedGame;
     private InputField loadFileInput;
@@ -27,6 +31,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     //private bool mouseMode = true;
     private bool menuActive = false;
     private bool allowNavigation = false;
+    private bool inInputField;
     private float timeSinceDPAD = 0.0f;
     private StandaloneInputModule EventSystemInputModule;
 
@@ -44,6 +49,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
         Cursor.visible = true;
 
         controllerMode = false;
+        inInputField = false;
         string[] inputNames = Input.GetJoystickNames();
         for (int i = 0; i < inputNames.Length; i++)
         {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
@@ -56,17 +62,18 @@ public class MainMenuCanvasControlling : MonoBehaviour
         }
 
         EventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
-        
+
         //if (controllerMode)
         //{
-            //disablePlayerForController();     
-            //EventSystemInputModule.verticalAxis = "DPadY";
+        //disablePlayerForController();     
+        //EventSystemInputModule.verticalAxis = "DPadY";
         //}
 
         for (int i = 0; i < playerUI.transform.childCount; i++)
         {
             playerUI.transform.GetChild(i).gameObject.SetActive(false);
         }
+        EventSystem.current.SetSelectedGameObject(GameObject.Find(tutorialButtonName));
     }
 
     void disablePlayerForController()
@@ -116,7 +123,6 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
         //enable UserControlMelee on CubeMan
         CharacterController.GetComponentInChildren<UserControlMelee>().enabled = true;
-        EventSystem.current.SetSelectedGameObject(null);
         //mouseMode = true;
     }
 
@@ -130,8 +136,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
             if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
             {
                 //if (mouseMode)
-               // {
-                    //disablePlayerForController();
+                // {
+                //disablePlayerForController();
                 //    mouseMode = false;
                 //}
                 controllerMode = true;
@@ -149,70 +155,98 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 controllerMode = false;
             }
         }
-
+        if(EventSystem.current.currentSelectedGameObject == null && controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(GameObject.Find(tutorialButtonName));
+        }
         //Debug.Log(menuActive);
 
         if (controllerMode)
         {
-                if(ps4Mode)
+            if (ps4Mode)
+            {
+                EventSystemInputModule.submitButton = "SubmitPS4";
+            }
+            else
+            {
+                EventSystemInputModule.submitButton = "Submit";
+            }
+
+            //Debug.Log(timeSinceDPAD);
+            if (menuActive && timeSinceDPAD < 0.1f)
+            {
+                timeSinceDPAD += Time.deltaTime;
+            }
+            if (!allowNavigation && timeSinceDPAD >= 0.1f)
+            {
+                EventSystem.current.sendNavigationEvents = true;
+                allowNavigation = true;
+            }
+
+            if (Input.GetAxis("DPadY") != 0 || Input.GetAxis("DPadYPS4") != 0)
+            {
+                if (ps4Mode)
                 {
-                    EventSystemInputModule.submitButton = "SubmitPS4";
+                    EventSystemInputModule.verticalAxis = "DPadYPS4";
                 }
                 else
                 {
-                    EventSystemInputModule.submitButton = "Submit";
+                    EventSystemInputModule.verticalAxis = "DPadY";
                 }
 
-                //Debug.Log(timeSinceDPAD);
-                if (menuActive && timeSinceDPAD < 0.1f)
+                //set canvas active for input manager if not active
+                if (!menuActive)
                 {
-                    timeSinceDPAD += Time.deltaTime;
-                }
-                if(!allowNavigation && timeSinceDPAD >= 0.1f)
-                {
-                    EventSystem.current.sendNavigationEvents = true;
-                    allowNavigation = true;
-                }
 
-                if (Input.GetAxis("DPadY") != 0 || Input.GetAxis("DPadYPS4") != 0)
-                {
-                    if (ps4Mode)
+                    if (hasSaveGameCanvas.activeInHierarchy)
                     {
-                        EventSystemInputModule.verticalAxis = "DPadYPS4";
+                        //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+                        EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
                     }
-                    else
+                    else if (noSaveGameCanvas.activeInHierarchy)
                     {
-                        EventSystemInputModule.verticalAxis = "DPadY";
+                        EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
                     }
 
-                    //set canvas active for input manager if not active
-                    if (!menuActive)
-                    {
-                        
-                        if (hasSaveGameCanvas.activeSelf)
-                        {
-                            //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
-                            EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-                        }
-                        else if (noSaveGameCanvas.activeSelf)
-                        {
-                            EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);  
-                        }
-                        
-                        menuActive = true;
-                        allowNavigation = false;
-                        timeSinceDPAD = 0.0f;
-                        EventSystem.current.sendNavigationEvents = false;
-                        disablePlayerForController();
-                    }
-
+                    menuActive = true;
+                    allowNavigation = false;
+                    timeSinceDPAD = 0.0f;
+                    EventSystem.current.sendNavigationEvents = false;
+                    disablePlayerForController();
                 }
-                else if (Input.GetAxis("VerticalLeft") != 0)
+
+            }
+            else if (Input.GetAxis("VerticalLeft") != 0)
+            {
+
+                EventSystemInputModule.verticalAxis = "Vertical";
+                if (menuActive)
                 {
-                    EventSystemInputModule.verticalAxis = "Vertical";
                     menuActive = false;
+                    //if player is in a submenu, exit that submenu.
+
+                    //exit any options menu
+                    optionsMenu.SetActive(false);
+
+                    //exit any save menu
+                    foreach (GameObject butt in loadFileButtons)
+                    {
+                        butt.transform.parent = null;
+                        Destroy(butt);
+                    }
+                    loadFileButtons.Clear();
+                    loadFileCanvas.SetActive(false);
+                    hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
+                    hasSaveGameCanvas.SetActive(hasSavedGame);
+                    noSaveGameCanvas.SetActive(!hasSavedGame);
+
                     enablePlayerForMouse();
                 }
+            }
+            if(Input.GetAxis("DPadY") == 0 && Input.GetAxis("DPadYPS4") == 0 && EventSystem.current.currentSelectedGameObject.name == loadInputFieldName)
+            {
+                inInputField = true;
+            }
             //EventSystemInputModule.verticalAxis = "DPadY";
         }
         else
@@ -220,11 +254,11 @@ public class MainMenuCanvasControlling : MonoBehaviour
             enablePlayerForMouse();
             EventSystemInputModule.verticalAxis = "Vertical";
         }
-        
 
-        if (loadFileCanvas.activeSelf == true && controllerMode && EventSystem.current.currentSelectedGameObject.name == "LoadInputField")
+        if (loadFileCanvas.activeInHierarchy && controllerMode && inInputField && EventSystem.current.currentSelectedGameObject.name == loadInputFieldName && (Input.GetAxis("DPadY") != 0 || Input.GetAxis("DPadYPS4") != 0))
         {
-            EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find("LoadFileButton").gameObject);
+            EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find(loadFileButtonName).gameObject);
+            inInputField = false;
         }
     }
 
@@ -250,7 +284,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
         {
             hasSaveGameCanvas.SetActive(hasSavedGame);
             noSaveGameCanvas.SetActive(!hasSavedGame);
-            if(controllerMode)
+            if (controllerMode)
             {
                 if (hasSaveGameCanvas.activeSelf)
                 {
@@ -296,12 +330,12 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private void FillInSaveFileInfo()
     {
         string[] files = SaveAndLoadGame.saver.GetAllSaveFiles();
-        for(int i = 0; i<files.Length;i++)
+        for (int i = 0; i < files.Length; i++)
         {
-            files[i] = files[i].Substring(Application.persistentDataPath.Length+1, files[i].Length - Application.persistentDataPath.Length - 5);
+            files[i] = files[i].Substring(Application.persistentDataPath.Length + 1, files[i].Length - Application.persistentDataPath.Length - 5);
             GameObject button = Instantiate(fileButtonPrefab) as GameObject;
             button.GetComponentInChildren<Text>().text = files[i];
-            button.transform.SetParent(scrollViewContent.transform,false);
+            button.transform.SetParent(scrollViewContent.transform, false);
             button.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(delegate { SetFileToLoadString(button.GetComponentInChildren<Text>().text); });
             loadFileButtons.Add(button);
         }
@@ -312,12 +346,12 @@ public class MainMenuCanvasControlling : MonoBehaviour
     /// </summary>
     public void HideLoadCanvas()
     {
-        loadFileButtons.Clear();
-        int buttonsCount = scrollViewContent.transform.childCount;
-        for (int i = 0; i < buttonsCount; i++)
+        foreach (GameObject butt in loadFileButtons)
         {
-            DestroyImmediate(scrollViewContent.transform.GetChild(0).gameObject);
+            butt.transform.parent = null;
+            Destroy(butt);
         }
+        loadFileButtons.Clear();
         loadFileCanvas.SetActive(false);
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame);
@@ -325,12 +359,12 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
         if (controllerMode)
         {
-            if (hasSaveGameCanvas.activeSelf)
+            if (hasSaveGameCanvas.activeInHierarchy)
             {
                 //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
                 EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
             }
-            else if (noSaveGameCanvas.activeSelf)
+            else if (noSaveGameCanvas.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
             }

@@ -112,11 +112,13 @@ namespace RootMotion
 
             // Should we rotate the camera?
             bool rotate = rotateAlways || (rotateOnLeftButton && Input.GetMouseButton(0)) || (rotateOnRightButton && Input.GetMouseButton(1)) || (rotateOnMiddleButton && Input.GetMouseButton(2));
-
-            if (rotate)
+            bool useControl = Input.GetJoystickNames().Length > 0;
+            if (useControl && rotate)
             {
-                x += Input.GetAxis("HorizontalRight") * rotationSensitivity;
-                y = ClampAngle(y + Input.GetAxis("VerticalRight") * rotationSensitivity, yMinLimit, yMaxLimit);
+                float horizontal = Input.GetJoystickNames()[0].Length == 19 ? Input.GetAxis("HorizontalRightPS4") : Input.GetAxis("HorizontalRight");
+                float vert = Input.GetJoystickNames()[0].Length == 19 ? Input.GetAxis("VerticalRightPS4") : Input.GetAxis("VerticalRight");
+                x +=  horizontal * rotationSensitivity;
+                y = ClampAngle(y + vert * rotationSensitivity, yMinLimit, yMaxLimit);
             }
 
             if (rotate)
