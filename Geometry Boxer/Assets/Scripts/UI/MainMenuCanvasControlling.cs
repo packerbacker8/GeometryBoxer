@@ -266,7 +266,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
             EventSystemInputModule.verticalAxis = "Vertical";
         }
 
-        if (loadFileCanvas.activeInHierarchy && controllerMode && inInputField && EventSystem.current.currentSelectedGameObject.name == loadInputFieldName && (Input.GetAxis("DPadY") != 0 || Input.GetAxis("DPadYPS4") != 0))
+        if (loadFileCanvas.activeInHierarchy && controllerMode && inInputField && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.name == loadInputFieldName && (Input.GetAxis("DPadY") != 0 || Input.GetAxis("DPadYPS4") != 0))
         {
             EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find(loadFileButtonName).gameObject);
             inInputField = false;
