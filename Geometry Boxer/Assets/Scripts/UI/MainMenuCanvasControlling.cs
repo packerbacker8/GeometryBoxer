@@ -34,6 +34,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private bool inInputField;
     private float timeSinceDPAD = 0.0f;
     private StandaloneInputModule EventSystemInputModule;
+    private bool loadCanvasEnabled = false;
 
     // Use this for initialization
     void Start()
@@ -73,7 +74,14 @@ public class MainMenuCanvasControlling : MonoBehaviour
         {
             playerUI.transform.GetChild(i).gameObject.SetActive(false);
         }
-        EventSystem.current.SetSelectedGameObject(GameObject.Find(tutorialButtonName));
+
+        if (controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(GameObject.Find(tutorialButtonName));
+            menuActive = true;
+        }
+        
+        
     }
 
     void disablePlayerForController()
@@ -155,10 +163,11 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 controllerMode = false;
             }
         }
-        if(EventSystem.current.currentSelectedGameObject == null && controllerMode)
-        {
-            EventSystem.current.SetSelectedGameObject(GameObject.Find(tutorialButtonName));
-        }
+
+        //if(EventSystem.current.currentSelectedGameObject == null && controllerMode)
+        //{
+        //    EventSystem.current.SetSelectedGameObject(GameObject.Find(tutorialButtonName));
+        //}
         //Debug.Log(menuActive);
 
         if (controllerMode)
@@ -241,9 +250,11 @@ public class MainMenuCanvasControlling : MonoBehaviour
                     noSaveGameCanvas.SetActive(!hasSavedGame);
 
                     enablePlayerForMouse();
+
                 }
+                EventSystem.current.SetSelectedGameObject(null);
             }
-            if(Input.GetAxis("DPadY") == 0 && Input.GetAxis("DPadYPS4") == 0 && EventSystem.current.currentSelectedGameObject.name == loadInputFieldName)
+            if(Input.GetAxis("DPadY") == 0 && Input.GetAxis("DPadYPS4") == 0 && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.name == loadInputFieldName)
             {
                 inInputField = true;
             }
@@ -260,6 +271,10 @@ public class MainMenuCanvasControlling : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find(loadFileButtonName).gameObject);
             inInputField = false;
         }
+        //if (loadCanvasEnabled)
+        //{
+         //   disablePlayerForController();
+        //}
     }
 
     /// <summary>
@@ -322,6 +337,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
         {
             EventSystem.current.SetSelectedGameObject(loadFileButtons[loadFileButtons.Count - 1]);
         }
+
+        loadCanvasEnabled = true;
     }
 
     /// <summary>
@@ -369,6 +386,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
             }
         }
+
+        loadCanvasEnabled = false;
     }
     /// <summary>
     /// Function to set string that represents file we want to load.
