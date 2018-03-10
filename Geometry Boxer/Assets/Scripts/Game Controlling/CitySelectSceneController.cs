@@ -37,8 +37,7 @@ public class CitySelectSceneController : MonoBehaviour
             }
             else
             {
-                //LoadLevel.loader.LoadALevel("OctahedronVictory");
-                wonGameCanvas.SetActive(true);
+                LoadLevel.loader.LoadALevel("OctaVictory");
             }
         }
         //wonGameCanvas.SetActive(SaveAndLoadGame.saver.CheckIfWonGame());
