@@ -2693,6 +2693,35 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 754ac39fd8bc224409ee56ab272f0d6c, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1705214082 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1627263141749742, guid: 80c287934c1bf2e488a18eb547dc1f44,
+    type: 2}
+  m_PrefabInternal: {fileID: 1920201001}
+--- !u!114 &1705214083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1705214082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5130c77d7b8ea5e4784f03f893e4196a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dominationMap: CitySelectMap
+  deathReloadMap: OctahedronBezelBase
+  loadLevelTimeOut: 20
+  playerOptions:
+  - {fileID: 1143032913}
+  - {fileID: 764843932}
+  enemyCubeContainer: {fileID: 1721190883}
+  enemyOctahedronContainer: {fileID: 34247016}
+  SafeSpot: {fileID: 1784421915}
+  hasAllies: 0
+  fractionalAllies: 3
+  sightLineExpansionThreshold: 0.5
+  sightExpansionAmount: 2
 --- !u!1 &1721190883
 GameObject:
   m_ObjectHideFlags: 0
@@ -3538,7 +3567,13 @@ Prefab:
       propertyPath: playerOptions.Array.data[1]
       value: 
       objectReference: {fileID: 764843932}
-    m_RemovedComponents: []
+    - target: {fileID: 114012859341719978, guid: 80c287934c1bf2e488a18eb547dc1f44,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 114012859341719978, guid: 80c287934c1bf2e488a18eb547dc1f44, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 80c287934c1bf2e488a18eb547dc1f44, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &2065850995

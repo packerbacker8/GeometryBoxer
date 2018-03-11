@@ -26,27 +26,27 @@ public class GameControllerScript : MonoBehaviour
     [Tooltip("How much to expand sight bubble's radius by.")]
     public float sightExpansionAmount = 2f;
     
-    private string currentMapName;
-    private int numEnemiesAlive;
-    private int oldExpansionNumEnemies;
-    private int charControllerIndex;
-    private GameObject activePlayer;
-    private GameObject enemyContainer;
-    private GameObject[] enemiesInWorld;
-    private GameObject allyContainer;
-    private GameObject[] alliesInWorld;
-    private GameObject playerCharController;
-    private Queue<GameObject> enemyTargetQueue;
-    private Queue<GameObject> allyTargetQueue;
-    private GameObject pauseMenu;
-    private GameObject deathMenuObj;
-    private GameObject winMenuObj;
-    private GameObject playerUI;
-    private bool playerAlive;
-    private bool levelWon;
+    protected string currentMapName;
+    protected int numEnemiesAlive;
+    protected int oldExpansionNumEnemies;
+    protected int charControllerIndex;
+    protected GameObject activePlayer;
+    protected GameObject enemyContainer;
+    protected GameObject[] enemiesInWorld;
+    protected GameObject allyContainer;
+    protected GameObject[] alliesInWorld;
+    protected GameObject playerCharController;
+    protected Queue<GameObject> enemyTargetQueue;
+    protected Queue<GameObject> allyTargetQueue;
+    protected GameObject pauseMenu;
+    protected GameObject deathMenuObj;
+    protected GameObject winMenuObj;
+    protected GameObject playerUI;
+    protected bool playerAlive;
+    protected bool levelWon;
 
     // Use this for initialization
-    void Awake()
+    protected virtual void Awake()
     {
         for (int i = 0; i < playerOptions.Length; i++)
         {
@@ -165,6 +165,7 @@ public class GameControllerScript : MonoBehaviour
         }
         levelWon = false;
         pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+        //Debug.Log(pauseMenu.GetComponentInChildren<DeathMenu>().ToString());
         deathMenuObj = pauseMenu.GetComponentInChildren<DeathMenu>().gameObject;
         deathMenuObj.SetActive(false);
         winMenuObj = pauseMenu.GetComponentInChildren<WinMenu>().gameObject;
@@ -177,10 +178,10 @@ public class GameControllerScript : MonoBehaviour
         Cursor.visible = false;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         //Here is where when loading in a game file the data is updated to destroy the enemies that were already killed.
-        if(SaveAndLoadGame.saver.GetLoadedFightScene())
+        if (SaveAndLoadGame.saver.GetLoadedFightScene())
         {
             HashSet<int> enemyI = SaveAndLoadGame.saver.GetFightSceneEnemyIndicies();
             for(int i = 0; i < enemiesInWorld.Length; i++)
@@ -205,9 +206,9 @@ public class GameControllerScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
-        if(numEnemiesAlive <= oldExpansionNumEnemies * sightLineExpansionThreshold)
+        if (numEnemiesAlive <= oldExpansionNumEnemies * sightLineExpansionThreshold)
         {
             oldExpansionNumEnemies = numEnemiesAlive;
             StartCoroutine(IncreaseEnemySight(sightExpansionAmount));
