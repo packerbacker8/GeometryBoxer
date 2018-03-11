@@ -374,7 +374,7 @@ public class GameControllerScript : MonoBehaviour
 
             for (int i = 0; i < enemiesInWorld.Length; i++)
             {
-                if (enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
+                if (enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
                 {
                     enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
                     enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);

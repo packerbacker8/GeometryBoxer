@@ -297,7 +297,11 @@ public class PlayerStatsBaseClass : MonoBehaviour
     {
         get
         {
-            return dead;
+            return this.dead;
+        }
+        private set
+        {
+            this.dead = value;
         }
     }
 }
