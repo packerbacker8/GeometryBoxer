@@ -15,7 +15,7 @@ public class ArenaModeScript : GameControllerScript {
     private float timeToStartWave = 3.0f;
     private bool waveActive = false;
     private int currentWaveNumber = 1;
-    private int lastWaveNumber = 5;
+    private int lastWaveNumber;
     private bool isCube;
 
     private GameObject currentHealthPickups;
@@ -116,6 +116,7 @@ public class ArenaModeScript : GameControllerScript {
     {
         base.Start();
 
+        lastWaveNumber = Waves.Length;
     }
 
     protected override void Update()
@@ -155,7 +156,7 @@ public class ArenaModeScript : GameControllerScript {
 
                 levelWon = true;
             }
-            else
+            else if (!levelWon)
             {
                 //set current wave inactive
                 Waves[currentWaveNumber - 1].gameObject.SetActive(false);
@@ -227,6 +228,8 @@ public class ArenaModeScript : GameControllerScript {
         Waves[waveNumber - 1].gameObject.SetActive(false);
 
         waveActive = false;
+
+        playerInterface.reinitializeUI(numEnemiesAlive);
 
     }
 
