@@ -265,6 +265,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
     {
         anim.Play("Death");
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
+        dead = true;
     }
 
     /// <summary>
@@ -290,5 +291,13 @@ public class PlayerStatsBaseClass : MonoBehaviour
     public virtual void SetIfPlayer2(bool p2)
     {
         isPlayer2 = p2;
+    }
+
+    public bool IsDead
+    {
+        get
+        {
+            return dead;
+        }
     }
 }

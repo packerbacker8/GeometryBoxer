@@ -270,7 +270,7 @@ public class GameControllerScript : MonoBehaviour
         }
         if (numEnemiesAlive <= 0)
         {
-            if (!levelWon && playerAlive)
+            if (!levelWon && (playerAlive || player2Alive))
             {
                 SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
 

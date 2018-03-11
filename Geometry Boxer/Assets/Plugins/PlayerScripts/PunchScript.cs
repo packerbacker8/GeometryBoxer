@@ -256,13 +256,13 @@ public class PunchScript : MonoBehaviour
     /// <returns>True if there is a controller, false if not.</returns>
     public bool CheckControllerMode()
     {
-        if(controllerInfo == null)
+        if (controllerInfo == null)
         {
             return false;
         }
-        if(controllerInfo.Length > 0 && !IsPlayer2)
+        if (controllerInfo.Length > 0 && !IsPlayer2)
         {
-            if(Player2Present && controllerInfo.Length == 1)
+            if (Player2Present && controllerInfo.Length == 1)
             {
                 return false;
             }
@@ -271,9 +271,9 @@ public class PunchScript : MonoBehaviour
                 return true;
             }
         }
-        else if(controllerInfo.Length > 0 && IsPlayer2)
+        else if (controllerInfo.Length > 0 && IsPlayer2)
         {
-            if(controllerInfo.Length == 1)
+            if (controllerInfo.Length == 1)
             {
                 if (controllerInfo[0].Length == 33 || controllerInfo[0].Length == 19)
                 {
@@ -294,65 +294,80 @@ public class PunchScript : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        useController = CheckControllerMode();
-        int controlIndex = IsPlayer2 && controllerInfo.Length > 1 ? 1 : 0;
-        if (useController && controllerInfo[controlIndex].Length == 19)
+        if (!baseStats.IsDead)
         {
-            changeToPSControl();
-        }
-        else //might want else if here.
-        {
-            changeToXBoxControl();
-        }
-        string dpady = IsPlayer2 ? "DPadY_2" : "DPadY";
-        if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw(dpady) == -1))
-        {
-            charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
-        }
+            useController = CheckControllerMode();
+            int controlIndex = IsPlayer2 && controllerInfo.Length > 1 ? 1 : 0;
+            if (useController && controllerInfo[controlIndex].Length == 19)
+            {
+                changeToPSControl();
+            }
+            else //might want else if here.
+            {
+                changeToXBoxControl();
+            }
+            string dpady = IsPlayer2 ? "DPadY_2" : "DPadY";
+            if (Input.GetKeyDown(dropWeapon) || (useController && Input.GetAxisRaw(dpady) == -1))
+            {
+                charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
+            }
 
-        if (numberOfMuscleComponents < puppetMaster.muscles.Length) //number of muscles increased from beginning, a prop has been picked up
-        {
-            rightGrab = true;
-        }
-        else //number of muscles is the same  or less, i.e. prop lost
-        {
-            rightGrab = false;
-        }
-        AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
-        if (!info.IsName("Hit"))
-        {
-            anim.speed = 1f;
-        }
-        if (isAttacking)
-        {
-            if (leftArmAttack)
+            if (numberOfMuscleComponents < puppetMaster.muscles.Length) //number of muscles increased from beginning, a prop has been picked up
             {
-                leftFistCollider.radius = leftFistStartSize.radius * fistGrowMultiplier;
-                leftFistCollider.height = leftFistStartSize.height * fistGrowMultiplier;
+                rightGrab = true;
             }
-            if (rightArmAttack)
+            else //number of muscles is the same  or less, i.e. prop lost
             {
-                rightFistCollider.radius = rightFistStartSize.radius * fistGrowMultiplier;
-                rightFistCollider.height = rightFistStartSize.height * fistGrowMultiplier;
+                rightGrab = false;
             }
-            if (leftFootAttack)
+            AnimatorStateInfo info = anim.GetCurrentAnimatorStateInfo(0);
+            if (!info.IsName("Hit"))
             {
-                leftFootCollider.size = leftFootStartSize.size * footGrowMultiplier;
+                anim.speed = 1f;
             }
-            if (rightFootAttack)
+            if (isAttacking)
             {
-                rightFootCollider.size = rightFootStartSize.size * footGrowMultiplier;
-            }
-            currentAnimLength -= Time.deltaTime;
-            if (currentAnimLength <= 0f)
-            {
-                isAttacking = false;
-                updateCollisionCheck = true;
-                leftArmAttack = false;
-                rightArmAttack = false;
-                leftFootAttack = false;
-                rightFootAttack = false;
+                if (leftArmAttack)
+                {
+                    leftFistCollider.radius = leftFistStartSize.radius * fistGrowMultiplier;
+                    leftFistCollider.height = leftFistStartSize.height * fistGrowMultiplier;
+                }
+                if (rightArmAttack)
+                {
+                    rightFistCollider.radius = rightFistStartSize.radius * fistGrowMultiplier;
+                    rightFistCollider.height = rightFistStartSize.height * fistGrowMultiplier;
+                }
+                if (leftFootAttack)
+                {
+                    leftFootCollider.size = leftFootStartSize.size * footGrowMultiplier;
+                }
+                if (rightFootAttack)
+                {
+                    rightFootCollider.size = rightFootStartSize.size * footGrowMultiplier;
+                }
+                currentAnimLength -= Time.deltaTime;
+                if (currentAnimLength <= 0f)
+                {
+                    isAttacking = false;
+                    updateCollisionCheck = true;
+                    leftArmAttack = false;
+                    rightArmAttack = false;
+                    leftFootAttack = false;
+                    rightFootAttack = false;
 
+                    leftFistCollider.radius = leftFistStartSize.radius;
+                    leftFistCollider.height = leftFistStartSize.height;
+                    rightFistCollider.radius = rightFistStartSize.radius;
+                    rightFistCollider.height = rightFistStartSize.height;
+
+                    leftFootCollider.center = leftFootStartSize.center;
+                    leftFootCollider.size = leftFootStartSize.size;
+                    rightFootCollider.center = rightFootStartSize.center;
+                    rightFootCollider.size = rightFootStartSize.size;
+                }
+            }
+            else
+            {
                 leftFistCollider.radius = leftFistStartSize.radius;
                 leftFistCollider.height = leftFistStartSize.height;
                 rightFistCollider.radius = rightFistStartSize.radius;
@@ -362,91 +377,79 @@ public class PunchScript : MonoBehaviour
                 leftFootCollider.size = leftFootStartSize.size;
                 rightFootCollider.center = rightFootStartSize.center;
                 rightFootCollider.size = rightFootStartSize.size;
-            }
-        }
-        else
-        {
-            leftFistCollider.radius = leftFistStartSize.radius;
-            leftFistCollider.height = leftFistStartSize.height;
-            rightFistCollider.radius = rightFistStartSize.radius;
-            rightFistCollider.height = rightFistStartSize.height;
-
-            leftFootCollider.center = leftFootStartSize.center;
-            leftFootCollider.size = leftFootStartSize.size;
-            rightFootCollider.center = rightFootStartSize.center;
-            rightFootCollider.size = rightFootStartSize.size;
-            if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
-            {
-                if (useController) //controller controls
+                if (!info.IsName(getUpProne) && !info.IsName(getUpSupine) && !info.IsName(fall) && anim.GetBool(onGround)) //prevent use of your arms when you are on the ground and getting up.
                 {
-                    //Left arm punching
-                    if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
+                    if (useController) //controller controls
                     {
-                        leftArmAttack = true;
-                        if (Input.GetButton(upperCutButton))
-                        {
-                            ThrowUppercut(Limbs.leftArm);
-                        }
-                        else
-                        {
-                            ThrowSinglePunch(Limbs.leftArm);
-                        }
-                    }
-                    else if (Input.GetButtonDown(rightJabControllerButton))
-                    {
-                        rightArmAttack = true;
-                        ThrowSinglePunch(Limbs.rightArm);
-                    }
-                    else if (Input.GetButton(upperCutButton))
-                    {
-                        
-                        rightArmAttack = true;
-                        ThrowUppercut(Limbs.rightArm);
-                    }
-                    else if (Input.GetButtonDown(hiKickButton))
-                    {
-                        ThrowHiKick();
-                    }
-
-                }
-                else  // keyboard controls
-                {
-                    if (!IsPlayer2)
-                    {
-                        if (Input.GetKeyDown(leftJabKey))
-                        {
-                            //currently a combo attack
-                            leftArmAttack = true;
-                            rightArmAttack = true;
-                            ThrowSinglePunch(Limbs.leftArm);
-                        }
-                        else if (Input.GetKeyDown(leftUppercutKey))
+                        //Left arm punching
+                        if (Input.GetButtonDown(leftJabControllerButton)) //left bumper
                         {
                             leftArmAttack = true;
-                            ThrowUppercut(Limbs.leftArm);
+                            if (Input.GetButton(upperCutButton))
+                            {
+                                ThrowUppercut(Limbs.leftArm);
+                            }
+                            else
+                            {
+                                ThrowSinglePunch(Limbs.leftArm);
+                            }
                         }
-
-                        if (Input.GetKeyDown(rightJabKey))
+                        else if (Input.GetButtonDown(rightJabControllerButton))
                         {
                             rightArmAttack = true;
                             ThrowSinglePunch(Limbs.rightArm);
                         }
-                        else if (Input.GetKeyDown(rightUppercutKey))
+                        else if (Input.GetButton(upperCutButton))
                         {
+
                             rightArmAttack = true;
                             ThrowUppercut(Limbs.rightArm);
                         }
-                        else if (Input.GetKeyDown(hiKickKey))
+                        else if (Input.GetButtonDown(hiKickButton))
                         {
-                            rightFootAttack = true;
                             ThrowHiKick();
+                        }
+
+                    }
+                    else  // keyboard controls
+                    {
+                        if (!IsPlayer2)
+                        {
+                            if (Input.GetKeyDown(leftJabKey))
+                            {
+                                //currently a combo attack
+                                leftArmAttack = true;
+                                rightArmAttack = true;
+                                ThrowSinglePunch(Limbs.leftArm);
+                            }
+                            else if (Input.GetKeyDown(leftUppercutKey))
+                            {
+                                leftArmAttack = true;
+                                ThrowUppercut(Limbs.leftArm);
+                            }
+
+                            if (Input.GetKeyDown(rightJabKey))
+                            {
+                                rightArmAttack = true;
+                                ThrowSinglePunch(Limbs.rightArm);
+                            }
+                            else if (Input.GetKeyDown(rightUppercutKey))
+                            {
+                                rightArmAttack = true;
+                                ThrowUppercut(Limbs.rightArm);
+                            }
+                            else if (Input.GetKeyDown(hiKickKey))
+                            {
+                                rightFootAttack = true;
+                                ThrowHiKick();
+                            }
                         }
                     }
                 }
-            }
-            else
-            {
-                //do something if down on the ground, ground combat
+                else
+                {
+                    //do something if down on the ground, ground combat
+                }
             }
         }
 
@@ -649,7 +652,7 @@ public class PunchScript : MonoBehaviour
         hiKickButton = "YButton";
         specialAttackButton = "XButton";
         activateSpecialAttackButton = "BButton";
-        if(IsPlayer2)
+        if (IsPlayer2)
         {
             leftJabControllerButton = "LeftBumper_2";
             rightJabControllerButton = "RightBumper_2";
@@ -668,7 +671,7 @@ public class PunchScript : MonoBehaviour
         hiKickButton = "YButton";
         specialAttackButton = "BButton";
         activateSpecialAttackButton = "AButton";
-        if(IsPlayer2)
+        if (IsPlayer2)
         {
             leftJabControllerButton = "LeftBumper_2";
             rightJabControllerButton = "RightBumper_2";
@@ -677,7 +680,7 @@ public class PunchScript : MonoBehaviour
             specialAttackButton = "BButton_2";
             activateSpecialAttackButton = "AButton_2";
         }
-}
+    }
 
     /// <summary>
     /// Make arms of player go limp.

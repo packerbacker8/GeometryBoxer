@@ -77,136 +77,139 @@ public class OctahedronSpecials : PunchScript
     protected override void Update()
     {
         base.Update();
-        if (updateCollisionCheck)
+        if (!baseStats.IsDead)
         {
-            //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
-            GameObject walker = leftShoulder;
-            GameObject walker2 = rightShoulder; //need both for sake of combo
-            GameObject walker3 = rightThigh;
-            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            if (updateCollisionCheck)
             {
-                walker.GetComponent<CollisionReceived>().sendDamage = true;
-                walker2.GetComponent<CollisionReceived>().sendDamage = true;
-                walker3.GetComponent<CollisionReceived>().sendDamage = true;
-                //assumes there is only one child
-                walker = walker.transform.GetChild(0).gameObject;
-                walker2 = walker2.transform.GetChild(0).gameObject;
-                walker3 = walker3.transform.GetChild(0).gameObject;
-            }
-            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null && walker3.GetComponent<CollisionReceived>() != null)
-            {
-                walker.GetComponent<CollisionReceived>().sendDamage = true;
-                walker2.GetComponent<CollisionReceived>().sendDamage = true;
-                walker3.GetComponent<CollisionReceived>().sendDamage = true;
-            }
-
-            updateCollisionCheck = false;
-        }
-
-        if (growingSpecial)
-        {
-            GrowSpecial();
-        }
-        else if (playerGrowing)
-        {
-            GrowPlayer();
-        }
-        else if (specialForm.GetComponent<MeshRenderer>().enabled)
-        {
-            if(Mathf.Abs(specialRigid.angularVelocity.y) < 5f)
-            {
-                SendMessage("OctaSpinStopSfx", true, SendMessageOptions.DontRequireReceiver);
-            }
-
-            UpdatePos(charController.transform, specialForm.transform);
-            coolDownTimer += Time.deltaTime;
-
-            isFloating = checkIfFloating();
-            //too high
-            if (isFloating > 0)
-            {
-                if (specialRigid.velocity.y > 0f)
+                //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
+                GameObject walker = leftShoulder;
+                GameObject walker2 = rightShoulder; //need both for sake of combo
+                GameObject walker3 = rightThigh;
+                while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
                 {
-                    floatCapped = false;
+                    walker.GetComponent<CollisionReceived>().sendDamage = true;
+                    walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                    walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                    //assumes there is only one child
+                    walker = walker.transform.GetChild(0).gameObject;
+                    walker2 = walker2.transform.GetChild(0).gameObject;
+                    walker3 = walker3.transform.GetChild(0).gameObject;
                 }
-                if (!floatCapped) specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
-                floatCapped = true;
-                specialRigid.useGravity = true;
+                if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null && walker3.GetComponent<CollisionReceived>() != null)
+                {
+                    walker.GetComponent<CollisionReceived>().sendDamage = true;
+                    walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                    walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                }
+
+                updateCollisionCheck = false;
             }
-            //too low
-            else if (isFloating < 0)
+
+            if (growingSpecial)
             {
-                specialRigid.useGravity = false;
-                specialRigid.AddForce(Vector3.up * specialAttackForce);
+                GrowSpecial();
             }
-            //in range
+            else if (playerGrowing)
+            {
+                GrowPlayer();
+            }
+            else if (specialForm.GetComponent<MeshRenderer>().enabled)
+            {
+                if (Mathf.Abs(specialRigid.angularVelocity.y) < 5f)
+                {
+                    SendMessage("OctaSpinStopSfx", true, SendMessageOptions.DontRequireReceiver);
+                }
+
+                UpdatePos(charController.transform, specialForm.transform);
+                coolDownTimer += Time.deltaTime;
+
+                isFloating = checkIfFloating();
+                //too high
+                if (isFloating > 0)
+                {
+                    if (specialRigid.velocity.y > 0f)
+                    {
+                        floatCapped = false;
+                    }
+                    if (!floatCapped) specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
+                    floatCapped = true;
+                    specialRigid.useGravity = true;
+                }
+                //too low
+                else if (isFloating < 0)
+                {
+                    specialRigid.useGravity = false;
+                    specialRigid.AddForce(Vector3.up * specialAttackForce);
+                }
+                //in range
+                else
+                {
+                    specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
+                    specialRigid.useGravity = false;
+                }
+                if (coolDownTimer >= specialAttackActiveTime)
+                {
+                    DeactivateSpecialAttack();
+                    UpdatePos(charController.transform, specialForm.transform);
+                    coolDownTimer = 0f;
+                }
+                if ((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton))
+                {
+                    DeactivateSpecialAttack();
+                    UpdatePos(charController.transform, specialForm.transform);
+                    coolDownTimer = 0f;
+                }
+                if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
+                {
+                    moveDir = Vector3.forward;
+                    moveDir = cam.transform.TransformDirection(moveDir);
+                    moveDir.y = 0;
+                    moveDir = Vector3.Normalize(moveDir);
+                    moveDir.x = moveDir.x * specialAttackForce * 100f;
+                    moveDir.z = moveDir.z * specialAttackForce * 100f;
+                    specialRigid.AddForce(moveDir);
+                    launched = true;
+                    specialRigid.AddForce(Vector3.up * specialAttackForce * 2f);
+                    SendMessage("OctaSpinSfx", true, SendMessageOptions.DontRequireReceiver);
+                }
+                else if (launched)
+                {
+                    moveDir = new Vector3(Input.GetAxisRaw(horizontalStick), 0, Input.GetAxisRaw(verticalStick));
+                    moveDir = cam.transform.TransformDirection(moveDir);
+                    moveDir.y = 0;
+                    moveDir = Vector3.Normalize(moveDir);
+                    moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
+                    moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
+                    //specialRigid.AddForce(moveDir);
+                    specialRigid.AddTorque(Vector3.up * specialAttackForce * spinForceMult);
+                    launchTime += Time.deltaTime;
+                    if (launchTime >= launchLength)
+                    {
+                        launched = false;
+                        launchTime = 0;
+                    }
+                    SendMessage("OctaSpinSfx", true, SendMessageOptions.DontRequireReceiver);
+                }
+
+            }
             else
             {
-                specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
-                specialRigid.useGravity = false;
-            }
-            if (coolDownTimer >= specialAttackActiveTime)
-            {
-                DeactivateSpecialAttack();
-                UpdatePos(charController.transform, specialForm.transform);
-                coolDownTimer = 0f;
-            }
-            if ((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton))
-            {
-                DeactivateSpecialAttack();
-                UpdatePos(charController.transform, specialForm.transform);
-                coolDownTimer = 0f;
-            }
-            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && specialForm.GetComponent<MeshRenderer>().enabled && !launched) //include jump key for controller
-            {
-                moveDir = Vector3.forward;
-                moveDir = cam.transform.TransformDirection(moveDir);
-                moveDir.y = 0;
-                moveDir = Vector3.Normalize(moveDir);
-                moveDir.x = moveDir.x * specialAttackForce * 100f;
-                moveDir.z = moveDir.z * specialAttackForce * 100f;
-                specialRigid.AddForce(moveDir);
-                launched = true;
-                specialRigid.AddForce(Vector3.up * specialAttackForce * 2f);
-                SendMessage("OctaSpinSfx", true, SendMessageOptions.DontRequireReceiver);
-            }
-            else if (launched)
-            {
-                moveDir = new Vector3(Input.GetAxisRaw(horizontalStick), 0, Input.GetAxisRaw(verticalStick));
-                moveDir = cam.transform.TransformDirection(moveDir);
-                moveDir.y = 0;
-                moveDir = Vector3.Normalize(moveDir);
-                moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
-                moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
-                //specialRigid.AddForce(moveDir);
-                specialRigid.AddTorque(Vector3.up * specialAttackForce * spinForceMult);
-                launchTime += Time.deltaTime;
-                if (launchTime >= launchLength)
-                {
-                    launched = false;
-                    launchTime = 0;
-                }
-                SendMessage("OctaSpinSfx", true, SendMessageOptions.DontRequireReceiver);
-            }
-
-        }
-        else
-        {
-            UpdatePos(specialForm.transform, charController.transform);
-            if (((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
-            {
-                growingSpecial = true;
-                ActivateSpecialAttack();
                 UpdatePos(specialForm.transform, charController.transform);
+                if (((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+                {
+                    growingSpecial = true;
+                    ActivateSpecialAttack();
+                    UpdatePos(specialForm.transform, charController.transform);
+                }
             }
-        }
-        if (onCooldown)
-        {
-            coolDownTimer += Time.deltaTime;
-            if (coolDownTimer >= specialAttackCooldownTime)
+            if (onCooldown)
             {
-                onCooldown = false;
-                coolDownTimer = 0f;
+                coolDownTimer += Time.deltaTime;
+                if (coolDownTimer >= specialAttackCooldownTime)
+                {
+                    onCooldown = false;
+                    coolDownTimer = 0f;
+                }
             }
         }
 
