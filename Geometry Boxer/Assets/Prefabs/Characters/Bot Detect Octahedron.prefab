@@ -1493,7 +1493,7 @@ Transform:
   - {fileID: 4664438286872416}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -95.145004, z: 0}
 --- !u!4 &4541662965578576
 Transform:
   m_ObjectHideFlags: 1
@@ -2875,7 +2875,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e7eec7e577cfc43b8b0dccfa08b43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnemyHealth: 3000
+  EnemyHealth: 2500
+  percentToFindHealthPack: 0.5
   deathDelay: 20
   damageThreshold: 25
   heavyDamageOffset: 15
@@ -3016,6 +3017,7 @@ MonoBehaviour:
   canCrouch: 1
   canJump: 0
   attackRandomAudio: 500
+  safeSpot: {fileID: 0}
   stoppingDistance: 1
   stoppingThreshold: 1.2
   attackRange: 1.2
@@ -3025,6 +3027,7 @@ MonoBehaviour:
   moveTargetObj: {fileID: 0}
   moveTarget: {fileID: 0}
   drop: 0
+  testingPath: 0
 --- !u!114 &114586165358919732
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3076,7 +3079,6 @@ MonoBehaviour:
   leftShoulder: {fileID: 1909788225495632}
   rightThigh: {fileID: 1045555789231222}
   leftThigh: {fileID: 1647651773565886}
-  attackRandomAudio: 1000
   enemyAnimations:
   - actionIndex: 1
     animName: RightPunch
@@ -3479,6 +3481,7 @@ MonoBehaviour:
   rotateSpeed: 1.5
   bounceAngle: 70
   sightRange: 20
+  leeway: 0.1
   playerTarget: 0
 --- !u!114 &114986244203990358
 MonoBehaviour:
