@@ -225,8 +225,8 @@ public class PunchScript : MonoBehaviour
         charController.GetComponent<CharacterMeleeDemo>().canMove = true;
         anim = charController.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMastObject = this.transform.GetChild(puppetMasterIndex).gameObject;
-        puppetMaster = puppetMastObject.GetComponent<PuppetMaster>();
-        numberOfMuscleComponents = puppetMastObject.GetComponent<PuppetMaster>().muscles.Length;
+        puppetMaster = puppetMastObject.GetComponentInChildren<PuppetMaster>();
+        numberOfMuscleComponents = puppetMaster.muscles.Length;
         armMuscles = new List<Muscle>();
         foreach (Muscle m in puppetMaster.muscles)
         {
@@ -256,6 +256,10 @@ public class PunchScript : MonoBehaviour
     /// <returns>True if there is a controller, false if not.</returns>
     public bool CheckControllerMode()
     {
+        if(controllerInfo == null)
+        {
+            return false;
+        }
         if(controllerInfo.Length > 0 && !IsPlayer2)
         {
             if(Player2Present && controllerInfo.Length == 1)

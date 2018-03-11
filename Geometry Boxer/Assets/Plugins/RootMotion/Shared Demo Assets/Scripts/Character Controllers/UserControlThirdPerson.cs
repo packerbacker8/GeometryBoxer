@@ -33,7 +33,14 @@ namespace RootMotion.Demos
         void Start()
         {
             // get the transform of the main camera
-            cam = this.transform.root.GetComponentInChildren<Camera>().transform;
+            if(this.transform.root.GetComponentInChildren<Camera>() != null)
+            {
+                cam = this.transform.root.GetComponentInChildren<Camera>().transform;
+            }
+            else
+            {
+                cam = Camera.main.transform;
+            }
         }
 
         protected virtual void Update()

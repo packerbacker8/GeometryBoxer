@@ -207,13 +207,28 @@ public class SaveAndLoadGame : MonoBehaviour
 
     /// <summary>
     /// Function to start new game save information and 
-    /// load into the character select scene.
+    /// load into the intro cutscene.
     /// </summary>
     public void StartNewGame()
     {
         //start save game information here
         saveData = new GameData();
         SetCityNamesAndStatus();
+        saveData.splitscreen = false;
+        LoadLevel.loader.LoadALevel("Intro");
+    }
+
+    /// <summary>
+    /// Function to start new game save information and 
+    /// load into the intro cutscene. This game is coop 
+    /// and has two players.
+    /// </summary>
+    public void StartNewCoopGame()
+    {
+        //start save game information here
+        saveData = new GameData();
+        SetCityNamesAndStatus();
+        saveData.splitscreen = true;
         LoadLevel.loader.LoadALevel("Intro");
     }
 
@@ -540,7 +555,7 @@ public class SaveAndLoadGame : MonoBehaviour
         public float player2CurrentHealth = 15000f;
         public List<string> cityNames = new List<string>();
         public List<string> cityStatuses = new List<string>();
-        public bool splitscreen = true;
+        public bool splitscreen = false;
         public bool wonGame = false;
         public HashSet<int> enemyIndicies = new HashSet<int>();
         public bool currentSceneHasAllies = false;

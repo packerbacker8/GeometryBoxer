@@ -189,23 +189,26 @@ namespace PlayerUI
         /// </summary>
         private void OnGUI()
         {
-            Rect camRect = playerCam.rect;
-            if (PlayersHealth < (fullHealth / 4) && !hit)
+            if(playerCam != null)
             {
-                GUI.DrawTexture(camRect, healthLow);
-            }
+                Rect camRect = playerCam.rect;
+                if (PlayersHealth < (fullHealth / 4) && !hit)
+                {
+                    GUI.DrawTexture(camRect, healthLow);
+                }
 
-            if (hit && hitCount > hitLowNumber && hitCount < hitHighNumber)
-            {
-                GUI.DrawTexture(camRect, hitLow);
-            }
-            else if (hit && hitCount > hitHighNumber)
-            {
-                GUI.DrawTexture(camRect, hitHigh);
-            }
-            else if (hit && hitCount < hitLowNumber && PlayersHealth < (fullHealth / 4))
-            {
-                GUI.DrawTexture(camRect, healthLow);
+                if (hit && hitCount > hitLowNumber && hitCount < hitHighNumber)
+                {
+                    GUI.DrawTexture(camRect, hitLow);
+                }
+                else if (hit && hitCount > hitHighNumber)
+                {
+                    GUI.DrawTexture(camRect, hitHigh);
+                }
+                else if (hit && hitCount < hitLowNumber && PlayersHealth < (fullHealth / 4))
+                {
+                    GUI.DrawTexture(camRect, healthLow);
+                }
             }
 
         }
