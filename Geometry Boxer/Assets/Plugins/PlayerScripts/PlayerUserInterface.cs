@@ -268,5 +268,17 @@ namespace PlayerUI
         {
             SpecialAttackButton = button;
         }
+
+        public void reinitializeUI(int enemyCount)
+        {
+            numEnemiesAlive = enemyCount;
+            hitLowNumber = 20;
+            hitHighNumber = 60;
+            PlayersHealth = 15000f;
+            Yellow = new Color(255 / 255.0F, 203 / 255.0F, 0, 1);
+            Blue = new Color(115 / 255.0F, 189 / 255.0F, 234 / 255.0F, 1);
+            Red = new Color(255 / 255.0F, 25 / 255.0F, 25 / 255.0F, 1);
+            Green = new Color(0 / 255.0F, 255 / 255.0F, 72 / 255.0F, 1);
+        }
     }
 }
