@@ -137,6 +137,8 @@ public class GameControllerScript : MonoBehaviour
                         {
                             enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, player2CharController.transform);
                         }
+                        enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
+                        enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
                     }
                     else if(enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
                     {
@@ -210,6 +212,8 @@ public class GameControllerScript : MonoBehaviour
                     {
                         enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, player2CharController.transform);
                     }
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
                 }
                 else if (enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
                 {
@@ -367,6 +371,15 @@ public class GameControllerScript : MonoBehaviour
             deathMenu.SetReloadString(deathReloadMap);
             deathMenu.setButtonActive();
             deathMenu.setMouse();
+
+            for (int i = 0; i < enemiesInWorld.Length; i++)
+            {
+                if (enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
+                {
+                    enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
+                    enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
+                }
+            }
         }
         else
         {
@@ -375,6 +388,10 @@ public class GameControllerScript : MonoBehaviour
                 if(enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<NormalMovementAI>() != null)
                 {
                     ChangeTarget(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex(), !p2);
+                }
+                else if(enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
+                {
+                    enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(p2 ? 1 : 0, false);
                 }
             }
         }

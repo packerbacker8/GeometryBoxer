@@ -25,6 +25,7 @@ namespace Enemy
         private Transform player2Transform;
         private GameObject gameController;
         private bool inZone;
+        private bool[] playersTargetable = new bool[2];
 
         /// <summary>
         /// Function to allow game controller to set the transform of the active player at the start so the 
@@ -122,12 +123,12 @@ namespace Enemy
                 UpdateTarget();
             }
             distance = Vector3.Distance(playerTransform.position, transform.position);
-            if (distance < sightRange && !moveTarget.Equals(player2Transform))
+            if (playersTargetable[0] && distance < sightRange && !moveTarget.Equals(player2Transform))
             {
                 playerTarget = true;
                 this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget(false);
             }
-            else if(player2Transform != null && (distance = Vector3.Distance(player2Transform.position, transform.position)) < sightRange)
+            else if(playersTargetable[1] && player2Transform != null && (distance = Vector3.Distance(player2Transform.position, transform.position)) < sightRange)
             {
                 playerTarget = true;
                 this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget(true);
@@ -177,6 +178,16 @@ namespace Enemy
         public void IncreaseSight(float amount)
         {
             sightRange *= amount;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="isTargetable"></param>
+        public void SetIfPlayerIsTargetable(int player, bool isTargetable)
+        {
+            playersTargetable[player] = isTargetable;
         }
     }
 }
