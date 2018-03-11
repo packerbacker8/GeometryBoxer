@@ -465,6 +465,10 @@ public class PauseMenu : MonoBehaviour
             {
                 SaveAndLoadGame.saver.SetPlayerCurrentHealth(gameController.GetActivePlayer().GetComponent<OctahedronStats>().GetPlayerHealth());
             }
+            if(gameController.GetPlayer2() != null)
+            {
+                SaveAndLoadGame.saver.SetPlayer2CurrentHealth(gameController.GetPlayer2().GetComponent<PlayerStatsBaseClass>().GetPlayerHealth());
+            }
         }
         else
         {

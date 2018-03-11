@@ -484,6 +484,24 @@ public class SaveAndLoadGame : MonoBehaviour
     }
 
     /// <summary>
+    /// Set what the player's health will be when loaded back in.
+    /// </summary>
+    /// <param name="amount">Set the players health to this amount.</param>
+    public void SetPlayer2CurrentHealth(float amount)
+    {
+        saveData.player2CurrentHealth = amount;
+    }
+
+    /// <summary>
+    /// Get what the player's health was at the time of saving.
+    /// </summary>
+    /// <returns>Returns what player's health was.</returns>
+    public float GetPlayer2CurrentHealth()
+    {
+        return saveData.player2CurrentHealth;
+    }
+
+    /// <summary>
     /// Set the save game current session as having splitscreen or not.
     /// </summary>
     /// <param name="split">If true, two player characters will be present.</param>
@@ -519,6 +537,7 @@ public class SaveAndLoadGame : MonoBehaviour
         public string sceneCurrentlyOn = "MainMenu";
         public string characterType = "Octahedron";
         public float playerCurrentHealth = 15000f;
+        public float player2CurrentHealth = 15000f;
         public List<string> cityNames = new List<string>();
         public List<string> cityStatuses = new List<string>();
         public bool splitscreen = true;

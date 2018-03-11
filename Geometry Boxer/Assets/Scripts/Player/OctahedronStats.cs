@@ -19,12 +19,21 @@ public class OctahedronStats : PlayerStatsBaseClass
         base.Start();
 
         HealthModifier = 1.0f;
-        health = SaveAndLoadGame.saver.GetLoadedFightScene() ? SaveAndLoadGame.saver.GetPlayerCurrentHealth() : Health;
+        if (SaveAndLoadGame.saver.GetLoadedFightScene())
+        {
+            health = isPlayer2 ? SaveAndLoadGame.saver.GetPlayer2CurrentHealth() : SaveAndLoadGame.saver.GetPlayerCurrentHealth();
+        }
+        else
+        {
+            health =  Health;
+        }
         playerUI.GetComponent<PlayerUserInterface>().SetHealth(health);
         originalHealth = Health;
         playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(originalHealth);
-        healthBarBackground = GameObject.FindGameObjectWithTag("HealthBarBackground").GetComponent<Image>();
-        healthBarFill = GameObject.FindGameObjectWithTag("HealthBarBackground").transform.GetChild(0).GetComponent<Image>();
+        int healthbarBackgroundIndex = 0;
+        int healthbarFillIndex = 0;
+        healthBarBackground = playerUI.transform.GetChild(healthbarBackgroundIndex).GetComponent<Image>();
+        healthBarFill = healthBarBackground.transform.GetChild(healthbarFillIndex).GetComponent<Image>();
         playerUI.GetComponent<PlayerUserInterface>().SetPlayerType(2);
         UpdateHealthUI();
     }
@@ -47,7 +56,7 @@ public class OctahedronStats : PlayerStatsBaseClass
     {
         anim.Play("Death");
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-        gameController.GetComponent<GameControllerScript>().PlayerKilled();
+        gameController.GetComponent<GameControllerScript>().PlayerKilled(isPlayer2);
 
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
     }

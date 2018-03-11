@@ -46,7 +46,9 @@ public class GameControllerScript : MonoBehaviour
     private GameObject deathMenuObj;
     private GameObject winMenuObj;
     private GameObject playerUI;
+    private GameObject player2UI;
     private bool playerAlive;
+    private bool player2Alive;
     private bool levelWon;
     private bool switchPlayers;
 
@@ -68,8 +70,14 @@ public class GameControllerScript : MonoBehaviour
         }
 
         this.GetComponent<SplitscreenOrientation>().player1Cam = activePlayer.GetComponentInChildren<Camera>();
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<PlayerUI.PlayerUserInterface>().SetPlayer(activePlayer);
+        activePlayer.GetComponent<PlayerStatsBaseClass>().SetIfPlayer2(false);
         IsSplitScreen = SaveAndLoadGame.saver.GetSplitscreen();
+        charControllerIndex = 2;
         player2CharController = null;
+        player2Alive = false;
+        player2 = null;
         if (IsSplitScreen)
         {
             player2 = Instantiate(activePlayer);
@@ -80,9 +88,13 @@ public class GameControllerScript : MonoBehaviour
             player2.GetComponentInChildren<UserControlThirdPerson>().SetIsPlayer2();
             player2CharController = player2.transform.GetChild(charControllerIndex).gameObject;
             activePlayer.GetComponent<PunchScript>().Player2Present = true;
+            player2UI = Instantiate(playerUI);
+            player2UI.tag += "_2";
+            player2UI.GetComponent<PlayerUI.PlayerUserInterface>().SetPlayer(player2);
+            player2.GetComponent<PlayerStatsBaseClass>().SetIfPlayer2(true);
+            player2Alive = true;
         }
 
-        charControllerIndex = 2;
         playerCharController = activePlayer.transform.GetChild(charControllerIndex).gameObject;
         enemyContainer = activePlayer.name.Contains("Cube") ? enemyOctahedronContainer : enemyCubeContainer;
         //if we have allies the setup has to include their targets and health along with some tag changes
@@ -213,12 +225,12 @@ public class GameControllerScript : MonoBehaviour
         deathMenuObj.SetActive(false);
         winMenuObj = pauseMenu.GetComponentInChildren<WinMenu>().gameObject;
         winMenuObj.SetActive(false);
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
 
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        this.GetComponent<SafetyNet>().SetPlayer2(player2);
     }
 
     private void Start()
@@ -313,6 +325,7 @@ public class GameControllerScript : MonoBehaviour
             enemiesInWorld[index] = null;
         }
         playerUI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
+        if (IsSplitScreen) player2UI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
     }
 
     /// <summary>
@@ -330,28 +343,61 @@ public class GameControllerScript : MonoBehaviour
     /// <summary>
     /// Tells the game controller the player died.
     /// </summary>
-    public void PlayerKilled()
+    /// <param name="p2">If this is true, the player that died is player 2.</param>
+    public void PlayerKilled(bool p2)
     {
-        playerAlive = false;
-        SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
+        if(p2)
+        {
+            player2Alive = false;
+        }
+        else
+        {
+            playerAlive = false;
+        }
+        if(!playerAlive && !player2Alive)
+        {
+            SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
 
-        //disable any pause menu at this point
-        pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);
+            //disable any pause menu at this point
+            pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);
 
-
-        //display death menu
-        deathMenuObj.SetActive(true);
-        DeathMenu deathMenu = deathMenuObj.GetComponent<DeathMenu>();
-        deathMenu.SetReloadString(deathReloadMap);
-        deathMenu.setButtonActive();
-        deathMenu.setMouse();
+            //display death menu
+            deathMenuObj.SetActive(true);
+            DeathMenu deathMenu = deathMenuObj.GetComponent<DeathMenu>();
+            deathMenu.SetReloadString(deathReloadMap);
+            deathMenu.setButtonActive();
+            deathMenu.setMouse();
+        }
+        else
+        {
+            for(int i = 0; i < enemiesInWorld.Length; i++)
+            {
+                if(enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<NormalMovementAI>() != null)
+                {
+                    ChangeTarget(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex(), !p2);
+                }
+            }
+        }
 
         //LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
     }
 
+    /// <summary>
+    /// Return the active player in the scene.
+    /// </summary>
+    /// <returns></returns>
     public GameObject GetActivePlayer()
     {
         return activePlayer;
+    }
+
+    /// <summary>
+    /// Get the player 2 main game object.
+    /// </summary>
+    /// <returns>Returns the main game object, or null if no player 2 present.</returns>
+    public GameObject GetPlayer2()
+    {
+        return player2;
     }
 
     /// <summary>

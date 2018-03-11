@@ -28,6 +28,7 @@ namespace PlayerUI
 
         private GameObject player;
         private GameObject enemies;
+        private Camera playerCam;
         private int numEnemiesAlive;
         private bool cooldown = false;
         private float playerCoolDownTimer;
@@ -52,7 +53,7 @@ namespace PlayerUI
         void Awake()
         {
             enemies = GameObject.FindGameObjectWithTag("EnemyContainer");
-            player = GameObject.FindGameObjectWithTag("Player");
+            //player = GameObject.FindGameObjectWithTag("Player");
 
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
             {
@@ -72,6 +73,14 @@ namespace PlayerUI
 
             hitTimer = 0;
             // PlayersHealth = 15000f;
+        }
+
+        private void Start()
+        {
+            this.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+            this.GetComponent<Canvas>().worldCamera = playerCam;
+            this.GetComponent<Canvas>().sortingLayerName = "UI";
+            this.GetComponent<Canvas>().planeDistance = 1;
         }
 
         // Update is called once per frame
@@ -180,24 +189,35 @@ namespace PlayerUI
         /// </summary>
         private void OnGUI()
         {
+            Rect camRect = playerCam.rect;
             if (PlayersHealth < (fullHealth / 4) && !hit)
             {
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), healthLow);
+                GUI.DrawTexture(camRect, healthLow);
             }
 
             if (hit && hitCount > hitLowNumber && hitCount < hitHighNumber)
             {
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), hitLow);
+                GUI.DrawTexture(camRect, hitLow);
             }
             else if (hit && hitCount > hitHighNumber)
             {
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), hitHigh);
+                GUI.DrawTexture(camRect, hitHigh);
             }
             else if (hit && hitCount < hitLowNumber && PlayersHealth < (fullHealth / 4))
             {
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), healthLow);
+                GUI.DrawTexture(camRect, healthLow);
             }
 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p"></param>
+        public void SetPlayer(GameObject p)
+        {
+            player = p;
+            playerCam = player.GetComponentInChildren<Camera>();
         }
 
         // functions called from other classes

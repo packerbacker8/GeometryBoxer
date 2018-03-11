@@ -17,6 +17,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
 
     protected bool dead;
     protected bool hitByEnemy;
+    protected bool isPlayer2;
     protected Animator anim;
     protected int characterControllerIndex = 2;
     protected int animationControllerIndex = 0;
@@ -64,15 +65,17 @@ public class PlayerStatsBaseClass : MonoBehaviour
         gameController = GameObject.FindGameObjectWithTag("GameController");
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
         behavePuppet = this.transform.GetComponentInChildren<BehaviourPuppet>();
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
-        if (playerUI != null)
-        {
-            playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(Health);
-        }
+
     }
 
     protected virtual void Start()
     {
+        string playerUIStr = isPlayer2 ? "playerUI_2" : "playerUI";
+        playerUI = GameObject.FindGameObjectWithTag(playerUIStr);
+        if (playerUI != null)
+        {
+            playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(Health);
+        }
         health = 1000f;
         stability = 1.0f;
         speed = 1.0f;
@@ -282,5 +285,10 @@ public class PlayerStatsBaseClass : MonoBehaviour
             return hitByEnemy;
         }
         return false;
+    }
+
+    public virtual void SetIfPlayer2(bool p2)
+    {
+        isPlayer2 = p2;
     }
 }

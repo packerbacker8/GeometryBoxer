@@ -49,14 +49,23 @@ public class CubeSpecialStats : PlayerStatsBaseClass
 
         HealthModifier = 1.0f;
 
-        health = SaveAndLoadGame.saver.GetLoadedFightScene() ? SaveAndLoadGame.saver.GetPlayerCurrentHealth() : Health;
+        if (SaveAndLoadGame.saver.GetLoadedFightScene())
+        {
+            health = isPlayer2 ? SaveAndLoadGame.saver.GetPlayer2CurrentHealth() : SaveAndLoadGame.saver.GetPlayerCurrentHealth();
+        }
+        else
+        {
+            health = Health;
+        }
+
         stability = Stability;
         speed = Speed;
         attackForce = AttackForce;
         fallDamageMultiplier = FallDamageMultiplier;
-
-        healthBarBackground = GameObject.FindGameObjectWithTag("HealthBarBackground").GetComponent<Image>();
-        healthBarFill = GameObject.FindGameObjectWithTag("HealthBarBackground").transform.GetChild(0).GetComponent<Image>();
+        int healthbarBackgroundIndex = 0;
+        int healthbarFillIndex = 0;
+        healthBarBackground = playerUI.transform.GetChild(healthbarBackgroundIndex).GetComponent<Image>();
+        healthBarFill = healthBarBackground.transform.GetChild(healthbarFillIndex).GetComponent<Image>();
         originalHealth = Health;
         //HealthScript.PlayerHealth = GetPlayerHealth();
         playerUI.GetComponent<PlayerUserInterface>().SetMaxHealth(originalHealth);
@@ -125,7 +134,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         }
         else
         {
-            gameController.GetComponent<GameControllerScript>().PlayerKilled();
+            gameController.GetComponent<GameControllerScript>().PlayerKilled(isPlayer2);
         }
     }
 

@@ -66,7 +66,7 @@ public class PlayerHealthScript : MonoBehaviour
     {
         anim.Play("Death");
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
-        gameController.GetComponent<GameControllerScript>().PlayerKilled();
+        gameController.GetComponent<GameControllerScript>().PlayerKilled(false);
 
         //Destroy(this.transform.gameObject,deathDelay);  //To be destroyed by game manager if body count exceeds certain amout.
     }

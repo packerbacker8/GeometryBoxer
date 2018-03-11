@@ -240,8 +240,9 @@ public class PunchScript : MonoBehaviour
         playerFinalSize = new Vector3(1.53119f, 1.53119f, 1.53119f);
         specialStartSize = new Vector3(0.1f, 0.1f, 0.1f);
         specialEndSize = new Vector3(specialFormSize, specialFormSize, specialFormSize);
-
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        string playerUIStr = "playerUI";
+        if (IsPlayer2) playerUIStr += "_2";
+        playerUI = GameObject.FindGameObjectWithTag(playerUIStr);
         if (playerUI != null)
         {
             playerUI.GetComponent<PlayerUserInterface>().SetDefultcoolDownTime(specialAttackCooldownTime);
