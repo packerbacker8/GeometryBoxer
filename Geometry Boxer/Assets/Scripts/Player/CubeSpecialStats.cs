@@ -170,7 +170,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
                 SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
-            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true);
         }
         else if (hitByEnemy)
         {
@@ -184,7 +184,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
                 SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
-            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true);
         }
     }
 

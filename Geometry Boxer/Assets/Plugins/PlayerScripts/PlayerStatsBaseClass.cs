@@ -245,7 +245,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude));
             }
-            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true);
         }
         else if (hitByEnemy)
         {
@@ -253,7 +253,7 @@ public class PlayerStatsBaseClass : MonoBehaviour
             {
                 SetPlayerHealth(Math.Abs(collision.impulse.magnitude));
             }
-            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true, 1);
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true);
         }
 
     }

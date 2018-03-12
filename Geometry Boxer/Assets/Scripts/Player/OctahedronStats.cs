@@ -83,6 +83,7 @@ public class OctahedronStats : PlayerStatsBaseClass
                 SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true);
         }
         else if (hitByEnemy)
         {
@@ -96,6 +97,7 @@ public class OctahedronStats : PlayerStatsBaseClass
                 SetPlayerHealth(dmgAmount);
             }
             UpdateHealthUI();
+            playerUI.GetComponent<PlayerUserInterface>().setHitUIimage(true);
         }
     }
     public void UpdateHealthUI()

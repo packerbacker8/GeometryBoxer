@@ -20,15 +20,16 @@ namespace PlayerUI
 
 
         [Header("Health images")]
-        public Texture healthLow;
-        public Texture hitLow;
+        public Material healthLow;
+        public Material hitLow;
         public int hitLowNumber = 20;
-        public Texture hitHigh;
+        public Material hitHigh;
         public int hitHighNumber = 60;
 
         private GameObject player;
         private GameObject enemies;
         private Camera playerCam;
+        private Image img;
         private int numEnemiesAlive;
         private bool cooldown = false;
         private float playerCoolDownTimer;
@@ -72,6 +73,7 @@ namespace PlayerUI
             }
 
             hitTimer = 0;
+            img = this.GetComponent<Image>();
             // PlayersHealth = 15000f;
         }
 
@@ -181,36 +183,41 @@ namespace PlayerUI
                 hit = false;
                 hitCount = 0;
             }
-        }
 
-        /// <summary>
-        /// UI GUI for low health and when being hit by enemyies
-        /// if you are hit 200 times hit UI will activate 
-        /// </summary>
-        private void OnGUI()
-        {
-            if(playerCam != null)
+            if (playerCam != null)
             {
                 Rect camRect = playerCam.rect;
                 if (PlayersHealth < (fullHealth / 4) && !hit)
                 {
-                    GUI.DrawTexture(camRect, healthLow);
+                    img.color = new Color(1f, 1f, 1f, 1f);
+                    img.material = healthLow;
+                    //GUI.DrawTexture(camRect, healthLow);
                 }
 
                 if (hit && hitCount > hitLowNumber && hitCount < hitHighNumber)
                 {
-                    GUI.DrawTexture(camRect, hitLow);
+                    img.color = new Color(1f, 1f, 1f, 1f);
+                    img.material = hitLow;
+                    //GUI.DrawTexture(camRect, hitLow);
                 }
                 else if (hit && hitCount > hitHighNumber)
                 {
-                    GUI.DrawTexture(camRect, hitHigh);
+                    img.color = new Color(1f, 1f, 1f, 1f);
+                    img.material = hitHigh;
+                    //GUI.DrawTexture(camRect, hitHigh);
                 }
                 else if (hit && hitCount < hitLowNumber && PlayersHealth < (fullHealth / 4))
                 {
-                    GUI.DrawTexture(camRect, healthLow);
+                    img.color = new Color(1f, 1f, 1f, 1f);
+                    img.material = healthLow;
+                    //GUI.DrawTexture(camRect, healthLow);
                 }
             }
-
+            if (!hit)
+            {
+                img.color = new Color(1f, 1f, 1f, 0f);
+                img.material = null;
+            }
         }
 
         /// <summary>
@@ -261,11 +268,11 @@ namespace PlayerUI
             PlayersHealth = health;
         }
 
-        public void setHitUIimage(bool h, int count)
+        public void setHitUIimage(bool h)
         {
-            hitCount += count;
+            hitCount++;
             hit = h;
-            hitTimer = 0.1f;
+            hitTimer = 1f;
         }
 
         /// <summary>
