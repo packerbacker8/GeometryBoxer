@@ -1185,6 +1185,7 @@ GameObject:
   - component: {fileID: 249119183}
   - component: {fileID: 249119182}
   - component: {fileID: 249119181}
+  - component: {fileID: 249119186}
   - component: {fileID: 249119180}
   m_Layer: 0
   m_Name: playerUI
@@ -1196,15 +1197,30 @@ GameObject:
 --- !u!114 &249119180
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114649466077777110, guid: 16a41d4e20b0175429cb04700f9d6511,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 249119179}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
 --- !u!114 &249119181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1227,10 +1243,10 @@ MonoBehaviour:
   specialAttackFullOcta: {fileID: 816773249}
   glowingBar: {fileID: 21300000, guid: 41730c885ad71af41b276d7baf0d0cad, type: 3}
   healthBar: {fileID: 526403790}
-  healthLow: {fileID: 2800000, guid: 8087458416ff7c645a260431e187cdab, type: 3}
-  hitLow: {fileID: 2800000, guid: 8087458416ff7c645a260431e187cdab, type: 3}
+  healthLow: {fileID: 2100000, guid: 7b98c9dd7376e6e4d9714f0c8f225ed9, type: 2}
+  hitLow: {fileID: 2100000, guid: 7b98c9dd7376e6e4d9714f0c8f225ed9, type: 2}
   hitLowNumber: 20
-  hitHigh: {fileID: 2800000, guid: 8087458416ff7c645a260431e187cdab, type: 3}
+  hitHigh: {fileID: 2100000, guid: 7b98c9dd7376e6e4d9714f0c8f225ed9, type: 2}
   hitHighNumber: 60
 --- !u!114 &249119182
 MonoBehaviour:
@@ -1315,6 +1331,12 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!222 &249119186
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 249119179}
 --- !u!4 &263405237 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4659554258882876, guid: 515afe85eab81ef459698bd10d1c7f82,
