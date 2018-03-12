@@ -11,6 +11,7 @@ public class SafetyNet : MonoBehaviour
     private GameObject resetLocation;
     private GameObject mainPlayer;
     private GameObject activePlayer;
+    private GameObject player2;
     private GameObject enemyContainer;
     private GameObject[] enemies;
     private bool sceneHasEnemies;
@@ -98,13 +99,17 @@ public class SafetyNet : MonoBehaviour
             GameControllerScript gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
             HashSet<int> allyI = gameController.hasAllies ? gameController.AllyAliveIndicies() : new HashSet<int>();
             SaveAndLoadGame.saver.SetFightSceneSaveValues(gameController.EnemyAliveIndicies(), gameController.hasAllies, allyI);
-            if (heWhoLeftTheWorld.name.Contains("Cube"))
+            if (mainPlayer.name.Contains("Cube"))
             {
                 SaveAndLoadGame.saver.SetPlayerCurrentHealth(heWhoLeftTheWorld.GetComponent<CubeSpecialStats>().GetPlayerHealth());
             }
             else
             {
                 SaveAndLoadGame.saver.SetPlayerCurrentHealth(heWhoLeftTheWorld.GetComponent<OctahedronStats>().GetPlayerHealth());
+            }
+            if(player2 != null)
+            {
+                SaveAndLoadGame.saver.SetPlayer2CurrentHealth(player2.GetComponentInChildren<PlayerStatsBaseClass>().GetPlayerHealth());
             }
             SaveAndLoadGame.saver.SetCurrentScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             heWhoLeftTheWorld.SendMessage("PlayerBeingReset", resetLocation.transform, SendMessageOptions.DontRequireReceiver);
@@ -113,5 +118,14 @@ public class SafetyNet : MonoBehaviour
         {
             heWhoLeftTheWorld.SendMessage("ResetEnemy", SendMessageOptions.DontRequireReceiver);
         }
+    }
+
+    /// <summary>
+    /// Set player 2 object. Null if no player 2 in scene.
+    /// </summary>
+    /// <param name="p2">Null if player 2 is not present.</param>
+    public void SetPlayer2(GameObject p2)
+    {
+        player2 = p2;
     }
 }

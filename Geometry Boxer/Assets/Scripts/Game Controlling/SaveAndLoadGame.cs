@@ -207,13 +207,28 @@ public class SaveAndLoadGame : MonoBehaviour
 
     /// <summary>
     /// Function to start new game save information and 
-    /// load into the character select scene.
+    /// load into the intro cutscene.
     /// </summary>
     public void StartNewGame()
     {
         //start save game information here
         saveData = new GameData();
         SetCityNamesAndStatus();
+        saveData.splitscreen = false;
+        LoadLevel.loader.LoadALevel("Intro");
+    }
+
+    /// <summary>
+    /// Function to start new game save information and 
+    /// load into the intro cutscene. This game is coop 
+    /// and has two players.
+    /// </summary>
+    public void StartNewCoopGame()
+    {
+        //start save game information here
+        saveData = new GameData();
+        SetCityNamesAndStatus();
+        saveData.splitscreen = true;
         LoadLevel.loader.LoadALevel("Intro");
     }
 
@@ -483,6 +498,42 @@ public class SaveAndLoadGame : MonoBehaviour
         return saveData.playerCurrentHealth;
     }
 
+    /// <summary>
+    /// Set what the player's health will be when loaded back in.
+    /// </summary>
+    /// <param name="amount">Set the players health to this amount.</param>
+    public void SetPlayer2CurrentHealth(float amount)
+    {
+        saveData.player2CurrentHealth = amount;
+    }
+
+    /// <summary>
+    /// Get what the player's health was at the time of saving.
+    /// </summary>
+    /// <returns>Returns what player's health was.</returns>
+    public float GetPlayer2CurrentHealth()
+    {
+        return saveData.player2CurrentHealth;
+    }
+
+    /// <summary>
+    /// Set the save game current session as having splitscreen or not.
+    /// </summary>
+    /// <param name="split">If true, two player characters will be present.</param>
+    public void SetSplitscreen(bool split)
+    {
+        saveData.splitscreen = split;
+    }
+
+    /// <summary>
+    /// Is the current save session splitscreen?
+    /// </summary>
+    /// <returns>True if yes, false otherwise.</returns>
+    public bool GetSplitscreen()
+    {
+        return saveData.splitscreen;
+    }
+
     [Serializable]
     private class InitializeData
     {
@@ -499,10 +550,12 @@ public class SaveAndLoadGame : MonoBehaviour
     {
         public string gameStatus = "Character Select";
         public string sceneCurrentlyOn = "MainMenu";
-        public string characterType = "Cube";
+        public string characterType = "Octahedron";
         public float playerCurrentHealth = 15000f;
+        public float player2CurrentHealth = 15000f;
         public List<string> cityNames = new List<string>();
         public List<string> cityStatuses = new List<string>();
+        public bool splitscreen = false;
         public bool wonGame = false;
         public HashSet<int> enemyIndicies = new HashSet<int>();
         public bool currentSceneHasAllies = false;

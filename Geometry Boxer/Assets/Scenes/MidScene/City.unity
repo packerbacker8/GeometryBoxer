@@ -27,7 +27,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 1
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: aeda7ac675715a848bb1d07b7fbaa714, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 7b621f3d20f81af4785f8576da7910e2, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.46882427, g: 0.5035756, b: 0.55030286, a: 1}
+  m_IndirectSpecularColor: {r: 0.17609401, g: 0.29808566, b: 0.5343638, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -2789,20 +2789,6 @@ Light:
   m_Lightmapping: 4
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_FalloffTable:
-    m_Table[0]: 0
-    m_Table[1]: 0
-    m_Table[2]: 0
-    m_Table[3]: 0
-    m_Table[4]: 0
-    m_Table[5]: 0
-    m_Table[6]: 0
-    m_Table[7]: 0
-    m_Table[8]: 0
-    m_Table[9]: 0
-    m_Table[10]: 0
-    m_Table[11]: 0
-    m_Table[12]: 0
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
@@ -11514,6 +11500,46 @@ Prefab:
         type: 2}
       propertyPath: m_Shadows.m_Type
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: skyMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 7b621f3d20f81af4785f8576da7910e2, type: 2}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: groundColor.r
+      value: 0.2700584
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: groundColor.g
+      value: 0.33088237
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: groundColor.b
+      value: 0.3182981
+      objectReference: {fileID: 0}
+    - target: {fileID: 108000011153186928, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: m_Intensity
+      value: 0.9259257
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: m_SkyTint.r
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: m_SkyTint.g
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000014225622392, guid: 4aab7a1543bedcc46b9b59c6404e5f00,
+        type: 2}
+      propertyPath: m_SkyTint.b
+      value: 0.5019608
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4aab7a1543bedcc46b9b59c6404e5f00, type: 2}
@@ -45642,7 +45668,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4076834313311158, guid: 427de71a12c6d004cbd285943409c7a7, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 191.66383
+      value: 183.27
       objectReference: {fileID: 0}
     - target: {fileID: 4076834313311158, guid: 427de71a12c6d004cbd285943409c7a7, type: 2}
       propertyPath: m_LocalPosition.y
