@@ -8,6 +8,8 @@ public class WinMenu : MonoBehaviour
     private StandaloneInputModule gameEventSystemInputModule;
     private bool shouldAllowDPad = false;
     private bool ps4Mode = false;
+    private float TimeSinceScreen = 0.0f;
+    private bool startTimer = false;
     private bool tutorialScene;
     // Use this for initialization
     void Start()
@@ -41,6 +43,18 @@ public class WinMenu : MonoBehaviour
                 }
             }
 
+            if(startTimer)
+            {
+                TimeSinceScreen += Time.deltaTime;
+                if (TimeSinceScreen > 1.2f)
+                {
+                    EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                    startTimer = false;
+                }
+            }
+
+
+
             if(ps4Mode)
             {
                 gameEventSystemInputModule.submitButton = "SubmitPS4";
@@ -69,8 +83,9 @@ public class WinMenu : MonoBehaviour
     public void setButtonActive()
     {
         //for controller
-        EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        //EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
         shouldAllowDPad = true;
+        startTimer = true;
     }
 
     public void retryButton()

@@ -10,6 +10,8 @@ public class DeathMenu : MonoBehaviour
     private string reloadLevelString;
     private bool shouldAllowDPad = false;
     private bool ps4Mode;
+    private float TimeSinceScreen = 0.0f;
+    private bool startTimer = false;
     private GameObject canvasPart;
     private StandaloneInputModule gameEventSystemInputModule;
     // Use this for initialization
@@ -56,6 +58,18 @@ public class DeathMenu : MonoBehaviour
                 }
             }*/
 
+            if (startTimer)
+            {
+                TimeSinceScreen += Time.deltaTime;
+                if (TimeSinceScreen > 1.2f)
+                {
+                    EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                    startTimer = false;
+                }
+            }
+
+
+
             if (ps4Mode)
             {
                 gameEventSystemInputModule.submitButton = "SubmitPS4";
@@ -96,7 +110,7 @@ public class DeathMenu : MonoBehaviour
     public void setButtonActive()
     {
         //for controller
-        EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        //EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
         shouldAllowDPad = true;
 
         //check this frame if a controller is plugged in or not, and change modes accordingly.
@@ -116,6 +130,8 @@ public class DeathMenu : MonoBehaviour
                 }
             }
         }
+
+        startTimer = true;
     }
 
     public void setMouse()
