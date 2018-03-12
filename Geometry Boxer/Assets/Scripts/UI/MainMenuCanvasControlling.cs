@@ -435,6 +435,14 @@ public class MainMenuCanvasControlling : MonoBehaviour
     }
 
     /// <summary>
+    /// Helper function to start a new coop save game.
+    /// </summary>
+    public void BeginNewCoopGame()
+    {
+        SaveAndLoadGame.saver.StartNewCoopGame();
+    }
+
+    /// <summary>
     /// Helper function to quit the game.
     /// </summary>
     public void QuitGame()

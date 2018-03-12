@@ -56,6 +56,10 @@ public class FireHydrantForce : MonoBehaviour
             {
                 findingRoot = findingRoot.transform.parent.gameObject;
             }
+            if(findingRoot.name.Contains("JEEP"))
+            {
+                return;
+            }
             BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
             behavePup.SetState(BehaviourPuppet.State.Unpinned);
             behavePup.dropProps = false;

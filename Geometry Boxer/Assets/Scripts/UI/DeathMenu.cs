@@ -27,6 +27,22 @@ public class DeathMenu : MonoBehaviour
         if (shouldAllowDPad)
         {
             string[] inputNames = Input.GetJoystickNames();
+            if(inputNames.Length > 0)
+            {
+                if (inputNames[0].Length == 19)
+                {
+                    ps4Mode = true;
+                }
+                else
+                {
+                    ps4Mode = false;
+                }
+            }
+            else
+            {
+                ps4Mode = false;
+            }
+            /*
             for (int i = 0; i < inputNames.Length; i++)
             {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
                 if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
@@ -40,7 +56,7 @@ public class DeathMenu : MonoBehaviour
                         ps4Mode = false;
                     }
                 }
-            }
+            }*/
 
             if (startTimer)
             {

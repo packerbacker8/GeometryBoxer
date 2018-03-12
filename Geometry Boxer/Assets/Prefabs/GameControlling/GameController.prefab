@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 114852009753482974}
   - component: {fileID: 114839644939680634}
   - component: {fileID: 65876051810672324}
+  - component: {fileID: 114186831323357730}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -106,7 +107,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1627263141749742}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -29.512844, y: 1.8976369, z: -34.00672}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224921602337074656}
@@ -142,12 +143,14 @@ MonoBehaviour:
   playerOptions:
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: 0}
   enemyCubeContainer: {fileID: 0}
   enemyOctahedronContainer: {fileID: 0}
   SafeSpot: {fileID: 0}
+  IsSplitScreen: 0
   hasAllies: 0
   fractionalAllies: 3
+  sightLineExpansionThreshold: 0.5
+  sightExpansionAmount: 2
 --- !u!114 &114099098534569590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -196,6 +199,20 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114186831323357730
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1627263141749742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb8a5a630191f234d88863a82738c6b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player1Cam: {fileID: 0}
+  player2Cam: {fileID: 0}
+  Horizontal: 1
 --- !u!114 &114247221738902694
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -284,7 +301,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerOptions:
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
 --- !u!114 &114852009753482974

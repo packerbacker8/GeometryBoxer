@@ -15,6 +15,8 @@ public class GameControllerScript : MonoBehaviour
     public GameObject enemyOctahedronContainer;
     public GameObject SafeSpot;
     [Header("Ally Information")]
+    [Tooltip("If set to true, two of the player characters will be active with the camera being half and half.")]
+    public bool IsSplitScreen = false;
     [Tooltip("If set to true, the enemy container that matches the type of the player will be used as a group of allies in the fight.")]
     public bool hasAllies = false;
     [Tooltip("This integer will divide the number of bots in the other container that will be the allies. The higher the number, the lower the number of allies.")]
@@ -31,23 +33,29 @@ public class GameControllerScript : MonoBehaviour
     private int oldExpansionNumEnemies;
     private int charControllerIndex;
     private GameObject activePlayer;
+    private GameObject player2;
     private GameObject enemyContainer;
     private GameObject[] enemiesInWorld;
     private GameObject allyContainer;
     private GameObject[] alliesInWorld;
     private GameObject playerCharController;
+    private GameObject player2CharController;
     private Queue<GameObject> enemyTargetQueue;
     private Queue<GameObject> allyTargetQueue;
     private GameObject pauseMenu;
     private GameObject deathMenuObj;
     private GameObject winMenuObj;
     private GameObject playerUI;
+    private GameObject player2UI;
     private bool playerAlive;
+    private bool player2Alive;
     private bool levelWon;
+    private bool switchPlayers;
 
     // Use this for initialization
     void Awake()
     {
+        switchPlayers = false;
         for (int i = 0; i < playerOptions.Length; i++)
         {
             if(playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()))
@@ -60,7 +68,33 @@ public class GameControllerScript : MonoBehaviour
                 playerOptions[i].SetActive(false);
             }
         }
+
+        this.GetComponent<SplitscreenOrientation>().player1Cam = activePlayer.GetComponentInChildren<Camera>();
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
+        playerUI.GetComponent<PlayerUI.PlayerUserInterface>().SetPlayer(activePlayer);
+        activePlayer.GetComponent<PlayerStatsBaseClass>().SetIfPlayer2(false);
+        IsSplitScreen = SaveAndLoadGame.saver.GetSplitscreen();
         charControllerIndex = 2;
+        player2CharController = null;
+        player2Alive = false;
+        player2 = null;
+        if (IsSplitScreen)
+        {
+            player2 = Instantiate(activePlayer);
+            player2.transform.position = new Vector3(player2.transform.position.x + 5f, player2.transform.position.y, player2.transform.position.z);
+            this.GetComponent<SplitscreenOrientation>().player2Cam = player2.GetComponentInChildren<Camera>();
+            player2.GetComponent<PunchScript>().SetAsPlayer2();
+            player2.GetComponentInChildren<RootMotion.CameraController>().SetIsPlayer2();
+            player2.GetComponentInChildren<UserControlThirdPerson>().SetIsPlayer2();
+            player2CharController = player2.transform.GetChild(charControllerIndex).gameObject;
+            activePlayer.GetComponent<PunchScript>().Player2Present = true;
+            player2UI = Instantiate(playerUI);
+            player2UI.tag += "_2";
+            player2UI.GetComponent<PlayerUI.PlayerUserInterface>().SetPlayer(player2);
+            player2.GetComponent<PlayerStatsBaseClass>().SetIfPlayer2(true);
+            player2Alive = true;
+        }
+
         playerCharController = activePlayer.transform.GetChild(charControllerIndex).gameObject;
         enemyContainer = activePlayer.name.Contains("Cube") ? enemyOctahedronContainer : enemyCubeContainer;
         //if we have allies the setup has to include their targets and health along with some tag changes
@@ -95,11 +129,21 @@ public class GameControllerScript : MonoBehaviour
                     enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
                     if(enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
                     {
-                        enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                        if(player2CharController == null)
+                        {
+                            enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null);
+                        }
+                        else
+                        {
+                            enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, player2CharController.transform);
+                        }
+                        enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
+                        enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
                     }
                     else if(enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
                     {
-                        enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
+                        switchPlayers = player2CharController == null ? false : !switchPlayers;
+                        enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
                     }
                     enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
                     allyTargetQueue.Enqueue(enemiesInWorld[i]);
@@ -111,7 +155,14 @@ public class GameControllerScript : MonoBehaviour
                     allyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(enemyContainer.transform.GetChild(i % numEnemiesAlive).GetChild(charControllerIndex).gameObject);
                     if(allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
                     {
-                        allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform); //might need to change
+                        if(player2CharController == null)
+                        {
+                            allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null); //might need to change
+                        }
+                        else
+                        {
+                            allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, player2CharController.transform); //might need to change
+                        }
                         allyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().sightRange = 0f; //set sight range to zero so that allied bots never try to switch targets
 
                     }
@@ -153,12 +204,21 @@ public class GameControllerScript : MonoBehaviour
                 enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
                 if (enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
                 {
-                    enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
-
+                    if(player2CharController == null)
+                    {
+                        enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null);
+                    }
+                    else
+                    {
+                        enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, player2CharController.transform);
+                    }
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
                 }
                 else if (enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
                 {
-                    //nothing?
+                    switchPlayers = player2CharController == null ? false : !switchPlayers;
+                    enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
                 }
                 enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
             }
@@ -169,12 +229,12 @@ public class GameControllerScript : MonoBehaviour
         deathMenuObj.SetActive(false);
         winMenuObj = pauseMenu.GetComponentInChildren<WinMenu>().gameObject;
         winMenuObj.SetActive(false);
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
 
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        this.GetComponent<SafetyNet>().SetPlayer2(player2);
     }
 
     private void Start()
@@ -214,7 +274,7 @@ public class GameControllerScript : MonoBehaviour
         }
         if (numEnemiesAlive <= 0)
         {
-            if (!levelWon && playerAlive)
+            if (!levelWon && (playerAlive || player2Alive))
             {
                 SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
 
@@ -269,6 +329,7 @@ public class GameControllerScript : MonoBehaviour
             enemiesInWorld[index] = null;
         }
         playerUI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
+        if (IsSplitScreen) player2UI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
     }
 
     /// <summary>
@@ -286,37 +347,91 @@ public class GameControllerScript : MonoBehaviour
     /// <summary>
     /// Tells the game controller the player died.
     /// </summary>
-    public void PlayerKilled()
+    /// <param name="p2">If this is true, the player that died is player 2.</param>
+    public void PlayerKilled(bool p2)
     {
-        playerAlive = false;
-        SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
+        if(p2)
+        {
+            player2Alive = false;
+        }
+        else
+        {
+            playerAlive = false;
+        }
+        if(!playerAlive && !player2Alive)
+        {
+            SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
 
-        //disable any pause menu at this point
-        pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);
+            //disable any pause menu at this point
+            pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);
 
+            //display death menu
+            deathMenuObj.SetActive(true);
+            DeathMenu deathMenu = deathMenuObj.GetComponent<DeathMenu>();
+            deathMenu.SetReloadString(deathReloadMap);
+            deathMenu.setButtonActive();
+            deathMenu.setMouse();
 
-        //display death menu
-        deathMenuObj.SetActive(true);
-        DeathMenu deathMenu = deathMenuObj.GetComponent<DeathMenu>();
-        deathMenu.SetReloadString(deathReloadMap);
-        deathMenu.setButtonActive();
-        deathMenu.setMouse();
+            for (int i = 0; i < enemiesInWorld.Length; i++)
+            {
+                if (enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
+                {
+                    enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
+                    enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0; i < enemiesInWorld.Length; i++)
+            {
+                if(enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<NormalMovementAI>() != null)
+                {
+                    ChangeTarget(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex(), !p2);
+                }
+                else if(enemiesInWorld[i] != null && enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
+                {
+                    enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(p2 ? 1 : 0, false);
+                }
+            }
+        }
 
         //LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
     }
 
+    /// <summary>
+    /// Return the active player in the scene.
+    /// </summary>
+    /// <returns></returns>
     public GameObject GetActivePlayer()
     {
         return activePlayer;
     }
 
     /// <summary>
+    /// Get the player 2 main game object.
+    /// </summary>
+    /// <returns>Returns the main game object, or null if no player 2 present.</returns>
+    public GameObject GetPlayer2()
+    {
+        return player2;
+    }
+
+    /// <summary>
     /// Function to change the target of the enemy to the player.
     /// </summary>
     /// <param name="indexOfEnemy">This index indicates which enemy to change their target.</param>
-    public void ChangeTarget(int indexOfEnemy)
+    /// <param name="player2">Is this player 2? True if yes.</param>
+    public void ChangeTarget(int indexOfEnemy, bool player2)
     {
-        enemiesInWorld[indexOfEnemy].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
+        if(player2)
+        {
+            enemiesInWorld[indexOfEnemy].GetComponentInChildren<UserControlAI>().SetMoveTarget(player2CharController);
+        }
+        else
+        {
+            enemiesInWorld[indexOfEnemy].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
+        }
     }
 
     /// <summary>

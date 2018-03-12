@@ -19,11 +19,20 @@ public class PauseMenu : MonoBehaviour
     RootMotion.Demos.UserControlMelee UserControlMeleeScript;
     RootMotion.CameraController CameraControllerScript;
     PunchScript punchScript;
+
     private string saveFileName;
+    private string startButton;
+    private string rightStickButton;
+    private string submit;
+    private string dPadY;
+    private string vertical;
+    private string horizontalLeft;
+    private string verticalLeft;
 
     private bool mouseShouldBeLocked = false;
     public bool isPaused = false;
     private bool isCombatScene = false;
+    private bool isPlayer2;
     private float TimeSinceEsc = 0.0f;
     private List<GameObject> saveFileButtons;
 
@@ -36,6 +45,14 @@ public class PauseMenu : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        startButton = "StartButton";
+        rightStickButton = "RightStickButton";
+        submit = "Submit";
+        dPadY = "DPadY";
+        vertical = "Vertical";
+        horizontalLeft = "HorizontalLeft";
+        verticalLeft = "VerticalLeft";
+
         control = GameObject.FindGameObjectWithTag("GameController");
         pauseMenuCanvas = this.transform.GetChild(0).gameObject;
         saveCanvas = this.transform.GetChild(1).gameObject;
@@ -63,6 +80,7 @@ public class PauseMenu : MonoBehaviour
                 punchScript = character.gameObject.GetComponent<PunchScript>();
             }
         }
+        isPlayer2 = false;
     }
 
     // Update is called once per frame
@@ -70,17 +88,24 @@ public class PauseMenu : MonoBehaviour
     {
         TimeSinceEsc = TimeSinceEsc += Time.deltaTime;
         isPaused = pauseMenuCanvas.activeInHierarchy;
-        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton") || Input.GetButtonDown("RightStickButton")) && !isPaused && notInDeathOrWinScreen)
+        if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(startButton) || Input.GetButtonDown(rightStickButton) || Input.GetButtonDown(startButton + "_2") || Input.GetButtonDown(rightStickButton + "_2")) && !isPaused && notInDeathOrWinScreen)
         {
+            if (Input.GetButtonDown(startButton + "_2") || Input.GetButtonDown(rightStickButton + "_2"))
+            {
+                isPlayer2 = true;
+            }
+            else
+            {
+                isPlayer2 = false;
+            }
             //RightStickButton axis is the same as start button for the PS4 controller.
             ps4Mode = checkPS4Mode();
-            if(Input.GetButtonDown("RightStickButton") && !ps4Mode)
+            if((Input.GetButtonDown(rightStickButton) || Input.GetButtonDown(rightStickButton + "_2")) && !ps4Mode)
             {
                 return;
             }
 
-
-            if (Input.GetButtonDown("StartButton") || Input.GetButtonDown("RightStickButton"))
+            if (Input.GetButtonDown(startButton) || Input.GetButtonDown(rightStickButton) || isPlayer2)
             {
                 controllerMode = true;
             }
@@ -88,11 +113,20 @@ public class PauseMenu : MonoBehaviour
             {
                 controllerMode = false;
             }
+
             pauseGameHelper();
         }
-        else if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown("StartButton") || Input.GetButtonDown("RightStickButton")) && isPaused)
+        else if (!isPlayer2 && (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(startButton) || Input.GetButtonDown(rightStickButton)) && isPaused)
         {
-            if (Input.GetButtonDown("RightStickButton") && !ps4Mode)
+            if (Input.GetButtonDown(rightStickButton) && !ps4Mode)
+            {
+                return;
+            }
+            resumeGameHelper();
+        }
+        else if(isPlayer2 && (Input.GetKeyDown(KeyCode.Escape) || Input.GetButtonDown(startButton) || Input.GetButtonDown(rightStickButton)) && isPaused)
+        {
+            if (Input.GetButtonDown(rightStickButton + "_2") && !ps4Mode)
             {
                 return;
             }
@@ -108,27 +142,34 @@ public class PauseMenu : MonoBehaviour
 
             if (ps4Mode)
             {
-                gameEventSystemInputModule.submitButton = "SubmitPS4";
+                gameEventSystemInputModule.submitButton = submit + "PS4";
             }
             else
             {
-                gameEventSystemInputModule.submitButton = "Submit";
+                gameEventSystemInputModule.submitButton = submit;
+            }
+            if(isPlayer2)
+            {
+                gameEventSystemInputModule.submitButton += "_2";
             }
 
 
-            if (ps4Mode && Input.GetAxis("DPadYPS4") != 0)
+            if (ps4Mode && (Input.GetAxis(dPadY + "PS4") != 0 || Input.GetAxis(dPadY + "PS4_2") != 0))
             {
-                gameEventSystemInputModule.verticalAxis = "DPadYPS4";
+                gameEventSystemInputModule.verticalAxis = dPadY + "PS4";
             }
-            else if (Input.GetAxis("DPadY") != 0)
+            else if (Input.GetAxis(dPadY) != 0 || Input.GetAxis(dPadY + "_2") != 0)
             {
-                gameEventSystemInputModule.verticalAxis = "DPadY";
+                gameEventSystemInputModule.verticalAxis = dPadY;
             }
             else
             {
-                gameEventSystemInputModule.verticalAxis = "Vertical";
+                gameEventSystemInputModule.verticalAxis = vertical;
             }
-
+            if(isPlayer2)
+            {
+                gameEventSystemInputModule.verticalAxis += "_2";
+            }
 
 
             if (saveCanvas.activeInHierarchy)
@@ -143,7 +184,11 @@ public class PauseMenu : MonoBehaviour
                     EventSystem.current.SetSelectedGameObject(saveCanvas.transform.Find("SaveFileButton").gameObject);
                 }
 
-                if (saveCanvasTextInputMode && (Input.GetAxis("HorizontalLeft") != 0 || Input.GetAxis("VerticalLeft") != 0))
+                if (!isPlayer2 && saveCanvasTextInputMode && (Input.GetAxis(horizontalLeft) != 0 || Input.GetAxis(verticalLeft) != 0))
+                {
+                    saveCanvasTextInputMode = false;
+                }
+                else if (isPlayer2 && saveCanvasTextInputMode && (Input.GetAxis(horizontalLeft + "_2") != 0 || Input.GetAxis(verticalLeft + "_2") != 0))
                 {
                     saveCanvasTextInputMode = false;
                 }
@@ -158,6 +203,36 @@ public class PauseMenu : MonoBehaviour
     {
         bool ps4True = false;
         string[] inputNames = Input.GetJoystickNames();
+        if(inputNames.Length > 0 && !isPlayer2)
+        {
+            if (inputNames[0].Length == 19)
+            {
+                ps4True = true;
+            }
+        }
+        else if(inputNames.Length > 0 && isPlayer2)
+        {
+            if(inputNames.Length > 1)
+            {
+                if (inputNames[1].Length == 19)
+                {
+                    ps4True = true;
+                }
+            }
+            else
+            {
+                if (inputNames[0].Length == 19)
+                {
+                    ps4True = true;
+                }
+            }
+
+        }
+        else
+        {
+            ps4True = false;
+        }
+        /*
         for (int i = 0; i < inputNames.Length; i++)
         {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
             if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
@@ -171,7 +246,7 @@ public class PauseMenu : MonoBehaviour
                     ps4True = false;
                 }
             }
-        }
+        }*/
 
         return ps4True;
     }
@@ -389,6 +464,10 @@ public class PauseMenu : MonoBehaviour
             else
             {
                 SaveAndLoadGame.saver.SetPlayerCurrentHealth(gameController.GetActivePlayer().GetComponent<OctahedronStats>().GetPlayerHealth());
+            }
+            if(gameController.GetPlayer2() != null)
+            {
+                SaveAndLoadGame.saver.SetPlayer2CurrentHealth(gameController.GetPlayer2().GetComponent<PlayerStatsBaseClass>().GetPlayerHealth());
             }
         }
         else
