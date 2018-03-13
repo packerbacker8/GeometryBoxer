@@ -49,7 +49,10 @@ namespace RootMotion
         private Vector3 smoothPosition;
         private Camera cam;
         private bool useController;
+        private bool isPlayer2;
         private string[] controllerInfo;
+        private string controllerHorizon;
+        private string controllerVertical;
         private float distanceOffset;
         private int layer;
         private int layermask;
@@ -81,6 +84,11 @@ namespace RootMotion
             }
             distanceOffset = 0;
             desiredPos = this.transform.position;
+            if(controllerInfo.Length > 0)
+            {
+                controllerHorizon = controllerInfo[0].Length == 19 ? "HorizontalRightPS4" : "HorizontalRight";
+                controllerVertical = controllerInfo[0].Length == 19 ? "VerticalRightPS4" : "VerticalRight";
+            }
         }
 
 
@@ -96,6 +104,18 @@ namespace RootMotion
 
         protected virtual void LateUpdate()
         {
+            if (controllerInfo.Length > 0)
+            {
+                int controlIndex = isPlayer2 && controllerInfo.Length > 1 ? 1 : 0;
+                controllerHorizon = controllerInfo[controlIndex].Length == 19 ? "HorizontalRightPS4" : "HorizontalRight";
+                controllerVertical = controllerInfo[controlIndex].Length == 19 ? "VerticalRightPS4" : "VerticalRight";
+                if (isPlayer2)
+                {
+                    controllerHorizon += "_2";
+                    controllerVertical += "_2";
+                }
+            }
+ 
             UpdateInput();
 
             if (updateMode == UpdateMode.LateUpdate) UpdateTransform();
@@ -115,37 +135,17 @@ namespace RootMotion
             bool useControl = Input.GetJoystickNames().Length > 0;
             if (useControl && rotate)
             {
-                float horizontal = Input.GetJoystickNames()[0].Length == 19 ? Input.GetAxis("HorizontalRightPS4") : Input.GetAxis("HorizontalRight");
-                float vert = Input.GetJoystickNames()[0].Length == 19 ? Input.GetAxis("VerticalRightPS4") : Input.GetAxis("VerticalRight");
+                float horizontal = Input.GetAxis(controllerHorizon);
+                float vert = Input.GetAxis(controllerVertical);
                 x +=  horizontal * rotationSensitivity;
                 y = ClampAngle(y + vert * rotationSensitivity, yMinLimit, yMaxLimit);
             }
 
-            if (rotate)
+            if (!isPlayer2 && rotate)
             {
                 x += Input.GetAxis("Mouse X") * rotationSensitivity;
                 y = ClampAngle(y - Input.GetAxis("Mouse Y") * rotationSensitivity, yMinLimit, yMaxLimit);
             }
-
-
-            // see if you can get this to work.
-            // useController = controllerInfo.Length > 0;
-            // if (useController)
-            // {
-            //         // delta rotation
-            //     if (rotate) {
-            // 	    x += Input.GetAxis("HorizontalRight") * rotationSensitivity;
-            // 	    y = ClampAngle(y - Input.GetAxis("VerticalRight") * rotationSensitivity, yMinLimit, yMaxLimit);
-            //     }
-            // }
-            // else
-            // {
-            //     if (rotate)
-            //     {
-            //         x += Input.GetAxis("Mouse X") * rotationSensitivity;
-            //         y = ClampAngle(y - Input.GetAxis("Mouse Y") * rotationSensitivity, yMinLimit, yMaxLimit);
-            //     }
-            // }
 
             // Distance
             distanceTarget = Mathf.Clamp(distanceTarget + zoomAdd, minDistance, maxDistance);
@@ -238,6 +238,11 @@ namespace RootMotion
             if (angle < -360) angle += 360;
             if (angle > 360) angle -= 360;
             return Mathf.Clamp(angle, min, max);
+        }
+
+        public void SetIsPlayer2()
+        {
+            isPlayer2 = true;
         }
 
     }

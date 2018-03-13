@@ -29,7 +29,18 @@ public class CitySelectSceneController : MonoBehaviour
         
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        wonGameCanvas.SetActive(SaveAndLoadGame.saver.CheckIfWonGame());
+        if(SaveAndLoadGame.saver.CheckIfWonGame())
+        {
+            if(activePlayer.name.Contains("Cube"))
+            {
+                LoadLevel.loader.LoadALevel("CubeVictory");
+            }
+            else
+            {
+                LoadLevel.loader.LoadALevel("OctaVictory");
+            }
+        }
+        //wonGameCanvas.SetActive(SaveAndLoadGame.saver.CheckIfWonGame());
     }
 
 

@@ -307,9 +307,10 @@ public class EnemyHealthScript : MonoBehaviour
     /// Helper function called by detect movement ai to tell the game controller to change the target of 
     /// the given enemy based on its index.
     /// </summary>
-    public void ChangeOurTarget()
+    /// <param name="player2">Is this player 2?</param>
+    public void ChangeOurTarget(bool player2)
     {
-        gameController.GetComponent<GameControllerScript>().ChangeTarget(enemyIndex);
+        gameController.GetComponent<GameControllerScript>().ChangeTarget(enemyIndex, player2);
     }
 
     /// Return the health the enemy originally started out with.

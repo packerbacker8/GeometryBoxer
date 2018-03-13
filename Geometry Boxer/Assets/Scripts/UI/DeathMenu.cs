@@ -10,6 +10,8 @@ public class DeathMenu : MonoBehaviour
     private string reloadLevelString;
     private bool shouldAllowDPad = false;
     private bool ps4Mode;
+    private float TimeSinceScreen = 0.0f;
+    private bool startTimer = false;
     private GameObject canvasPart;
     private StandaloneInputModule gameEventSystemInputModule;
     // Use this for initialization
@@ -25,6 +27,22 @@ public class DeathMenu : MonoBehaviour
         if (shouldAllowDPad)
         {
             string[] inputNames = Input.GetJoystickNames();
+            if(inputNames.Length > 0)
+            {
+                if (inputNames[0].Length == 19)
+                {
+                    ps4Mode = true;
+                }
+                else
+                {
+                    ps4Mode = false;
+                }
+            }
+            else
+            {
+                ps4Mode = false;
+            }
+            /*
             for (int i = 0; i < inputNames.Length; i++)
             {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
                 if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
@@ -38,7 +56,19 @@ public class DeathMenu : MonoBehaviour
                         ps4Mode = false;
                     }
                 }
+            }*/
+
+            if (startTimer)
+            {
+                TimeSinceScreen += Time.deltaTime;
+                if (TimeSinceScreen > 1.2f)
+                {
+                    EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                    startTimer = false;
+                }
             }
+
+
 
             if (ps4Mode)
             {
@@ -80,7 +110,7 @@ public class DeathMenu : MonoBehaviour
     public void setButtonActive()
     {
         //for controller
-        EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        //EventSystem.current.SetSelectedGameObject(this.gameObject.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
         shouldAllowDPad = true;
 
         //check this frame if a controller is plugged in or not, and change modes accordingly.
@@ -100,6 +130,8 @@ public class DeathMenu : MonoBehaviour
                 }
             }
         }
+
+        startTimer = true;
     }
 
     public void setMouse()

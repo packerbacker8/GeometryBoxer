@@ -20,14 +20,16 @@ namespace PlayerUI
 
 
         [Header("Health images")]
-        public Texture healthLow;
-        public Texture hitLow;
+        public Material healthLow;
+        public Material hitLow;
         public int hitLowNumber = 20;
-        public Texture hitHigh;
+        public Material hitHigh;
         public int hitHighNumber = 60;
 
         private GameObject player;
         private GameObject enemies;
+        private Camera playerCam;
+        private Image img;
         private int numEnemiesAlive;
         private bool cooldown = false;
         private float playerCoolDownTimer;
@@ -52,7 +54,7 @@ namespace PlayerUI
         void Awake()
         {
             enemies = GameObject.FindGameObjectWithTag("EnemyContainer");
-            player = GameObject.FindGameObjectWithTag("Player");
+            //player = GameObject.FindGameObjectWithTag("Player");
 
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
             {
@@ -71,7 +73,16 @@ namespace PlayerUI
             }
 
             hitTimer = 0;
+            img = this.GetComponent<Image>();
             // PlayersHealth = 15000f;
+        }
+
+        private void Start()
+        {
+            this.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceCamera;
+            this.GetComponent<Canvas>().worldCamera = playerCam;
+            this.GetComponent<Canvas>().sortingLayerName = "UI";
+            this.GetComponent<Canvas>().planeDistance = 1;
         }
 
         // Update is called once per frame
@@ -172,32 +183,51 @@ namespace PlayerUI
                 hit = false;
                 hitCount = 0;
             }
+
+            if (playerCam != null)
+            {
+                Rect camRect = playerCam.rect;
+                if (PlayersHealth < (fullHealth / 4) && !hit)
+                {
+                    img.color = new Color(1f, 1f, 1f, 1f);
+                    img.material = healthLow;
+                    //GUI.DrawTexture(camRect, healthLow);
+                }
+
+                if (hit && hitCount > hitLowNumber && hitCount < hitHighNumber)
+                {
+                    img.color = new Color(1f, 1f, 1f, 1f);
+                    img.material = hitLow;
+                    //GUI.DrawTexture(camRect, hitLow);
+                }
+                else if (hit && hitCount > hitHighNumber)
+                {
+                    img.color = new Color(1f, 1f, 1f, 1f);
+                    img.material = hitHigh;
+                    //GUI.DrawTexture(camRect, hitHigh);
+                }
+                else if (hit && hitCount < hitLowNumber && PlayersHealth < (fullHealth / 4))
+                {
+                    img.color = new Color(1f, 1f, 1f, 1f);
+                    img.material = healthLow;
+                    //GUI.DrawTexture(camRect, healthLow);
+                }
+            }
+            if (!hit)
+            {
+                img.color = new Color(1f, 1f, 1f, 0f);
+                img.material = null;
+            }
         }
 
         /// <summary>
-        /// UI GUI for low health and when being hit by enemyies
-        /// if you are hit 200 times hit UI will activate 
+        /// 
         /// </summary>
-        private void OnGUI()
+        /// <param name="p"></param>
+        public void SetPlayer(GameObject p)
         {
-            if (PlayersHealth < (fullHealth / 4) && !hit)
-            {
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), healthLow);
-            }
-
-            if (hit && hitCount > hitLowNumber && hitCount < hitHighNumber)
-            {
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), hitLow);
-            }
-            else if (hit && hitCount > hitHighNumber)
-            {
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), hitHigh);
-            }
-            else if (hit && hitCount < hitLowNumber && PlayersHealth < (fullHealth / 4))
-            {
-                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), healthLow);
-            }
-
+            player = p;
+            playerCam = player.GetComponentInChildren<Camera>();
         }
 
         // functions called from other classes
@@ -238,11 +268,11 @@ namespace PlayerUI
             PlayersHealth = health;
         }
 
-        public void setHitUIimage(bool h, int count)
+        public void setHitUIimage(bool h)
         {
-            hitCount += count;
+            hitCount++;
             hit = h;
-            hitTimer = 0.1f;
+            hitTimer = 1f;
         }
 
         /// <summary>

@@ -17,7 +17,6 @@ public class CubeAttackScript : PunchScript
 
     private bool isGrounded;
     private GameObject gameController;
-    private GameObject playerUIChild;
     private float coolDownTime;
     private float coolDownTimer;
 
@@ -109,7 +108,7 @@ public class CubeAttackScript : PunchScript
                 UpdatePos(charController.transform, specialForm.transform);
                 coolDownTimer = 0f;
             }
-            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown(specialAttackButton)))
+            if (((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton)))
             {
                 DeactivateSpecialAttack();
                 UpdatePos(charController.transform, specialForm.transform);
@@ -118,7 +117,7 @@ public class CubeAttackScript : PunchScript
             if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
             {
                 specialRigid.AddForce(Vector3.up * specialAttackForce * 100f);
-                SendMessage("CubeJumpSfx",true,SendMessageOptions.DontRequireReceiver);
+                SendMessage("CubeJumpSfx", true, SendMessageOptions.DontRequireReceiver);
             }
             else if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
             {
@@ -128,7 +127,7 @@ public class CubeAttackScript : PunchScript
             }
             if (!isGrounded)
             {
-                moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+                moveDir = new Vector3(Input.GetAxisRaw(horizontalStick), 0, Input.GetAxisRaw(verticalStick));
                 moveDir = cam.transform.TransformDirection(moveDir);
                 moveDir.y = 0;
                 moveDir = Vector3.Normalize(moveDir);
@@ -141,7 +140,7 @@ public class CubeAttackScript : PunchScript
         {
             UpdatePos(specialForm.transform, charController.transform);
 
-            if ((Input.GetKeyDown(specialAttack) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+            if (((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
             {
                 growingSpecial = true;
                 ActivateSpecialAttack();
@@ -300,6 +299,18 @@ public class CubeAttackScript : PunchScript
         }
     }
 
+    public override void SetAsPlayer2()
+    {
+        base.SetAsPlayer2();
+        leftJabControllerButton = leftJabControllerButton + "_2";
+        rightJabControllerButton = rightJabControllerButton + "_2";
+        upperCutButton = upperCutButton + "_2";
+        hiKickButton = hiKickButton + "_2";
+        specialAttackButton = specialAttackButton + "_2";
+        activateSpecialAttackButton = activateSpecialAttackButton + "_2";
+        horizontalStick += "_2";
+        verticalStick += "_2";
+    }
 }
 
 
