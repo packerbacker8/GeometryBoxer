@@ -75,7 +75,7 @@ public class ArenaModeScript : GameControllerScript {
             enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
             if (enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
             {
-                enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null);
 
             }
             else if (enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
@@ -214,7 +214,7 @@ public class ArenaModeScript : GameControllerScript {
             enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
             if (enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
             {
-                enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null);
 
             }
             else if (enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
