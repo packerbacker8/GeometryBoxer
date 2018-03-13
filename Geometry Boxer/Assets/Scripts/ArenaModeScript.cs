@@ -8,7 +8,7 @@ using PlayerUI;
 public class ArenaModeScript : GameControllerScript {
 
     public GameObject[] Waves;
-
+    public GameObject tempEnemyContainer;
     private PlayerUserInterface playerInterface;
 
     private float timeBeforeWaveBegins;
@@ -99,8 +99,6 @@ public class ArenaModeScript : GameControllerScript {
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        playerInterface = GameObject.FindGameObjectWithTag("playerUI").GetComponent<PlayerUserInterface>();
-        playerInterface.reinitializeUI(numEnemiesAlive);
 
         currentHealthPickups = Waves[0].transform.Find("HealthPickups").gameObject;
         currentPropPickups = Waves[0].transform.Find("Props").gameObject;
@@ -117,6 +115,9 @@ public class ArenaModeScript : GameControllerScript {
         base.Start();
 
         lastWaveNumber = Waves.Length;
+        Destroy(tempEnemyContainer);
+        playerInterface = GameObject.FindGameObjectWithTag("playerUI").GetComponent<PlayerUserInterface>();
+        
     }
 
     protected override void Update()
@@ -129,6 +130,8 @@ public class ArenaModeScript : GameControllerScript {
                 enemyContainer.SetActive(true);
                 currentHealthPickups.SetActive(true);
                 currentPropPickups.SetActive(true);
+
+                playerInterface.reinitializeUI(numEnemiesAlive);
 
                 timeBeforeWaveBegins = 0.0f;
                 waveActive = true;
@@ -229,7 +232,6 @@ public class ArenaModeScript : GameControllerScript {
 
         waveActive = false;
 
-        playerInterface.reinitializeUI(numEnemiesAlive);
 
     }
 
