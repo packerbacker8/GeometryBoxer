@@ -105,7 +105,7 @@ public class ArenaModeScript : GameControllerScript {
         Waves[0].gameObject.SetActive(false);
 
 
-        //initAI();
+        initAI();
     }
 
     
@@ -208,7 +208,7 @@ public class ArenaModeScript : GameControllerScript {
 
         for (int i = 0; i < numEnemiesAlive; i++)
         {
-            enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
+            /*enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
             enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
             enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
             enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
@@ -220,7 +220,7 @@ public class ArenaModeScript : GameControllerScript {
             else if (enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
             {
                 //nothing?
-            }
+            }*/
             enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
         }
 
@@ -236,7 +236,7 @@ public class ArenaModeScript : GameControllerScript {
     }
 
 
-    /*public void initAI()
+    public void initAI()
     {
 
 
@@ -262,7 +262,7 @@ public class ArenaModeScript : GameControllerScript {
                 aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
                 if (aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>() != null)
                 {
-                    aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetPlayerTransform(playerCharController.transform);
+                    aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null);
 
                 }
                 else if (aContainer.transform.GetChild(j).GetComponentInChildren<NormalMovementAI>() != null)
@@ -279,6 +279,6 @@ public class ArenaModeScript : GameControllerScript {
             Waves[i].gameObject.SetActive(false);
         }
 
-    }*/
+    }
 
 }
