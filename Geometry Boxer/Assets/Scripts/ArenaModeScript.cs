@@ -24,7 +24,7 @@ public class ArenaModeScript : GameControllerScript {
 
     protected override void Awake()
     {
-        for (int i = 0; i < playerOptions.Length; i++)
+        /*for (int i = 0; i < playerOptions.Length; i++)
         {
             if (playerOptions[i].name.Contains(SaveAndLoadGame.saver.GetCharacterType()))
             {
@@ -98,7 +98,26 @@ public class ArenaModeScript : GameControllerScript {
         playerAlive = true;
         currentMapName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.visible = false; */
+
+
+        base.Awake();
+
+        
+
+        if (enemyContainer == enemyOctahedronContainer)
+        {
+            // = Waves[0].transform.Find("EnemiesOctahedron").gameObject;
+            //Waves[0].transform.Find("EnemiesCube").gameObject.SetActive(false);
+            isCube = true;
+        }
+        else
+        {
+            //enemyContainer = Waves[0].transform.Find("EnemiesCube").gameObject;
+            //Waves[0].transform.Find("EnemiesOctahedron").gameObject.SetActive(false);
+            isCube = false;
+        }
+
 
         currentHealthPickups = Waves[0].transform.Find("HealthPickups").gameObject;
         currentPropPickups = Waves[0].transform.Find("Props").gameObject;
@@ -144,7 +163,7 @@ public class ArenaModeScript : GameControllerScript {
 
         if (numEnemiesAlive <= 0)
         {
-            if (!levelWon && playerAlive && currentWaveNumber == lastWaveNumber)
+            if (!levelWon && (playerAlive || player2Alive) && currentWaveNumber == lastWaveNumber)
             {
                 SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
 
@@ -262,13 +281,23 @@ public class ArenaModeScript : GameControllerScript {
                 aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
                 if (aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>() != null)
                 {
-                    aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null);
-
+                    if (player2CharController == null)
+                    {
+                        aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null);
+                    }
+                    else
+                    {
+                        aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, player2CharController.transform);
+                    }
+                    aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
+                    aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
                 }
                 else if (aContainer.transform.GetChild(j).GetComponentInChildren<NormalMovementAI>() != null)
                 {
-                    //nothing?
+                    switchPlayers = player2CharController == null ? false : !switchPlayers;
+                    aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
                 }
+
             }
 
 
