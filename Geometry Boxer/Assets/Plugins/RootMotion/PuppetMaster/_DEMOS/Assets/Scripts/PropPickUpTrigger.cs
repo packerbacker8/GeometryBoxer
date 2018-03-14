@@ -11,12 +11,12 @@ namespace RootMotion.Demos {
         public AudioClip pickup;
 
         private CharacterPuppet characterPuppet;
-        private GameObject light;
+        private GameObject orb;
         private AudioSource source;
 
         void Start()
         {
-            light = this.transform.parent.GetChild(5).gameObject;
+            orb = this.transform.parent.GetChild(5).gameObject;
             source = this.gameObject.AddComponent<AudioSource>();
             source.spatialBlend = 0.6f;
         }
@@ -34,7 +34,7 @@ namespace RootMotion.Demos {
 			if (characterPuppet.propRoot.currentProp != null) return;
 
 			characterPuppet.propRoot.currentProp = prop;
-            light.SetActive(false);
+            orb.SetActive(false);
             source.PlayOneShot(pickup, 0.5f);
         }
 	}
