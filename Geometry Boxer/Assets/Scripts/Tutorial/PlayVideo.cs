@@ -9,7 +9,12 @@ public class PlayVideo : MonoBehaviour {
     public VideoPlayer video;
     public string sceneToLoad;
     private float timer = 0f;
-    
+
+    private void Awake()
+    {
+        Cursor.visible = false;
+    }
+
     // Update is called once per frame
     void Update ()
     {
