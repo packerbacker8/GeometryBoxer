@@ -55,6 +55,15 @@ public class OctahedronStats : PlayerStatsBaseClass
     public override void KillPlayer()
     {
         anim.Play("Death");
+        if (charController.GetComponent<CharacterMeleeDemo>().propRoot.gameObject.GetComponent<PropPickUpTrigger>() != null)
+        {
+            Destroy(charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp.gameObject.GetComponent<PropPickUpTrigger>());
+        }
+        else if(charController.GetComponent<CharacterMeleeDemo>().propRoot.gameObject.GetComponent<PropPickUpTriggerWithParticle>() != null)
+        {
+            Destroy(charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp.gameObject.GetComponent<PropPickUpTriggerWithParticle>());
+        }
+        charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp = null;
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
         gameController.GetComponent<GameControllerScript>().PlayerKilled(isPlayer2);
 

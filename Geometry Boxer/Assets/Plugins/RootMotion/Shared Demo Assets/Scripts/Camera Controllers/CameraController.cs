@@ -224,8 +224,22 @@ namespace RootMotion
         private float zoomAdd
         {
             get
-            {
-                float scrollAxis = Input.GetAxis("Mouse ScrollWheel");
+            { 
+                string leftTrigger = "LeftTrigger";
+                string rightTrigger = "RightTrigger";
+                int controlIndex = isPlayer2 && controllerInfo.Length > 1 ? 1 : 0;
+                if(controllerInfo.Length > 0)
+                {
+                    leftTrigger = controllerInfo[controlIndex].Length == 19 ? leftTrigger + "PS4" : leftTrigger;
+                    rightTrigger = controllerInfo[controlIndex].Length == 19 ? rightTrigger + "PS4" : rightTrigger;
+                    if (isPlayer2)
+                    {
+                        leftTrigger += "_2";
+                        rightTrigger += "_2";
+                    }
+                }
+
+                float scrollAxis = Input.GetAxis("Mouse ScrollWheel") - Input.GetAxis(leftTrigger) + Input.GetAxis(rightTrigger);
                 if (scrollAxis > 0) return -zoomSensitivity;
                 if (scrollAxis < 0) return zoomSensitivity;
                 return 0;
