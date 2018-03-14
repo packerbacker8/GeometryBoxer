@@ -131,7 +131,7 @@ public class CubeSpecialStats : PlayerStatsBaseClass
         {
             Destroy(charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp.gameObject.GetComponent<PropPickUpTrigger>());
         }
-        else
+        else if (charController.GetComponent<CharacterMeleeDemo>().propRoot.gameObject.GetComponent<PropPickUpTriggerWithParticle>() != null)
         {
             Destroy(charController.GetComponent<CharacterMeleeDemo>().propRoot.currentProp.gameObject.GetComponent<PropPickUpTriggerWithParticle>());
         }
