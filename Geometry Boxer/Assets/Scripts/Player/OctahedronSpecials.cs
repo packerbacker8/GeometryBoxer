@@ -14,11 +14,6 @@ public class OctahedronSpecials : PunchScript
     public float octahedronExtension = 5f;
     public bool debugMode = false;
 
-    CharacterMeleeDemo charMeleeDemoRef;
-    UserControlThirdPerson userControlThirdPersonRef;
-    CharacterThirdPerson charThirdPersonref;
-    Rigidbody rb;
-
     //public CharacterController;
     // animClips = anim.runtimeAnimatorController.animationClips;
 
@@ -44,12 +39,6 @@ public class OctahedronSpecials : PunchScript
     protected override void Start()
     {
         base.Start();
-        charMeleeDemoRef = transform.GetComponentInChildren<CharacterMeleeDemo>();
-        userControlThirdPersonRef = transform.GetComponentInChildren<UserControlThirdPerson>();
-        charThirdPersonref = transform.GetComponentInChildren<CharacterThirdPerson>();
-        //AnimatorStateInfo i = anim.GetNextAnimatorStateInfo(0);
-        Rigidbody[] arr = transform.GetComponentsInChildren<Rigidbody>();
-        rb = arr[11];
 
         stats = this.GetComponent<OctahedronStats>();
         baseStats = this.GetComponent<OctahedronStats>();
