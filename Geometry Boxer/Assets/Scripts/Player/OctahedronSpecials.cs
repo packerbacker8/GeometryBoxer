@@ -12,6 +12,7 @@ public class OctahedronSpecials : PunchScript
     public float angularDragAmount = 2f;
     public float floatHeight = 1f;
     public float octahedronExtension = 5f;
+    public int SpinsTillSwitch = 5;
     public bool debugMode = false;
 
     //public CharacterController;
@@ -29,6 +30,8 @@ public class OctahedronSpecials : PunchScript
     private bool floatCapped;
 
     private int isFloating;
+    private int spinCount;
+    private int spinDir;
 
     private OctahedronStats stats;
 
@@ -58,6 +61,8 @@ public class OctahedronSpecials : PunchScript
         isGrounded = checkIfGrounded();
         floatCapped = false;
         isFloating = 0;
+        spinCount = 0;
+        spinDir = 1;
         specialRigid.maxAngularVelocity = Mathf.Infinity;
         specialRigid.angularDrag = angularDragAmount;
     }
@@ -136,6 +141,13 @@ public class OctahedronSpecials : PunchScript
                     specialRigid.velocity = new Vector3(specialRigid.velocity.x, 0f, specialRigid.velocity.z);
                     specialRigid.useGravity = false;
                 }
+                moveDir = new Vector3(Input.GetAxisRaw(horizontalStick), 0, Input.GetAxisRaw(verticalStick));
+                moveDir = cam.transform.TransformDirection(moveDir);
+                moveDir.y = 0;
+                moveDir = Vector3.Normalize(moveDir);
+                moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
+                moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
+                specialRigid.AddForce(moveDir); //Testing playing around with moving the octa hedron around with move keys
                 if (coolDownTimer >= specialAttackActiveTime)
                 {
                     DeactivateSpecialAttack();
@@ -159,18 +171,31 @@ public class OctahedronSpecials : PunchScript
                     specialRigid.AddForce(moveDir);
                     launched = true;
                     specialRigid.AddForce(Vector3.up * specialAttackForce * 2f);
+                    /*if(specialRigid.angularVelocity.y < 0.5f)
+                    {
+                        spinDir *= -1;
+                    }*/
+                    if (spinDir == 1)
+                    {
+                        spinCount++;
+                    }
+                    else
+                    {
+                        spinCount--;
+                    }
+                    if (spinCount == SpinsTillSwitch)
+                    {
+                        spinDir = -1;
+                    }
+                    else if (spinCount == 0)
+                    {
+                        spinDir = 1;
+                    }
                     SendMessage("OctaSpinSfx", true, SendMessageOptions.DontRequireReceiver);
                 }
                 else if (launched)
                 {
-                    moveDir = new Vector3(Input.GetAxisRaw(horizontalStick), 0, Input.GetAxisRaw(verticalStick));
-                    moveDir = cam.transform.TransformDirection(moveDir);
-                    moveDir.y = 0;
-                    moveDir = Vector3.Normalize(moveDir);
-                    moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
-                    moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
-                    //specialRigid.AddForce(moveDir);
-                    specialRigid.AddTorque(Vector3.up * specialAttackForce * spinForceMult);
+                    specialRigid.AddTorque((spinDir * Vector3.up) * specialAttackForce * spinForceMult);
                     launchTime += Time.deltaTime;
                     if (launchTime >= launchLength)
                     {
