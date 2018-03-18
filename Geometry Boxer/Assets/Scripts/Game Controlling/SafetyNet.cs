@@ -8,6 +8,7 @@ public class SafetyNet : MonoBehaviour
     [Header("Player Character Options")]
     public GameObject[] playerOptions;
 
+    private GameObject playerUI; 
     private GameObject resetLocation;
     private GameObject mainPlayer;
     private GameObject activePlayer;
@@ -21,7 +22,6 @@ public class SafetyNet : MonoBehaviour
     void Start()
     {
         resetLocation = GameObject.FindGameObjectWithTag("Respawn");
-
 
         for (int i = 0; i < playerOptions.Length; i++)
         {
@@ -95,6 +95,12 @@ public class SafetyNet : MonoBehaviour
     {
         if(heWhoLeftTheWorld.tag.Contains("Player"))
         {
+            string playerUIStr =  "playerUI";
+            playerUI = GameObject.FindGameObjectWithTag(playerUIStr);
+            if (playerUI != null)
+            {
+                playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
+            }
             SaveAndLoadGame.saver.SetLoadedFightScene(true);
             GameControllerScript gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
             HashSet<int> allyI = gameController.hasAllies ? gameController.AllyAliveIndicies() : new HashSet<int>();
@@ -109,6 +115,12 @@ public class SafetyNet : MonoBehaviour
             }
             if(player2 != null)
             {
+                playerUIStr = "playerUI_2";
+                playerUI = GameObject.FindGameObjectWithTag(playerUIStr);
+                if (playerUI != null)
+                {
+                    playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
+                }
                 SaveAndLoadGame.saver.SetPlayer2CurrentHealth(player2.GetComponentInChildren<PlayerStatsBaseClass>().GetPlayerHealth());
             }
             SaveAndLoadGame.saver.SetCurrentScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);

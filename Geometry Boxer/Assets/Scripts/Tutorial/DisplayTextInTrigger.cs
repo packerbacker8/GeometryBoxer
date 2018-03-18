@@ -58,10 +58,12 @@ public class DisplayTextInTrigger : MonoBehaviour {
     }
     void OnTriggerExit(Collider col)
     {
+        /*
         if (col.transform.root.tag == "Player")
         {
             panel.SetActive(false);
             textComponent.text = "";
         }
+        */
     }
 }
