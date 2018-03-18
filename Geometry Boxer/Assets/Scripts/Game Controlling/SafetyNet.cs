@@ -8,6 +8,7 @@ public class SafetyNet : MonoBehaviour
     [Header("Player Character Options")]
     public GameObject[] playerOptions;
 
+    private GameObject playerUI; 
     private GameObject resetLocation;
     private GameObject mainPlayer;
     private GameObject activePlayer;
@@ -21,6 +22,7 @@ public class SafetyNet : MonoBehaviour
     void Start()
     {
         resetLocation = GameObject.FindGameObjectWithTag("Respawn");
+        playerUI = GameObject.FindGameObjectWithTag("playerUI");
 
 
         for (int i = 0; i < playerOptions.Length; i++)
@@ -95,6 +97,8 @@ public class SafetyNet : MonoBehaviour
     {
         if(heWhoLeftTheWorld.tag.Contains("Player"))
         {
+            Debug.Log("ChildCount on playerUI = " + (playerUI.transform.childCount - 1));
+            playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
             SaveAndLoadGame.saver.SetLoadedFightScene(true);
             GameControllerScript gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
             HashSet<int> allyI = gameController.hasAllies ? gameController.AllyAliveIndicies() : new HashSet<int>();
