@@ -102,10 +102,10 @@ public class HealthPickup : MonoBehaviour
                 healthThingy = Instantiate(healthGainedEffectPrefab, colObj.GetComponentInChildren<UserControlMelee>().transform.position, colObj.GetComponentInChildren<UserControlMelee>().transform.rotation, colObj.GetComponentInChildren<UserControlMelee>().transform);
             }
         }
-        else if(col.gameObject.transform.root.tag.Contains("Enemy"))
+        else if(col.gameObject.transform.root.tag.Contains("Enemy") || col.gameObject.transform.root.tag.Contains("Ally"))
         {
             colObj = col.gameObject;
-            while(!colObj.tag.Contains("EnemyRoot"))
+            while(!colObj.tag.Contains("EnemyRoot") && !colObj.tag.Contains("AllyRoot"))
             {
                 colObj = colObj.transform.parent.gameObject;
             }

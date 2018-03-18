@@ -59,105 +59,108 @@ public class CubeAttackScript : PunchScript
     protected override void Update()
     {
         base.Update();
-        if (updateCollisionCheck)
+        if (!baseStats.IsDead)
         {
-            //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
-            GameObject walker = leftShoulder;
-            GameObject walker2 = rightShoulder; //need both for sake of combo
-            GameObject walker3 = rightThigh;
-            while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+            if (updateCollisionCheck)
             {
-                walker.GetComponent<CollisionReceived>().sendDamage = true;
-                walker2.GetComponent<CollisionReceived>().sendDamage = true;
-                walker3.GetComponent<CollisionReceived>().sendDamage = true;
-                //assumes there is only one child
-                walker = walker.transform.GetChild(0).gameObject;
-                walker2 = walker2.transform.GetChild(0).gameObject;
-                walker3 = walker3.transform.GetChild(0).gameObject;
-            }
-            if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null && walker3.GetComponent<CollisionReceived>() != null)
-            {
-                walker.GetComponent<CollisionReceived>().sendDamage = true;
-                walker2.GetComponent<CollisionReceived>().sendDamage = true;
-                walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                //ASSUMES ALL CHARACTER ARMS AND LEGS ARE 3 JOINTS
+                GameObject walker = leftShoulder;
+                GameObject walker2 = rightShoulder; //need both for sake of combo
+                GameObject walker3 = rightThigh;
+                while (walker.transform.childCount > 0 && walker.GetComponent<CollisionReceived>() != null)
+                {
+                    walker.GetComponent<CollisionReceived>().sendDamage = true;
+                    walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                    walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                    //assumes there is only one child
+                    walker = walker.transform.GetChild(0).gameObject;
+                    walker2 = walker2.transform.GetChild(0).gameObject;
+                    walker3 = walker3.transform.GetChild(0).gameObject;
+                }
+                if (walker.GetComponent<CollisionReceived>() != null && walker2.GetComponent<CollisionReceived>() != null && walker3.GetComponent<CollisionReceived>() != null)
+                {
+                    walker.GetComponent<CollisionReceived>().sendDamage = true;
+                    walker2.GetComponent<CollisionReceived>().sendDamage = true;
+                    walker3.GetComponent<CollisionReceived>().sendDamage = true;
+                }
+
+                updateCollisionCheck = false;
             }
 
-            updateCollisionCheck = false;
-        }
-
-        isGrounded = checkIfGrounded();
-        if (isGrounded)
-        {
-            launched = false;
-        }
-        if (growingSpecial)
-        {
-            GrowSpecial();
-        }
-        else if (playerGrowing)
-        {
-            GrowPlayer();
-        }
-        else if (specialForm.GetComponent<MeshRenderer>().enabled)
-        {
-            UpdatePos(charController.transform, specialForm.transform);
-            coolDownTimer += Time.deltaTime;
-            if (coolDownTimer >= specialAttackActiveTime)
+            isGrounded = checkIfGrounded();
+            if (isGrounded)
             {
-                DeactivateSpecialAttack();
+                launched = false;
+            }
+            if (growingSpecial)
+            {
+                GrowSpecial();
+            }
+            else if (playerGrowing)
+            {
+                GrowPlayer();
+            }
+            else if (specialForm.GetComponent<MeshRenderer>().enabled)
+            {
                 UpdatePos(charController.transform, specialForm.transform);
-                coolDownTimer = 0f;
+                coolDownTimer += Time.deltaTime;
+                if (coolDownTimer >= specialAttackActiveTime)
+                {
+                    DeactivateSpecialAttack();
+                    UpdatePos(charController.transform, specialForm.transform);
+                    coolDownTimer = 0f;
+                }
+                if (((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton)))
+                {
+                    DeactivateSpecialAttack();
+                    UpdatePos(charController.transform, specialForm.transform);
+                    coolDownTimer = 0f;
+                }
+                if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
+                {
+                    specialRigid.AddForce(Vector3.up * specialAttackForce * 100f);
+                    SendMessage("CubeJumpSfx", true, SendMessageOptions.DontRequireReceiver);
+                }
+                else if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
+                {
+                    specialRigid.AddForce(-Vector3.up * specialAttackForce * 300f);
+                    launched = true;
+                    SendMessage("CubeStompSfx", true, SendMessageOptions.DontRequireReceiver);
+                }
+                if (!isGrounded)
+                {
+                    moveDir = new Vector3(Input.GetAxisRaw(horizontalStick), 0, Input.GetAxisRaw(verticalStick));
+                    moveDir = cam.transform.TransformDirection(moveDir);
+                    moveDir.y = 0;
+                    moveDir = Vector3.Normalize(moveDir);
+                    moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
+                    moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
+                    specialRigid.AddForce(moveDir);
+                }
             }
-            if (((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton)))
+            else
             {
-                DeactivateSpecialAttack();
-                UpdatePos(charController.transform, specialForm.transform);
-                coolDownTimer = 0f;
-            }
-            if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && isGrounded && specialForm.GetComponent<MeshRenderer>().enabled) //include jump key for controller
-            {
-                specialRigid.AddForce(Vector3.up * specialAttackForce * 100f);
-                SendMessage("CubeJumpSfx", true, SendMessageOptions.DontRequireReceiver);
-            }
-            else if ((Input.GetKeyDown(useAttack) || Input.GetButtonDown(activateSpecialAttackButton)) && specialForm.GetComponent<MeshRenderer>().enabled && !launched)
-            {
-                specialRigid.AddForce(-Vector3.up * specialAttackForce * 300f);
-                launched = true;
-                SendMessage("CubeStompSfx", true, SendMessageOptions.DontRequireReceiver);
-            }
-            if (!isGrounded)
-            {
-                moveDir = new Vector3(Input.GetAxisRaw(horizontalStick), 0, Input.GetAxisRaw(verticalStick));
-                moveDir = cam.transform.TransformDirection(moveDir);
-                moveDir.y = 0;
-                moveDir = Vector3.Normalize(moveDir);
-                moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
-                moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
-                specialRigid.AddForce(moveDir);
-            }
-        }
-        else
-        {
-            UpdatePos(specialForm.transform, charController.transform);
-
-            if (((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
-            {
-                growingSpecial = true;
-                ActivateSpecialAttack();
                 UpdatePos(specialForm.transform, charController.transform);
-            }
-        }
 
-        if (onCooldown)
-        {
-            coolDownTimer += Time.deltaTime;
-            if (coolDownTimer >= specialAttackCooldownTime)
+                if (((Input.GetKeyDown(specialAttack) && !IsPlayer2) || Input.GetButtonDown(specialAttackButton)) && !specialForm.GetComponent<MeshRenderer>().enabled && !onCooldown)
+                {
+                    growingSpecial = true;
+                    ActivateSpecialAttack();
+                    UpdatePos(specialForm.transform, charController.transform);
+                }
+            }
+
+            if (onCooldown)
             {
-                onCooldown = false;
-                coolDownTimer = 0f;
+                coolDownTimer += Time.deltaTime;
+                if (coolDownTimer >= specialAttackCooldownTime)
+                {
+                    onCooldown = false;
+                    coolDownTimer = 0f;
+                }
             }
-        }
 
+        }
         //GrowBigPower();
     }
 
