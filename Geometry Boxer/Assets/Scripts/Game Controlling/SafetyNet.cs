@@ -22,8 +22,6 @@ public class SafetyNet : MonoBehaviour
     void Start()
     {
         resetLocation = GameObject.FindGameObjectWithTag("Respawn");
-        playerUI = GameObject.FindGameObjectWithTag("playerUI");
-
 
         for (int i = 0; i < playerOptions.Length; i++)
         {
@@ -97,6 +95,8 @@ public class SafetyNet : MonoBehaviour
     {
         if(heWhoLeftTheWorld.tag.Contains("Player"))
         {
+            string playerUIStr =  "playerUI";
+            playerUI = GameObject.FindGameObjectWithTag(playerUIStr);
             if (playerUI != null)
             {
                 playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
@@ -115,6 +115,12 @@ public class SafetyNet : MonoBehaviour
             }
             if(player2 != null)
             {
+                playerUIStr = "playerUI_2";
+                playerUI = GameObject.FindGameObjectWithTag(playerUIStr);
+                if (playerUI != null)
+                {
+                    playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
+                }
                 SaveAndLoadGame.saver.SetPlayer2CurrentHealth(player2.GetComponentInChildren<PlayerStatsBaseClass>().GetPlayerHealth());
             }
             SaveAndLoadGame.saver.SetCurrentScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);

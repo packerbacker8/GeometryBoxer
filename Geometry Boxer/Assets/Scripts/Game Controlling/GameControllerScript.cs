@@ -455,7 +455,8 @@ public class GameControllerScript : MonoBehaviour
                         return;
                     }
                 }
-                enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
+                switchPlayers = IsSplitScreen ? !switchPlayers : false;
+                enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
             }
             else
             {
@@ -473,7 +474,8 @@ public class GameControllerScript : MonoBehaviour
         }
         else
         {
-            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
+            switchPlayers = IsSplitScreen ? !switchPlayers : false;
+            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
         }
     }
 
