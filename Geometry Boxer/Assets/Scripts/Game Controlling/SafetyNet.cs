@@ -102,26 +102,34 @@ public class SafetyNet : MonoBehaviour
                 playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
             }
             SaveAndLoadGame.saver.SetLoadedFightScene(true);
-            GameControllerScript gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
-            HashSet<int> allyI = gameController.hasAllies ? gameController.AllyAliveIndicies() : new HashSet<int>();
-            SaveAndLoadGame.saver.SetFightSceneSaveValues(gameController.EnemyAliveIndicies(), gameController.hasAllies, allyI);
-            if (mainPlayer.name.Contains("Cube"))
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
             {
-                SaveAndLoadGame.saver.SetPlayerCurrentHealth(heWhoLeftTheWorld.GetComponent<CubeSpecialStats>().GetPlayerHealth());
+                GameControllerScriptTutorial gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScriptTutorial>();
+                SaveAndLoadGame.saver.SetFightSceneSaveValues(gameController.EnemyAliveIndicies(), false, new HashSet<int>());
             }
             else
             {
-                SaveAndLoadGame.saver.SetPlayerCurrentHealth(heWhoLeftTheWorld.GetComponent<OctahedronStats>().GetPlayerHealth());
-            }
-            if(player2 != null)
-            {
-                playerUIStr = "playerUI_2";
-                playerUI = GameObject.FindGameObjectWithTag(playerUIStr);
-                if (playerUI != null)
+                GameControllerScript gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScript>();
+                HashSet<int> allyI = gameController.hasAllies ? gameController.AllyAliveIndicies() : new HashSet<int>();
+                SaveAndLoadGame.saver.SetFightSceneSaveValues(gameController.EnemyAliveIndicies(), gameController.hasAllies, allyI);
+                if (mainPlayer.name.Contains("Cube"))
                 {
-                    playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
+                    SaveAndLoadGame.saver.SetPlayerCurrentHealth(heWhoLeftTheWorld.GetComponent<CubeSpecialStats>().GetPlayerHealth());
                 }
-                SaveAndLoadGame.saver.SetPlayer2CurrentHealth(player2.GetComponentInChildren<PlayerStatsBaseClass>().GetPlayerHealth());
+                else
+                {
+                    SaveAndLoadGame.saver.SetPlayerCurrentHealth(heWhoLeftTheWorld.GetComponent<OctahedronStats>().GetPlayerHealth());
+                }
+                if (player2 != null)
+                {
+                    playerUIStr = "playerUI_2";
+                    playerUI = GameObject.FindGameObjectWithTag(playerUIStr);
+                    if (playerUI != null)
+                    {
+                        playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
+                    }
+                    SaveAndLoadGame.saver.SetPlayer2CurrentHealth(player2.GetComponentInChildren<PlayerStatsBaseClass>().GetPlayerHealth());
+                }
             }
             SaveAndLoadGame.saver.SetCurrentScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             heWhoLeftTheWorld.SendMessage("PlayerBeingReset", resetLocation.transform, SendMessageOptions.DontRequireReceiver);
