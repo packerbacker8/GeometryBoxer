@@ -120,4 +120,21 @@ public class GameControllerScriptTutorial : MonoBehaviour
     {
         enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(activePlayer.transform.GetChild(2).gameObject);
     }
+
+    /// <summary>
+    /// Function to give enemies alive indicies.
+    /// </summary>
+    /// <returns>Returns enemies that are being tracked as alive in enemiesInWorld container.</returns>
+    public HashSet<int> EnemyAliveIndicies()
+    {
+        HashSet<int> enemiesAlive = new HashSet<int>();
+        for (int i = 0; i < enemiesInWorld.Count; i++)
+        {
+            if (enemiesInWorld[i] != null)
+            {
+                enemiesAlive.Add(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex());
+            }
+        }
+        return enemiesAlive;
+    }
 }
