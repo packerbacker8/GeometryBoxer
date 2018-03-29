@@ -463,8 +463,8 @@ namespace RootMotion.Dynamics {
 			Color color = new Color(0.2f, 0.9f, 0.5f);
 			Handles.color = color;
 
-			if (Event.current.type == EventType.mouseUp) isDragging = false;
-			if (Event.current.type == EventType.mouseDown) isDragging = false;
+			if (Event.current.type == EventType.MouseUp) isDragging = false;
+			if (Event.current.type == EventType.MouseDown) isDragging = false;
 
 			if (script.mode == RagdollEditor.Mode.Colliders) {
 

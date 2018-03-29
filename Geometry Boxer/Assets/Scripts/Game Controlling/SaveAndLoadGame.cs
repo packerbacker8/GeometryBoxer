@@ -10,8 +10,15 @@ public class SaveAndLoadGame : MonoBehaviour
     public static SaveAndLoadGame saver;
     public string[] cityNames;
     public string[] cityStatuses;
+    [Header("Debug Controls")]
     [Tooltip("If set to true, the main menu scene will not be forced.")]
     public bool debugMode = false;
+    [Tooltip("When in debug mode, which character is chosen? Cube or Octahedron")]
+    public string StartingCharacterType = "Octahedron";
+    [Tooltip("If true, debugged scene will be done in a splitscreen format.")]
+    public bool DebugSplitscreen = false;
+    [Tooltip("Which scene to debug on? If string remains blank, current scene will be loaded.")]
+    public string SceneToDebug = "";
 
     private static InitializeData initData;
     private static GameData saveData;
@@ -64,7 +71,18 @@ public class SaveAndLoadGame : MonoBehaviour
             //might want to not destroy on load
             DontDestroyOnLoad(this.gameObject);
             saver = this;
-            saveData = new GameData();
+            if (debugMode)
+            {
+                saveData = new GameData { characterType = StartingCharacterType, splitscreen = DebugSplitscreen };
+                if (SceneToDebug != "")
+                {
+                    LoadLevel.loader.LoadALevel(SceneToDebug);
+                }
+            }
+            else
+            {
+                saveData = new GameData();
+            }
             currentSavePath = "";
         }
         else if(saver != this)

@@ -17,7 +17,7 @@ public class HealthPickup : MonoBehaviour
     private float timer;
     private Vector3 startingPos;
     private AudioSource source;
-    private GameObject light;
+    private GameObject orb;
 
     // Use this for initialization
     void Start()
@@ -28,7 +28,7 @@ public class HealthPickup : MonoBehaviour
         waiting = false;
         source = gameObject.AddComponent<AudioSource>();
         source.spatialBlend = 0.75f;
-        light = gameObject.transform.GetChild(0).gameObject;
+        orb = this.gameObject.transform.GetChild(0).gameObject;
     }
 
     // Update is called once per frame
@@ -51,7 +51,7 @@ public class HealthPickup : MonoBehaviour
                 waiting = false;
                 this.gameObject.GetComponent<MeshRenderer>().enabled = true;
                 this.gameObject.GetComponent<SphereCollider>().enabled = true;
-                light.SetActive(true);
+                orb.SetActive(true);
             }
         }
     }
@@ -102,10 +102,10 @@ public class HealthPickup : MonoBehaviour
                 healthThingy = Instantiate(healthGainedEffectPrefab, colObj.GetComponentInChildren<UserControlMelee>().transform.position, colObj.GetComponentInChildren<UserControlMelee>().transform.rotation, colObj.GetComponentInChildren<UserControlMelee>().transform);
             }
         }
-        else if(col.gameObject.transform.root.tag.Contains("Enemy"))
+        else if(col.gameObject.transform.root.tag.Contains("Enemy") || col.gameObject.transform.root.tag.Contains("Ally"))
         {
             colObj = col.gameObject;
-            while(!colObj.tag.Contains("EnemyRoot"))
+            while(!colObj.tag.Contains("EnemyRoot") && !colObj.tag.Contains("AllyRoot"))
             {
                 colObj = colObj.transform.parent.gameObject;
             }
@@ -128,7 +128,7 @@ public class HealthPickup : MonoBehaviour
             this.gameObject.GetComponent<MeshRenderer>().enabled = false;
             this.gameObject.GetComponent<SphereCollider>().enabled = false;
             source.PlayOneShot(healthPickup, 1f);
-            light.SetActive(false);
+            orb.SetActive(false);
             if(healthThingy != null)
             {
                 Destroy(healthThingy, RemoveHealthEffect);
