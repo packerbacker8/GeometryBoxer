@@ -22,7 +22,7 @@ public class InteractableCity : Interactable
 
     [TextArea]
     public string description;
-
+    private string submitPS4 = "SubmitPS4";
     private string dPadX = "DPadX";
     private string dPadXPS4 = "DPadXPS4";
     private WorldInteraction worldInit;
@@ -70,6 +70,7 @@ public class InteractableCity : Interactable
         if (pauseMenuScript.checkPS4Mode())
         {
             eventSystem.GetComponent<StandaloneInputModule>().horizontalAxis = dPadXPS4;
+            eventSystem.GetComponent<StandaloneInputModule>().submitButton = submitPS4;
         }
         else //otherwise use XBox's
         {
