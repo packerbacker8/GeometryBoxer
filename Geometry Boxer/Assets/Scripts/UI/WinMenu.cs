@@ -28,11 +28,11 @@ public class WinMenu : MonoBehaviour
         if (shouldAllowDPad)
         {
             string[] inputNames = Input.GetJoystickNames();
-            for (int i = 0; i < inputNames.Length; i++)
+            if(inputNames.Length > 0)
             {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-                if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+                if (inputNames[0].Length == 33 || inputNames[0].Length == 19)
                 {
-                    if (inputNames[i].Length == 19)
+                    if (inputNames[0].Length == 19)
                     {
                         ps4Mode = true;
                     }
