@@ -44,6 +44,7 @@ public class InteractableCity : Interactable
         cam = MapCamera.GetComponent<RTSCam>();
         Canvas.SetActive(false);
         citySelectController = GameObject.FindGameObjectWithTag("GameController");
+        Cursor.visible = false;
 
         statusLight.intensity = pulseRange;
         //If city is owned, switch light from red to green. What status goes here?
@@ -82,6 +83,11 @@ public class InteractableCity : Interactable
         exitedTrigger = false;
         if (col.transform.root.tag == "Player" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "owned" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "conquered" && !exitedTrigger)
         {
+            //If no joystick plugged in, turn mouse on
+            if(Input.GetJoystickNames().Length == 0)
+            {
+                Cursor.visible = true;
+            }
             worldInit.freeze = true;
             cam.freeze = true;
             Canvas.SetActive(true);
@@ -103,6 +109,7 @@ public class InteractableCity : Interactable
         cam.freeze = false;
         Canvas.SetActive(false);
         sphere.radius = sphereOriginalRad;
+        Cursor.visible = false;
     }
 
     //Bring up the canvas for the city if clicked on
