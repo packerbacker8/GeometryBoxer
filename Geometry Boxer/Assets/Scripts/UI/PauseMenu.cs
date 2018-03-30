@@ -25,6 +25,7 @@ public class PauseMenu : MonoBehaviour
     private string rightStickButton;
     private string submit;
     private string dPadY;
+    private string dPadX;
     private string vertical;
     private string horizontalLeft;
     private string verticalLeft;
@@ -49,6 +50,7 @@ public class PauseMenu : MonoBehaviour
         rightStickButton = "RightStickButton";
         submit = "Submit";
         dPadY = "DPadY";
+        dPadX = "DPadX";
         vertical = "Vertical";
         horizontalLeft = "HorizontalLeft";
         verticalLeft = "VerticalLeft";
@@ -136,10 +138,7 @@ public class PauseMenu : MonoBehaviour
 
         if (controllerMode && isPaused)
         {
-
             ps4Mode = checkPS4Mode();
-
-
             if (ps4Mode)
             {
                 gameEventSystemInputModule.submitButton = submit + "PS4";
@@ -152,7 +151,6 @@ public class PauseMenu : MonoBehaviour
             {
                 gameEventSystemInputModule.submitButton += "_2";
             }
-
 
             if (ps4Mode && (Input.GetAxis(dPadY + "PS4") != 0 || Input.GetAxis(dPadY + "PS4_2") != 0))
             {
@@ -195,8 +193,6 @@ public class PauseMenu : MonoBehaviour
 
             }
         }
-
-
     }
 
     public bool checkPS4Mode()

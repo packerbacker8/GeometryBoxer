@@ -15,6 +15,7 @@ public class CharacterSelectController : MonoBehaviour
     public Text octahedronText;
     public float speed = 1.0f;
 
+    private string dPadXPS4 = "DPadXPS4";
     private string characterSelected;
     private Vector3 cubeOrginalPos;
     private Vector3 octahedronOriginalPos;
@@ -80,6 +81,7 @@ public class CharacterSelectController : MonoBehaviour
             if (ps4Mode)
             {
                 gameEventSystemInputModule.submitButton = "SubmitPS4";
+                gameEventSystemInputModule.horizontalAxis = dPadXPS4;
             }
             else
             {
@@ -88,11 +90,11 @@ public class CharacterSelectController : MonoBehaviour
 
 
             //Debug.Log(Input.GetAxis("DPadY"));
-            if (Input.GetAxis("HorizontalLeft") < -0.5f || (!ps4Mode && Input.GetAxis("DPadY") < -0.5f) || Input.GetAxis("DPadX") < -0.5f || Input.GetAxis("DPadYPS4") < -0.5f)
+            if (Input.GetAxis("HorizontalLeft") < -0.5f || (!ps4Mode && Input.GetAxis("DPadY") < -0.5f) || Input.GetAxis("DPadX") < -0.5f || Input.GetAxis("DPadYPS4") < -0.5f || Input.GetAxis(dPadXPS4) < -0.5f)
             {
                 CharacterSelected("Cube");
             }
-            else if (Input.GetAxis("HorizontalLeft") > 0.5f || (!ps4Mode && Input.GetAxis("DPadY") > 0.5f) || Input.GetAxis("DPadX") > 0.5f || Input.GetAxis("DPadYPS4") > 0.5f)
+            else if (Input.GetAxis("HorizontalLeft") > 0.5f || (!ps4Mode && Input.GetAxis("DPadY") > 0.5f) || Input.GetAxis("DPadX") > 0.5f || Input.GetAxis("DPadYPS4") > 0.5f || Input.GetAxis(dPadXPS4) > 0.5f)
             {
                 CharacterSelected("Octahedron");
             }
