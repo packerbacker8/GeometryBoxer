@@ -20,6 +20,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public string tutorialButtonName = "TextButtonTutorial";
     public string loadFileButtonName = "LoadFileButton";
     public string loadInputFieldName = "LoadInputField";
+    string[] inputNames;
 
     private bool hasSavedGame;
     private InputField loadFileInput;
@@ -51,16 +52,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
         controllerMode = false;
         inInputField = false;
-        string[] inputNames = Input.GetJoystickNames();
-        for (int i = 0; i < inputNames.Length; i++)
-        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
-            {
-                controllerMode = true;
-                if (inputNames[i].Length == 19)
-                    ps4Mode = true;
-            }
-        }
+        CheckControllerModeAndType();
 
         EventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
 
@@ -134,42 +126,9 @@ public class MainMenuCanvasControlling : MonoBehaviour
         //mouseMode = true;
     }
 
-
     void Update()
     {
-        //check this frame if a controller is plugged in or not, and change modes accordingly.
-        string[] inputNames = Input.GetJoystickNames();
-        for (int i = 0; i < inputNames.Length; i++)
-        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
-            {
-                //if (mouseMode)
-                // {
-                //disablePlayerForController();
-                //    mouseMode = false;
-                //}
-                controllerMode = true;
-                if (inputNames[i].Length == 19)
-                {
-                    ps4Mode = true;
-                }
-                else
-                {
-                    ps4Mode = false;
-                }
-            }
-            else
-            {
-                controllerMode = false;
-            }
-        }
-
-        //if(EventSystem.current.currentSelectedGameObject == null && controllerMode)
-        //{
-        //    EventSystem.current.SetSelectedGameObject(GameObject.Find(tutorialButtonName));
-        //}
-        //Debug.Log(menuActive);
-
+        CheckControllerModeAndType();
         if (controllerMode)
         {
             if (ps4Mode)
@@ -271,10 +230,6 @@ public class MainMenuCanvasControlling : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find(loadFileButtonName).gameObject);
             inInputField = false;
         }
-        //if (loadCanvasEnabled)
-        //{
-         //   disablePlayerForController();
-        //}
     }
 
     /// <summary>
@@ -456,6 +411,26 @@ public class MainMenuCanvasControlling : MonoBehaviour
     {
         SaveAndLoadGame.saver.SetCharType("Cube");
         LoadLevel.loader.LoadALevel("Tutorial");
+    }
+
+    /// <summary>
+    /// Check if there is a controller plugged in and if so checks its type (PS4 vs Xbox)
+    /// and then sets the appropriate variables. Only checks the first controller slot.
+    /// </summary>
+    private void CheckControllerModeAndType()
+    {
+        inputNames = Input.GetJoystickNames();
+        if (inputNames.Length > 0)
+        {
+            if (inputNames[0].Length == 33 || inputNames[0].Length == 19)
+            {
+                controllerMode = true;
+                if (inputNames[0].Length == 19)
+                {
+                    ps4Mode = true;
+                }
+            }
+        }
     }
 
 }

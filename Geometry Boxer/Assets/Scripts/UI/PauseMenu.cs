@@ -10,15 +10,18 @@ public class PauseMenu : MonoBehaviour
     public GameObject scrollViewContent;
     public GameObject fileButtonPrefab;
     public GameObject pauseMenuCanvas { get; private set; }
+    public bool notInDeathOrWinScreen = true;
+    public bool saveCanvasTextInputMode = false;
+    public bool isPaused = false;
 
     private GameObject character;
     private GameObject control;
     private GameObject saveCanvas;
     private InputField saveInputField;
 
-    RootMotion.Demos.UserControlMelee UserControlMeleeScript;
-    RootMotion.CameraController CameraControllerScript;
-    PunchScript punchScript;
+    private RootMotion.Demos.UserControlMelee UserControlMeleeScript;
+    private RootMotion.CameraController CameraControllerScript;
+    private PunchScript punchScript;
 
     private string saveFileName;
     private string startButton;
@@ -30,17 +33,15 @@ public class PauseMenu : MonoBehaviour
     private string verticalLeft;
 
     private bool mouseShouldBeLocked = false;
-    public bool isPaused = false;
     private bool isCombatScene = false;
     private bool isPlayer2;
-    private float TimeSinceEsc = 0.0f;
-    private List<GameObject> saveFileButtons;
-
-    private StandaloneInputModule gameEventSystemInputModule;
     private bool controllerMode = false;
     private bool ps4Mode = false;
-    public bool notInDeathOrWinScreen = true;
-    public bool saveCanvasTextInputMode = false;
+
+    private float TimeSinceEsc = 0.0f;
+
+    private List<GameObject> saveFileButtons;
+    private StandaloneInputModule gameEventSystemInputModule;
 
     // Use this for initialization
     void Start()
@@ -100,11 +101,15 @@ public class PauseMenu : MonoBehaviour
             }
             //RightStickButton axis is the same as start button for the PS4 controller.
             ps4Mode = checkPS4Mode();
-            if((Input.GetButtonDown(rightStickButton) || Input.GetButtonDown(rightStickButton + "_2")) && !ps4Mode)
+            if (((!isPlayer2 && Input.GetButtonDown(rightStickButton)) || (isPlayer2 && Input.GetButtonDown(rightStickButton + "_2"))) && !ps4Mode)
             {
                 return;
             }
-
+            //if its player 1 (or 2) and right trigger is pressed and its playstation 4 controller, then dont pause
+            if (((!isPlayer2 && Input.GetButtonDown(startButton)) || (isPlayer2 && Input.GetButtonDown(startButton + "_2"))) && ps4Mode)
+            {
+                return;
+            }
             if (Input.GetButtonDown(startButton) || Input.GetButtonDown(rightStickButton) || isPlayer2)
             {
                 controllerMode = true;
@@ -232,21 +237,6 @@ public class PauseMenu : MonoBehaviour
         {
             ps4True = false;
         }
-        /*
-        for (int i = 0; i < inputNames.Length; i++)
-        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
-            {
-                if (inputNames[i].Length == 19)
-                {
-                    ps4True = true;
-                }
-                else
-                {
-                    ps4True = false;
-                }
-            }
-        }*/
 
         return ps4True;
     }
