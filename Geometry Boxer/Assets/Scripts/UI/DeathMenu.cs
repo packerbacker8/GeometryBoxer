@@ -105,7 +105,9 @@ public class DeathMenu : MonoBehaviour
                 if (inputNames[0].Length == 19)
                 {
                     ps4Mode = true;
+                    gameEventSystemInputModule = EventSystem.current.GetComponent<StandaloneInputModule>();
                     gameEventSystemInputModule.submitButton = "SubmitPS4";
+                    
                 }
                 else
                 {
