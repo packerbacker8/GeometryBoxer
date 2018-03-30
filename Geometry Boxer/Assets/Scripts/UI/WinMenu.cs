@@ -104,7 +104,4 @@ public class WinMenu : MonoBehaviour
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
-
-
-
 }
