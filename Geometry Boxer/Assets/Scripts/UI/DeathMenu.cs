@@ -42,21 +42,6 @@ public class DeathMenu : MonoBehaviour
             {
                 ps4Mode = false;
             }
-            /*
-            for (int i = 0; i < inputNames.Length; i++)
-            {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-                if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
-                {
-                    if (inputNames[i].Length == 19)
-                    {
-                        ps4Mode = true;
-                    }
-                    else
-                    {
-                        ps4Mode = false;
-                    }
-                }
-            }*/
 
             if (startTimer)
             {
@@ -93,8 +78,6 @@ public class DeathMenu : MonoBehaviour
                 gameEventSystemInputModule.verticalAxis = "Vertical";
             }
         }
-
-
     }
 
     public void retryButton()
@@ -115,14 +98,16 @@ public class DeathMenu : MonoBehaviour
 
         //check this frame if a controller is plugged in or not, and change modes accordingly.
         string[] inputNames = Input.GetJoystickNames();
-        for (int i = 0; i < inputNames.Length; i++)
+        if(inputNames.Length > 0)
         {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
+            if (inputNames[0].Length == 33 || inputNames[0].Length == 19)
             {
-                if (inputNames[i].Length == 19)
+                if (inputNames[0].Length == 19)
                 {
                     ps4Mode = true;
+                    gameEventSystemInputModule = EventSystem.current.GetComponent<StandaloneInputModule>();
                     gameEventSystemInputModule.submitButton = "SubmitPS4";
+                    
                 }
                 else
                 {
