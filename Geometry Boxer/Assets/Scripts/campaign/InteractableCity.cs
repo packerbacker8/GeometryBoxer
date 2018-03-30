@@ -23,10 +23,14 @@ public class InteractableCity : Interactable
     [TextArea]
     public string description;
 
+    private string dPadX = "DPadX";
+    private string dPadXPS4 = "DPadXPS4";
     private WorldInteraction worldInit;
     private RTSCam cam;
     private GameObject citySelectController;
     private SphereCollider sphere;
+    private GameObject eventSystem;
+    private PauseMenu pauseMenuScript;
     private bool exitedTrigger = false;
     private float sphereOriginalRad;
 
@@ -56,6 +60,20 @@ public class InteractableCity : Interactable
         }
         sphere = this.GetComponent<SphereCollider>();
         sphereOriginalRad = sphere.radius;
+
+        //Set the Dpad X axis as the way to select buttons on the 
+        eventSystem = GameObject.FindGameObjectWithTag("EventSystem").gameObject;
+        pauseMenuScript = GameObject.FindGameObjectWithTag("PauseMenu").gameObject.GetComponent<PauseMenu>();
+
+        //If the pauseMenu's checkPS4Mode believe PS4 controller is at helm, use that axis
+        if (pauseMenuScript.checkPS4Mode())
+        {
+            eventSystem.GetComponent<StandaloneInputModule>().horizontalAxis = dPadXPS4;
+        }
+        else //otherwise use XBox's
+        {
+            eventSystem.GetComponent<StandaloneInputModule>().horizontalAxis = dPadX;
+        }
     }
 
     //Bring up the canvas for the city if player enters the trigger zone
@@ -67,6 +85,7 @@ public class InteractableCity : Interactable
             worldInit.freeze = true;
             cam.freeze = true;
             Canvas.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(Canvas.transform.GetChild(3).gameObject);
             citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
             cityImageLink.sprite = citySprite;
             cityTitleText.text = CityTitle;
