@@ -21,6 +21,7 @@ public class ArenaModeScript : GameControllerScript {
     private GameObject currentHealthPickups;
     private GameObject currentPropPickups;
 
+	private Transform[] SpawnLocationTransforms; 
 
     protected override void Awake()
     {
@@ -136,6 +137,13 @@ public class ArenaModeScript : GameControllerScript {
         lastWaveNumber = Waves.Length;
         Destroy(tempEnemyContainer);
         playerInterface = GameObject.FindGameObjectWithTag("playerUI").GetComponent<PlayerUserInterface>();
+
+
+		//initialize all possible spawn transforms
+
+
+
+
         
     }
 
@@ -279,7 +287,8 @@ public class ArenaModeScript : GameControllerScript {
                 aContainer.transform.GetChild(j).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
                 aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
                 aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
-                if (aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>() != null)
+
+                /*if (aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>() != null)
                 {
                     if (player2CharController == null)
                     {
@@ -291,12 +300,12 @@ public class ArenaModeScript : GameControllerScript {
                     }
                     aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
                     aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
-                }
-                else if (aContainer.transform.GetChild(j).GetComponentInChildren<NormalMovementAI>() != null)
-                {
+                }*/
+                //else if (aContainer.transform.GetChild(j).GetComponentInChildren<NormalMovementAI>() != null)
+                //{
                     switchPlayers = player2CharController == null ? false : !switchPlayers;
                     aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
-                }
+                //}
 
             }
 
