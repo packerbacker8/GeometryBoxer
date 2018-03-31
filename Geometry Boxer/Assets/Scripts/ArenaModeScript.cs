@@ -7,21 +7,36 @@ using PlayerUI;
 
 public class ArenaModeScript : GameControllerScript {
 
-    public GameObject[] Waves;
-    public GameObject tempEnemyContainer;
+    //public GameObject[] Waves;
+    //public GameObject tempEnemyContainer;
+    public GameObject spawnSetGameObject;
+    private SpawnSet gameSpawnSet;
+    private int numberOfRegularEnemiesToSpawn;
+    private int numberOfHealthToSpawn;
+    public GameObject botCubePrefab;
+    public GameObject botOctahedronPrefab;
+    public GameObject healthPrefab;
+    List<GameObject>[] healthPickupPool;
+
+    public static int numberOfWavesPreloaded;
+    List<GameObject>[] currentWavesAllocation;
+    private int currentWaveIndex;
+
+    //just an idea to see what spawns are taken. The key is the position.x + position.y + position.z of the transform's position.
+    //private Dictionary<int, Transform> spawnDictionary;
+
     private PlayerUserInterface playerInterface;
 
     private float timeBeforeWaveBegins;
     private float timeToStartWave = 3.0f;
-    private bool waveActive = false;
-    private int currentWaveNumber = 1;
-    private int lastWaveNumber;
+    private bool waveActive = true;
+    private int currentWaveNumber;
+    //private int lastWaveNumber;
     private bool isCube;
 
-    private GameObject currentHealthPickups;
-    private GameObject currentPropPickups;
-
-	private Transform[] SpawnLocationTransforms; 
+    //private GameObject currentHealthPickups;
+    //private GameObject currentPropPickups;
+	//private Transform[] SpawnLocationTransforms; 
 
     protected override void Awake()
     {
@@ -105,27 +120,16 @@ public class ArenaModeScript : GameControllerScript {
         base.Awake();
 
         
-
         if (enemyContainer == enemyOctahedronContainer)
         {
-            // = Waves[0].transform.Find("EnemiesOctahedron").gameObject;
-            //Waves[0].transform.Find("EnemiesCube").gameObject.SetActive(false);
             isCube = true;
         }
         else
         {
-            //enemyContainer = Waves[0].transform.Find("EnemiesCube").gameObject;
-            //Waves[0].transform.Find("EnemiesOctahedron").gameObject.SetActive(false);
             isCube = false;
         }
 
-
-        currentHealthPickups = Waves[0].transform.Find("HealthPickups").gameObject;
-        currentPropPickups = Waves[0].transform.Find("Props").gameObject;
-        Waves[0].gameObject.SetActive(false);
-
-
-        initAI();
+        numEnemiesAlive = 0;
     }
 
     
@@ -134,17 +138,19 @@ public class ArenaModeScript : GameControllerScript {
     {
         base.Start();
 
-        lastWaveNumber = Waves.Length;
-        Destroy(tempEnemyContainer);
+        //lastWaveNumber = Waves.Length;
+        //Destroy(tempEnemyContainer);
         playerInterface = GameObject.FindGameObjectWithTag("playerUI").GetComponent<PlayerUserInterface>();
+        gameSpawnSet = spawnSetGameObject.GetComponentInChildren<SpawnSet>();
 
+        numberOfWavesPreloaded = 5;
+        currentWavesAllocation = new List<GameObject>[numberOfWavesPreloaded];
+        currentWaveNumber = 0;
+        currentWaveIndex = 0;
+        numberOfRegularEnemiesToSpawn = 2;
+        numberOfHealthToSpawn = 0;
+        healthPickupPool = new List<GameObject>[numberOfWavesPreloaded];
 
-		//initialize all possible spawn transforms
-
-
-
-
-        
     }
 
     protected override void Update()
@@ -153,10 +159,17 @@ public class ArenaModeScript : GameControllerScript {
         {
             if (timeBeforeWaveBegins >= timeToStartWave)
             {
-                Waves[currentWaveNumber - 1].gameObject.SetActive(true);
-                enemyContainer.SetActive(true);
-                currentHealthPickups.SetActive(true);
-                currentPropPickups.SetActive(true);
+
+                //set every object in the current List<Object> that corresponds to the current wave to active
+                foreach (GameObject obj in currentWavesAllocation[currentWaveIndex - 1])
+                {
+                    obj.SetActive(true);
+                }
+
+                foreach (GameObject health in healthPickupPool[currentWaveIndex - 1])
+                {
+                    health.SetActive(true);
+                }
 
                 playerInterface.reinitializeUI(numEnemiesAlive);
 
@@ -171,7 +184,7 @@ public class ArenaModeScript : GameControllerScript {
 
         if (numEnemiesAlive <= 0)
         {
-            if (!levelWon && (playerAlive || player2Alive) && currentWaveNumber == lastWaveNumber)
+            if (!playerAlive && !player2Alive /*&& currentWaveNumber == lastWaveNumber*/)
             {
                 SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
 
@@ -188,86 +201,155 @@ public class ArenaModeScript : GameControllerScript {
             }
             else if (!levelWon)
             {
-                //set current wave inactive
-                Waves[currentWaveNumber - 1].gameObject.SetActive(false);
 
-
+                //if there are any remaining health pickups, remove them.
+                if(currentWaveIndex - 1 >= 0)
+                {
+                    foreach (GameObject health in healthPickupPool[currentWaveIndex - 1])
+                    {
+                        Destroy(health);
+                    }
+                }
+                
 
                 currentWaveNumber += 1;
 
 
                 //set next wave active
-                Waves[currentWaveNumber - 1].gameObject.SetActive(true);
-
-                prepareForNextWave(currentWaveNumber);
+                //Waves[currentWaveNumber - 1].gameObject.SetActive(true);
+                currentWaveIndex = currentWaveIndex % numberOfWavesPreloaded;
+                if (currentWaveIndex == 0)
+                {
+                    InstantiateNewWavePool();
+                }
+                prepareForNextWave(currentWaveIndex);
+                currentWaveIndex++;
             }
 
-            //StartCoroutine(changeLevel(dominationMap));
+            
         }
     }
 
-    private void prepareForNextWave(int waveNumber)
+    /* Preinstantiates a number of enemy objects and waves into the current allocation*/
+    private void InstantiateNewWavePool()
+    {
+        for (int i = 0; i < numberOfWavesPreloaded; i++)
+        {
+            //make a spawnList and set it to the i'th preloaded wave
+            List<GameObject> spawnList = new List<GameObject>();
+            GameObject currentEnemy;
+            for (int j = 0; j < numberOfRegularEnemiesToSpawn; j++)
+            {
+                if (isCube)
+                {
+                    currentEnemy = Instantiate(botOctahedronPrefab, gameSpawnSet.getRandomSpawnTransform(), false);
+                }
+                else
+                {
+                    Transform spawnTransform = gameSpawnSet.getRandomSpawnTransform();
+                    currentEnemy = Instantiate(botCubePrefab, spawnTransform.position, spawnTransform.rotation);
+                }
+
+                currentEnemy.SetActive(false);
+                spawnList.Add(currentEnemy);
+            }
+            currentWavesAllocation[i] = spawnList;
+
+
+            //make a healthPickupList and set it to the i'th preloaded wave
+            List<GameObject> healthPickupList = new List<GameObject>();
+            GameObject currentHealthPickup;
+            for (int j = 0; j < numberOfHealthToSpawn; j++)
+            {
+                Transform spawnTransform = gameSpawnSet.getRandomSpawnTransform();
+                currentHealthPickup = Instantiate(healthPrefab, spawnTransform.position, spawnTransform.rotation);
+                currentHealthPickup.SetActive(false);
+                healthPickupList.Add(currentHealthPickup);
+            }
+            healthPickupPool[i] = healthPickupList;
+
+
+
+            //set the parameters for the next wave
+            numberOfRegularEnemiesToSpawn = numberOfRegularEnemiesToSpawn + 2;
+
+            if(currentWaveNumber >=  1)
+            {
+                numberOfHealthToSpawn = 1;
+            }
+
+
+        }
+
+
+
+        //initialize AI variables for every object in current pool just created
+        initAI();
+
+
+    }
+
+    /*this method basically just takes care of the enemiesInWorld and oldExpansionNumEnemies variables from GameController script*/
+    private void prepareForNextWave(int waveIndex)
     {
         //load the first wave enemies
         if (isCube)
         {
-            enemyContainer = Waves[waveNumber - 1].transform.Find("EnemiesOctahedron").gameObject;
-            Waves[waveNumber - 1].transform.Find("EnemiesCube").gameObject.SetActive(false);
+           //enemyContainer = Waves[waveNumber - 1].transform.Find("EnemiesOctahedron").gameObject;
+           // Waves[waveNumber - 1].transform.Find("EnemiesCube").gameObject.SetActive(false);
         }
         else
         {
-            enemyContainer = Waves[waveNumber - 1].transform.Find("EnemiesCube").gameObject;
-            Waves[waveNumber - 1].transform.Find("EnemiesOctahedron").gameObject.SetActive(false);
+            //enemyContainer = Waves[waveNumber - 1].transform.Find("EnemiesCube").gameObject;
+            //Waves[waveNumber - 1].transform.Find("EnemiesOctahedron").gameObject.SetActive(false);
         }
 
-        //enemyContainer should refer to first wave enemy container.
 
-        numEnemiesAlive = enemyContainer.transform.childCount;
+
+        numEnemiesAlive = currentWavesAllocation[waveIndex].Count;
         oldExpansionNumEnemies = numEnemiesAlive;
         
+
         for (int i = 0; i < enemiesInWorld.Length; i++)
         {
             Destroy(enemiesInWorld[i]);
         }
         enemiesInWorld = new GameObject[numEnemiesAlive];
 
-
-
-        for (int i = 0; i < numEnemiesAlive; i++)
+        int index = 0;
+        foreach (GameObject enemyObj in currentWavesAllocation[waveIndex])
         {
-            /*enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetEnemyIndex(i);
-            enemyContainer.transform.GetChild(i).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
-            enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
-            enemyContainer.transform.GetChild(i).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
-            if (enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>() != null)
-            {
-                enemyContainer.transform.GetChild(i).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null);
-
-            }
-            else if (enemyContainer.transform.GetChild(i).GetComponentInChildren<NormalMovementAI>() != null)
-            {
-                //nothing?
-            }*/
-            enemiesInWorld[i] = enemyContainer.transform.GetChild(i).gameObject;
+            enemiesInWorld[index] = enemyObj;
         }
 
-
-
-        currentHealthPickups = Waves[waveNumber - 1].transform.Find("HealthPickups").gameObject;
-        currentPropPickups = Waves[waveNumber - 1].transform.Find("Props").gameObject;
-        Waves[waveNumber - 1].gameObject.SetActive(false);
-
         waveActive = false;
-
-
     }
 
 
+    //Initializes AI object's variables for every object in the current wave pool.
     public void initAI()
     {
+        for (int i = 0; i < numberOfWavesPreloaded; i++)
+        {
+
+            int enemyIndex = 0;
+            foreach (GameObject currentEnemyObject in currentWavesAllocation[i])
+            {
+
+                currentEnemyObject.GetComponent<EnemyHealthScript>().SetEnemyIndex(enemyIndex);
+                currentEnemyObject.GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
+                currentEnemyObject.GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
+                currentEnemyObject.GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
 
 
+                switchPlayers = player2CharController == null ? false : !switchPlayers;
+                currentEnemyObject.GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
 
+                enemyIndex++;
+            }
+        }
+
+        /*
         for (int i = 1; i < Waves.Length; i++)
         {
             GameObject aContainer = null;
@@ -288,35 +370,22 @@ public class ArenaModeScript : GameControllerScript {
                 aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
                 aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
 
-                /*if (aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>() != null)
-                {
-                    if (player2CharController == null)
-                    {
-                        aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, null);
-                    }
-                    else
-                    {
-                        aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetPlayersTransform(playerCharController.transform, player2CharController.transform);
-                    }
-                    aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
-                    aContainer.transform.GetChild(j).GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
-                }*/
-                //else if (aContainer.transform.GetChild(j).GetComponentInChildren<NormalMovementAI>() != null)
-                //{
-                    switchPlayers = player2CharController == null ? false : !switchPlayers;
-                    aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
-                //}
+
+                 switchPlayers = player2CharController == null ? false : !switchPlayers;
+                 aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
 
             }
 
 
         }
 
-        for (int i = 1; i < Waves.Length; i++)
-        {
-            Waves[i].gameObject.SetActive(false);
-        }
+        //for (int i = 1; i < Waves.Length; i++)
+        //{
+        //    Waves[i].gameObject.SetActive(false);
+        //}
 
+    */
+        
     }
 
 }
