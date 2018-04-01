@@ -22,11 +22,15 @@ public class InteractableCity : Interactable
 
     [TextArea]
     public string description;
-
+    private string submitPS4 = "SubmitPS4";
+    private string dPadX = "DPadX";
+    private string dPadXPS4 = "DPadXPS4";
     private WorldInteraction worldInit;
     private RTSCam cam;
     private GameObject citySelectController;
     private SphereCollider sphere;
+    private GameObject eventSystem;
+    private PauseMenu pauseMenuScript;
     private bool exitedTrigger = false;
     private float sphereOriginalRad;
 
@@ -40,6 +44,7 @@ public class InteractableCity : Interactable
         cam = MapCamera.GetComponent<RTSCam>();
         Canvas.SetActive(false);
         citySelectController = GameObject.FindGameObjectWithTag("GameController");
+        Cursor.visible = false;
 
         statusLight.intensity = pulseRange;
         //If city is owned, switch light from red to green. What status goes here?
@@ -56,6 +61,21 @@ public class InteractableCity : Interactable
         }
         sphere = this.GetComponent<SphereCollider>();
         sphereOriginalRad = sphere.radius;
+
+        //Set the Dpad X axis as the way to select buttons on the 
+        eventSystem = GameObject.FindGameObjectWithTag("EventSystem").gameObject;
+        pauseMenuScript = GameObject.FindGameObjectWithTag("PauseMenu").gameObject.GetComponent<PauseMenu>();
+
+        //If the pauseMenu's checkPS4Mode believe PS4 controller is at helm, use that axis
+        if (pauseMenuScript.checkPS4Mode())
+        {
+            eventSystem.GetComponent<StandaloneInputModule>().horizontalAxis = dPadXPS4;
+            eventSystem.GetComponent<StandaloneInputModule>().submitButton = submitPS4;
+        }
+        else //otherwise use XBox's
+        {
+            eventSystem.GetComponent<StandaloneInputModule>().horizontalAxis = dPadX;
+        }
     }
 
     //Bring up the canvas for the city if player enters the trigger zone
@@ -64,9 +84,15 @@ public class InteractableCity : Interactable
         exitedTrigger = false;
         if (col.transform.root.tag == "Player" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "owned" && SaveAndLoadGame.saver.GetCityStatus(sceneName) != "conquered" && !exitedTrigger)
         {
+            //If no joystick plugged in, turn mouse on
+            if(Input.GetJoystickNames().Length == 0)
+            {
+                Cursor.visible = true;
+            }
             worldInit.freeze = true;
             cam.freeze = true;
             Canvas.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(Canvas.transform.GetChild(3).gameObject);
             citySelectController.GetComponent<CitySelectSceneController>().SetCityBuildName(sceneName);
             cityImageLink.sprite = citySprite;
             cityTitleText.text = CityTitle;
@@ -84,6 +110,7 @@ public class InteractableCity : Interactable
         cam.freeze = false;
         Canvas.SetActive(false);
         sphere.radius = sphereOriginalRad;
+        Cursor.visible = false;
     }
 
     //Bring up the canvas for the city if clicked on

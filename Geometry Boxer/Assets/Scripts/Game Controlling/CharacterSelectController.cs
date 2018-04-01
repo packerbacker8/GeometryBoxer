@@ -15,7 +15,10 @@ public class CharacterSelectController : MonoBehaviour
     public Text octahedronText;
     public float speed = 1.0f;
 
+    private string dPadXPS4 = "DPadXPS4";
     private string characterSelected;
+    private string[] inputNames;
+
     private Vector3 cubeOrginalPos;
     private Vector3 octahedronOriginalPos;
     private Vector3 cubeForwardPos;
@@ -46,40 +49,19 @@ public class CharacterSelectController : MonoBehaviour
         octahedronText.enabled = false;
 
         controllerMode = false;
-        string[] inputNames = Input.GetJoystickNames();
-        for (int i = 0; i < inputNames.Length; i++)
-        {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-            if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
-            {
-                controllerMode = true;
-            }
-        }
+        CheckControllerModeAndType();
         gameEventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
     }
 
     void Update()
     {
+        CheckControllerModeAndType();
         if (controllerMode)
         {
-            string[] inputNames = Input.GetJoystickNames();
-            for (int i = 0; i < inputNames.Length; i++)
-            {       //Length == 33 is Xbox One Controller... Length == 19 is PS4 Controller
-                if (inputNames[i].Length == 33 || inputNames[i].Length == 19)
-                {
-                    if (inputNames[i].Length == 19)
-                    {
-                        ps4Mode = true;
-                    }
-                    else
-                    {
-                        ps4Mode = false;
-                    }
-                }
-            }
-
             if (ps4Mode)
             {
                 gameEventSystemInputModule.submitButton = "SubmitPS4";
+                gameEventSystemInputModule.horizontalAxis = dPadXPS4;
             }
             else
             {
@@ -88,11 +70,11 @@ public class CharacterSelectController : MonoBehaviour
 
 
             //Debug.Log(Input.GetAxis("DPadY"));
-            if (Input.GetAxis("HorizontalLeft") < -0.5f || (!ps4Mode && Input.GetAxis("DPadY") < -0.5f) || Input.GetAxis("DPadX") < -0.5f || Input.GetAxis("DPadYPS4") < -0.5f)
+            if (Input.GetAxis("HorizontalLeft") < -0.5f || (!ps4Mode && Input.GetAxis("DPadY") < -0.5f) || Input.GetAxis("DPadX") < -0.5f || Input.GetAxis("DPadYPS4") < -0.5f || Input.GetAxis(dPadXPS4) < -0.5f)
             {
                 CharacterSelected("Cube");
             }
-            else if (Input.GetAxis("HorizontalLeft") > 0.5f || (!ps4Mode && Input.GetAxis("DPadY") > 0.5f) || Input.GetAxis("DPadX") > 0.5f || Input.GetAxis("DPadYPS4") > 0.5f)
+            else if (Input.GetAxis("HorizontalLeft") > 0.5f || (!ps4Mode && Input.GetAxis("DPadY") > 0.5f) || Input.GetAxis("DPadX") > 0.5f || Input.GetAxis("DPadYPS4") > 0.5f || Input.GetAxis(dPadXPS4) > 0.5f)
             {
                 CharacterSelected("Octahedron");
             }
@@ -191,5 +173,25 @@ public class CharacterSelectController : MonoBehaviour
             LoadLevel.loader.LoadALevel("DefendNightclub");
         }
         
+    }
+
+    /// <summary>
+    /// Check if there is a controller plugged in and if so checks its type (PS4 vs Xbox)
+    /// and then sets the appropriate variables. Only checks the first controller slot.
+    /// </summary>
+    private void CheckControllerModeAndType()
+    {
+        inputNames = Input.GetJoystickNames();
+        if (inputNames.Length > 0)
+        {
+            if (inputNames[0].Length == 33 || inputNames[0].Length == 19)
+            {
+                controllerMode = true;
+                if (inputNames[0].Length == 19)
+                {
+                    ps4Mode = true;
+                }
+            }
+        }
     }
 }

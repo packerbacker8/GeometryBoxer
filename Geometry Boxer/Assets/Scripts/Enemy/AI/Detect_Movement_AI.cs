@@ -123,20 +123,26 @@ namespace Enemy
                 UpdateTarget();
             }
             distance = Vector3.Distance(playerTransform.position, transform.position);
-            if (playersTargetable[0] && distance < sightRange && !moveTarget.Equals(player2Transform))
+            if (playersTargetable[0] && distance < sightRange)
             {
-                playerTarget = true;
-                this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget(false);
+                if ((moveTarget.Equals(player2Transform) && Vector3.Distance(player2Transform.position, transform.position) >= sightRange) || !moveTarget.Equals(player2Transform))
+                {
+                    playerTarget = true;
+                    this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget(false);
+                }
             }
             else if(playersTargetable[1] && player2Transform != null && (distance = Vector3.Distance(player2Transform.position, transform.position)) < sightRange)
             {
-                playerTarget = true;
-                this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget(true);
+                if ((moveTarget.Equals(playerTransform) && Vector3.Distance(playerTransform.position, transform.position) >= sightRange) || !moveTarget.Equals(playerTransform))
+                {
+                    playerTarget = true;
+                    this.transform.parent.gameObject.GetComponent<EnemyHealthScript>().ChangeOurTarget(true);
+                }
             }
             else
             {
                 playerTarget = false;
-                if (moveTarget == playerTransform) //allow enemy bots to retarget other bots
+                if (moveTarget == playerTransform || moveTarget == player2Transform) //allow enemy bots to retarget other bots because neither player is in range
                 {
                     UpdateTarget();
                 }
