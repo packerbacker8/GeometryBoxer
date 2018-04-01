@@ -291,7 +291,9 @@ public class PunchScript : MonoBehaviour
         return false;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Update function is called every frame to update input for the player.
+    /// </summary>
     protected virtual void Update()
     {
         if (!baseStats.IsDead)
@@ -853,7 +855,7 @@ public class PunchScript : MonoBehaviour
     /// <returns>Returns true if on ground, false otherwise, with some tolerance.</returns>
     protected virtual bool checkIfGrounded()
     {
-        Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialForm.GetComponent<BoxCollider>().size.y * 2f, specialForm.transform.position.z);
+        //Vector3 endPoint = new Vector3(specialForm.transform.position.x, specialForm.transform.position.y - specialForm.GetComponent<BoxCollider>().size.y * 2f, specialForm.transform.position.z);
         //Debug.DrawLine(specialForm.transform.position, endPoint, Color.red, 5f);
         //Debug.Log("Size now: " + specialForm.GetComponent<BoxCollider>().size.y);
         return Physics.Raycast(specialForm.transform.position, -Vector3.up, specialForm.GetComponent<BoxCollider>().size.y * specialForm.transform.localScale.y + 0.1f);

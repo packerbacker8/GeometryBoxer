@@ -12,8 +12,8 @@ namespace RootMotion.Dynamics {
 		private static bool isDragging;
 
 		public static float DrawJointLimit(Joint joint, string label, Vector3 axis, float limit, Color color, float openValue, bool drawHandles) {
-			if (Event.current.type == EventType.mouseDown) isDragging = false;
-			if (Event.current.type == EventType.mouseUp) isDragging = false;
+			if (Event.current.type == EventType.MouseDown) isDragging = false;
+			if (Event.current.type == EventType.MouseUp) isDragging = false;
 
 			float radius = HandleUtility.GetHandleSize(joint.transform.position);
 			Vector3 center = joint.transform.TransformPoint(joint.anchor);

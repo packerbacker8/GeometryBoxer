@@ -61,8 +61,11 @@ public class FireHydrantForce : MonoBehaviour
                 return;
             }
             BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
-            behavePup.SetState(BehaviourPuppet.State.Unpinned);
-            behavePup.dropProps = false;
+            if (behavePup != null)
+            {
+                behavePup.SetState(BehaviourPuppet.State.Unpinned);
+                behavePup.dropProps = false;
+            }
             other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
         }
 
@@ -98,7 +101,10 @@ public class FireHydrantForce : MonoBehaviour
                 findingRoot = findingRoot.transform.parent.gameObject;
             }
             BehaviourPuppet behavePup = findingRoot.GetComponentInChildren<BehaviourPuppet>();
-            behavePup.dropProps = true;
+            if(behavePup != null)
+            {
+                behavePup.dropProps = true;
+            }
             other.transform.GetComponentInChildren<Rigidbody>().AddForce(Vector3.up * 100);
         }
     }

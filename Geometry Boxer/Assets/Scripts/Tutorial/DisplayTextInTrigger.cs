@@ -42,7 +42,7 @@ public class DisplayTextInTrigger : MonoBehaviour {
     {
         if(col.transform.root.tag == "Player" && !pingPlayed && ping != null)
         {
-            pinger.PlayOneShot(ping, 0.5f);
+            pinger.PlayOneShot(ping, 1f);
             pingPlayed = true;
             panel.SetActive(true);
         }
@@ -58,10 +58,12 @@ public class DisplayTextInTrigger : MonoBehaviour {
     }
     void OnTriggerExit(Collider col)
     {
+        /*
         if (col.transform.root.tag == "Player")
         {
             panel.SetActive(false);
             textComponent.text = "";
         }
+        */
     }
 }
