@@ -3,18 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //A type of SpawnSet. 
-public class RowSpawnFormat : SpawnSet {
-
-	
-	void Start () {
-		
-	}
-	
-	
-	void Update () {
-		
-	}
-
+public class RowSpawnFormat : SpawnSet
+{
     public override Transform getRandomSpawnTransform()
     {
         GameObject randomRow = this.gameObject.transform.GetChild(Random.Range(0, this.gameObject.transform.childCount)).gameObject;
@@ -23,6 +13,4 @@ public class RowSpawnFormat : SpawnSet {
 
         return currentTransform;
     }
-
-
 }

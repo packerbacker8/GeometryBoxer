@@ -9,8 +9,11 @@ public class ArenaModeScript : GameControllerScript
 {
     public GameObject spawnSetGameObject;
     public GameObject botCubePrefab;
+    public GameObject botSpecialCubePrefab;
     public GameObject botOctahedronPrefab;
+    public GameObject botSpecialOctahedronPrefab;
     public GameObject healthPrefab;
+    public int specialSpawnWaveMultiple = 5;
     public static int numberOfWavesPreloaded;
 
 
@@ -21,14 +24,18 @@ public class ArenaModeScript : GameControllerScript
     //just an idea to see what spawns are taken. The key is the position.x + position.y + position.z of the transform's position.
     //private Dictionary<int, Transform> spawnDictionary;
 
-    private PlayerUserInterface playerInterface;
     private SpawnSet gameSpawnSet;
+    private PlayerUserInterface playerUIScript;
+    private PlayerUserInterface player2UIScript;
+
     private int numberOfRegularEnemiesToSpawn;
     private int numberOfHealthToSpawn;
+    private int currentWaveNumber;
+
     private float timeBeforeWaveBegins;
     private float timeToStartWave = 3.0f;
+
     private bool waveActive = true;
-    private int currentWaveNumber;
     private bool isCube;
 
     protected override void Awake()
@@ -42,7 +49,6 @@ public class ArenaModeScript : GameControllerScript
         {
             isCube = false;
         }
-
         numEnemiesAlive = 0;
     }
 
@@ -51,7 +57,8 @@ public class ArenaModeScript : GameControllerScript
     protected override void Start()
     {
         base.Start();
-        playerInterface = GameObject.FindGameObjectWithTag("playerUI").GetComponent<PlayerUserInterface>();
+        playerUIScript = playerUI.GetComponent<PlayerUserInterface>();
+        player2UIScript = IsSplitScreen ? player2UI.GetComponent<PlayerUserInterface>() : null;
         gameSpawnSet = spawnSetGameObject.GetComponentInChildren<SpawnSet>();
 
         numberOfWavesPreloaded = 5;
@@ -81,7 +88,11 @@ public class ArenaModeScript : GameControllerScript
                     health.SetActive(true);
                 }
 
-                playerInterface.reinitializeUI(numEnemiesAlive);
+                playerUIScript.reinitializeUI(numEnemiesAlive);
+                if (IsSplitScreen)
+                {
+                    player2UIScript.reinitializeUI(numEnemiesAlive);
+                }
 
                 timeBeforeWaveBegins = 0.0f;
                 waveActive = true;
@@ -94,6 +105,8 @@ public class ArenaModeScript : GameControllerScript
 
         if (numEnemiesAlive <= 0)
         {
+            //if both players are dead
+            //might be used if we have a win condition
             if (!playerAlive && !player2Alive) /*&& currentWaveNumber == lastWaveNumber*/
             {
                 SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
@@ -111,7 +124,6 @@ public class ArenaModeScript : GameControllerScript
             }
             else if (!levelWon)
             {
-
                 //if there are any remaining health pickups, remove them.
                 if (currentWaveIndex - 1 >= 0)
                 {
@@ -122,7 +134,6 @@ public class ArenaModeScript : GameControllerScript
                 }
                 currentWaveNumber += 1;
                 //set next wave active
-                //Waves[currentWaveNumber - 1].gameObject.SetActive(true);
                 currentWaveIndex = currentWaveIndex % numberOfWavesPreloaded;
                 if (currentWaveIndex == 0)
                 {
@@ -188,16 +199,6 @@ public class ArenaModeScript : GameControllerScript
     private void prepareForNextWave(int waveIndex)
     {
         //load the first wave enemies
-        if (isCube)
-        {
-            //enemyContainer = Waves[waveNumber - 1].transform.Find("EnemiesOctahedron").gameObject;
-            // Waves[waveNumber - 1].transform.Find("EnemiesCube").gameObject.SetActive(false);
-        }
-        else
-        {
-            //enemyContainer = Waves[waveNumber - 1].transform.Find("EnemiesCube").gameObject;
-            //Waves[waveNumber - 1].transform.Find("EnemiesOctahedron").gameObject.SetActive(false);
-        }
         numEnemiesAlive = currentWavesAllocation[waveIndex].Count;
         oldExpansionNumEnemies = numEnemiesAlive;
 
@@ -236,44 +237,6 @@ public class ArenaModeScript : GameControllerScript
                 enemyIndex++;
             }
         }
-
-        /*
-        for (int i = 1; i < Waves.Length; i++)
-        {
-            GameObject aContainer = null;
-            if(isCube)
-            {
-                 aContainer = Waves[i].transform.Find("EnemiesOctahedron").gameObject;
-            }
-            else
-            {
-                 aContainer = Waves[i].transform.Find("EnemiesCube").gameObject;
-            }
-
-            int numEnemies = aContainer.transform.childCount;
-            for (int j = 0; j < numEnemies; j++)
-            {
-                aContainer.transform.GetChild(j).GetComponent<EnemyHealthScript>().SetEnemyIndex(j);
-                aContainer.transform.GetChild(j).GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
-                aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
-                aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
-
-
-                 switchPlayers = player2CharController == null ? false : !switchPlayers;
-                 aContainer.transform.GetChild(j).GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
-
-            }
-
-
-        }
-
-        //for (int i = 1; i < Waves.Length; i++)
-        //{
-        //    Waves[i].gameObject.SetActive(false);
-        //}
-
-    */
-
     }
 
 }
