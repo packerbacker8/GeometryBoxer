@@ -7,7 +7,8 @@ using PlayerUI;
 
 public class ArenaModeScript : GameControllerScript
 {
-    public GameObject spawnSetGameObject;
+    public GameObject enemySpawnSetGameObject;
+    public GameObject healthSpawnSetGameObject;
     public GameObject botCubePrefab;
     public GameObject botSpecialCubePrefab;
     public GameObject botOctahedronPrefab;
@@ -25,7 +26,7 @@ public class ArenaModeScript : GameControllerScript
     public int specialEnemyStartingAmount = 2;
     [Tooltip("How many special enemies to spawn the next time around will be added on to by this factor.")]
     public int specialEnemySpawnFactor = 2;
-    public int numberOfWavesPreloaded = 5;
+    public int numberOfWavesPreloaded = 20;
     public int numberOfHealthpacks = 3;
 
 
@@ -37,7 +38,8 @@ public class ArenaModeScript : GameControllerScript
     //just an idea to see what spawns are taken. The key is the position.x + position.y + position.z of the transform's position.
     //private Dictionary<int, Transform> spawnDictionary;
 
-    private SpawnSet gameSpawnSet;
+    private SpawnSet enemySpawnSet;
+    private SpawnSet healthSpawnSet;
     private PlayerUserInterface playerUIScript;
     private PlayerUserInterface player2UIScript;
 
@@ -49,6 +51,7 @@ public class ArenaModeScript : GameControllerScript
     private float timeBeforeWaveBegins;
 
     private bool waveActive;
+    private bool waveReady;
     private bool isCube;
 
     protected override void Awake()
@@ -72,7 +75,8 @@ public class ArenaModeScript : GameControllerScript
         base.Start();
         playerUIScript = playerUI.GetComponent<PlayerUserInterface>();
         player2UIScript = IsSplitScreen ? player2UI.GetComponent<PlayerUserInterface>() : null;
-        gameSpawnSet = spawnSetGameObject.GetComponentInChildren<SpawnSet>();
+        enemySpawnSet = enemySpawnSetGameObject.GetComponentInChildren<SpawnSet>();
+        healthSpawnSet = healthSpawnSetGameObject.GetComponentInChildren<SpawnSet>();
         healthContainer = GameObject.FindGameObjectWithTag("HealthContainer");
 
         waveActive = true;
@@ -162,10 +166,18 @@ public class ArenaModeScript : GameControllerScript
             currentWaveIndex = currentWaveIndex % numberOfWavesPreloaded;
             if (currentWaveIndex == 0)
             {
-                InstantiateNewWavePool();
+                waveReady = false;
+                StartCoroutine(InstantiateNewWavePool());
             }
-            PrepareForNextWave(currentWaveIndex);
-            currentWaveIndex++;
+            else
+            {
+                waveReady = true;
+            }
+            if (waveReady)
+            {
+                PrepareForNextWave(currentWaveIndex);
+                currentWaveIndex++;
+            }
         }
     }
 
@@ -173,7 +185,7 @@ public class ArenaModeScript : GameControllerScript
     /// Preinstantiates a number of enemy objects and waves into the current allocation.
     /// How may waves instatiated depend on the <c>numberOfWavesPreloaded</c> variable.
     /// </summary>
-    private void InstantiateNewWavePool()
+    private IEnumerator InstantiateNewWavePool()
     {
         for (int i = 0; i < numberOfWavesPreloaded; i++)
         {
@@ -188,11 +200,11 @@ public class ArenaModeScript : GameControllerScript
                     //player is cube
                     if (isCube)
                     {
-                        currentEnemy = Instantiate(botSpecialOctahedronPrefab, gameSpawnSet.getRandomSpawnTransform(), false);
+                        currentEnemy = Instantiate(botSpecialOctahedronPrefab, enemySpawnSet.getRandomSpawnTransform(), false);
                     }
                     else
                     {
-                        Transform spawnTransform = gameSpawnSet.getRandomSpawnTransform();
+                        Transform spawnTransform = enemySpawnSet.getRandomSpawnTransform();
                         currentEnemy = Instantiate(botSpecialCubePrefab, spawnTransform.position, spawnTransform.rotation);
                     }
                 }
@@ -201,11 +213,11 @@ public class ArenaModeScript : GameControllerScript
                     //player is cube
                     if (isCube)
                     {
-                        currentEnemy = Instantiate(botOctahedronPrefab, gameSpawnSet.getRandomSpawnTransform(), false);
+                        currentEnemy = Instantiate(botOctahedronPrefab, enemySpawnSet.getRandomSpawnTransform(), false);
                     }
                     else
                     {
-                        Transform spawnTransform = gameSpawnSet.getRandomSpawnTransform();
+                        Transform spawnTransform = enemySpawnSet.getRandomSpawnTransform();
                         currentEnemy = Instantiate(botCubePrefab, spawnTransform.position, spawnTransform.rotation);
                     }
                 }
@@ -219,7 +231,7 @@ public class ArenaModeScript : GameControllerScript
             GameObject currentHealthPickup;
             for (int j = 0; j < numberOfHealthToSpawn; j++)
             {
-                Transform spawnTransform = gameSpawnSet.getRandomSpawnTransform();
+                Transform spawnTransform = healthSpawnSet.getRandomSpawnTransform();
                 currentHealthPickup = Instantiate(healthPrefab, spawnTransform.position, spawnTransform.rotation);
                 currentHealthPickup.SetActive(false);
                 healthPickupList.Add(currentHealthPickup);
@@ -239,6 +251,8 @@ public class ArenaModeScript : GameControllerScript
         }
         //initialize AI variables for every object in current pool just created
         InitAI();
+        waveReady = true;
+        yield return null;
     }
 
     /// <summary>
@@ -291,6 +305,15 @@ public class ArenaModeScript : GameControllerScript
                 enemyIndex++;
             }
         }
+    }
+
+    /// <summary>
+    /// Returns the 1 based wave number the player is on.
+    /// </summary>
+    /// <returns>The wave that is currently active, starts counting at 1.</returns>
+    public int GetWaveNumber()
+    {
+        return currentWaveNumber + 1;
     }
 
 }
