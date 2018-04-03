@@ -478,6 +478,8 @@ public class GameControllerScript : MonoBehaviour
         else
         {
             switchPlayers = IsSplitScreen ? !switchPlayers : false;
+            switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
+            switchPlayers = IsSplitScreen && player2Alive ? switchPlayers : false;
             enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
         }
     }

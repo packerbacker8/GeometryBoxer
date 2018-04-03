@@ -13,12 +13,25 @@ public class ArenaModeScript : GameControllerScript
     public GameObject botOctahedronPrefab;
     public GameObject botSpecialOctahedronPrefab;
     public GameObject healthPrefab;
+    [Tooltip("Roughly how many seconds between each wave.")]
+    public float timeBetweenWaves = 3.0f;
+    [Tooltip("How many enemies spawn at the start?")]
+    public int startingWaveAmount = 2;
+    [Tooltip("How many enemies are added each wave?")]
+    public int waveGrowthAmount = 2;
+    [Tooltip("What multiple of wave the special enemies will spawn on.")]
     public int specialSpawnWaveMultiple = 5;
-    public static int numberOfWavesPreloaded;
+    [Tooltip("On the first wave special enemies start in, this is how many there will be.")]
+    public int specialEnemyStartingAmount = 2;
+    [Tooltip("How many special enemies to spawn the next time around will be added on to by this factor.")]
+    public int specialEnemySpawnFactor = 2;
+    public int numberOfWavesPreloaded = 5;
+    public int numberOfHealthpacks = 3;
 
 
     private List<GameObject>[] currentWavesAllocation;
     private List<GameObject>[] healthPickupPool;
+    private GameObject healthContainer;
     private int currentWaveIndex;
 
     //just an idea to see what spawns are taken. The key is the position.x + position.y + position.z of the transform's position.
@@ -29,13 +42,13 @@ public class ArenaModeScript : GameControllerScript
     private PlayerUserInterface player2UIScript;
 
     private int numberOfRegularEnemiesToSpawn;
+    private int numberOfSpecialEnemiesToSpawn;
     private int numberOfHealthToSpawn;
     private int currentWaveNumber;
 
     private float timeBeforeWaveBegins;
-    private float timeToStartWave = 3.0f;
 
-    private bool waveActive = true;
+    private bool waveActive;
     private bool isCube;
 
     protected override void Awake()
@@ -60,12 +73,14 @@ public class ArenaModeScript : GameControllerScript
         playerUIScript = playerUI.GetComponent<PlayerUserInterface>();
         player2UIScript = IsSplitScreen ? player2UI.GetComponent<PlayerUserInterface>() : null;
         gameSpawnSet = spawnSetGameObject.GetComponentInChildren<SpawnSet>();
+        healthContainer = GameObject.FindGameObjectWithTag("HealthContainer");
 
-        numberOfWavesPreloaded = 5;
+        waveActive = true;
         currentWavesAllocation = new List<GameObject>[numberOfWavesPreloaded];
         currentWaveNumber = 0;
         currentWaveIndex = 0;
-        numberOfRegularEnemiesToSpawn = 2;
+        numberOfRegularEnemiesToSpawn = startingWaveAmount;
+        numberOfSpecialEnemiesToSpawn = specialEnemyStartingAmount;
         numberOfHealthToSpawn = 0;
         healthPickupPool = new List<GameObject>[numberOfWavesPreloaded];
 
@@ -73,19 +88,26 @@ public class ArenaModeScript : GameControllerScript
 
     protected override void Update()
     {
+        //if the wave is not active, that means we are either waiting, or we are prepping for the next wave.
         if (!waveActive)
         {
-            if (timeBeforeWaveBegins >= timeToStartWave)
+            if (timeBeforeWaveBegins >= timeBetweenWaves)
             {
                 //set every object in the current List<Object> that corresponds to the current wave to active
                 foreach (GameObject obj in currentWavesAllocation[currentWaveIndex - 1])
                 {
                     obj.SetActive(true);
+                    switchPlayers = player2CharController == null ? false : !switchPlayers;
+                    switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
+                    switchPlayers = player2Alive ? switchPlayers : false;
+                    obj.GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
+                    obj.transform.parent = isCube ? enemyOctahedronContainer.transform : enemyCubeContainer.transform;
                 }
 
                 foreach (GameObject health in healthPickupPool[currentWaveIndex - 1])
                 {
                     health.SetActive(true);
+                    health.transform.parent = healthContainer.transform;
                 }
 
                 playerUIScript.reinitializeUI(numEnemiesAlive);
@@ -103,11 +125,14 @@ public class ArenaModeScript : GameControllerScript
             }
         }
 
+        //if the number of enemies is 0, then that means a wave is defeated and we need to get everything 
+        //set to start the next wave
         if (numEnemiesAlive <= 0)
         {
+            #region
             //if both players are dead
             //might be used if we have a win condition
-            if (!playerAlive && !player2Alive) /*&& currentWaveNumber == lastWaveNumber*/
+            /*if (!playerAlive && !player2Alive)
             {
                 SaveAndLoadGame.saver.SetCityStatus(currentMapName, "conquered");
 
@@ -121,33 +146,33 @@ public class ArenaModeScript : GameControllerScript
                 winMenu.setMouse();
 
                 levelWon = true;
-            }
-            else if (!levelWon)
+            }*/
+            #endregion
+
+            //if there are any remaining health pickups, remove them.
+            if (currentWaveIndex - 1 >= 0)
             {
-                //if there are any remaining health pickups, remove them.
-                if (currentWaveIndex - 1 >= 0)
+                foreach (GameObject health in healthPickupPool[currentWaveIndex - 1])
                 {
-                    foreach (GameObject health in healthPickupPool[currentWaveIndex - 1])
-                    {
-                        Destroy(health);
-                    }
+                    Destroy(health);
                 }
-                currentWaveNumber += 1;
-                //set next wave active
-                currentWaveIndex = currentWaveIndex % numberOfWavesPreloaded;
-                if (currentWaveIndex == 0)
-                {
-                    InstantiateNewWavePool();
-                }
-                prepareForNextWave(currentWaveIndex);
-                currentWaveIndex++;
             }
-
-
+            currentWaveNumber++;
+            //set next wave active
+            currentWaveIndex = currentWaveIndex % numberOfWavesPreloaded;
+            if (currentWaveIndex == 0)
+            {
+                InstantiateNewWavePool();
+            }
+            PrepareForNextWave(currentWaveIndex);
+            currentWaveIndex++;
         }
     }
 
-    /* Preinstantiates a number of enemy objects and waves into the current allocation*/
+    /// <summary>
+    /// Preinstantiates a number of enemy objects and waves into the current allocation.
+    /// How may waves instatiated depend on the <c>numberOfWavesPreloaded</c> variable.
+    /// </summary>
     private void InstantiateNewWavePool()
     {
         for (int i = 0; i < numberOfWavesPreloaded; i++)
@@ -157,16 +182,33 @@ public class ArenaModeScript : GameControllerScript
             GameObject currentEnemy;
             for (int j = 0; j < numberOfRegularEnemiesToSpawn; j++)
             {
-                if (isCube)
+                //wave to spawn specials
+                if(j < numberOfSpecialEnemiesToSpawn && (currentWaveNumber + i) % specialSpawnWaveMultiple == 0)
                 {
-                    currentEnemy = Instantiate(botOctahedronPrefab, gameSpawnSet.getRandomSpawnTransform(), false);
+                    //player is cube
+                    if (isCube)
+                    {
+                        currentEnemy = Instantiate(botSpecialOctahedronPrefab, gameSpawnSet.getRandomSpawnTransform(), false);
+                    }
+                    else
+                    {
+                        Transform spawnTransform = gameSpawnSet.getRandomSpawnTransform();
+                        currentEnemy = Instantiate(botSpecialCubePrefab, spawnTransform.position, spawnTransform.rotation);
+                    }
                 }
-                else
+                else //otherwise spawn regular
                 {
-                    Transform spawnTransform = gameSpawnSet.getRandomSpawnTransform();
-                    currentEnemy = Instantiate(botCubePrefab, spawnTransform.position, spawnTransform.rotation);
+                    //player is cube
+                    if (isCube)
+                    {
+                        currentEnemy = Instantiate(botOctahedronPrefab, gameSpawnSet.getRandomSpawnTransform(), false);
+                    }
+                    else
+                    {
+                        Transform spawnTransform = gameSpawnSet.getRandomSpawnTransform();
+                        currentEnemy = Instantiate(botCubePrefab, spawnTransform.position, spawnTransform.rotation);
+                    }
                 }
-
                 currentEnemy.SetActive(false);
                 spawnList.Add(currentEnemy);
             }
@@ -185,23 +227,32 @@ public class ArenaModeScript : GameControllerScript
             healthPickupPool[i] = healthPickupList;
 
             //set the parameters for the next wave
-            numberOfRegularEnemiesToSpawn = numberOfRegularEnemiesToSpawn + 2;
+            numberOfRegularEnemiesToSpawn += waveGrowthAmount;
+            if ((currentWaveNumber + i) % specialSpawnWaveMultiple == 0)
+            {
+                numberOfSpecialEnemiesToSpawn += specialEnemySpawnFactor;
+            }
             if (currentWaveNumber >= 1)
             {
-                numberOfHealthToSpawn = 1;
+                numberOfHealthToSpawn = numberOfHealthpacks; //currently no change in the number of healthpacks, could grow each round or every couple rounds
             }
         }
         //initialize AI variables for every object in current pool just created
-        initAI();
+        InitAI();
     }
 
-    /*this method basically just takes care of the enemiesInWorld and oldExpansionNumEnemies variables from GameController script*/
-    private void prepareForNextWave(int waveIndex)
+    /// <summary>
+    /// Adjusts enemiesInWorld array to be proper for each wave, and fix which number of enemies to start expanding sightline on
+    /// which won't matter in this case as all enemies know where the player is at all times. Also sets the wave as not active.
+    /// </summary>
+    /// <param name="waveIndex"></param>
+    private void PrepareForNextWave(int waveIndex)
     {
         //load the first wave enemies
         numEnemiesAlive = currentWavesAllocation[waveIndex].Count;
         oldExpansionNumEnemies = numEnemiesAlive;
 
+        //might be able to get away without having to do this
         for (int i = 0; i < enemiesInWorld.Length; i++)
         {
             Destroy(enemiesInWorld[i]);
@@ -212,14 +263,16 @@ public class ArenaModeScript : GameControllerScript
         foreach (GameObject enemyObj in currentWavesAllocation[waveIndex])
         {
             enemiesInWorld[index] = enemyObj;
+            index++;
         }
 
         waveActive = false;
     }
 
-
-    //Initializes AI object's variables for every object in the current wave pool.
-    public void initAI()
+    /// <summary>
+    /// Initializes AI object's variables for every object in the current wave pool.
+    /// </summary>
+    public void InitAI()
     {
         for (int i = 0; i < numberOfWavesPreloaded; i++)
         {
@@ -229,9 +282,10 @@ public class ArenaModeScript : GameControllerScript
                 currentEnemyObject.GetComponent<EnemyHealthScript>().SetEnemyIndex(enemyIndex);
                 currentEnemyObject.GetComponent<EnemyHealthScript>().SetDamageSource("Player", true);
                 currentEnemyObject.GetComponentInChildren<UserControlAI>().safeSpot = SafeSpot;
-                currentEnemyObject.GetComponentInChildren<UserControlAI>().SetMoveTarget(playerCharController);
 
                 switchPlayers = player2CharController == null ? false : !switchPlayers;
+                switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
+                switchPlayers = player2Alive ? switchPlayers : false;
                 currentEnemyObject.GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
 
                 enemyIndex++;

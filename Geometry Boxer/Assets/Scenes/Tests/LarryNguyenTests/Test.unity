@@ -12730,6 +12730,11 @@ Prefab:
       propertyPath: debugMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114059141406363036, guid: e69b09739c130e9449555b60e80f9cb7,
+        type: 2}
+      propertyPath: DebugSplitscreen
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e69b09739c130e9449555b60e80f9cb7, type: 2}
   m_IsPrefabParent: 0
@@ -29067,7 +29072,7 @@ GameObject:
   m_Component:
   - component: {fileID: 822136947}
   m_Layer: 0
-  m_Name: EnemiesCube (1)
+  m_Name: EnemiesCube
   m_TagString: EnemyContainer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29546,7 +29551,7 @@ GameObject:
   m_Component:
   - component: {fileID: 839191033}
   m_Layer: 0
-  m_Name: EnemiesOctahedron (1)
+  m_Name: EnemiesOctahedron
   m_TagString: EnemyContainer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49241,6 +49246,48 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &1406517456
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4625799251406038, guid: 0b7c1cac59daf2545b96545514d8df6d, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625799251406038, guid: 0b7c1cac59daf2545b96545514d8df6d, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625799251406038, guid: 0b7c1cac59daf2545b96545514d8df6d, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625799251406038, guid: 0b7c1cac59daf2545b96545514d8df6d, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625799251406038, guid: 0b7c1cac59daf2545b96545514d8df6d, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625799251406038, guid: 0b7c1cac59daf2545b96545514d8df6d, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625799251406038, guid: 0b7c1cac59daf2545b96545514d8df6d, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625799251406038, guid: 0b7c1cac59daf2545b96545514d8df6d, type: 2}
+      propertyPath: m_RootOrder
+      value: 22
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 0b7c1cac59daf2545b96545514d8df6d, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1407946763
 GameObject:
   m_ObjectHideFlags: 0
@@ -60105,10 +60152,22 @@ MonoBehaviour:
   spawnSetGameObject: {fileID: 1684717154}
   botCubePrefab: {fileID: 1580138071602084, guid: 4f55e8e7522dd7147bb98701fbbf5276,
     type: 2}
+  botSpecialCubePrefab: {fileID: 1580138071602084, guid: 9a05ad5636f0bc74ebdeb3a68cc3548c,
+    type: 2}
   botOctahedronPrefab: {fileID: 1399700643421994, guid: 465b5b013ecc4d248a0d73b688f5e04e,
+    type: 2}
+  botSpecialOctahedronPrefab: {fileID: 1399700643421994, guid: 1932a00659d62864dbcc13eee863e132,
     type: 2}
   healthPrefab: {fileID: 1803091379020608, guid: a141cfd1379651a499af577b50c633a8,
     type: 2}
+  timeBetweenWaves: 3
+  startingWaveAmount: 2
+  waveGrowthAmount: 2
+  specialSpawnWaveMultiple: 5
+  specialEnemyStartingAmount: 2
+  specialEnemySpawnFactor: 2
+  numberOfWavesPreloaded: 5
+  numberOfHealthpacks: 3
 --- !u!1 &1705462930
 GameObject:
   m_ObjectHideFlags: 0
