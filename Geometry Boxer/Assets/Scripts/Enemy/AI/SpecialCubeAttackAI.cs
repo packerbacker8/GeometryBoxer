@@ -43,7 +43,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
     private CharacterPuppet characterPuppet;
     private AudioSource source;
     private SFX_Manager sfxManager;
-    private System.Random rand = new System.Random();
+    private static System.Random rand = new System.Random();
     private string leftSwingAnimation = "SwingProp";
     private string rightSwingAnimation = "SwingProp";
     private string getUpProne = "GetUpProne";
@@ -59,7 +59,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
     private Vector3 deactivePos;
     private Vector3 launchDir;
     private Rigidbody cubeRigid;
-    private System.Random randChance;
+    private static System.Random randChance;
 
     private int attackRandomAudio = 20;
     private int swingAnimLayer = 1;
@@ -80,7 +80,7 @@ public class SpecialCubeAttackAI : MonoBehaviour, IAttackBase
     private bool specialActivated;
     private bool isGrounded;
 
-    private System.Random randAttack;
+    private static System.Random randAttack;
     
 
     public List<CharacterAnimations> enemyAnimations = new List<CharacterAnimations>();
