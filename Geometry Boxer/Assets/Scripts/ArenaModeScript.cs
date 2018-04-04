@@ -7,8 +7,6 @@ using PlayerUI;
 
 public class ArenaModeScript : GameControllerScript
 {
-    public GameObject enemySpawnSetGameObject;
-    public GameObject healthSpawnSetGameObject;
     public GameObject botCubePrefab;
     public GameObject botSpecialCubePrefab;
     public GameObject botOctahedronPrefab;
@@ -32,6 +30,8 @@ public class ArenaModeScript : GameControllerScript
 
     private List<GameObject>[] currentWavesAllocation;
     private List<GameObject>[] healthPickupPool;
+    private GameObject enemySpawnSetGameObject;
+    private GameObject healthSpawnSetGameObject;
     private GameObject healthContainer;
     private int currentWaveIndex;
 
@@ -73,6 +73,8 @@ public class ArenaModeScript : GameControllerScript
     protected override void Start()
     {
         base.Start();
+        enemySpawnSetGameObject = GameObject.FindGameObjectWithTag("RootSpawn");
+        healthSpawnSetGameObject = GameObject.FindGameObjectWithTag("HealthSpawn");
         playerUIScript = playerUI.GetComponent<PlayerUserInterface>();
         player2UIScript = IsSplitScreen ? player2UI.GetComponent<PlayerUserInterface>() : null;
         enemySpawnSet = enemySpawnSetGameObject.GetComponentInChildren<SpawnSet>();
@@ -200,11 +202,11 @@ public class ArenaModeScript : GameControllerScript
                     //player is cube
                     if (isCube)
                     {
-                        currentEnemy = Instantiate(botSpecialOctahedronPrefab, enemySpawnSet.getRandomSpawnTransform(), false);
+                        currentEnemy = Instantiate(botSpecialOctahedronPrefab, enemySpawnSet.getRandomSpawnTransform3D(), false);
                     }
                     else
                     {
-                        Transform spawnTransform = enemySpawnSet.getRandomSpawnTransform();
+                        Transform spawnTransform = enemySpawnSet.getRandomSpawnTransform3D();
                         currentEnemy = Instantiate(botSpecialCubePrefab, spawnTransform.position, spawnTransform.rotation);
                     }
                 }
@@ -213,11 +215,11 @@ public class ArenaModeScript : GameControllerScript
                     //player is cube
                     if (isCube)
                     {
-                        currentEnemy = Instantiate(botOctahedronPrefab, enemySpawnSet.getRandomSpawnTransform(), false);
+                        currentEnemy = Instantiate(botOctahedronPrefab, enemySpawnSet.getRandomSpawnTransform3D(), false);
                     }
                     else
                     {
-                        Transform spawnTransform = enemySpawnSet.getRandomSpawnTransform();
+                        Transform spawnTransform = enemySpawnSet.getRandomSpawnTransform3D();
                         currentEnemy = Instantiate(botCubePrefab, spawnTransform.position, spawnTransform.rotation);
                     }
                 }
@@ -231,7 +233,7 @@ public class ArenaModeScript : GameControllerScript
             GameObject currentHealthPickup;
             for (int j = 0; j < numberOfHealthToSpawn; j++)
             {
-                Transform spawnTransform = healthSpawnSet.getRandomSpawnTransform();
+                Transform spawnTransform = healthSpawnSet.getRandomSpawnTransform2D();
                 currentHealthPickup = Instantiate(healthPrefab, spawnTransform.position, spawnTransform.rotation);
                 currentHealthPickup.SetActive(false);
                 healthPickupList.Add(currentHealthPickup);

@@ -19,7 +19,7 @@ public class PlaceHealthSpawnLocation : ScriptableWizard
     }
     [MenuItem("Geometry Boxer Tools/Add Health Spawn Points")]
 
-    static void SelectAllOfTagWizard()
+    static void PlaceHealthSpawnWizard()
     {
         ScriptableWizard.DisplayWizard<PlaceHealthSpawnLocation>("Add Health Spawn Points", "Finished", "Add Health Spawn Point");
     }
