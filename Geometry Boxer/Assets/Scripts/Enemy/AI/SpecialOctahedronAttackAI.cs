@@ -44,9 +44,9 @@ public class SpecialOctahedronAttackAI : MonoBehaviour, IAttackBase
     private CharacterPuppet characterPuppet;
     private AudioSource source;
     private SFX_Manager sfxManager;
-    private System.Random rand = new System.Random();
-    private System.Random randAttack;
-    private System.Random randChance;
+    private static System.Random rand = new System.Random();
+    private static System.Random randAttack;
+    private static System.Random randChance;
     private List<GameObject> projectiles;
     private Vector3 startProjectileSize;
 
