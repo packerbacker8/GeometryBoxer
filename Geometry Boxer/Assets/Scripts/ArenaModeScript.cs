@@ -280,18 +280,13 @@ public class ArenaModeScript : GameControllerScript
         int numSpecialToSpawn = currentWaveNumber % specialSpawnWaveMultiple == 0 ? numberOfSpecialEnemiesToSpawn : 0;
 
         enemiesInWorld = new GameObject[numEnemiesAlive];
-        GameObject enemyObj;
-        for (int i = 0; i < numEnemiesAlive - numSpecialToSpawn; i++)
+        for (int i = 0; i < numEnemiesAlive; i++)
         {
-            enemyObj = enemyPool[i];
-            enemiesInWorld[i] = enemyObj;
+            enemiesInWorld[i] = enemyPool[i];
         }
-        int index = 0;
-        for (int i = numEnemiesAlive - numSpecialToSpawn; i < numEnemiesAlive; i++)
+        for (int i = 0 ; i < numSpecialToSpawn; i++)
         {
-            enemyObj = specialEnemyPool[index];
-            enemiesInWorld[i] = enemyObj;
-            index++;
+            enemiesInWorld[i] = specialEnemyPool[i];
         }
 
         waveActive = false;
@@ -316,6 +311,7 @@ public class ArenaModeScript : GameControllerScript
 
             enemyIndex++;
         }
+        enemyIndex = 0;
         foreach(GameObject currentSpecialEnemy in specialEnemyPool)
         {
             currentSpecialEnemy.GetComponent<EnemyHealthScript>().SetEnemyIndex(enemyIndex);
