@@ -135,4 +135,9 @@ public class HealthPickup : MonoBehaviour
             }
         }
     }
+
+    public void ChangeStartingPosition(Vector3 pos)
+    {
+        startingPos = pos;
+    }
 }

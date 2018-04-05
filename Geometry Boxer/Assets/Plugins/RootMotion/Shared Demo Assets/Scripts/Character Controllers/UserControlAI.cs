@@ -8,7 +8,6 @@ using System.Collections;
 
 namespace RootMotion.Demos
 {
-
     /// <summary>
     /// User input for an AI controlled character controller.
     /// </summary>

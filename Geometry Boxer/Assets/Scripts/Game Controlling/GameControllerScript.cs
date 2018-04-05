@@ -312,7 +312,7 @@ public class GameControllerScript : MonoBehaviour
     /// </summary>
     /// <param name="index">Index in the respective array.</param>
     /// <param name="tag">Tag of the object sent.</param>
-    public void IsKilled(int index, string tag)
+    public virtual void IsKilled(int index, string tag)
     {
         if(hasAllies)
         {
@@ -351,7 +351,7 @@ public class GameControllerScript : MonoBehaviour
     /// Tells the game controller the player died.
     /// </summary>
     /// <param name="p2">If this is true, the player that died is player 2.</param>
-    public void PlayerKilled(bool p2)
+    public virtual void PlayerKilled(bool p2)
     {
         if(p2)
         {
@@ -442,7 +442,7 @@ public class GameControllerScript : MonoBehaviour
     /// </summary>
     /// <param name="index">The bot index in their respective array.</param>
     /// <param name="tag">Tag of their root object</param>
-    public void SetNewTarget(int index, string tag)
+    public virtual void SetNewTarget(int index, string tag)
     {
         if(hasAllies)
         {
@@ -503,7 +503,7 @@ public class GameControllerScript : MonoBehaviour
     }
 
 
-    public void SetTargetHealthPack(int index, GameObject objOfHealth, string tag)
+    public virtual void SetTargetHealthPack(int index, GameObject objOfHealth, string tag)
     {
         if(tag.Contains("Ally"))
         {
@@ -526,7 +526,7 @@ public class GameControllerScript : MonoBehaviour
     /// </summary>
     /// <returns>Nothing is returned.</returns>
     /// <param name="amount">This amount will be multiplied to the enemies current sight radius.</param>
-    private IEnumerator IncreaseEnemySight(float amount)
+    protected virtual IEnumerator IncreaseEnemySight(float amount)
     {
         yield return null;
         foreach(GameObject enemy in enemiesInWorld)
@@ -543,7 +543,7 @@ public class GameControllerScript : MonoBehaviour
     /// Function to give enemies alive indicies.
     /// </summary>
     /// <returns>Returns enemies that are being tracked as alive in enemiesInWorld container.</returns>
-    public HashSet<int> EnemyAliveIndicies()
+    public virtual HashSet<int> EnemyAliveIndicies()
     {
         HashSet<int> enemiesAlive = new HashSet<int>();
         for (int i = 0; i < enemiesInWorld.Length; i++)
@@ -560,7 +560,7 @@ public class GameControllerScript : MonoBehaviour
     /// Function to give allies alive indicies.
     /// </summary>
     /// <returns>Returns allies that are being tracked as alive in alliesInWorld container.</returns>
-    public HashSet<int> AllyAliveIndicies()
+    public virtual HashSet<int> AllyAliveIndicies()
     {
         HashSet<int> alliesAlive = new HashSet<int>();
         for (int i = 0; i < alliesInWorld.Length; i++)
