@@ -196,8 +196,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4002671364177060}
-  - component: {fileID: 114730405452330876}
   - component: {fileID: 114816277683950246}
+  - component: {fileID: 114612430855227838}
   m_Layer: 0
   m_Name: Arena Bot Octahedron
   m_TagString: EnemyRoot
@@ -3494,6 +3494,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leeway: 0.1
+--- !u!114 &114612430855227838
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1257310959703964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e10f6af51730d744bb4ef76d41e58f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyHealth: 2500
+  percentToFindHealthPack: 0.5
+  deathDelay: 20
+  damageThreshold: 25
+  heavyDamageOffset: 15
+  deathObject: {fileID: 1009739543081150}
 --- !u!114 &114652707422484502
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3564,23 +3581,6 @@ MonoBehaviour:
   ignoreCollisionWithRagdoll:
     serializedVersion: 2
     m_Bits: 0
---- !u!114 &114730405452330876
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1257310959703964}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7e7eec7e577cfc43b8b0dccfa08b43f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EnemyHealth: 2500
-  percentToFindHealthPack: 0.5
-  deathDelay: 20
-  damageThreshold: 25
-  heavyDamageOffset: 15
-  deathObject: {fileID: 1009739543081150}
 --- !u!114 &114816277683950246
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -8736,7 +8736,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 523332687
+  randomSeed: -513978200
   InitialModule:
     serializedVersion: 3
     enabled: 1

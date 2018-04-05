@@ -1028,8 +1028,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4534786862281946}
-  - component: {fileID: 114212661575101886}
   - component: {fileID: 114470827495362334}
+  - component: {fileID: 114078181041663594}
   m_Layer: 0
   m_Name: Arena Bot Octahedron Special
   m_TagString: EnemyRoot
@@ -2827,6 +2827,23 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114078181041663594
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1966634599796640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e10f6af51730d744bb4ef76d41e58f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyHealth: 2500
+  percentToFindHealthPack: 0.5
+  deathDelay: 20
+  damageThreshold: 25
+  heavyDamageOffset: 15
+  deathObject: {fileID: 1001373993310324}
 --- !u!114 &114110503297078806
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2875,23 +2892,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volume: 1
---- !u!114 &114212661575101886
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1966634599796640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7e7eec7e577cfc43b8b0dccfa08b43f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EnemyHealth: 2500
-  percentToFindHealthPack: 0.5
-  deathDelay: 20
-  damageThreshold: 25
-  heavyDamageOffset: 15
-  deathObject: {fileID: 1001373993310324}
 --- !u!114 &114350564743089774
 MonoBehaviour:
   m_ObjectHideFlags: 1

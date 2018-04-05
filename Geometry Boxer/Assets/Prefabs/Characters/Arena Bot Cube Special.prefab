@@ -766,8 +766,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4658738416018796}
-  - component: {fileID: 114878076147115514}
   - component: {fileID: 114892763457605752}
+  - component: {fileID: 114080279565378790}
   m_Layer: 0
   m_Name: Arena Bot Cube Special
   m_TagString: EnemyRoot
@@ -3181,6 +3181,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sendDamage: 1
+--- !u!114 &114080279565378790
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1808872568010686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e10f6af51730d744bb4ef76d41e58f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyHealth: 2500
+  percentToFindHealthPack: 0.5
+  deathDelay: 20
+  damageThreshold: 30
+  heavyDamageOffset: 50
+  deathObject: {fileID: 1852774760733264}
 --- !u!114 &114196297804681550
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3581,23 +3598,6 @@ MonoBehaviour:
   turnSpeed: 5
   runCycleLegOffset: 0.2
   animSpeedMultiplier: 1
---- !u!114 &114878076147115514
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1808872568010686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7e7eec7e577cfc43b8b0dccfa08b43f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EnemyHealth: 2500
-  percentToFindHealthPack: 0.5
-  deathDelay: 20
-  damageThreshold: 30
-  heavyDamageOffset: 50
-  deathObject: {fileID: 1852774760733264}
 --- !u!114 &114882453466791380
 MonoBehaviour:
   m_ObjectHideFlags: 1
