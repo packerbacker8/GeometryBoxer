@@ -9,7 +9,7 @@ using PlayerUI;
 public class EnemyHealthScript : MonoBehaviour
 {
     public float EnemyHealth = 1000f;
-    [Tooltip("0.99 means to find health pack at 100% health, 0.01 means to find health pack at 1% health.")]
+    [Tooltip("0.99 means to find health pack at 100% health, 0.01 means to find health pack at 2% health.")]
     [Range(0.01f, 0.99f)]
     public float percentToFindHealthPack = 0.5f;
     public float deathDelay = 20f;
@@ -18,42 +18,42 @@ public class EnemyHealthScript : MonoBehaviour
     public GameObject deathObject;
 
     //Sound Engine Needs
-    private AudioSource source;
-    private AudioSource impactSource;
-    private int lightImpactIndex;
-    private int heavyImpactIndex;
-    private int painIndex;
-    private int deathIndex;
-    private System.Random rand = new System.Random();
-    private SFX_Manager sfxManager;
+    protected AudioSource source;
+    protected AudioSource impactSource;
+    protected int lightImpactIndex;
+    protected int heavyImpactIndex;
+    protected int painIndex;
+    protected int deathIndex;
+    protected System.Random rand = new System.Random();
+    protected SFX_Manager sfxManager;
+    
+    protected bool dead;
+    protected bool damageIsFromPlayer;
+    protected bool damageFromAllies;
+    protected bool findHealth;
+    protected int characterControllerIndex = 2;
+    protected int animationControllerIndex = 0;
+    protected int puppetMasterIndex = 1;
+    protected int enemyIndex = 0;
+    protected string getUpProne = "GetUpProne";
+    protected string getUpSupine = "GetUpSupine";
+    protected string damageSource = "Player";
+    protected GameObject puppetMast;
+    protected GameObject gameController;
+    protected GameObject playerUI;
+    protected GameObject healthContainer;
+    protected UserControlAI charController;
+    protected Animator anim;
+    
+    protected SwapMaterials ShowDmg;
+    protected float Val0;
+    protected float Val1;
+    protected float Val2;
+    protected float Val3;
+    protected float Val4;
+    protected float originalHealth;
 
-    private bool dead;
-    private bool damageIsFromPlayer;
-    private bool damageFromAllies;
-    private bool findHealth;
-    private int characterControllerIndex = 2;
-    private int animationControllerIndex = 0;
-    private int puppetMasterIndex = 1;
-    private int enemyIndex = 0;
-    private string getUpProne = "GetUpProne";
-    private string getUpSupine = "GetUpSupine";
-    private string damageSource = "Player";
-    private GameObject puppetMast;
-    private GameObject gameController;
-    private GameObject playerUI;
-    private GameObject healthContainer;
-    private UserControlAI charController;
-    private Animator anim;
-
-    private SwapMaterials ShowDmg;
-    private float Val0;
-    private float Val1;
-    private float Val2;
-    private float Val3;
-    private float Val4;
-    private float originalHealth;
-
-    private void Awake()
+    protected virtual void Awake()
     {
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         puppetMast = this.transform.GetChild(puppetMasterIndex).gameObject;
@@ -69,7 +69,7 @@ public class EnemyHealthScript : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start()
+    protected virtual void Start()
     {
         source.spatialBlend = 0.9f;
         impactSource.spatialBlend = 0.9f;
@@ -89,7 +89,7 @@ public class EnemyHealthScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if(!findHealth && EnemyHealth < originalHealth * percentToFindHealthPack)
         {
@@ -104,7 +104,7 @@ public class EnemyHealthScript : MonoBehaviour
     /// <summary>
     /// Function for the enemy to go find a health pack, in some random way.
     /// </summary>
-    private void GetHealth()
+    protected virtual void GetHealth()
     {
         if(healthContainer == null)
         {
@@ -227,7 +227,7 @@ public class EnemyHealthScript : MonoBehaviour
     /// <summary>
     /// Function to kill enemy AI unit, plays associated death animation then removes the object.
     /// </summary>
-    public void KillEnemy()
+    public virtual void KillEnemy()
     {
         if (!dead)
         {
@@ -259,7 +259,7 @@ public class EnemyHealthScript : MonoBehaviour
     /// <summary>
     /// Helper function to kill enemy and freeze them if they go outside the bounds of the world.
     /// </summary>
-    public void ResetEnemy()
+    public virtual void ResetEnemy()
     {
         this.GetComponentInChildren<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         KillEnemy();
