@@ -17,7 +17,7 @@ public class ArenaModeScript : GameControllerScript
     [Tooltip("How many enemies spawn at the start?")]
     public int startingWaveAmount = 2;
     [Tooltip("How many enemies are added each wave?")]
-    public int waveGrowthAmount = 2;
+    public int waveGrowthAmount = 3;
     [Tooltip("What multiple of wave the special enemies will spawn on.")]
     public int specialSpawnWaveMultiple = 5;
     [Tooltip("On the first wave special enemies start in, this is how many there will be.")]
@@ -29,7 +29,8 @@ public class ArenaModeScript : GameControllerScript
 
 
     private List<GameObject>[] currentWavesAllocation;
-    private List<GameObject>[] healthPickupPool;
+    private List<Transform>[] healthPickupTransforms;
+    private List<GameObject> healthPickups;
     private GameObject enemySpawnSetGameObject;
     private GameObject healthSpawnSetGameObject;
     private GameObject healthContainer;
@@ -87,9 +88,18 @@ public class ArenaModeScript : GameControllerScript
         currentWaveIndex = 0;
         numberOfRegularEnemiesToSpawn = startingWaveAmount;
         numberOfSpecialEnemiesToSpawn = specialEnemyStartingAmount;
-        numberOfHealthToSpawn = 0;
-        healthPickupPool = new List<GameObject>[numberOfWavesPreloaded];
-
+        numberOfHealthToSpawn = numberOfHealthpacks;
+        healthPickupTransforms = new List<Transform>[numberOfWavesPreloaded];
+        //make a healthPickupList and set it to the i'th preloaded wave
+        healthPickups = new List<GameObject>();
+        GameObject currentHealthPickup;
+        for (int j = 0; j < numberOfHealthToSpawn; j++)
+        {
+            currentHealthPickup = Instantiate(healthPrefab, Vector3.zero, Quaternion.identity);
+            currentHealthPickup.SetActive(true);
+            currentHealthPickup.transform.parent = healthContainer.transform;
+            healthPickups.Add(currentHealthPickup);
+        }
     }
 
     protected override void Update()
@@ -110,10 +120,10 @@ public class ArenaModeScript : GameControllerScript
                     obj.transform.parent = isCube ? enemyOctahedronContainer.transform : enemyCubeContainer.transform;
                 }
 
-                foreach (GameObject health in healthPickupPool[currentWaveIndex - 1])
+                for(int i = 0; i < healthPickupTransforms[currentWaveIndex - 1].Count; i++)
                 {
-                    health.SetActive(true);
-                    health.transform.parent = healthContainer.transform;
+                    healthPickups[i % healthPickups.Count].transform.position = healthPickupTransforms[currentWaveIndex - 1][i].position;
+                    healthPickups[i % healthPickups.Count].GetComponent<HealthPickup>().ChangeStartingPosition(healthPickupTransforms[currentWaveIndex - 1][i].position);
                 }
 
                 playerUIScript.reinitializeUI(numEnemiesAlive);
@@ -155,14 +165,6 @@ public class ArenaModeScript : GameControllerScript
             }*/
             #endregion
 
-            //if there are any remaining health pickups, remove them.
-            if (currentWaveIndex - 1 >= 0)
-            {
-                foreach (GameObject health in healthPickupPool[currentWaveIndex - 1])
-                {
-                    Destroy(health);
-                }
-            }
             currentWaveNumber++;
             //set next wave active
             currentWaveIndex = currentWaveIndex % numberOfWavesPreloaded;
@@ -229,26 +231,24 @@ public class ArenaModeScript : GameControllerScript
             currentWavesAllocation[i] = spawnList;
 
             //make a healthPickupList and set it to the i'th preloaded wave
-            List<GameObject> healthPickupList = new List<GameObject>();
-            GameObject currentHealthPickup;
+            List<Transform> healthPickupList = new List<Transform>();
+            Transform healthSpawnTransform;
             for (int j = 0; j < numberOfHealthToSpawn; j++)
             {
-                Transform spawnTransform = healthSpawnSet.getRandomSpawnTransform2D();
-                currentHealthPickup = Instantiate(healthPrefab, spawnTransform.position, spawnTransform.rotation);
-                currentHealthPickup.SetActive(false);
-                healthPickupList.Add(currentHealthPickup);
+                healthSpawnTransform = healthSpawnSet.getRandomSpawnTransform2D();
+                while (healthPickupList.Contains(healthSpawnTransform))
+                {
+                    healthSpawnTransform = healthSpawnSet.getRandomSpawnTransform2D();
+                }
+                healthPickupList.Add(healthSpawnTransform);
             }
-            healthPickupPool[i] = healthPickupList;
+            healthPickupTransforms[i] = healthPickupList;
 
             //set the parameters for the next wave
             numberOfRegularEnemiesToSpawn += waveGrowthAmount;
             if ((currentWaveNumber + i) % specialSpawnWaveMultiple == 0)
             {
                 numberOfSpecialEnemiesToSpawn += specialEnemySpawnFactor;
-            }
-            if (currentWaveNumber >= 1)
-            {
-                numberOfHealthToSpawn = numberOfHealthpacks; //currently no change in the number of healthpacks, could grow each round or every couple rounds
             }
         }
         //initialize AI variables for every object in current pool just created
