@@ -12,6 +12,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public Text survivalCurrentMapSelection;
     public Dropdown survivalFactionDropdown;
     public Dropdown survivalModeDropdown;
+    public GameObject survivalBackButton;
+    public GameObject survivalStartButton;
 
     public GameObject survivalCanvas;
     public GameObject hasSaveGameCanvas;
@@ -241,6 +243,38 @@ public class MainMenuCanvasControlling : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find(loadFileButtonName).gameObject);
             inInputField = false;
         }
+
+        //Cases for Survival Canvas
+        if (survivalCanvas.activeSelf && controllerMode)
+        {
+            GameObject scrollViewGameObj = survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject;
+            GameObject curObj = EventSystem.current.currentSelectedGameObject;
+
+            //We are on scrollview hitting right, so move to faction dropdown
+            if (Input.GetAxis("DPadX") == 1 && curObj == scrollViewGameObj)
+            {
+                Debug.Log("Scroll view to dropdown");
+                EventSystem.current.SetSelectedGameObject(survivalFactionDropdown.gameObject);
+            }
+            //We are on scrollView hitting left, so move to back button
+            else if (Input.GetAxis("DPadX") == -1 && curObj == scrollViewGameObj)
+            {
+                Debug.Log("Backbutton");
+                EventSystem.current.SetSelectedGameObject(survivalBackButton.gameObject);
+            }
+            //We are on either dropdown and hit left, move us to scrollview
+            else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && (Input.GetAxis("DPadX") == -1))
+            {
+                Debug.Log("Moving from dropdowns to scrollview button");
+                EventSystem.current.SetSelectedGameObject(scrollViewGameObj);
+            }
+            if(Input.GetAxisRaw("DPadX") == -1)
+            {
+                Debug.Log(curObj.name + " " + (curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown)));
+            }
+            Debug.Log(Input.GetAxisRaw("DPadX"));
+        }
+        Debug.Log(EventSystem.current.currentSelectedGameObject.name.ToString());
     }
 
     /// <summary>
@@ -289,6 +323,12 @@ public class MainMenuCanvasControlling : MonoBehaviour
         hasSaveGameCanvas.SetActive(false);
         noSaveGameCanvas.SetActive(false);
         optionsMenu.SetActive(false);
+
+        if (controllerMode)
+        {
+            //Debug.Log(survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            EventSystem.current.SetSelectedGameObject(survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        }
     }
 
 
