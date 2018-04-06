@@ -12,6 +12,12 @@ public class ArenaModeScript : GameControllerScript
     public GameObject botOctahedronPrefab;
     public GameObject botSpecialOctahedronPrefab;
     public GameObject healthPrefab;
+    [Tooltip("How much health the bots start with.")]
+    public float startingEnemyHealth = 100f;
+    [Tooltip("How much does the health go up by per round.")]
+    public float healthGrowthAmount = 1.5f;
+    [Tooltip("How much more health do the special bots have.")]
+    public float specialBotHealthFactor = 2.0f;
     [Tooltip("Roughly how many seconds between each wave.")]
     public float timeBetweenWaves = 3.0f;
     [Tooltip("How many enemies are added each wave? Also how many enemies at the start")]
@@ -51,6 +57,7 @@ public class ArenaModeScript : GameControllerScript
     private int specialEnemyPoolCount;
 
     private float timeBeforeWaveBegins;
+    private float botHealth;
 
     private bool waveActive;
     private bool waveReady;
@@ -104,6 +111,7 @@ public class ArenaModeScript : GameControllerScript
             currentHealthPickup.transform.parent = healthContainer.transform;
             healthPickups.Add(currentHealthPickup);
         }
+        botHealth = startingEnemyHealth;
     }
 
     protected override void Update()
@@ -117,14 +125,20 @@ public class ArenaModeScript : GameControllerScript
                 foreach (GameObject obj in enemiesInWorld)
                 {
                     obj.SetActive(true);
-
+                    float tempHealth = botHealth;
+                    if(obj.GetComponent<SpecialCubeAttackAI>() != null || obj.GetComponent<SpecialOctahedronAttackAI>() != null)
+                    {
+                        tempHealth *= specialBotHealthFactor;
+                    }
+                    obj.GetComponent<ArenaEnemyHealthScript>().SetOriginalHealth(tempHealth);
+                    obj.GetComponent<ArenaEnemyHealthScript>().ResetEnemy();
                     switchPlayers = player2CharController == null ? false : !switchPlayers;
                     switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
                     switchPlayers = player2Alive ? switchPlayers : false;
                     obj.GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
                     obj.transform.parent = isCube ? enemyOctahedronContainer.transform : enemyCubeContainer.transform;
                 }
-
+                botHealth *= healthGrowthAmount; //grow the enemy health each wave
                 for (int i = 0; i < healthPickupTransforms[currentWaveIndex - 1].Count; i++)
                 {
                     healthPickups[i % healthPickups.Count].transform.position = healthPickupTransforms[currentWaveIndex - 1][i].position;
@@ -335,6 +349,7 @@ public class ArenaModeScript : GameControllerScript
     {
         return currentWaveNumber + 1;
     }
+
     /*
     /// <summary>
     /// Updates how many enemies are alive after one is killed.

@@ -54,7 +54,6 @@ public class ArenaEnemyHealthScript : EnemyHealthScript
             deathObjClone.GetComponent<ScatterAndDestroy>().BeginDestruction(deathDelay);
             Destroy(deathObjClone);
             deathObject.SetActive(false);
-            ResetValues();
             this.gameObject.SetActive(false);  //To be destroyed by game manager if body count exceeds certain amout.
         }
     }
@@ -71,6 +70,15 @@ public class ArenaEnemyHealthScript : EnemyHealthScript
         deathObject.SetActive(false);
         EnemyHealth = originalHealth;
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Alive;
+    }
 
+    /// <summary>
+    /// Sets the bot's original health to the passed new value. To be used in tandem
+    /// with the <c>ResetValues()</c> method when resetting the bots.
+    /// </summary>
+    /// <param name="newHealth">The health that the original health variable will now be.</param>
+    public void SetOriginalHealth(float newHealth)
+    {
+        originalHealth = newHealth;
     }
 }
