@@ -6,7 +6,8 @@ public class SpinX : MonoBehaviour {
 
     public float speed = 10f;
 	// Update is called once per frame
-	void Update () {
-        transform.Rotate(Vector3.right * Time.deltaTime * speed);
-	}
+	void Update ()
+    {
+        transform.RotateAround(transform.position, transform.up, Time.deltaTime * speed * 90f);
+    }
 }

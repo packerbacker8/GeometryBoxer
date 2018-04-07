@@ -235,6 +235,17 @@ public class SaveAndLoadGame : MonoBehaviour
         saveData.splitscreen = false;
         LoadLevel.loader.LoadALevel("Intro");
     }
+    /// <summary>
+    /// Function to start new game singleplayer arena game for any arena level
+    /// </summary>
+    public void StartNewArenaGame(string levelName, string faction)
+    {
+        //start save game information here
+        saveData = new GameData();
+        saveData.splitscreen = false;
+        SaveAndLoadGame.saver.SetCharType(faction);
+        LoadLevel.loader.LoadALevel(levelName);
+    }
 
     /// <summary>
     /// Function to start new game save information and 
@@ -248,6 +259,18 @@ public class SaveAndLoadGame : MonoBehaviour
         SetCityNamesAndStatus();
         saveData.splitscreen = true;
         LoadLevel.loader.LoadALevel("Intro");
+    }
+
+    /// <summary>
+    /// Start a coop game for survival mode for any of the arena maps.
+    /// </summary>
+    public void StartNewArenaCoopGame(string levelName, string faction)
+    {
+        //start save game information here
+        saveData = new GameData();
+        saveData.splitscreen = true;
+        SaveAndLoadGame.saver.SetCharType(faction);
+        LoadLevel.loader.LoadALevel(levelName);
     }
 
     /// <summary>

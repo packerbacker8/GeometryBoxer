@@ -8,6 +8,14 @@ using RootMotion.Demos;
 
 public class MainMenuCanvasControlling : MonoBehaviour
 {
+    //Toggles for Survival Canvas
+    public Text survivalCurrentMapSelection;
+    public Dropdown survivalFactionDropdown;
+    public Dropdown survivalModeDropdown;
+    public GameObject survivalBackButton;
+    public GameObject survivalStartButton;
+
+    public GameObject survivalCanvas;
     public GameObject hasSaveGameCanvas;
     public GameObject noSaveGameCanvas;
     public GameObject optionsMenu;
@@ -25,21 +33,26 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private bool hasSavedGame;
     private InputField loadFileInput;
     private string fileToLoad;
+    private string survivalCurrentArenaSelection;
     private List<GameObject> loadFileButtons;
 
     private bool controllerMode;
     private bool ps4Mode = false;
-    //private bool mouseMode = true;
     private bool menuActive = false;
     private bool allowNavigation = false;
     private bool inInputField;
+    private bool loadCanvasEnabled = false;
     private float timeSinceDPAD = 0.0f;
     private StandaloneInputModule EventSystemInputModule;
-    private bool loadCanvasEnabled = false;
 
     // Use this for initialization
     void Start()
     {
+        //All things related to Survival Canvas
+        survivalCanvas.SetActive(false);
+        survivalCurrentMapSelection.text = "Arena0";
+        survivalCurrentArenaSelection = "Arena0";
+
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
         noSaveGameCanvas.SetActive(!hasSavedGame);
@@ -230,6 +243,32 @@ public class MainMenuCanvasControlling : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(loadFileCanvas.transform.Find(loadFileButtonName).gameObject);
             inInputField = false;
         }
+
+        //Cases for Survival Canvas
+        if (survivalCanvas.activeSelf && controllerMode)
+        {
+            GameObject scrollViewGameObj = survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject;
+            GameObject curObj = EventSystem.current.currentSelectedGameObject;
+
+            //We are on scrollview hitting right, so move to faction dropdown
+            if (Input.GetAxis("DPadX") == 1 && curObj == scrollViewGameObj)
+            {
+                Debug.Log("Scroll view to dropdown");
+                EventSystem.current.SetSelectedGameObject(survivalFactionDropdown.gameObject);
+            }
+            //We are on scrollView hitting left, so move to back button
+            else if (Input.GetAxis("DPadX") == -1 && curObj == scrollViewGameObj)
+            {
+                Debug.Log("Backbutton");
+                EventSystem.current.SetSelectedGameObject(survivalBackButton.gameObject);
+            }
+            //We are on either dropdown and hit left, move us to scrollview
+            else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && (Input.GetAxis("DPadX") == -1))
+            {
+                Debug.Log("Moving from dropdowns to scrollview button");
+                EventSystem.current.SetSelectedGameObject(scrollViewGameObj);
+            }
+        }
     }
 
     /// <summary>
@@ -267,6 +306,25 @@ public class MainMenuCanvasControlling : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Function to show the survival mode canvas.
+    /// </summary>
+    public void ShowSurvivalModeCanvas()
+    {
+        survivalCanvas.SetActive(true);
+        loadFileCanvas.SetActive(false);
+        hasSaveGameCanvas.SetActive(false);
+        noSaveGameCanvas.SetActive(false);
+        optionsMenu.SetActive(false);
+
+        if (controllerMode)
+        {
+            //Debug.Log(survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            EventSystem.current.SetSelectedGameObject(survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        }
+    }
+
 
     /// <summary>
     /// Function to show the load file canvas.
@@ -432,5 +490,62 @@ public class MainMenuCanvasControlling : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// Function for back button on SurvivalCanvas
+    /// </summary>
+    public void HideSurvivalCanvas()
+    {
+        survivalCanvas.SetActive(false);
+        hasSaveGameCanvas.SetActive(hasSavedGame);
+        noSaveGameCanvas.SetActive(!hasSavedGame);
+        if (controllerMode)
+        {
+            if (hasSaveGameCanvas.activeSelf)
+            {
+                EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+            else if (noSaveGameCanvas.activeSelf)
+            {
+                EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            }
+        }
+    }
+    /// <summary>
+    /// Function for the start button on the SurvivalCanvas. Evaluates chosen map, mode, and faction and starts appropriate game
+    /// </summary>
+    public void StartSurvivalGame()
+    {
+        string level = survivalCurrentArenaSelection;
+        string faction = "";
 
+        //Faction is Cubemen
+        if(survivalFactionDropdown.value == 0)
+        {
+            faction = "Cube";
+            
+        }
+        //Faction is Octahdedron
+        else if(survivalFactionDropdown.value == 1)
+        {
+            faction = "Octahedron";
+        }
+
+
+        //Mode is single player
+        if (survivalModeDropdown.value == 0)
+        {
+            SaveAndLoadGame.saver.StartNewArenaGame(level,faction);
+        }
+        //Mode is coop
+        else if(survivalModeDropdown.value == 1)
+        {
+            SaveAndLoadGame.saver.StartNewArenaCoopGame(level,faction);
+        }
+    }
+    //Set current level selection to name of map buutton. MAP BUTTON MUST BE SAME AS SCENE NAME, but not the text ON the button.
+    public void ArenaMapSelection()
+    {
+        survivalCurrentArenaSelection = EventSystem.current.currentSelectedGameObject.name;
+        survivalCurrentMapSelection.text = survivalCurrentArenaSelection;
+    }
 }

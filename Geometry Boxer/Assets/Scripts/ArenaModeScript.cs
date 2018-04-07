@@ -239,7 +239,7 @@ public class ArenaModeScript : GameControllerScript
                 waveReady = false;
                 int startEnemy = enemyPoolCount - numberOfWavesPreloaded * waveGrowthAmount;
                 int startSpecial = specialEnemyPoolCount - numberOfWavesPreloaded * waveGrowthAmount / 5;
-                StartCoroutine(InstantiateNewWavePool(startEnemy, startSpecial));
+                InstantiateNewWavePool(startEnemy, startSpecial);
                 enemyPoolCount += numberOfWavesPreloaded * waveGrowthAmount;
                 specialEnemyPoolCount += numberOfWavesPreloaded * waveGrowthAmount / 5;
             }
@@ -265,7 +265,7 @@ public class ArenaModeScript : GameControllerScript
     /// Preinstantiates a number of enemy objects and waves into the current allocation.
     /// How may waves instatiated depend on the <c>numberOfWavesPreloaded</c> variable.
     /// </summary>
-    private IEnumerator InstantiateNewWavePool(int startEnemyPool, int startSpecialEnemyPool)
+    private void InstantiateNewWavePool(int startEnemyPool, int startSpecialEnemyPool)
     {
         //generate enemies for enemy pool
         for (int i = startEnemyPool; i < enemyPoolCount; i++)
@@ -326,7 +326,6 @@ public class ArenaModeScript : GameControllerScript
         //initialize AI variables for every object in current pool just created
         InitAI();
         waveReady = true;
-        yield return null;
     }
 
     /// <summary>
