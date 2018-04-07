@@ -300,6 +300,7 @@ public class OctahedronSpecials : PunchScript
         specialRigid.angularDrag = 100f;
         specialRigid.angularVelocity = Vector3.zero;
         charController.transform.localScale = playerStartSize;
+        charController.GetComponent<Rigidbody>().useGravity = true;
         charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
         charController.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         specialRigid.useGravity = false;
@@ -383,6 +384,7 @@ public class OctahedronSpecials : PunchScript
         charController.GetComponent<CharacterMeleeDemo>().enabled = false;
         charController.GetComponent<CapsuleCollider>().enabled = false;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+        charController.GetComponent<Rigidbody>().useGravity = false;
         SendMessage("PowerUpActive", true, SendMessageOptions.DontRequireReceiver);
     }
 
