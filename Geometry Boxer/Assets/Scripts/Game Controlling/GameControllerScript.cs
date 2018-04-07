@@ -312,7 +312,7 @@ public class GameControllerScript : MonoBehaviour
     /// </summary>
     /// <param name="index">Index in the respective array.</param>
     /// <param name="tag">Tag of the object sent.</param>
-    public virtual void IsKilled(int index, string tag)
+    public virtual bool IsKilled(int index, string tag)
     {
         if(hasAllies)
         {
@@ -333,6 +333,7 @@ public class GameControllerScript : MonoBehaviour
         }
         playerUI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
         if (IsSplitScreen) player2UI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
+        return true;
     }
 
     /// <summary>

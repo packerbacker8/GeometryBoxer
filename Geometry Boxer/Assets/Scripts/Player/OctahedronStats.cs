@@ -9,6 +9,8 @@ using PlayerUI;
 
 public class OctahedronStats : PlayerStatsBaseClass
 {
+    public float Speed = 0.5f;
+
     private float originalHealth;
     private float HealthModifier;
     private Image healthBarBackground;
