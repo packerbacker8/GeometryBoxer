@@ -33,8 +33,6 @@ public class OctahedronSpecials : PunchScript
     private int spinCount;
     private int spinDir;
 
-    private OctahedronStats stats;
-
     private MeshCollider specialFormCollider;
 
 
@@ -43,7 +41,6 @@ public class OctahedronSpecials : PunchScript
     {
         base.Start();
 
-        stats = this.GetComponent<OctahedronStats>();
         baseStats = this.GetComponent<OctahedronStats>();
         specialFormCollider = specialForm.GetComponent<MeshCollider>();
         specialForm.GetComponent<MeshRenderer>().enabled = false;
@@ -145,8 +142,8 @@ public class OctahedronSpecials : PunchScript
                 moveDir = cam.transform.TransformDirection(moveDir);
                 moveDir.y = 0;
                 moveDir = Vector3.Normalize(moveDir);
-                moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
-                moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
+                moveDir.x = moveDir.x * specialAttackForce * baseStats.GetPlayerSpeed() * Time.deltaTime;
+                moveDir.z = moveDir.z * specialAttackForce * baseStats.GetPlayerSpeed() * Time.deltaTime;
                 specialRigid.AddForce(moveDir); //Testing playing around with moving the octa hedron around with move keys
                 if (coolDownTimer >= specialAttackActiveTime)
                 {
