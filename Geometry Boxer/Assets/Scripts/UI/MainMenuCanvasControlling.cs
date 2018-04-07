@@ -268,13 +268,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 Debug.Log("Moving from dropdowns to scrollview button");
                 EventSystem.current.SetSelectedGameObject(scrollViewGameObj);
             }
-            if(Input.GetAxisRaw("DPadX") == -1)
-            {
-                Debug.Log(curObj.name + " " + (curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown)));
-            }
-            Debug.Log(Input.GetAxisRaw("DPadX"));
         }
-        Debug.Log(EventSystem.current.currentSelectedGameObject.name.ToString());
     }
 
     /// <summary>
