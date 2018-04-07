@@ -13,8 +13,6 @@ public class CubeAttackScript : PunchScript
     private float TimePowerUp;
     private Behaviour halo;
 
-    private CubeSpecialStats stats;
-
     private bool isGrounded;
     private GameObject gameController;
     private float coolDownTime;
@@ -29,7 +27,6 @@ public class CubeAttackScript : PunchScript
     protected override void Start()
     {
         base.Start();
-        stats = this.GetComponent<CubeSpecialStats>();
         baseStats = this.GetComponent<CubeSpecialStats>();
         anim = this.transform.GetChild(characterControllerIndex).gameObject.transform.GetChild(animationControllerIndex).gameObject.GetComponent<Animator>();
         charController = this.transform.GetChild(characterControllerIndex).gameObject;
@@ -43,7 +40,7 @@ public class CubeAttackScript : PunchScript
         }*/
         coolDownTime = 2000f;
 
-        playerRigidBody = stats.pelvisJoint.GetComponent<Rigidbody>();
+        playerRigidBody = baseStats.pelvisJoint.GetComponent<Rigidbody>();
         PowerUp = false;
         isGrounded = checkIfGrounded();
         specialStartSize = new Vector3(0.2f, 0.2f, 0.2f);
@@ -133,8 +130,8 @@ public class CubeAttackScript : PunchScript
                     moveDir = cam.transform.TransformDirection(moveDir);
                     moveDir.y = 0;
                     moveDir = Vector3.Normalize(moveDir);
-                    moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
-                    moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
+                    moveDir.x = moveDir.x * specialAttackForce * baseStats.GetPlayerSpeed() * Time.deltaTime;
+                    moveDir.z = moveDir.z * specialAttackForce * baseStats.GetPlayerSpeed() * Time.deltaTime;
                     specialRigid.AddForce(moveDir);
                 }
             }

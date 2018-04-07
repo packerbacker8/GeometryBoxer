@@ -33,8 +33,6 @@ public class OctahedronSpecials : PunchScript
     private int spinCount;
     private int spinDir;
 
-    private OctahedronStats stats;
-
     private MeshCollider specialFormCollider;
 
 
@@ -43,7 +41,6 @@ public class OctahedronSpecials : PunchScript
     {
         base.Start();
 
-        stats = this.GetComponent<OctahedronStats>();
         baseStats = this.GetComponent<OctahedronStats>();
         specialFormCollider = specialForm.GetComponent<MeshCollider>();
         specialForm.GetComponent<MeshRenderer>().enabled = false;
@@ -145,8 +142,8 @@ public class OctahedronSpecials : PunchScript
                 moveDir = cam.transform.TransformDirection(moveDir);
                 moveDir.y = 0;
                 moveDir = Vector3.Normalize(moveDir);
-                moveDir.x = moveDir.x * specialAttackForce * stats.GetPlayerSpeed();
-                moveDir.z = moveDir.z * specialAttackForce * stats.GetPlayerSpeed();
+                moveDir.x = moveDir.x * specialAttackForce * baseStats.GetPlayerSpeed() * Time.deltaTime;
+                moveDir.z = moveDir.z * specialAttackForce * baseStats.GetPlayerSpeed() * Time.deltaTime;
                 specialRigid.AddForce(moveDir); //Testing playing around with moving the octa hedron around with move keys
                 if (coolDownTimer >= specialAttackActiveTime)
                 {
@@ -300,6 +297,7 @@ public class OctahedronSpecials : PunchScript
         specialRigid.angularDrag = 100f;
         specialRigid.angularVelocity = Vector3.zero;
         charController.transform.localScale = playerStartSize;
+        charController.GetComponent<Rigidbody>().useGravity = true;
         charController.GetComponent<Rigidbody>().velocity = new Vector3(charController.GetComponent<Rigidbody>().velocity.x, 0, charController.GetComponent<Rigidbody>().velocity.z);
         charController.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         specialRigid.useGravity = false;
@@ -383,6 +381,7 @@ public class OctahedronSpecials : PunchScript
         charController.GetComponent<CharacterMeleeDemo>().enabled = false;
         charController.GetComponent<CapsuleCollider>().enabled = false;
         charController.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
+        charController.GetComponent<Rigidbody>().useGravity = false;
         SendMessage("PowerUpActive", true, SendMessageOptions.DontRequireReceiver);
     }
 

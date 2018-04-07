@@ -12,6 +12,12 @@ public class ArenaModeScript : GameControllerScript
     public GameObject botOctahedronPrefab;
     public GameObject botSpecialOctahedronPrefab;
     public GameObject healthPrefab;
+    [Tooltip("How much health the bots start with.")]
+    public float startingEnemyHealth = 100f;
+    [Tooltip("How much does the health go up by per round.")]
+    public float healthGrowthAmount = 1.5f;
+    [Tooltip("How much more health do the special bots have.")]
+    public float specialBotHealthFactor = 2.0f;
     [Tooltip("Roughly how many seconds between each wave.")]
     public float timeBetweenWaves = 3.0f;
     [Tooltip("How many enemies are added each wave? Also how many enemies at the start")]
@@ -24,6 +30,10 @@ public class ArenaModeScript : GameControllerScript
     public int specialEnemySpawnFactor = 2;
     public int numberOfWavesPreloaded = 20;
     public int numberOfHealthpacks = 3;
+    [Tooltip("Max number of enemies in the world at a time.")]
+    public int enemyCap = 30;
+    [Header("Framerate info")]
+    public float refreshTime = 0.5f;
 
 
     private List<GameObject> enemyPool;
@@ -49,8 +59,17 @@ public class ArenaModeScript : GameControllerScript
     private int currentWaveNumber;
     private int enemyPoolCount;
     private int specialEnemyPoolCount;
+    private int frameCounter;
+    private int frameRefreshesSeen;
+    private int leftoverEnemies;
+    private int leftoverSpecialEnemies;
 
     private float timeBeforeWaveBegins;
+    private float botHealth;
+    private float timeCounter;
+    private float lastFramerate;
+    private float framerateTotal;
+    private float highestFramerateSeen;
 
     private bool waveActive;
     private bool waveReady;
@@ -104,27 +123,71 @@ public class ArenaModeScript : GameControllerScript
             currentHealthPickup.transform.parent = healthContainer.transform;
             healthPickups.Add(currentHealthPickup);
         }
+        botHealth = startingEnemyHealth;
+
+        lastFramerate = 0.0f;
+        timeCounter = 0.0f;
+        framerateTotal = 0.0f;
+        highestFramerateSeen = 0.0f;
+        frameCounter = 0;
+        frameRefreshesSeen = 0;
+
+        leftoverEnemies = 0;
+        leftoverSpecialEnemies = 0;
     }
 
     protected override void Update()
     {
+        /*
+        //Info for framerate stuff
+        if (timeCounter < refreshTime)
+        {
+            timeCounter += Time.deltaTime;
+            frameCounter++;
+        }
+        else
+        {
+            lastFramerate = frameCounter / timeCounter;
+            if(lastFramerate > highestFramerateSeen)
+            {
+                highestFramerateSeen = lastFramerate;
+            }
+            framerateTotal += lastFramerate;
+            frameRefreshesSeen++;
+            frameCounter = 0;
+            timeCounter = 0.0f;
+        }*/
         //if the wave is not active, that means we are either waiting, or we are prepping for the next wave.
         if (!waveActive)
         {
             if (timeBeforeWaveBegins >= timeBetweenWaves)
             {
+                /*
+                float avgFramerate = framerateTotal / frameRefreshesSeen;
+                if(avgFramerate < highestFramerateSeen/3.0f)
+                {
+                    enemyCap = enemiesInWorld.Length;
+                }
+                frameRefreshesSeen = 0;
+                framerateTotal = 0f;*/
                 //set every object in the current List<Object> that corresponds to the current wave to active
                 foreach (GameObject obj in enemiesInWorld)
                 {
                     obj.SetActive(true);
-
+                    float tempHealth = botHealth;
+                    if(obj.GetComponent<SpecialCubeAttackAI>() != null || obj.GetComponent<SpecialOctahedronAttackAI>() != null)
+                    {
+                        tempHealth *= specialBotHealthFactor;
+                    }
+                    obj.GetComponent<ArenaEnemyHealthScript>().SetOriginalHealth(tempHealth);
+                    obj.GetComponent<ArenaEnemyHealthScript>().ResetValues(enemySpawnSet.getRandomSpawnTransform3D());
                     switchPlayers = player2CharController == null ? false : !switchPlayers;
                     switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
                     switchPlayers = player2Alive ? switchPlayers : false;
                     obj.GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
                     obj.transform.parent = isCube ? enemyOctahedronContainer.transform : enemyCubeContainer.transform;
                 }
-
+                botHealth *= healthGrowthAmount; //grow the enemy health each wave
                 for (int i = 0; i < healthPickupTransforms[currentWaveIndex - 1].Count; i++)
                 {
                     healthPickups[i % healthPickups.Count].transform.position = healthPickupTransforms[currentWaveIndex - 1][i].position;
@@ -169,7 +232,6 @@ public class ArenaModeScript : GameControllerScript
                 levelWon = true;
             }*/
             #endregion
-
             //set next wave active
             currentWaveIndex = currentWaveIndex % numberOfWavesPreloaded;
             if (currentWaveIndex == 0)
@@ -276,15 +338,20 @@ public class ArenaModeScript : GameControllerScript
     {
         //load the first wave enemies
         numEnemiesAlive = numberOfRegularEnemiesToSpawn;
+        int numEnemiesToSpawn = numEnemiesAlive > enemyCap ? enemyCap : numEnemiesAlive;
+        leftoverEnemies = numEnemiesAlive - numEnemiesToSpawn;
         oldExpansionNumEnemies = numEnemiesAlive;
         int numSpecialToSpawn = currentWaveNumber % specialSpawnWaveMultiple == 0 ? numberOfSpecialEnemiesToSpawn : 0;
+        int numSpecialToActuallySpawn = numSpecialToSpawn > enemyCap ? enemyCap : numSpecialToSpawn;
+        leftoverSpecialEnemies = numSpecialToSpawn - numSpecialToActuallySpawn;
+        leftoverEnemies -= leftoverSpecialEnemies;
 
-        enemiesInWorld = new GameObject[numEnemiesAlive];
-        for (int i = 0; i < numEnemiesAlive; i++)
+        enemiesInWorld = new GameObject[numEnemiesToSpawn];
+        for (int i = 0; i < numEnemiesToSpawn; i++)
         {
             enemiesInWorld[i] = enemyPool[i];
         }
-        for (int i = 0 ; i < numSpecialToSpawn; i++)
+        for (int i = 0 ; i < numSpecialToActuallySpawn; i++)
         {
             enemiesInWorld[i] = specialEnemyPool[i];
         }
@@ -335,205 +402,262 @@ public class ArenaModeScript : GameControllerScript
     {
         return currentWaveNumber + 1;
     }
-    /*
+
+
     /// <summary>
     /// Updates how many enemies are alive after one is killed.
     /// </summary>
     /// <param name="index">Index in the respective array.</param>
     /// <param name="tag">Tag of the object sent.</param>
-    public override void IsKilled(int index, string tag)
+    public override bool IsKilled(int index, string tag)
     {
+        bool actuallyKill = true;
         if (hasAllies)
         {
             if (tag.Contains("Enemy"))
             {
                 numEnemiesAlive--;
-                //enemiesInWorld[index] = null;
+                if(leftoverSpecialEnemies > 0)
+                {
+                    leftoverSpecialEnemies--;
+                    enemiesInWorld[index].GetComponent<ArenaEnemyHealthScript>().SetOriginalHealth(botHealth * specialBotHealthFactor);
+                    enemiesInWorld[index].GetComponent<ArenaEnemyHealthScript>().ResetValues(enemySpawnSet.getRandomSpawnTransform3D());
+                    switchPlayers = player2CharController == null ? false : !switchPlayers;
+                    switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
+                    switchPlayers = player2Alive ? switchPlayers : false;
+                    enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
+                    enemiesInWorld[index].transform.parent = isCube ? enemyOctahedronContainer.transform : enemyCubeContainer.transform;
+                    actuallyKill = false;
+                }
+                else if(leftoverEnemies > 0)
+                {
+                    leftoverEnemies--;
+                    enemiesInWorld[index].GetComponent<ArenaEnemyHealthScript>().SetOriginalHealth(botHealth);
+                    enemiesInWorld[index].GetComponent<ArenaEnemyHealthScript>().ResetValues(enemySpawnSet.getRandomSpawnTransform3D());
+                    switchPlayers = player2CharController == null ? false : !switchPlayers;
+                    switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
+                    switchPlayers = player2Alive ? switchPlayers : false;
+                    enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
+                    enemiesInWorld[index].transform.parent = isCube ? enemyOctahedronContainer.transform : enemyCubeContainer.transform;
+                    actuallyKill = false;
+                }
+                else
+                {
+                    enemiesInWorld[index] = null;
+                }
             }
             else
             {
-                //alliesInWorld[index] = null;
+                alliesInWorld[index] = null;
             }
         }
         else
         {
             numEnemiesAlive--;
-            //enemiesInWorld[index] = null;
-        }
-        playerUI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
-        if (IsSplitScreen) player2UI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
-    }
-
-
-    /// <summary>
-    /// Tells the game controller the player died.
-    /// </summary>
-    /// <param name="p2">If this is true, the player that died is player 2.</param>
-    public override void PlayerKilled(bool p2)
-    {
-        if (p2)
-        {
-            player2Alive = false;
-        }
-        else
-        {
-            playerAlive = false;
-        }
-        if (!playerAlive && !player2Alive)
-        {
-            SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
-
-            //disable any pause menu at this point
-            pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);
-
-            //display death menu
-            deathMenuObj.SetActive(true);
-            DeathMenu deathMenu = deathMenuObj.GetComponent<DeathMenu>();
-            deathMenu.SetReloadString(deathReloadMap);
-            deathMenu.setButtonActive();
-            deathMenu.setMouse();
-
-            for (int i = 0; i < enemiesInWorld.Length; i++)
+            if (leftoverSpecialEnemies > 0)
             {
-                if (enemiesInWorld[i].activeInHierarchy && enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
-                {
-                    enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
-                    enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < enemiesInWorld.Length; i++)
-            {
-                if (enemiesInWorld[i].activeInHierarchy && enemiesInWorld[i].GetComponentInChildren<NormalMovementAI>() != null)
-                {
-                    ChangeTarget(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex(), !p2);
-                }
-                else if (enemiesInWorld[i].activeInHierarchy && enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
-                {
-                    enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(p2 ? 1 : 0, false);
-                }
-            }
-        }
-
-        //LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
-    }
-
-    /// <summary>
-    /// Function to set new target for bots to attack.
-    /// </summary>
-    /// <param name="index">The bot index in their respective array.</param>
-    /// <param name="tag">Tag of their root object</param>
-    public override void SetNewTarget(int index, string tag)
-    {
-        if (hasAllies)
-        {
-            if (tag.Contains("Enemy"))
-            {
-                while (enemyTargetQueue.Count != 0)
-                {
-                    GameObject target = enemyTargetQueue.Dequeue();
-                    if (target != null && target.activeInHierarchy)
-                    {
-                        enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(target.transform.GetChild(charControllerIndex).gameObject);
-                        enemyTargetQueue.Enqueue(target);
-                        return;
-                    }
-                }
-                switchPlayers = IsSplitScreen ? !switchPlayers : false;
+                leftoverSpecialEnemies--;
+                enemiesInWorld[index].GetComponent<ArenaEnemyHealthScript>().SetOriginalHealth(botHealth * specialBotHealthFactor);
+                enemiesInWorld[index].GetComponent<ArenaEnemyHealthScript>().ResetValues(enemySpawnSet.getRandomSpawnTransform3D());
+                switchPlayers = player2CharController == null ? false : !switchPlayers;
+                switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
+                switchPlayers = player2Alive ? switchPlayers : false;
                 enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
+                enemiesInWorld[index].transform.parent = isCube ? enemyOctahedronContainer.transform : enemyCubeContainer.transform;
+                actuallyKill = false;
+            }
+            else if (leftoverEnemies > 0)
+            {
+                leftoverEnemies--;
+                enemiesInWorld[index].GetComponent<ArenaEnemyHealthScript>().SetOriginalHealth(botHealth);
+                enemiesInWorld[index].GetComponent<ArenaEnemyHealthScript>().ResetValues(enemySpawnSet.getRandomSpawnTransform3D());
+                switchPlayers = player2CharController == null ? false : !switchPlayers;
+                switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
+                switchPlayers = player2Alive ? switchPlayers : false;
+                enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
+                enemiesInWorld[index].transform.parent = isCube ? enemyOctahedronContainer.transform : enemyCubeContainer.transform;
+                actuallyKill = false;
             }
             else
             {
-                while (allyTargetQueue.Count != 0)
+                enemiesInWorld[index] = null;
+            }
+        }
+        playerUI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
+        if (IsSplitScreen) player2UI.GetComponent<PlayerUI.PlayerUserInterface>().EnemiesLeft(numEnemiesAlive);
+        return actuallyKill;
+    }
+
+    /*
+/// <summary>
+/// Tells the game controller the player died.
+/// </summary>
+/// <param name="p2">If this is true, the player that died is player 2.</param>
+public override void PlayerKilled(bool p2)
+{
+    if (p2)
+    {
+        player2Alive = false;
+    }
+    else
+    {
+        playerAlive = false;
+    }
+    if (!playerAlive && !player2Alive)
+    {
+        SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
+
+        //disable any pause menu at this point
+        pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);
+
+        //display death menu
+        deathMenuObj.SetActive(true);
+        DeathMenu deathMenu = deathMenuObj.GetComponent<DeathMenu>();
+        deathMenu.SetReloadString(deathReloadMap);
+        deathMenu.setButtonActive();
+        deathMenu.setMouse();
+
+        for (int i = 0; i < enemiesInWorld.Length; i++)
+        {
+            if (enemiesInWorld[i].activeInHierarchy && enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
+            {
+                enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(0, true);
+                enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(1, IsSplitScreen);
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < enemiesInWorld.Length; i++)
+        {
+            if (enemiesInWorld[i].activeInHierarchy && enemiesInWorld[i].GetComponentInChildren<NormalMovementAI>() != null)
+            {
+                ChangeTarget(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex(), !p2);
+            }
+            else if (enemiesInWorld[i].activeInHierarchy && enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>() != null)
+            {
+                enemiesInWorld[i].GetComponentInChildren<Detect_Movement_AI>().SetIfPlayerIsTargetable(p2 ? 1 : 0, false);
+            }
+        }
+    }
+
+    //LoadLevel.loader.LoadALevel(deathReloadMap); //index of the scene the player is currently on
+}
+
+/// <summary>
+/// Function to set new target for bots to attack.
+/// </summary>
+/// <param name="index">The bot index in their respective array.</param>
+/// <param name="tag">Tag of their root object</param>
+public override void SetNewTarget(int index, string tag)
+{
+    if (hasAllies)
+    {
+        if (tag.Contains("Enemy"))
+        {
+            while (enemyTargetQueue.Count != 0)
+            {
+                GameObject target = enemyTargetQueue.Dequeue();
+                if (target != null && target.activeInHierarchy)
                 {
-                    GameObject target = allyTargetQueue.Dequeue();
-                    if (target != null && target.activeInHierarchy)
-                    {
-                        alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(target.transform.GetChild(charControllerIndex).gameObject);
-                        allyTargetQueue.Enqueue(target);
-                        return;
-                    }
+                    enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(target.transform.GetChild(charControllerIndex).gameObject);
+                    enemyTargetQueue.Enqueue(target);
+                    return;
+                }
+            }
+            switchPlayers = IsSplitScreen ? !switchPlayers : false;
+            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
+        }
+        else
+        {
+            while (allyTargetQueue.Count != 0)
+            {
+                GameObject target = allyTargetQueue.Dequeue();
+                if (target != null && target.activeInHierarchy)
+                {
+                    alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(target.transform.GetChild(charControllerIndex).gameObject);
+                    allyTargetQueue.Enqueue(target);
+                    return;
                 }
             }
         }
-        else
+    }
+    else
+    {
+        switchPlayers = IsSplitScreen ? !switchPlayers : false;
+        switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
+        switchPlayers = IsSplitScreen && player2Alive ? switchPlayers : false;
+        enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
+    }
+}
+
+public override void SetTargetHealthPack(int index, GameObject objOfHealth, string tag)
+{
+    if (tag.Contains("Ally"))
+    {
+        if (alliesInWorld[index] != null && alliesInWorld[index].activeInHierarchy)
         {
-            switchPlayers = IsSplitScreen ? !switchPlayers : false;
-            switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
-            switchPlayers = IsSplitScreen && player2Alive ? switchPlayers : false;
-            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(switchPlayers ? player2CharController : playerCharController);
+            alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
         }
     }
-
-    public override void SetTargetHealthPack(int index, GameObject objOfHealth, string tag)
+    else
     {
-        if (tag.Contains("Ally"))
+        if (enemiesInWorld[index] != null && enemiesInWorld[index].activeInHierarchy)
         {
-            if (alliesInWorld[index] != null && alliesInWorld[index].activeInHierarchy)
-            {
-                alliesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
-            }
-        }
-        else
-        {
-            if (enemiesInWorld[index] != null && enemiesInWorld[index].activeInHierarchy)
-            {
-                enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
-            }
+            enemiesInWorld[index].GetComponentInChildren<UserControlAI>().SetMoveTarget(objOfHealth);
         }
     }
+}
 
-    /// <summary>
-    /// Coroutine to expand enemies' (currently alive in map) sight radius to be larger by the given amount.
-    /// </summary>
-    /// <returns>Nothing is returned.</returns>
-    /// <param name="amount">This amount will be multiplied to the enemies current sight radius.</param>
-    protected override IEnumerator IncreaseEnemySight(float amount)
+/// <summary>
+/// Coroutine to expand enemies' (currently alive in map) sight radius to be larger by the given amount.
+/// </summary>
+/// <returns>Nothing is returned.</returns>
+/// <param name="amount">This amount will be multiplied to the enemies current sight radius.</param>
+protected override IEnumerator IncreaseEnemySight(float amount)
+{
+    yield return null;
+    foreach (GameObject enemy in enemiesInWorld)
     {
-        yield return null;
-        foreach (GameObject enemy in enemiesInWorld)
+        if (enemy != null && enemy.activeInHierarchy && enemy.GetComponentInChildren<Detect_Movement_AI>() != null)
         {
-            if (enemy != null && enemy.activeInHierarchy && enemy.GetComponentInChildren<Detect_Movement_AI>() != null)
-            {
-                enemy.GetComponentInChildren<Detect_Movement_AI>().IncreaseSight(amount);
-            }
+            enemy.GetComponentInChildren<Detect_Movement_AI>().IncreaseSight(amount);
         }
-        yield return null;
     }
+    yield return null;
+}
 
-    /// <summary>
-    /// Function to give enemies alive indicies.
-    /// </summary>
-    /// <returns>Returns enemies that are being tracked as alive in enemiesInWorld container.</returns>
-    public override HashSet<int> EnemyAliveIndicies()
+/// <summary>
+/// Function to give enemies alive indicies.
+/// </summary>
+/// <returns>Returns enemies that are being tracked as alive in enemiesInWorld container.</returns>
+public override HashSet<int> EnemyAliveIndicies()
+{
+    HashSet<int> enemiesAlive = new HashSet<int>();
+    for (int i = 0; i < enemiesInWorld.Length; i++)
     {
-        HashSet<int> enemiesAlive = new HashSet<int>();
-        for (int i = 0; i < enemiesInWorld.Length; i++)
+        if (enemiesInWorld[i] != null && enemiesInWorld[i].activeInHierarchy)
         {
-            if (enemiesInWorld[i] != null && enemiesInWorld[i].activeInHierarchy)
-            {
-                enemiesAlive.Add(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex());
-            }
+            enemiesAlive.Add(enemiesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex());
         }
-        return enemiesAlive;
     }
+    return enemiesAlive;
+}
 
-    /// <summary>
-    /// Function to give allies alive indicies.
-    /// </summary>
-    /// <returns>Returns allies that are being tracked as alive in alliesInWorld container.</returns>
-    public override HashSet<int> AllyAliveIndicies()
+/// <summary>
+/// Function to give allies alive indicies.
+/// </summary>
+/// <returns>Returns allies that are being tracked as alive in alliesInWorld container.</returns>
+public override HashSet<int> AllyAliveIndicies()
+{
+    HashSet<int> alliesAlive = new HashSet<int>();
+    for (int i = 0; i < alliesInWorld.Length; i++)
     {
-        HashSet<int> alliesAlive = new HashSet<int>();
-        for (int i = 0; i < alliesInWorld.Length; i++)
+        if (alliesInWorld[i] != null && alliesInWorld[i].activeInHierarchy)
         {
-            if (alliesInWorld[i] != null && alliesInWorld[i].activeInHierarchy)
-            {
-                alliesAlive.Add(alliesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex());
-            }
+            alliesAlive.Add(alliesInWorld[i].GetComponent<EnemyHealthScript>().GetEnemyIndex());
         }
-        return alliesAlive;
-    }*/
+    }
+    return alliesAlive;
+}*/
 }
