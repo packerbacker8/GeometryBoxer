@@ -38,31 +38,36 @@ public class ArenaEnemyHealthScript : EnemyHealthScript
                 source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
             }
             puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Dead;
+            dead = true;
+            deathObject.SetActive(true);
+            GameObject deathObjClone = Instantiate(deathObject, deathObject.transform.position, deathObject.transform.rotation);
+            deathObjClone.GetComponent<ScatterAndDestroy>().BeginDestruction(deathDelay);
+            Destroy(deathObjClone);
+            deathObject.SetActive(false);
+            bool shouldDie = true;
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
             {
                 gameController.GetComponent<GameControllerScriptTutorial>().isKilled(enemyIndex);
             }
             else
             {
-                gameController.GetComponent<GameControllerScript>().IsKilled(enemyIndex, this.gameObject.tag);
+                shouldDie = gameController.GetComponent<GameControllerScript>().IsKilled(enemyIndex, this.gameObject.tag);
             }
-
-            dead = true;
-
-            deathObject.SetActive(true);
-            GameObject deathObjClone = Instantiate(deathObject, deathObject.transform.position, deathObject.transform.rotation);
-            deathObjClone.GetComponent<ScatterAndDestroy>().BeginDestruction(deathDelay);
-            Destroy(deathObjClone);
-            deathObject.SetActive(false);
-            this.gameObject.SetActive(false);  //To be destroyed by game manager if body count exceeds certain amout.
+            if (shouldDie)
+            {
+                this.gameObject.SetActive(false);  //To be destroyed by game manager if body count exceeds certain amout.
+            }
         }
     }
 
     /// <summary>
     /// Reset values of the enemy health script for arena bots.
     /// </summary>
-    public void ResetValues()
+    /// <param name="newPosTransform">The new location the bot will spawn at.</param>
+    public void ResetValues(Transform newPosTransform)
     {
+        //this.transform.position = newPosTransform.position;
+        charController.transform.position = newPosTransform.position;
         dead = false;
         damageIsFromPlayer = false;
         findHealth = false;
