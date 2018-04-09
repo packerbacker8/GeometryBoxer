@@ -33,6 +33,7 @@ public class ArenaEnemyHealthScript : EnemyHealthScript
     {
         if (!dead)
         {
+            charController.gameObject.GetComponent<CharacterPuppet>().propRoot.currentProp = null;
             if (sfxManager != null && sfxManager.maleDeath.Count > 0)
             {
                 source.PlayOneShot(sfxManager.maleDeath[rand.Next(0, sfxManager.maleDeath.Count)]);
