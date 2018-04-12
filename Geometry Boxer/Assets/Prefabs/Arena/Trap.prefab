@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 23564301368538690}
   - component: {fileID: 114864433861165504}
   - component: {fileID: 82029737035429436}
-  - component: {fileID: 208252215835544930}
+  - component: {fileID: 208695345441741154}
   m_Layer: 0
   m_Name: Trap
   m_TagString: PlayerEnemy
@@ -74,8 +74,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1174108317071474}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.858994, y: 1.5, z: -14.837801}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 17.546, y: 0.84, z: 39.173}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4973483474809022}
@@ -355,7 +355,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!208 &208252215835544930
+--- !u!208 &208695345441741154
 NavMeshObstacle:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -364,9 +364,9 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 5, y: 1, z: 5}
+  m_Extents: {x: 5.175, y: 1, z: 4.94}
   m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
