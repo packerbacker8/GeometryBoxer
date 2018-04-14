@@ -269,7 +269,7 @@ public class ArenaModeScript : GameControllerScript
     private void InstantiateNewWavePool(int startEnemyPool, int startSpecialEnemyPool)
     {
         //generate enemies for enemy pool
-        //no need to generate more enemies that will ever be on the screen
+        //no need to generate more enemies that will ever be on the screen 
         for (int i = startEnemyPool; i < enemyCap; i++)
         {
             GameObject currentEnemy;
