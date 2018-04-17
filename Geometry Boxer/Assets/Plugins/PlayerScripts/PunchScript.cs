@@ -721,6 +721,7 @@ public class PunchScript : MonoBehaviour
 
     public virtual void ImpactReceived(Collision collision)
     {
+        if (collision.transform.root.tag.Contains("PlayerEnemy")) return;
         if (collision.gameObject.transform.root.tag.Contains("Enemy") && isAttacking)
         {
             GameObject findingRoot = collision.gameObject;

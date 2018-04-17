@@ -66,7 +66,7 @@ public class PauseMenu : MonoBehaviour
         saveFileName = "";
         saveFileButtons = new List<GameObject>();
         //if game controller found is game controller for combat levels, grab player info
-        isCombatScene = control.name.Equals("GameController");
+        isCombatScene = control.name.Equals("GameController") || control.name.Equals("ArenaGameController");
         if (isCombatScene)
         {
             character = control.GetComponent<GameControllerScript>().GetActivePlayer();
