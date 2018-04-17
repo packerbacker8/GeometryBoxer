@@ -17,6 +17,8 @@ namespace PlayerUI
         public Transform specialAttackFullOcta;
         public Sprite glowingBar;
         public Transform healthBar;
+        public Sprite EnemyCubePortrait;
+        public Sprite EnemyOctahedronPotrait;
 
 
         [Header("Health images")]
@@ -281,16 +283,19 @@ namespace PlayerUI
         /// <param name="type"></param>
         public void SetPlayerType(int type)
         {
+            GameObject enemyImg = this.transform.GetChild(3).GetChild(1).gameObject;
             if (type == 1)
             {
                 PlayerIsCube = true;
                 PlayerIsOcta = false;
+                enemyImg.GetComponent<Image>().sprite = EnemyOctahedronPotrait;
             }
 
             if (type == 2)
             {
                 PlayerIsOcta = true;
                 PlayerIsCube = false;
+                enemyImg.GetComponent<Image>().sprite = EnemyCubePortrait;
             }
         }
 
