@@ -16,14 +16,19 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public GameObject survivalStartButton;
 
     public GameObject survivalCanvas;
-    public GameObject hasSaveGameCanvas;
-    public GameObject noSaveGameCanvas;
-    public GameObject optionsMenu;
+    public GameObject CampaignCanvas;
+    public GameObject StartMenuCanvas;
+    public GameObject creditsCanvas;
     public GameObject loadFileCanvas;
+
+    public UnityEngine.UI.Button continueButton;
+    public UnityEngine.UI.Button loadGameButton;
+
     public GameObject fileButtonPrefab;
     public GameObject scrollView;
     public GameObject scrollViewContent;
     public GameObject playerUI;
+    
     [Header("Names of UI elements that need to be found.")]
     public string tutorialButtonName = "TextButtonTutorial";
     public string loadFileButtonName = "LoadFileButton";
@@ -48,14 +53,23 @@ public class MainMenuCanvasControlling : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        
+
+       
+        //hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
+        StartMenuCanvas.SetActive(true);
+        CampaignCanvas.SetActive(false);
+        hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
+        continueButton.interactable = hasSavedGame;
+        loadGameButton.interactable = hasSavedGame;
         //All things related to Survival Canvas
         survivalCanvas.SetActive(false);
         survivalCurrentMapSelection.text = "Arena0";
-        survivalCurrentArenaSelection = "Arena0";
 
-        hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
-        hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
-        noSaveGameCanvas.SetActive(!hasSavedGame);
+
+
+
+        survivalCurrentArenaSelection = "Arena0";
         loadFileInput = loadFileCanvas.GetComponentInChildren<InputField>();
         loadFileCanvas.SetActive(false);
         fileToLoad = "";
@@ -96,9 +110,9 @@ public class MainMenuCanvasControlling : MonoBehaviour
             //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
             EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
         }
-        else if (noSaveGameCanvas.activeSelf)
+        else if (StartMenuCanvas.activeSelf)
         {
-            EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
         }
 
 
@@ -184,9 +198,9 @@ public class MainMenuCanvasControlling : MonoBehaviour
                         //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
                         EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
                     }
-                    else if (noSaveGameCanvas.activeInHierarchy)
+                    else if (StartMenuCanvas.activeInHierarchy)
                     {
-                        EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                        EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
                     }
 
                     menuActive = true;
@@ -207,7 +221,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
                     //if player is in a submenu, exit that submenu.
 
                     //exit any options menu
-                    optionsMenu.SetActive(false);
+                    creditsCanvas.SetActive(false);
 
                     //exit any save menu
                     foreach (GameObject butt in loadFileButtons)
@@ -219,7 +233,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
                     loadFileCanvas.SetActive(false);
                     hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
                     hasSaveGameCanvas.SetActive(hasSavedGame);
-                    noSaveGameCanvas.SetActive(!hasSavedGame);
+                    StartMenuCanvas.SetActive(!hasSavedGame);
 
                     enablePlayerForMouse();
 
@@ -277,31 +291,31 @@ public class MainMenuCanvasControlling : MonoBehaviour
     /// <param name="show">If true, options menu will be shown, hidden if false.</param>
     public void ShowOrHideOptions(bool show)
     {
-        optionsMenu.SetActive(show);
+        creditsCanvas.SetActive(show);
         if (show)
         {
             hasSaveGameCanvas.SetActive(false);
-            noSaveGameCanvas.SetActive(false);
+            StartMenuCanvas.SetActive(false);
 
             if (controllerMode)
             {
-                EventSystem.current.SetSelectedGameObject(optionsMenu.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                EventSystem.current.SetSelectedGameObject(creditsCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
             }
 
         }
         else
         {
             hasSaveGameCanvas.SetActive(hasSavedGame);
-            noSaveGameCanvas.SetActive(!hasSavedGame);
+            StartMenuCanvas.SetActive(!hasSavedGame);
             if (controllerMode)
             {
                 if (hasSaveGameCanvas.activeSelf)
                 {
                     EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
                 }
-                else if (noSaveGameCanvas.activeSelf)
+                else if (StartMenuCanvas.activeSelf)
                 {
-                    EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
                 }
             }
         }
@@ -315,8 +329,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
         survivalCanvas.SetActive(true);
         loadFileCanvas.SetActive(false);
         hasSaveGameCanvas.SetActive(false);
-        noSaveGameCanvas.SetActive(false);
-        optionsMenu.SetActive(false);
+        StartMenuCanvas.SetActive(false);
+        creditsCanvas.SetActive(false);
 
         if (controllerMode)
         {
@@ -334,7 +348,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
         loadFileCanvas.SetActive(true);
         FillInSaveFileInfo();
         hasSaveGameCanvas.SetActive(false);
-        noSaveGameCanvas.SetActive(false);
+        StartMenuCanvas.SetActive(false);
 
         for (int i = 0; i < loadFileButtons.Count; i++)
         {
@@ -385,7 +399,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
         loadFileCanvas.SetActive(false);
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame);
-        noSaveGameCanvas.SetActive(!hasSavedGame);
+        StartMenuCanvas.SetActive(!hasSavedGame);
 
         if (controllerMode)
         {
@@ -394,9 +408,9 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
                 EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
             }
-            else if (noSaveGameCanvas.activeInHierarchy)
+            else if (StartMenuCanvas.activeInHierarchy)
             {
-                EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
             }
         }
 
@@ -497,16 +511,16 @@ public class MainMenuCanvasControlling : MonoBehaviour
     {
         survivalCanvas.SetActive(false);
         hasSaveGameCanvas.SetActive(hasSavedGame);
-        noSaveGameCanvas.SetActive(!hasSavedGame);
+        StartMenuCanvas.SetActive(!hasSavedGame);
         if (controllerMode)
         {
             if (hasSaveGameCanvas.activeSelf)
             {
                 EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
             }
-            else if (noSaveGameCanvas.activeSelf)
+            else if (StartMenuCanvas.activeSelf)
             {
-                EventSystem.current.SetSelectedGameObject(noSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
             }
         }
     }
