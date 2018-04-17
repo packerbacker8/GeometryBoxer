@@ -209,7 +209,9 @@ public class EnemyHealthScript : MonoBehaviour
     {
         if (!dead)
         {
+
             //anim.Play("Death");
+            charController.gameObject.GetComponent<CharacterPuppet>().propRoot.currentProp = null;
 
             if (sfxManager != null && sfxManager.maleDeath.Count > 0)
             {

@@ -22,7 +22,7 @@ public class ImpactSound : MonoBehaviour {
 	
 	public void SendImpactSound(Collision col)
     {
-        if(Mathf.Abs(col.impulse.magnitude) > punchSoundForceThreshold && col.transform.root.tag == "Player")
+        if(Mathf.Abs(col.impulse.magnitude) > punchSoundForceThreshold && col.transform.root.tag.Contains("Player"))
         {
             if(source != null)
             {
