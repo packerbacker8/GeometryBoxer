@@ -50,8 +50,6 @@ public class MainMenuCanvasControlling : MonoBehaviour
     {
         //All things related to Survival Canvas
         survivalCanvas.SetActive(false);
-        survivalCurrentMapSelection.text = "Arena0";
-        survivalCurrentArenaSelection = "Arena0";
 
         hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
         hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
@@ -318,11 +316,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
         noSaveGameCanvas.SetActive(false);
         optionsMenu.SetActive(false);
 
-        if (controllerMode)
-        {
-            //Debug.Log(survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-            EventSystem.current.SetSelectedGameObject(survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-        }
+        EventSystem.current.SetSelectedGameObject(survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        ArenaMapSelection();
     }
 
 
@@ -545,7 +540,10 @@ public class MainMenuCanvasControlling : MonoBehaviour
     //Set current level selection to name of map buutton. MAP BUTTON MUST BE SAME AS SCENE NAME, but not the text ON the button.
     public void ArenaMapSelection()
     {
-        survivalCurrentArenaSelection = EventSystem.current.currentSelectedGameObject.name;
-        survivalCurrentMapSelection.text = survivalCurrentArenaSelection;
+        if(survivalCanvas.activeInHierarchy)
+        {
+            survivalCurrentArenaSelection = EventSystem.current.currentSelectedGameObject.name;
+            survivalCurrentMapSelection.text = EventSystem.current.currentSelectedGameObject.gameObject.GetComponentInChildren<Text>().text;
+        }
     }
 }
