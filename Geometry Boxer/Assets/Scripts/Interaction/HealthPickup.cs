@@ -59,6 +59,10 @@ public class HealthPickup : MonoBehaviour
     public void OnTriggerEnter(Collider col)
     {
         GameObject colObj = col.transform.root.gameObject;
+
+        //This is a tag for hazards like traps and the jeep
+        if (col.transform.tag == "PlayerEnemy") return;
+
         bool destroy = false;
         GameObject healthThingy = null;
         if (col.gameObject.transform.root.tag == "Player")
