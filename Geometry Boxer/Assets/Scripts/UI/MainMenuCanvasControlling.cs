@@ -23,6 +23,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
     public UnityEngine.UI.Button continueButton;
     public UnityEngine.UI.Button loadGameButton;
+    public UnityEngine.UI.Button coopButton;
 
     public GameObject fileButtonPrefab;
     public GameObject scrollView;
@@ -35,7 +36,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public string loadInputFieldName = "LoadInputField";
     string[] inputNames;
 
-    private bool hasSavedGame;
+    
     private InputField loadFileInput;
     private string fileToLoad;
     private string survivalCurrentArenaSelection;
@@ -53,15 +54,14 @@ public class MainMenuCanvasControlling : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        
 
-       
+
+        checkCoop();
+        checkSaves();
         //hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
         StartMenuCanvas.SetActive(true);
         CampaignCanvas.SetActive(false);
-        hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
-        continueButton.interactable = hasSavedGame;
-        loadGameButton.interactable = hasSavedGame;
+       
         //All things related to Survival Canvas
         survivalCanvas.SetActive(false);
         survivalCurrentMapSelection.text = "Arena0";
@@ -100,19 +100,51 @@ public class MainMenuCanvasControlling : MonoBehaviour
         
     }
 
+    void checkCoop()
+    {
+        if (Input.GetJoystickNames().Length > 1)
+        { 
+            coopButton.interactable = true;
+            coopButton.GetComponentInChildren<Text>().color = Color.white;
+        }
+        else
+        {
+            coopButton.interactable = false;
+            coopButton.GetComponentInChildren<Text>().color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        }
+    }
+
+    void checkSaves()
+    {
+        if (SaveAndLoadGame.saver.CheckForSaveGame())
+        {
+            continueButton.interactable = true;
+            continueButton.GetComponentInChildren<Text>().color = Color.white;
+            loadGameButton.interactable = true;
+            loadGameButton.GetComponentInChildren<Text>().color = Color.white;
+        }
+        else
+        {
+            continueButton.interactable = false;
+            continueButton.GetComponentInChildren<Text>().color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            loadGameButton.interactable = false;
+            loadGameButton.GetComponentInChildren<Text>().color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        }
+
+    }
     void disablePlayerForController()
     {
-        if (hasSaveGameCanvas.activeSelf)
-        {
-            //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
-            EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-        }
-        else if (StartMenuCanvas.activeSelf)
-        {
-            EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-        }
+        //if (StartMenuCanvas.activeSelf)
+        //{
+        //    //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+        //    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        //}
+        //else if (StartMenuCanvas.activeSelf)
+        //{
+        //    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        //}
 
-
+        EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
         GameObject CharacterController = null;
         GameObject[] listOfPlayerObjects = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < listOfPlayerObjects.Length; i++)
@@ -153,6 +185,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     void Update()
     {
         CheckControllerModeAndType();
+        checkCoop();
         if (controllerMode)
         {
             if (ps4Mode)
@@ -190,15 +223,17 @@ public class MainMenuCanvasControlling : MonoBehaviour
                 if (!menuActive)
                 {
 
-                    if (hasSaveGameCanvas.activeInHierarchy)
-                    {
-                        //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
-                        EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-                    }
-                    else if (StartMenuCanvas.activeInHierarchy)
-                    {
-                        EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-                    }
+                    //if (hasSaveGameCanvas.activeInHierarchy)
+                    //{
+                    //    //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+                    //    EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                    //}
+                    //else if (StartMenuCanvas.activeInHierarchy)
+                    //{
+                    //    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                    //}
+
+                    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
 
                     menuActive = true;
                     allowNavigation = false;
@@ -228,10 +263,9 @@ public class MainMenuCanvasControlling : MonoBehaviour
                     }
                     loadFileButtons.Clear();
                     loadFileCanvas.SetActive(false);
-                    hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
-                    hasSaveGameCanvas.SetActive(hasSavedGame);
-                    StartMenuCanvas.SetActive(!hasSavedGame);
 
+                    CampaignCanvas.SetActive(false);
+                    StartMenuCanvas.SetActive(true);
                     enablePlayerForMouse();
 
                 }
@@ -282,6 +316,37 @@ public class MainMenuCanvasControlling : MonoBehaviour
         }
     }
 
+    public void showCampaign()
+    {
+        CampaignCanvas.SetActive(true);
+        StartMenuCanvas.SetActive(false);
+        checkSaves();
+        if (controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(CampaignCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+
+        }
+    }
+
+    public void hideCampaign()
+    {
+        StartMenuCanvas.SetActive(true);
+        CampaignCanvas.SetActive(false);
+
+        if (controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+
+            //if (hasSaveGameCanvas.activeSelf)
+            //{
+            //    EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            //}
+            //else if (StartMenuCanvas.activeSelf)
+            //{
+            //    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            //}
+        }
+    }
     /// <summary>
     /// Function to show or hide options for the game.
     /// </summary>
@@ -291,8 +356,10 @@ public class MainMenuCanvasControlling : MonoBehaviour
         creditsCanvas.SetActive(show);
         if (show)
         {
-            hasSaveGameCanvas.SetActive(false);
+            
             StartMenuCanvas.SetActive(false);
+            CampaignCanvas.SetActive(false);
+            survivalCanvas.SetActive(false);
 
             if (controllerMode)
             {
@@ -302,18 +369,21 @@ public class MainMenuCanvasControlling : MonoBehaviour
         }
         else
         {
-            hasSaveGameCanvas.SetActive(hasSavedGame);
-            StartMenuCanvas.SetActive(!hasSavedGame);
+            //hasSaveGameCanvas.SetActive(hasSavedGame);
+            //StartMenuCanvas.SetActive(!hasSavedGame);
+            StartMenuCanvas.SetActive(true);
             if (controllerMode)
-            {
-                if (hasSaveGameCanvas.activeSelf)
-                {
-                    EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-                }
-                else if (StartMenuCanvas.activeSelf)
-                {
-                    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-                }
+            {         
+                EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                
+                //if (hasSaveGameCanvas.activeSelf)
+                //{
+                //    EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                //}
+                //else if (StartMenuCanvas.activeSelf)
+                //{
+                //    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+                //}
             }
         }
     }
@@ -325,7 +395,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     {
         survivalCanvas.SetActive(true);
         loadFileCanvas.SetActive(false);
-        hasSaveGameCanvas.SetActive(false);
+        CampaignCanvas.SetActive(false);
         StartMenuCanvas.SetActive(false);
         creditsCanvas.SetActive(false);
 
@@ -341,7 +411,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     {
         loadFileCanvas.SetActive(true);
         FillInSaveFileInfo();
-        hasSaveGameCanvas.SetActive(false);
+        CampaignCanvas.SetActive(false);
         StartMenuCanvas.SetActive(false);
 
         for (int i = 0; i < loadFileButtons.Count; i++)
@@ -391,21 +461,20 @@ public class MainMenuCanvasControlling : MonoBehaviour
         }
         loadFileButtons.Clear();
         loadFileCanvas.SetActive(false);
-        hasSavedGame = SaveAndLoadGame.saver.CheckForSaveGame();
-        hasSaveGameCanvas.SetActive(hasSavedGame);
-        StartMenuCanvas.SetActive(!hasSavedGame);
-
+       
+        StartMenuCanvas.SetActive(true);
         if (controllerMode)
         {
-            if (hasSaveGameCanvas.activeInHierarchy)
-            {
-                //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
-                EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-            }
-            else if (StartMenuCanvas.activeInHierarchy)
-            {
-                EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-            }
+            EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            //if (hasSaveGameCanvas.activeInHierarchy)
+            //{
+            //    //UnityEngine.UI.Button[] a = hasSaveGameCanvas.GetComponentsInChildren<UnityEngine.UI.Button>();
+            //    EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            //}
+            //else if (StartMenuCanvas.activeInHierarchy)
+            //{
+            //    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            //}
         }
 
         loadCanvasEnabled = false;
@@ -504,18 +573,19 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public void HideSurvivalCanvas()
     {
         survivalCanvas.SetActive(false);
-        hasSaveGameCanvas.SetActive(hasSavedGame);
-        StartMenuCanvas.SetActive(!hasSavedGame);
+        StartMenuCanvas.SetActive(true);
+
         if (controllerMode)
         {
-            if (hasSaveGameCanvas.activeSelf)
-            {
-                EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-            }
-            else if (StartMenuCanvas.activeSelf)
-            {
-                EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
-            }
+            EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            //if (hasSaveGameCanvas.activeSelf)
+            //{
+            //    EventSystem.current.SetSelectedGameObject(hasSaveGameCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            //}
+            //else if (StartMenuCanvas.activeSelf)
+            //{
+            //    EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+            //}
         }
     }
     /// <summary>
