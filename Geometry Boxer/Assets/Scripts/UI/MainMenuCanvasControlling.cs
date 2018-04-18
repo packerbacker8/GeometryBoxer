@@ -462,7 +462,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
         loadFileButtons.Clear();
         loadFileCanvas.SetActive(false);
        
-        StartMenuCanvas.SetActive(true);
+        CampaignCanvas.SetActive(true);
+        checkSaves();
         if (controllerMode)
         {
             EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
