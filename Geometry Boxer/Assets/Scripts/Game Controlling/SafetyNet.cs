@@ -61,7 +61,6 @@ public class SafetyNet : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-
         if (other.transform.root.tag.Contains("Player"))
         {
             HandleSafteyNetCatch(other.transform.root.gameObject);
@@ -85,7 +84,14 @@ public class SafetyNet : MonoBehaviour
         }
         else
         {
-            Destroy(other.gameObject);
+            if(other.transform.root.tag.Contains("Interactable"))
+            {
+                Destroy(other.transform.root.gameObject);
+            }
+            else
+            {
+                Destroy(other.gameObject);
+            }
         }
         
     }
