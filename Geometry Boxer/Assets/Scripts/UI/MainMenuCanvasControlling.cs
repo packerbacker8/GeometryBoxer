@@ -265,6 +265,14 @@ public class MainMenuCanvasControlling : MonoBehaviour
                     loadFileCanvas.SetActive(false);
 
                     CampaignCanvas.SetActive(false);
+
+                    //exit any survival menu
+                    if (survivalCanvas.activeSelf)
+                    {
+                        survivalCanvas.SetActive(false);
+                    }
+
+
                     StartMenuCanvas.SetActive(true);
                     enablePlayerForMouse();
 
