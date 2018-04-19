@@ -181,6 +181,7 @@ public class ArenaModeScript : GameControllerScript
                     }
                     obj.GetComponent<ArenaEnemyHealthScript>().SetOriginalHealth(tempHealth);
                     obj.GetComponent<ArenaEnemyHealthScript>().ResetValues(enemySpawnSet.getRandomSpawnTransform3D());
+                    obj.GetComponent<ArenaEnemyHealthScript>().UpdateEnemyMaterial();
                     switchPlayers = player2CharController == null ? false : !switchPlayers;
                     switchPlayers = playerAlive ? switchPlayers : true; //could cause a crash if no player 2 and player 1 is dead and enemies are trying to target still
                     switchPlayers = player2Alive ? switchPlayers : false;
@@ -234,7 +235,7 @@ public class ArenaModeScript : GameControllerScript
             #endregion
             //set next wave active
             currentWaveIndex = currentWaveIndex % numberOfWavesPreloaded;
-            if (currentWaveIndex == 0)
+            if (currentWaveNumber == 0)
             {
                 waveReady = false;
                 int startEnemy = enemyPoolCount - numberOfWavesPreloaded * waveGrowthAmount;
@@ -268,7 +269,8 @@ public class ArenaModeScript : GameControllerScript
     private void InstantiateNewWavePool(int startEnemyPool, int startSpecialEnemyPool)
     {
         //generate enemies for enemy pool
-        for (int i = startEnemyPool; i < enemyPoolCount; i++)
+        //no need to generate more enemies that will ever be on the screen 
+        for (int i = startEnemyPool; i < enemyCap; i++)
         {
             GameObject currentEnemy;
             //player is cube
@@ -305,8 +307,9 @@ public class ArenaModeScript : GameControllerScript
             }
             healthPickupTransforms[i] = healthPickupList;
         }
-        //generate special enemy pool
-        for (int i = startSpecialEnemyPool; i < specialEnemyPoolCount; i++)
+        //generate special enemy pool 
+        //no need to generate more enemies than there ever will be
+        for (int i = startSpecialEnemyPool; i < enemyCap; i++)
         {
             GameObject currentEnemy;
 
