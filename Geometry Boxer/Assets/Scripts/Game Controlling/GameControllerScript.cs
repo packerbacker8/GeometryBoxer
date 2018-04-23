@@ -365,6 +365,7 @@ public class GameControllerScript : MonoBehaviour
         if(!playerAlive && !player2Alive)
         {
             SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
+            SaveAndLoadGame.saver.SetWaveOn(-1);
 
             //disable any pause menu at this point
             pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);

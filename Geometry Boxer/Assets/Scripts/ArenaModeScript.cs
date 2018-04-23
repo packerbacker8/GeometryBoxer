@@ -107,10 +107,11 @@ public class ArenaModeScript : GameControllerScript
         specialEnemyPoolCount = (numberOfWavesPreloaded * waveGrowthAmount) / specialSpawnWaveMultiple;
         enemyPool = new List<GameObject>(enemyPoolCount * 2);
         specialEnemyPool = new List<GameObject>(specialEnemyPoolCount * 2);
-        currentWaveNumber = 0;
+        int resetWaveNum = SaveAndLoadGame.saver.GetWaveOn();
+        currentWaveNumber = resetWaveNum == -1 ? 0 : resetWaveNum;
         currentWaveIndex = 0;
-        numberOfRegularEnemiesToSpawn = waveGrowthAmount;
-        numberOfSpecialEnemiesToSpawn = specialEnemyStartingAmount;
+        numberOfRegularEnemiesToSpawn = waveGrowthAmount * (currentWaveNumber == 0 ? 1 : currentWaveNumber);
+        numberOfSpecialEnemiesToSpawn = specialEnemyStartingAmount * (currentWaveNumber == 0 ? 1 : currentWaveNumber);
         numberOfHealthToSpawn = numberOfHealthpacks;
         healthPickupTransforms = new List<Transform>[numberOfWavesPreloaded];
         //make a healthPickupList and set it to the i'th preloaded wave
@@ -123,7 +124,7 @@ public class ArenaModeScript : GameControllerScript
             currentHealthPickup.transform.parent = healthContainer.transform;
             healthPickups.Add(currentHealthPickup);
         }
-        botHealth = startingEnemyHealth;
+        botHealth = currentWaveNumber == 0 ? startingEnemyHealth : startingEnemyHealth * Mathf.Pow(healthGrowthAmount, currentWaveNumber - 1);
 
         lastFramerate = 0.0f;
         timeCounter = 0.0f;
@@ -235,7 +236,7 @@ public class ArenaModeScript : GameControllerScript
             #endregion
             //set next wave active
             currentWaveIndex = currentWaveIndex % numberOfWavesPreloaded;
-            if (currentWaveNumber == 0)
+            if (currentWaveNumber == 0 || SaveAndLoadGame.saver.GetWaveOn() != -1)
             {
                 waveReady = false;
                 int startEnemy = enemyPoolCount - numberOfWavesPreloaded * waveGrowthAmount;
@@ -402,7 +403,7 @@ public class ArenaModeScript : GameControllerScript
     /// <returns>The wave that is currently active, starts counting at 1.</returns>
     public int GetWaveNumber()
     {
-        return currentWaveNumber + 1;
+        return currentWaveNumber;
     }
 
 

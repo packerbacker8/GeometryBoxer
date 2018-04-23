@@ -54,8 +54,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
-
+        SaveAndLoadGame.saver.SetWaveOn(-1);
         checkCoop();
         checkSaves();
         //hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
