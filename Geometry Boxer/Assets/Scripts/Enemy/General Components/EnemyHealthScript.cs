@@ -198,30 +198,8 @@ public class EnemyHealthScript : MonoBehaviour
         {
             damageIsFromPlayer = charController.IsKnockedDown();
         }
-        if (EnemyHealth > Val0)
-        {
-            ShowDmg.SetMaterial0();
-        }
-        else if (EnemyHealth > Val1)
-        {
-            ShowDmg.SetMaterial1();
-        }
-        else if (EnemyHealth > Val2)
-        {
-            ShowDmg.SetMaterial2();
-        }
-        else if (EnemyHealth > Val3)
-        {
-            ShowDmg.SetMaterial3();
-        }
-        else if (EnemyHealth > Val4)
-        {
-            ShowDmg.SetMaterial4();
-        }
-        else
-        {
-            ShowDmg.SetMaterial5();
-        }
+
+        UpdateEnemyMaterial();
     }
 
     /// <summary>
@@ -330,6 +308,37 @@ public class EnemyHealthScript : MonoBehaviour
     public void AddHealth(float toAdd)
     {
         EnemyHealth += toAdd;
+    }
+
+    /// <summary>
+    /// Update the enemy's material based on damage level.
+    /// </summary>
+    public void UpdateEnemyMaterial()
+    {
+        if (EnemyHealth > Val0)
+        {
+            ShowDmg.SetMaterial0();
+        }
+        else if (EnemyHealth > Val1)
+        {
+            ShowDmg.SetMaterial1();
+        }
+        else if (EnemyHealth > Val2)
+        {
+            ShowDmg.SetMaterial2();
+        }
+        else if (EnemyHealth > Val3)
+        {
+            ShowDmg.SetMaterial3();
+        }
+        else if (EnemyHealth > Val4)
+        {
+            ShowDmg.SetMaterial4();
+        }
+        else
+        {
+            ShowDmg.SetMaterial5();
+        }
     }
 }
 

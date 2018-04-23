@@ -68,7 +68,7 @@ public class ArenaEnemyHealthScript : EnemyHealthScript
     public void ResetValues(Transform newPosTransform)
     {
         //this.transform.position = newPosTransform.position;
-        charController.transform.position = newPosTransform.position;
+        this.transform.position = newPosTransform.position;
         dead = false;
         damageIsFromPlayer = false;
         findHealth = false;

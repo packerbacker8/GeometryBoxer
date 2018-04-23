@@ -61,7 +61,6 @@ public class SafetyNet : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-
         if (other.transform.root.tag.Contains("Player"))
         {
             HandleSafteyNetCatch(other.transform.root.gameObject);
@@ -85,7 +84,14 @@ public class SafetyNet : MonoBehaviour
         }
         else
         {
-            Destroy(other.gameObject);
+            if(other.transform.root.tag.Contains("Interactable"))
+            {
+                Destroy(other.transform.root.gameObject);
+            }
+            else
+            {
+                Destroy(other.gameObject);
+            }
         }
         
     }
@@ -102,6 +108,10 @@ public class SafetyNet : MonoBehaviour
                 playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
             }
             SaveAndLoadGame.saver.SetLoadedFightScene(true);
+            if(this.gameObject.name == "ArenaGameController")
+            {
+                SaveAndLoadGame.saver.SetWaveOn(GetComponent<ArenaModeScript>().GetWaveNumber());
+            }
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
             {
                 GameControllerScriptTutorial gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScriptTutorial>();

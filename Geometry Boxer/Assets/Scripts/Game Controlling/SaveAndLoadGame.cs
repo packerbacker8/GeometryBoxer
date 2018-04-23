@@ -25,6 +25,13 @@ public class SaveAndLoadGame : MonoBehaviour
     private bool hasSavedGame;
     private bool forceTutorial;
     private string currentSavePath;
+    /// <summary>
+    /// What wave the player is on in arena mode. If the value is -1
+    /// that means they are not on any wave (not in arena mode or hasn't
+    /// been reset) but any other positive integer represents current
+    /// wave number at the time of resetting.
+    /// </summary>
+    private int waveOn;
 
     //use player information and store it in a singleton game object
 
@@ -95,6 +102,7 @@ public class SaveAndLoadGame : MonoBehaviour
     private void Start()
     {
         SetCityNamesAndStatus();
+        waveOn = -1;
         if(!debugMode)
         {
             if (forceTutorial)
@@ -573,6 +581,24 @@ public class SaveAndLoadGame : MonoBehaviour
     public bool GetSplitscreen()
     {
         return saveData.splitscreen;
+    }
+
+    /// <summary>
+    /// Set what wave the player is currently on.
+    /// </summary>
+    /// <param name="val"></param>
+    public void SetWaveOn(int val)
+    {
+        waveOn = val;
+    }
+
+    /// <summary>
+    /// Returns what wave number the player is on in arena mode.
+    /// </summary>
+    /// <returns>-1 means not on any wave, any other positive integer is the current wave number.</returns>
+    public int GetWaveOn()
+    {
+        return waveOn;
     }
 
     [Serializable]

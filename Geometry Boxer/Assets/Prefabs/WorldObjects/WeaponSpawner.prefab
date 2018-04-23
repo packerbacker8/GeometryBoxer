@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1955510563654246}
+  m_IsPrefabParent: 1
+--- !u!1 &1955510563654246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4621085240149668}
+  - component: {fileID: 114150027504410772}
+  m_Layer: 0
+  m_Name: WeaponSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4621085240149668
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955510563654246}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114150027504410772
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1955510563654246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f737200290ab6e4dbae04d90615de8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WeaponSpawnLocationPrefab: {fileID: 1544754241089530, guid: 1b50d40a953edc5468a7f803c0dbeab1,
+    type: 2}
+  WeaponTypes:
+  - {fileID: 1884086592843518, guid: ed601543ac29c8543985d1e42433013c, type: 2}
+  - {fileID: 1001609716160426, guid: ab39cbfdba8232d468b0404940b8643b, type: 2}
+  - {fileID: 1481402591605526, guid: a2bf31784de499a47b9df94a43edf67e, type: 2}
+  - {fileID: 1505426865420122, guid: cb4a5878fd589294a96e19261371e308, type: 2}
+  - {fileID: 1299182388676750, guid: 56c19cc0243ef2c4d997811d3daca623, type: 2}
+  - {fileID: 1971804774843748, guid: d4bff88945df6ee4d86ce74f4c97b402, type: 2}
+  - {fileID: 1907723905273874, guid: 10c9e157e55f63247914704ae42b00aa, type: 2}
