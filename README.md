@@ -7,6 +7,7 @@ enemies and control the world!
 ## Getting Started
 
 Visit Steam to download and play the game.
+[Link is here!](http://store.steampowered.com/app/840620/Geometry_Boxer/)
 
 ### Prerequisites
 
