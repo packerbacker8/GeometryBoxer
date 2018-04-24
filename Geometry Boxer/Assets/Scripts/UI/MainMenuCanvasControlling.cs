@@ -54,8 +54,6 @@ public class MainMenuCanvasControlling : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
-
         checkCoop();
         checkSaves();
         //hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
@@ -265,6 +263,13 @@ public class MainMenuCanvasControlling : MonoBehaviour
                     loadFileCanvas.SetActive(false);
 
                     CampaignCanvas.SetActive(false);
+
+                    //exit any survival menu
+                    if (survivalCanvas.activeSelf)
+                    {
+                        survivalCanvas.SetActive(false);
+                    }
+
                     StartMenuCanvas.SetActive(true);
                     enablePlayerForMouse();
 
@@ -298,19 +303,16 @@ public class MainMenuCanvasControlling : MonoBehaviour
             //We are on scrollview hitting right, so move to faction dropdown
             if (Input.GetAxis("DPadX") == 1 && curObj == scrollViewGameObj)
             {
-                Debug.Log("Scroll view to dropdown");
                 EventSystem.current.SetSelectedGameObject(survivalFactionDropdown.gameObject);
             }
             //We are on scrollView hitting left, so move to back button
             else if (Input.GetAxis("DPadX") == -1 && curObj == scrollViewGameObj)
             {
-                Debug.Log("Backbutton");
                 EventSystem.current.SetSelectedGameObject(survivalBackButton.gameObject);
             }
             //We are on either dropdown and hit left, move us to scrollview
             else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && (Input.GetAxis("DPadX") == -1))
             {
-                Debug.Log("Moving from dropdowns to scrollview button");
                 EventSystem.current.SetSelectedGameObject(scrollViewGameObj);
             }
         }
