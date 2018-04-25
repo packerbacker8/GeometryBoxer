@@ -21,7 +21,7 @@ public class MeleeSfx : MonoBehaviour {
     }
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.transform.root.tag == "EnemyRoot" || collision.gameObject.transform.root.tag == "Player")
+        if (collision.gameObject.transform.root.tag == "EnemyRoot")
         {
             if (collision.impulse.magnitude > damageThreshold)
             {
