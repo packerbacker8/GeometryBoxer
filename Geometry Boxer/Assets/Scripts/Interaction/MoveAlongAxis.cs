@@ -31,6 +31,6 @@ public class MoveAlongAxis : MonoBehaviour
     }
     void Update()
     {
-        transform.position = Vector3.Lerp(pointA, pointB, Mathf.PingPong(Time.time/2, 1));
+        transform.position = Vector3.Lerp(pointA, pointB, Mathf.PingPong(speed * Time.time/2, 1));
     }
 }
