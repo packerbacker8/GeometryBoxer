@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEditor;
+using System.Reflection;
+using System;
 
 public class AutoGenerateSpawnPoints : ScriptableWizard
 {
@@ -10,6 +12,7 @@ public class AutoGenerateSpawnPoints : ScriptableWizard
     [SerializeField]
     public Density DensityOfSpawnPoints = Density.Medium;
     public NavMeshData nav;
+    public GameObject sp;
 
     private GameObject rootSpawn;
 
@@ -122,10 +125,19 @@ public class AutoGenerateSpawnPoints : ScriptableWizard
                     float distToCheck = 0.5f; // not sure
                     if (NavMesh.SamplePosition(pos, out hit, distToCheck, NavMesh.AllAreas))
                     {
-                        GameObject spawnPoint = new GameObject("SpawnPoint");
+                        GameObject spawnPoint;
+                        if (sp != null)
+                        {
+                            spawnPoint = Instantiate(sp);
+                            spawnPoint.GetComponent<ParticleSystem>().Stop();
+                        }
+                        else
+                        {
+                            spawnPoint = new GameObject("SpawnPoint");
+                            spawnPoint.AddComponent<BoxCollider>();
+                            spawnPoint.GetComponent<BoxCollider>().isTrigger = true;
+                        }
                         spawnPoint.transform.parent = spawnLayerZ.transform;
-                        spawnPoint.AddComponent<BoxCollider>();
-                        spawnPoint.GetComponent<BoxCollider>().isTrigger = true;
                         spawnPoint.transform.position = new Vector3(pos.x, pos.y + 1.0f, pos.z);
                     }
                 }

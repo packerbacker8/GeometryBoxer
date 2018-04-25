@@ -308,6 +308,7 @@ public class EnemyHealthScript : MonoBehaviour
     public void AddHealth(float toAdd)
     {
         EnemyHealth += toAdd;
+        UpdateEnemyMaterial();
     }
 
     /// <summary>

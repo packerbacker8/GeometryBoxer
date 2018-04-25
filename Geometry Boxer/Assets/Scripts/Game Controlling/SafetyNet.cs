@@ -108,6 +108,10 @@ public class SafetyNet : MonoBehaviour
                 playerUI.transform.GetChild(playerUI.transform.childCount - 1).gameObject.SetActive(true);
             }
             SaveAndLoadGame.saver.SetLoadedFightScene(true);
+            if(this.gameObject.name == "ArenaGameController")
+            {
+                SaveAndLoadGame.saver.SetWaveOn(GetComponent<ArenaModeScript>().GetWaveNumber());
+            }
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name.Contains("Tutorial"))
             {
                 GameControllerScriptTutorial gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameControllerScriptTutorial>();
