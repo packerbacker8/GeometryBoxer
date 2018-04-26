@@ -41,6 +41,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private string fileToLoad;
     private string survivalCurrentArenaSelection;
     private List<GameObject> loadFileButtons;
+    private GameObject survivalContent;
+    private GameObject[] mapButtons;
 
     private bool controllerMode;
     private bool ps4Mode = false;
@@ -48,6 +50,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
     private bool allowNavigation = false;
     private bool inInputField;
     private bool loadCanvasEnabled = false;
+    private bool pushedLeft;
+    private bool pushedRight;
     private float timeSinceDPAD = 0.0f;
     private StandaloneInputModule EventSystemInputModule;
 
@@ -58,6 +62,12 @@ public class MainMenuCanvasControlling : MonoBehaviour
         checkSaves();
         //hasSaveGameCanvas.SetActive(hasSavedGame); //only one of the canvas elements will be active at once
         StartMenuCanvas.SetActive(true);
+        survivalContent = survivalCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject;
+        mapButtons = new GameObject[survivalContent.transform.childCount];
+        for(int i = 0; i < mapButtons.Length; i++)
+        {
+            mapButtons[i] = survivalContent.transform.GetChild(i).gameObject;
+        }
         CampaignCanvas.SetActive(false);
        
         //All things related to Survival Canvas
@@ -74,6 +84,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
         controllerMode = false;
         inInputField = false;
+        pushedLeft = false;
+        pushedRight = false;
         CheckControllerModeAndType();
 
         EventSystemInputModule = GameObject.FindGameObjectWithTag("EventSystem").gameObject.GetComponent<StandaloneInputModule>();
@@ -189,10 +201,12 @@ public class MainMenuCanvasControlling : MonoBehaviour
             if (ps4Mode)
             {
                 EventSystemInputModule.submitButton = "SubmitPS4";
+                EventSystemInputModule.cancelButton = "CancelPS4";
             }
             else
             {
                 EventSystemInputModule.submitButton = "Submit";
+                EventSystemInputModule.cancelButton = "Cancel";
             }
 
             //Debug.Log(timeSinceDPAD);
@@ -297,25 +311,67 @@ public class MainMenuCanvasControlling : MonoBehaviour
         //Cases for Survival Canvas
         if (survivalCanvas.activeSelf && controllerMode)
         {
-            GameObject scrollViewGameObj = survivalCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject;
+            GameObject scrollViewGameObj = mapButtons[0];
             GameObject curObj = EventSystem.current.currentSelectedGameObject;
-
-            //We are on scrollview hitting right, so move to faction dropdown
-            if (Input.GetAxis("DPadX") == 1 && curObj == scrollViewGameObj)
-            {
-                EventSystem.current.SetSelectedGameObject(survivalFactionDropdown.gameObject);
-            }
-            //We are on scrollView hitting left, so move to back button
-            else if (Input.GetAxis("DPadX") == -1 && curObj == scrollViewGameObj)
-            {
-                EventSystem.current.SetSelectedGameObject(survivalBackButton.gameObject);
-            }
-            //We are on either dropdown and hit left, move us to scrollview
-            else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && (Input.GetAxis("DPadX") == -1))
+            if(curObj == null)
             {
                 EventSystem.current.SetSelectedGameObject(scrollViewGameObj);
             }
+            bool inScrollView = false;
+            foreach(GameObject butt in mapButtons)
+            {
+                if (curObj!=null && curObj.Equals(butt))
+                {
+                    inScrollView = true;
+                    break;
+                }
+            }
+            //We are on scrollview hitting right, so move to faction dropdown
+            if ((Input.GetAxis("DPadX") == 1 || Input.GetAxis("DPadXPS4") == 1) && inScrollView && !pushedRight)
+            {
+                EventSystem.current.SetSelectedGameObject(survivalFactionDropdown.gameObject);
+                pushedRight = true;
+            }
+            //on back button, going to scrollview
+            else if (curObj.Equals(survivalBackButton) && (Input.GetAxis("DPadX") == 1 || Input.GetAxis("DPadXPS4") == 1))
+            {
+                EventSystem.current.SetSelectedGameObject(scrollViewGameObj);
+                pushedRight = true;
+            }
+            //We are on scrollView hitting left, so move to back button
+            else if ((Input.GetAxis("DPadX") == -1 || Input.GetAxis("DPadXPS4") == -1) && inScrollView && !pushedLeft)
+            {
+                EventSystem.current.SetSelectedGameObject(survivalBackButton.gameObject);
+            }
+            //on dropdowns, going to start button
+            else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && (Input.GetAxis("DPadX") == 1 || Input.GetAxis("DPadXPS4") == 1) && !pushedRight)
+            {
+                EventSystem.current.SetSelectedGameObject(survivalStartButton);
+            }
+            //We are on either dropdown and hit left, move us to scrollview
+            else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && (Input.GetAxis("DPadX") == -1 || Input.GetAxis("DPadXPS4") == -1) && !pushedLeft)
+            {
+                EventSystem.current.SetSelectedGameObject(scrollViewGameObj);
+                pushedLeft = true;
+            }
+            //on start button going to drop downs
+            else if (curObj.Equals(survivalStartButton) && (Input.GetAxis("DPadX") == -1 || Input.GetAxis("DPadXPS4") == -1))
+            {
+                EventSystem.current.SetSelectedGameObject(survivalFactionDropdown.gameObject);
+                pushedLeft = true;
+            }
+            else if((Input.GetAxis("DPadX") == 0 || Input.GetAxis("DPadXPS4") == 0))
+            {
+                pushedLeft = false;
+                pushedRight = false;
+            }
         }
+    }
+
+    public void ValueChangedOnDropdown(Dropdown val)
+    {
+        Debug.Log(val.value);
+        Debug.Log("value you was changed");
     }
 
     public void showCampaign()
