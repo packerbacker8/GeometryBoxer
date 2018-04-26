@@ -39,6 +39,7 @@ namespace RootMotion.Demos {
 		}
 
 		protected override bool Jump() {
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Main Menu") return false;
 			if (puppet.state != BehaviourPuppet.State.Puppet || !canMove) return false;
 
 			return base.Jump();
