@@ -196,6 +196,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
     {
         CheckControllerModeAndType();
         checkCoop();
+        string dpadx = ps4Mode ? "DPadXPS4" : "DPadX";
+        string cancel = ps4Mode ? "CancelPS4" : "Cancel";
         if (controllerMode)
         {
             if (ps4Mode)
@@ -308,6 +310,21 @@ public class MainMenuCanvasControlling : MonoBehaviour
             inInputField = false;
         }
 
+        if ((CampaignCanvas.activeInHierarchy || creditsCanvas.activeInHierarchy) && controllerMode)
+        {
+            if (Input.GetButtonDown(cancel))
+            {
+                if (CampaignCanvas.activeInHierarchy)
+                {
+                    hideCampaign();
+                }
+                else if (creditsCanvas.activeInHierarchy)
+                {
+                    ShowOrHideOptions(false);
+                }
+            }
+        }
+
         //Cases for Survival Canvas
         if (survivalCanvas.activeSelf && controllerMode)
         {
@@ -326,9 +343,12 @@ public class MainMenuCanvasControlling : MonoBehaviour
                     break;
                 }
             }
-            string dpadx = ps4Mode ? "DPadXPS4" : "DPadX";
+            if (Input.GetButtonDown(cancel))
+            {
+                HideSurvivalCanvas();
+            }
             //We are on scrollview hitting right, so move to faction dropdown
-            if (Input.GetAxis(dpadx) == 1 && inScrollView && !pushedRight)
+            else if (Input.GetAxis(dpadx) == 1 && inScrollView && !pushedRight)
             {
                 EventSystem.current.SetSelectedGameObject(survivalFactionDropdown.gameObject);
                 pushedRight = true;
