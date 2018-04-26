@@ -326,41 +326,44 @@ public class MainMenuCanvasControlling : MonoBehaviour
                     break;
                 }
             }
+            string dpadx = ps4Mode ? "DPadXPS4" : "DPadX";
             //We are on scrollview hitting right, so move to faction dropdown
-            if ((Input.GetAxis("DPadX") == 1 || Input.GetAxis("DPadXPS4") == 1) && inScrollView && !pushedRight)
+            if (Input.GetAxis(dpadx) == 1 && inScrollView && !pushedRight)
             {
                 EventSystem.current.SetSelectedGameObject(survivalFactionDropdown.gameObject);
                 pushedRight = true;
             }
             //on back button, going to scrollview
-            else if (curObj.Equals(survivalBackButton) && (Input.GetAxis("DPadX") == 1 || Input.GetAxis("DPadXPS4") == 1))
+            else if (curObj.Equals(survivalBackButton) && Input.GetAxis(dpadx) == 1)
             {
                 EventSystem.current.SetSelectedGameObject(scrollViewGameObj);
                 pushedRight = true;
             }
             //We are on scrollView hitting left, so move to back button
-            else if ((Input.GetAxis("DPadX") == -1 || Input.GetAxis("DPadXPS4") == -1) && inScrollView && !pushedLeft)
+            else if (Input.GetAxis(dpadx) == -1 && inScrollView && !pushedLeft)
             {
                 EventSystem.current.SetSelectedGameObject(survivalBackButton.gameObject);
+                pushedLeft = true;
             }
             //on dropdowns, going to start button
-            else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && (Input.GetAxis("DPadX") == 1 || Input.GetAxis("DPadXPS4") == 1) && !pushedRight)
+            else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && Input.GetAxis(dpadx) == 1 && !pushedRight)
             {
                 EventSystem.current.SetSelectedGameObject(survivalStartButton);
+                pushedRight = true;
             }
             //We are on either dropdown and hit left, move us to scrollview
-            else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && (Input.GetAxis("DPadX") == -1 || Input.GetAxis("DPadXPS4") == -1) && !pushedLeft)
+            else if ((curObj.Equals(survivalFactionDropdown.gameObject) || curObj.Equals(survivalModeDropdown.gameObject)) && Input.GetAxis(dpadx) == -1 && !pushedLeft)
             {
                 EventSystem.current.SetSelectedGameObject(scrollViewGameObj);
                 pushedLeft = true;
             }
             //on start button going to drop downs
-            else if (curObj.Equals(survivalStartButton) && (Input.GetAxis("DPadX") == -1 || Input.GetAxis("DPadXPS4") == -1))
+            else if (curObj.Equals(survivalStartButton) && Input.GetAxis(dpadx) == -1)
             {
                 EventSystem.current.SetSelectedGameObject(survivalFactionDropdown.gameObject);
                 pushedLeft = true;
             }
-            else if((Input.GetAxis("DPadX") == 0 || Input.GetAxis("DPadXPS4") == 0))
+            else if(Input.GetAxis(dpadx) == 0)
             {
                 pushedLeft = false;
                 pushedRight = false;
