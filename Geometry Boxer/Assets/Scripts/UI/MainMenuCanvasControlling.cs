@@ -394,8 +394,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
     public void ValueChangedOnDropdown(Dropdown val)
     {
-        Debug.Log(val.value);
-        Debug.Log("value you was changed");
+        survivalFactionDropdown.transform.GetChild(2).GetComponent<Image>().sprite = val.itemImage.sprite;
     }
 
     public void showCampaign()
