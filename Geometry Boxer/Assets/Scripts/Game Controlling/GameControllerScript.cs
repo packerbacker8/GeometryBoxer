@@ -366,6 +366,7 @@ public class GameControllerScript : MonoBehaviour
         {
             SaveAndLoadGame.saver.SetCityStatus(currentMapName, "notconquered");
             SaveAndLoadGame.saver.SetWaveOn(-1);
+            SaveAndLoadGame.saver.SetLoadedFightScene(false); //might be the right fix?
 
             //disable any pause menu at this point
             pauseMenu.GetComponent<PauseMenu>().pauseMenuCanvas.SetActive(false);
