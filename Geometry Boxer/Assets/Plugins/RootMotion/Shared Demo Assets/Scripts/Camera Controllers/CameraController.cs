@@ -224,7 +224,8 @@ namespace RootMotion
         private float zoomAdd
         {
             get
-            { 
+            {
+                float scrollAxis;
                 string leftTrigger = "LeftTrigger";
                 string rightTrigger = "RightTrigger";
                 int controlIndex = isPlayer2 && controllerInfo.Length > 1 ? 1 : 0;
@@ -237,11 +238,17 @@ namespace RootMotion
                         leftTrigger += "_2";
                         rightTrigger += "_2";
                     }
+                    scrollAxis = Input.GetAxis(rightTrigger) - Input.GetAxis(leftTrigger);
+                    if (scrollAxis > 0) return -zoomSensitivity;
+                    if (scrollAxis < 0) return zoomSensitivity;
+                }
+                else
+                {
+                    scrollAxis = Input.GetAxis("Mouse ScrollWheel"); // - Input.GetAxis(leftTrigger) + Input.GetAxis(rightTrigger);
+                    if (scrollAxis > 0) return -zoomSensitivity;
+                    if (scrollAxis < 0) return zoomSensitivity;
                 }
 
-                float scrollAxis = Input.GetAxis("Mouse ScrollWheel") - Input.GetAxis(leftTrigger) + Input.GetAxis(rightTrigger);
-                if (scrollAxis > 0) return -zoomSensitivity;
-                if (scrollAxis < 0) return zoomSensitivity;
                 return 0;
             }
         }
