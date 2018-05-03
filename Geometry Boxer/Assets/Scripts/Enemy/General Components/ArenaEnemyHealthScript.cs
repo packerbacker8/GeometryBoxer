@@ -5,6 +5,11 @@ using RootMotion.Demos;
 
 public class ArenaEnemyHealthScript : EnemyHealthScript
 {
+    public float autoKillTime = 90f;
+
+    private float autoKillTimer;
+    private float prevHealthValue;
+
     protected override void Awake()
     {
         base.Awake();
@@ -13,12 +18,26 @@ public class ArenaEnemyHealthScript : EnemyHealthScript
     protected override void Start()
     {
         base.Start();
+        autoKillTimer = 0;
+        prevHealthValue = EnemyHealth;
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
+
+        autoKillTimer += Time.deltaTime;
+        if(prevHealthValue != EnemyHealth || dead)
+        {
+            autoKillTimer = 0;
+        }
+        if(!dead && autoKillTimer > autoKillTime)
+        {
+            EnemyHealth = -1f;
+            KillEnemy();
+        }
+        prevHealthValue = EnemyHealth;
     }
 
     protected override void GetHealth()
@@ -72,9 +91,10 @@ public class ArenaEnemyHealthScript : EnemyHealthScript
         dead = false;
         damageIsFromPlayer = false;
         findHealth = false;
-
+        autoKillTimer = 0;
         deathObject.SetActive(false);
         EnemyHealth = originalHealth;
+        prevHealthValue = EnemyHealth;
         puppetMast.GetComponent<PuppetMaster>().state = PuppetMaster.State.Alive;
     }
 

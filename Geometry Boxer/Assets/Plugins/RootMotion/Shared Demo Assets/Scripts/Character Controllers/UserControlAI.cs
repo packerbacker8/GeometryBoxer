@@ -162,10 +162,12 @@ namespace RootMotion.Demos
                     if (moveResult != transform.position)
                     {
                         agent.destination = moveResult;
+                        
                         if (agent.pathStatus == NavMeshPathStatus.PathComplete)
                         {
                             state.move = agent.velocity;
                         }
+                        /*
                         else
                         {
 
@@ -176,7 +178,7 @@ namespace RootMotion.Demos
                                
                                 StartCoroutine(Respawn());
                             }
-                        }
+                        }*/
                     }
 
                     else
