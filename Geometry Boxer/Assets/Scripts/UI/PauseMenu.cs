@@ -322,7 +322,7 @@ public class PauseMenu : MonoBehaviour
 
         isPaused = true;
     }
-
+    
     /// <summary>
     /// Function to resume gameplay when playing in other scenes.
     /// </summary>
