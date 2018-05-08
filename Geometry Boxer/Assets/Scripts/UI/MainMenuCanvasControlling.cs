@@ -15,6 +15,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
     public GameObject survivalBackButton;
     public GameObject survivalStartButton;
 
+    public GameObject OptionsCanvas;
     public GameObject survivalCanvas;
     public GameObject CampaignCanvas;
     public GameObject StartMenuCanvas;
@@ -396,6 +397,26 @@ public class MainMenuCanvasControlling : MonoBehaviour
     {
         survivalFactionDropdown.transform.GetChild(2).GetComponent<Image>().sprite = val.itemImage.sprite;
     }
+    public void showOptions()
+    {
+        OptionsCanvas.SetActive(true);
+        CampaignCanvas.SetActive(false);
+        StartMenuCanvas.SetActive(false);
+        if (controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(OptionsCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        }
+    }
+    public void hideOptions()
+    {
+        StartMenuCanvas.SetActive(true);
+        CampaignCanvas.SetActive(false);
+        OptionsCanvas.SetActive(false);
+        if (controllerMode)
+        {
+            EventSystem.current.SetSelectedGameObject(StartMenuCanvas.GetComponentInChildren<UnityEngine.UI.Button>().gameObject);
+        }
+    }
 
     public void showCampaign()
     {
@@ -408,6 +429,7 @@ public class MainMenuCanvasControlling : MonoBehaviour
 
         }
     }
+
 
     public void hideCampaign()
     {
