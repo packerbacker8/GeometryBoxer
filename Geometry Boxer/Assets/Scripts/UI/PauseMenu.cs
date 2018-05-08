@@ -10,7 +10,6 @@ public class PauseMenu : MonoBehaviour
     public GameObject scrollViewContent;
     public GameObject fileButtonPrefab;
     public GameObject pauseMenuCanvas { get; private set; }
-    public GameObject optionsMenuCanvas;
     public bool notInDeathOrWinScreen = true;
     public bool saveCanvasTextInputMode = false;
     public bool isPaused = false;
@@ -323,20 +322,7 @@ public class PauseMenu : MonoBehaviour
 
         isPaused = true;
     }
-
-    public void openOptionsMenu()
-    {
-        saveCanvas.SetActive(false);
-        pauseMenuCanvas.SetActive(false);
-        optionsMenuCanvas.SetActive(true);
-    }
-
-    public void closeOptionsMenu()
-    {
-        optionsMenuCanvas.SetActive(false);
-        pauseMenuCanvas.SetActive(true);
-    }
-
+    
     /// <summary>
     /// Function to resume gameplay when playing in other scenes.
     /// </summary>

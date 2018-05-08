@@ -108,8 +108,8 @@ public class MainMenuCanvasControlling : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(GameObject.Find(tutorialButtonName));
             menuActive = true;
         }
-        
-        
+
+        OptionsCanvas.SetActive(false);   
     }
 
     void checkCoop()
