@@ -9,6 +9,7 @@ public class OptionsMenu : MonoBehaviour {
     public AudioMixer audioMixerMaster;
     public Dropdown resolutionDropdown;
     public Dropdown qualityDropdown;
+    public Slider musicSlider;
     private Resolution[] resolutions;
 
 	// Use this for initialization
@@ -37,6 +38,10 @@ public class OptionsMenu : MonoBehaviour {
 
         qualityDropdown.value = QualitySettings.GetQualityLevel();
         qualityDropdown.RefreshShownValue();
+
+        float currentMusicVolume;
+        audioMixerMaster.GetFloat("MasterVolume",out currentMusicVolume);
+        musicSlider.value = currentMusicVolume;
 
     }
 	public void SetResolution(int resolutionIndex)
